@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>AI Assistant Settings</title>
+
+  <!-- JioType Font Family -->
+  <style>
+    @font-face {
+      font-family: 'JioType';
+      font-weight: 400;
+      src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeVarW05-Regular.woff2') format('woff2');
+    }
+    @font-face {
+      font-family: 'JioType';
+      font-weight: 500;
+      src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Medium.woff2') format('woff2');
+    }
+    @font-face {
+      font-family: 'JioType';
+      font-weight: 700;
+      src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Bold.woff2') format('woff2');
+    }
+    @font-face {
+      font-family: 'JioType';
+      font-weight: 900;
+      src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Black.woff2') format('woff2');
+    }
+  </style>
+
+  <style>
+    /* ─── Design Tokens ─────────────────────────────────────── */
+    :root {
+      /* Colors */
+      --color-primary-50:    #3535f3;
+      --color-primary-10:    #ebebfe;
+      --color-primary-20:    #c5c5fc;
+      --color-grey-100:      #141414;
+      --color-grey-80:       #3d3d3d;
+      --color-grey-60:       #666666;
+      --color-grey-30:       #b3b3b3;
+      --color-grey-10:       #f0f0f0;
+      --color-grey-05:       #f8f8f8;
+      --color-surface:       #ffffff;
+      --color-error:         #fa2f40;
+      --color-success:       #00b050;
+      --color-sparkle-start: #7c3aed;
+      --color-sparkle-end:   #3535f3;
+      --color-warning:       #ff8a00;
+
+      /* Spacing */
+      --sp-xxs:  4px;
+      --sp-xs:   8px;
+      --sp-s:    12px;
+      --sp-base: 16px;
+      --sp-m:    24px;
+      --sp-l:    32px;
+      --sp-xl:   48px;
+      --sp-xxl:  64px;
+
+      /* Border Radius */
+      --r-xs:   4px;
+      --r-s:    8px;
+      --r-m:    12px;
+      --r-l:    16px;
+      --r-xl:   20px;
+      --r-xxl:  23px;
+      --r-pill: 999px;
+    }
+
+    /* ─── Reset & Base ──────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'JioType', sans-serif;
+      background: var(--color-grey-05);
+      color: var(--color-grey-100);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: var(--sp-m) var(--sp-base) var(--sp-xxl);
+    }
+
+    .page-shell {
+      width: 100%;
+      max-width: 440px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    /* ─── Top App Bar ───────────────────────────────────────── */
+    .app-bar {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-s);
+      padding: var(--sp-base) 0 var(--sp-m);
+      position: sticky;
+      top: 0;
+      background: var(--color-grey-05);
+      z-index: 10;
+    }
+
+    .app-bar__back {
+      width: 40px; height: 40px;
+      border-radius: var(--r-pill);
+      border: none;
+      background: var(--color-grey-10);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.15s;
+    }
+    .app-bar__back:hover { background: var(--color-primary-10); }
+
+    .app-bar__title {
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 28px;
+      letter-spacing: -0.3px;
+      color: var(--color-grey-100);
+      flex: 1;
+    }
+
+    /* ─── AI Avatar Hero ────────────────────────────────────── */
+    .hero-card {
+      background: linear-gradient(135deg, #1a1a6e 0%, #3535f3 60%, #7c3aed 100%);
+      border-radius: var(--r-xxl);
+      padding: var(--sp-m) var(--sp-m) var(--sp-l);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--sp-s);
+      margin-bottom: var(--sp-m);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+    }
+    .hero-card::after {
+      content: '';
+      position: absolute;
+      bottom: -30px; left: -30px;
+      width: 120px; height: 120px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .hero-avatar {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(8px);
+      border: 2px solid rgba(255,255,255,0.25);
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-avatar-pulse {
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.2);
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.6; }
+      50% { transform: scale(1.08); opacity: 0.2; }
+    }
+
+    .hero-name {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.3px;
+      position: relative; z-index: 1;
+    }
+    .hero-status {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.7);
+      display: flex; align-items: center; gap: var(--sp-xxs);
+      position: relative; z-index: 1;
+    }
+    .hero-status__dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #4ade80;
+      box-shadow: 0 0 6px #4ade80;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: var(--sp-base);
+      margin-top: var(--sp-xxs);
+      position: relative; z-index: 1;
+    }
+    .hero-stat {
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
+    }
+    .hero-stat__value {
+      font-size: 18px; font-weight: 700; color: #fff;
+    }
+    .hero-stat__label {
+      font-size: 11px; font-weight: 500;
+      color: rgba(255,255,255,0.6);
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .hero-stat-divider {
+      width: 1px;
+      background: rgba(255,255,255,0.2);
+      align-self: stretch;
+      margin: var(--sp-xxs) 0;
+    }
+
+    /* ─── Section Label ─────────────────────────────────────── */
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--color-grey-60);
+      padding: var(--sp-m) 0 var(--sp-xs) var(--sp-xxs);
+    }
+
+    /* ─── Settings Card ─────────────────────────────────────── */
+    .settings-card {
+      background: var(--color-surface);
+      border-radius: var(--r-xxl);
+      overflow: hidden;
+      margin-bottom: var(--sp-m);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04);
+    }
+
+    /* ─── Settings Row ──────────────────────────────────────── */
+    .setting-row {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-s);
+      padding: var(--sp-base) var(--sp-base);
+      cursor: pointer;
+      transition: background 0.12s;
+      position: relative;
+    }
+    .setting-row:hover { background: var(--color-grey-05); }
+    .setting-row:active { background: var(--color-primary-10); }
+
+    .setting-row + .setting-row::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 56px; right: 0;
+      height: 1px;
+      background: var(--color-grey-10);
+    }
+
+    .setting-row__icon-wrap {
+      width: 40px; height: 40px;
+      border-radius: var(--r-m);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .setting-row__body {
+      flex: 1;
+      min-width: 0;
+    }
+    .setting-row__title {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--color-grey-100);
+      line-height: 22px;
+    }
+    .setting-row__subtitle {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--color-grey-60);
+      line-height: 18px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .setting-row__right {
+      display: flex; align-items: center; gap: var(--sp-xs);
+      flex-shrink: 0;
+    }
+
+    .value-chip {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-primary-50);
+      background: var(--color-primary-10);
+      border-radius: var(--r-pill);
+      padding: 3px var(--sp-xs);
+    }
+
+    /* ─── Toggle Switch ─────────────────────────────────────── */
+    .toggle-wrap { display: flex; align-items: center; }
+
+    .toggle-input { display: none; }
+
+    .toggle-track {
+      width: 48px; height: 28px;
+      border-radius: var(--r-pill);
+      background: var(--color-grey-30);
+      position: relative;
+      cursor: pointer;
+      transition: background 0.22s ease;
+      flex-shrink: 0;
+    }
+    .toggle-input:checked + .toggle-track { background: var(--color-primary-50); }
+
+    .toggle-thumb {
+      position: absolute;
+      top: 3px; left: 3px;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      transition: transform 0.22s ease;
+    }
+    .toggle-input:checked + .toggle-track .toggle-thumb {
+      transform: translateX(20px);
+    }
+
+    /* ─── Select Dropdown ───────────────────────────────────── */
+    .native-select {
+      font-family: 'JioType', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-primary-50);
+      background: var(--color-primary-10);
+      border: none;
+      border-radius: var(--r-pill);
+      padding: 4px var(--sp-m) 4px var(--sp-xs);
+      appearance: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+      outline: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%233535f3' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+      background-size: 12px;
+    }
+
+    /* ─── Accent Icon Colors ────────────────────────────────── */
+    .ic-bg-blue    { background: #e8e8fe; }
+    .ic-bg-purple  { background: #f3e8ff; }
+    .ic-bg-green   { background: #dcfce7; }
+    .ic-bg-orange  { background: #fff3e0; }
+    .ic-bg-red     { background: #fce8e8; }
+    .ic-bg-teal    { background: #e0f7fa; }
+    .ic-bg-grey    { background: var(--color-grey-10); }
+
+    /* ─── Model Selection Card ──────────────────────────────── */
+    .model-card-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-xs);
+      padding: var(--sp-base);
+    }
+
+    .model-option {
+      border-radius: var(--r-l);
+      border: 2px solid var(--color-grey-10);
+      padding: var(--sp-s) var(--sp-xs);
+      display: flex; flex-direction: column; gap: var(--sp-xxs);
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      position: relative;
+      background: var(--color-grey-05);
+    }
+    .model-option:hover { border-color: var(--color-primary-20); background: var(--color-primary-10); }
+    .model-option.selected {
+      border-color: var(--color-primary-50);
+      background: var(--color-primary-10);
+    }
+    .model-option__check {
+      position: absolute;
+      top: var(--sp-xs); right: var(--sp-xs);
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--color-primary-50);
+      display: none;
+      align-items: center; justify-content: center;
+    }
+    .model-option.selected .model-option__check { display: flex; }
+    .model-option__name {
+      font-size: 14px; font-weight: 700;
+      color: var(--color-grey-100);
+    }
+    .model-option__desc {
+      font-size: 11px; font-weight: 400;
+      color: var(--color-grey-60);
+      line-height: 16px;
+    }
+    .model-option__badge {
+      font-size: 10px; font-weight: 700;
+      color: var(--color-primary-50);
+      background: var(--color-primary-10);
+      border-radius: var(--r-pill);
+      padding: 2px var(--sp-xxs);
+      display: inline-block;
+      margin-top: var(--sp-xxs);
+      letter-spacing: 0.3px;
+    }
+    .model-option.selected .model-option__name,
+    .model-option.selected .model-option__desc { color: var(--color-primary-50); }
+
+    /* ─── Memory Bar ────────────────────────────────────────── */
+    .memory-bar-wrap {
+      padding: 0 var(--sp-base) var(--sp-base);
+      display: flex; flex-direction: column; gap: var(--sp-xs);
+    }
+    .memory-bar-header {
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .memory-bar-label {
+      font-size: 13px; font-weight: 500; color: var(--color-grey-80);
+    }
+    .memory-bar-value {
+      font-size: 12px; font-weight: 500; color: var(--color-grey-60);
+    }
+    .memory-bar-track {
+      height: 6px;
+      border-radius: var(--r-pill);
+      background: var(--color-grey-10);
+      overflow: hidden;
+    }
+    .memory-bar-fill {
+      height: 100%;
+      border-radius: var(--r-pill);
+      background: linear-gradient(90deg, var(--color-primary-50), #7c3aed);
+      width: 62%;
+      transition: width 0.4s ease;
+    }
+
+    /* ─── Danger Zone ───────────────────────────────────────── */
+    .danger-btn {
+      width: 100%;
+      border: none;
+      background: none;
+      padding: var(--sp-base);
+      display: flex; align-items: center; gap: var(--sp-s);
+      cursor: pointer;
+      border-radius: var(--r-xxl);
+      transition: background 0.12s;
+      text-align: left;
+    }
+    .danger-btn:hover { background: #fff0f0; }
+    .danger-btn__text { flex: 1; }
+    .danger-btn__title {
+      font-size: 15px; font-weight: 500;
+      color: var(--color-error);
+    }
+    .danger-btn__subtitle {
+      font-size: 12px; font-weight: 400;
+      color: #f87171;
+    }
+
+    /* ─── Version Footer ────────────────────────────────────── */
+    .footer {
+      text-align: center;
+      padding: var(--sp-l) 0 var(--sp-m);
+      display: flex; flex-direction: column; align-items: center; gap: var(--sp-xxs);
+    }
+    .footer__logo {
+      display: flex; align-items: center; gap: var(--sp-xs);
+    }
+    .footer__version {
+      font-size: 12px; font-weight: 400; color: var(--color-grey-30);
+    }
+
+    /* ─── SVG Icon Helpers ──────────────────────────────────── */
+    .icon { display: inline-flex; align-items: center; justify-content: center; }
+
+    /* ─── Chevron ───────────────────────────────────────────── */
+    .chevron-right svg { display: block; }
+
+  </style>
+</head>
+<body>
+
+<div class="page-shell">
+
+  <!-- ── App Bar ── -->
+  <header class="app-bar">
+    <button class="app-bar__back" aria-label="Go back">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3535f3" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+    </button>
+    <h1 class="app-bar__title">Settings</h1>
+    <!-- ic_settings icon (SVG from JDS) -->
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+    </svg>
+  </header>
+
+  <!-- ── Hero Card ── -->
+  <div class="hero-card">
+    <div class="hero-avatar">
+      <div class="hero-avatar-pulse"></div>
+      <!-- Brain / AI icon -->
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.95)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-1.66z"/>
+        <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-1.66z"/>
+      </svg>
+    </div>
+    <div class="hero-name">Hello Jio AI</div>
+    <div class="hero-status">
+      <div class="hero-status__dot"></div>
+      Active &amp; Ready
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat__value">1,284</div>
+        <div class="hero-stat__label">Chats</div>
+      </div>
+      <div class="hero-stat-divider"></div>
+      <div class="hero-stat">
+        <div class="hero-stat__value">98%</div>
+        <div class="hero-stat__label">Accuracy</div>
+      </div>
+      <div class="hero-stat-divider"></div>
+      <div class="hero-stat">
+        <div class="hero-stat__value">62%</div>
+        <div class="hero-stat__label">Memory</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!--  SECTION: AI Behaviour                      -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="section-label">AI Behaviour</div>
+  <div class="settings-card">
+
+    <!-- AI Model -->
+    <div class="model-card-grid">
+      <div class="model-option selected" onclick="selectModel(this)">
+        <div class="model-option__check">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="model-option__name">Jio Smart</div>
+        <div class="model-option__desc">Fast &amp; efficient for everyday tasks</div>
+        <span class="model-option__badge">DEFAULT</span>
+      </div>
+      <div class="model-option" onclick="selectModel(this)">
+        <div class="model-option__check">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="model-option__name">Jio Ultra</div>
+        <div class="model-option__desc">Advanced reasoning &amp; deep analysis</div>
+        <span class="model-option__badge">PRO</span>
+      </div>
+    </div>
+
+    <!-- Response Style -->
+    <div class="setting-row" style="padding-top:0">
+      <div class="setting-row__icon-wrap ic-bg-blue">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3535f3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+      </div>
+      <div class="setting-row__body">
+        <div class="setting-row__title">Response Style</div>
+        <div class="setting-row__subtitle">Tone and length of AI replies</div>
+      </div>
+      <div class="setting-row__right">
+        <select class="native-select" onchange="this.blur()">
+          <option>Concise</option>
+          <option>Balanced</option>
+          <option>Detailed</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Creativity Level -->
+    <div class="setting-row">
+      <div class="setting-row__icon-wrap ic-bg-purple">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+      </div>
+      <div class="setting-row__body">
+        <div class="setting-row__title">Creativity Level</div>
+        <div class="setting-row__subtitle">How imaginative the AI is</div>
+      </div>
+      <div class="setting-row__right">
+        <select class="native-select" onchange="this.blur()">
+          <option>Balanced</option>
+          <option>Precise</option>
+          <option>Creative</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Auto Suggestions -->
+    <div class="setting-row">
+      <div class="setting-row__icon-wrap ic-bg-teal">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0891b2" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+      </div>
+      <div class="setting-row__body">
+        <div class="setting-row__title">Smart Suggestions</div>
+        <div class="setting-row__subtitle">Show follow-up prompts</div>
+      </div>
+      <div class="setting-row__right toggle-wrap">
+        <input type="checkbox" class="toggle-input" id="t-suggestions" checked>
+        <label class="toggle-track" for="t-suggestions"><div class="toggle-thumb"></div></label>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!--  SECTION: Memory & Context                  -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="section-label">Memory &amp; Context</div>
+  <div class="settings-card">
+
+    <!-- Personalised Memory toggle -->
+    <div class="setting-row">
+      <div class="setting-row__icon-wrap ic-bg-green">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <ellipse cx="12" cy="5" rx="9" ry="3"/>
+          <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+          <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+        </svg>
+      </div>
+      <div class="setting-row__body">
+        <div class="setting-row__title">Personalised Memory</div>
+        <div class="setting-row__subtitle">Remember your preferences &amp; history</div>
+      </div>
+      <div class="setting-row__right toggle-wrap">
+        <input type="checkbox" class="toggle-input" id="t-memory" checked>
+        <label class="toggle-track" for="t-memory"><div class="toggle-thumb"></div></label>
+      </div>
+    </div>
+
+    <!-- Memory usage bar -->
+    <div class="memory-bar-wrap">
+      <div class="memory-bar-header">
+        <span class="memory-bar-label">Memory used</span>
+        <span class="memory-bar-value">620 MB / 1 GB</span>
+      </div>
+      <div class="memory-bar-track">
+        <div class="memory-bar-fill"></div>
+      </div>
+    </div>
+
+    <!-- Cross-session context -->
+    <div class="setting-row" style="padding-top:0">
+      <div class="setting-row__icon-wrap ic-bg-orange">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+      </div>
+      <div class="setting-row__body">
+        <div class="setting-row__title">Cross-session Context</div>
+        <div class="setting-row__subtitle">Carry context between conversations</div>
+      </div>
+      <div class="setting-row__right toggle-wrap">
+        <input type="checkbox" class="toggle-input" id="t-cross">
+        <label class="toggle-track" for="t-cross"><div class="toggle-thumb"></div></label>
+      </div>
+    </div>
+
+    <!-- View Memory -->
+    <div class="setting-row">
+      <div class="setting-row__icon-wrap ic-bg-grey">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+          <polyline points="10 9 9 9 8 9"/>
+        </svg>
+      </div>
+      <div class="setting-row__body">
+        <div class="setting-row__title">View Saved Memory</div>
+        <div class="setting-row__subtitle">Browse what AI remembers about you</div>
+      </div>
+      <div class="setting-row__right chevron-right">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b3b3b3" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!--  SECTION: Voice & Language                  -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="section-label">Voice &amp; Language</div>
+  <div class="settings-card">
+
+    <!-- Voice Input -->
+    <div class="setting-row">
+      <div class="setting-row__icon-wrap ic-bg-blue">
+        <!-- ic_mic -->
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3535f3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+          <line x1="12" y1="19" x2="12" y2="23"/>
+          <line x1="8" y1="23" x2="16" y2="23"/>
+        </svg>
+      </div>
+      <div class="setting-row__body">
+        <div class="setting-row__title">Voice Input</div>
+        <div class="setting-row__subtitle">Speak to interact with AI</div>
+      </div>
+      <div class="setting-row__right toggle-wrap">
+        <input type="checkbox" class="toggle-input" id="t-voice" checked>
+        <label class="toggle-track" for="t-voice"><div class="toggle-thumb"></div></label>
+      </div>
+    </div>
+
+    <!-- Language -->
+    <div class="setting-row">
+      <div class="setting-row__icon-wrap ic-bg-teal">
+        <!-- ic_language -->
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0891b2" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="2" y1="12" x2="22" y2="12"/>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+        </svg>
+      </div>
+      <div class="setting-row__body">
+        <div class="setting-row__title">Language</div>
+        <div class="setting-row__subtitle">AI response language</div>
+      </div>
+      <div class="setting-row__right">
+        <select class="native-select" onchange="this.blur()">
+          <option>English</option>
+          <option>Hindi</option>
+          <option>Tamil</option>
+          <option>Telugu</option>
+          <option>Marathi</option>
+          <option>Bengali</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Voice Speed -->
+    <div class="setting-row">
+      <div class="setting-row__icon-wrap ic-bg-purple">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+          <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+        </svg>
+      </div>
+      <div class="setting-row__body">
+        <div class="setting-row__title">Voice Speed</div>
+        <div class="setting-row__subtitle">Speech playback rate</div>
+      </div>
+      <div class="setting-row__right">
+        <select class="native-select" onchange="this.blur()">
+          <option>Normal</option>
+          <option>Slow</option>
+          <option>Fast</option>
+        </select>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!--  SECTION: Notifications                     -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="section-label">Notifications</div>
+  <div class="settings-card">
+
+    <!-- Push Notifications -->
+    <div class="setting-row">
+      <div class="setting-row__icon-wrap ic-bg-orange">
+        <!-- ic_notifications -->
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+        </svg>
+      </div>
+      <div class="setting-row__body">
+        <div class="setting-row__title">Push Notifications</div>
+        <div class="setting-row__subtitle">AI replies &amp; task alerts</div>
+      </div>
+      <div class="setting-row__right toggle-wrap">
+        <input type="checkbox" class="toggle-input" id="t-notif" checked>
+        <label class="toggle-track" for="t-notif"><div class="toggle-thumb"></div></label>
+      </div>
+    </div>
+
+    <!-- Daily Digest -->
+    <div class="setting-row">
+      <div class="setting-row__icon-wrap ic-bg-blue">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3535f3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+      </div>
+      <div class="setting-row__body">
+        <div class="setting-row__title">Daily Digest</div>
+        <div class="setting-row__subtitle">Morning AI summary of your day</div>
+      </div>
+      <div class="setting-row__right toggle-wrap">
+        <input type="checkbox" class="toggle-input" id="t-digest">
+        <label class="toggle-track" for="t-digest"><div class="toggle-thumb"></div></label>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!--  SECTION: Appearance                        -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="section-label">Appearance</div>
+  <div class="settings-card">
+
+    <!-- Dark Mode -->
+    <div class="setting-row">
+      <div class="setting-row__icon-wrap" style="background:#1e1b4b">
+        <!-- ic_night -->
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a5b4fc" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </div>
+      <div class="setting-row__body">
+        <div class="setting-row__title">Dark Mode</div>
+        <div class="setting-row__subtitle">Switch to dark theme</div>
+      </div>
+      <div class="setting-row__right toggle-wrap">
+        <input type="checkbox" class="toggle-input" id="t-dark" onchange="toggleDark(this)">
+        <label class="toggle-track" for="t-dark"><div class="toggle-thumb"></div></label>
+      </div>
+    </div>
+
+    <!-- Chat Bubble Style -->
+    <div class="setting-row">
+      <div class="setting-row__icon-wrap ic-bg-purple">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+        </svg>
+      </div>
+      <div class="setting-row__body">
+        <div class="setting-row__title">Chat Bubble Style</div>
+        <div class="setting-row__subtitle">Appearance of message bubbles</div>
+      </div>
+      <div class="setting-row__right">
+        <select class="native-select" onchange="this.blur()">
+          <option>Rounded</option>
+          <option>Square</option>
+          <option>Minimal</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Font Size -->
+    <div class="setting-row">
+      <div class="setting-row__icon-wrap ic-bg-grey">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="4 7 4 4 20 4 20 7"/>
+          <line x1="9" y1="20" x2="15" y2="20"/>
+          <line x1="12" y1="4" x2="12" y2="20"/>
+        </svg>
+      </div>
+      <div class="setting-row__body">
+        <div class="setting-row__title">Font Size</div>
+        <div class="setting-row__subtitle">Text size in chat</div>
+      </div>
+      <div class="setting-row__right">
+        <select class="native-select" onchange="this.blur()">
+          <option>Medium</option>
+          <option>Small</option>
+          <option>Large</option>
+        </select>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!--  SECTION: Privacy & Data                    -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="section-label">Privacy &amp; Data</div>
+  <div class="settings-card">
+
+    <!-- Analytics -->
+    <div class="setting-row">
+      <div class="setting-row__icon-wrap ic-bg-green">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="20" x2="18" y2="10"/>
+          <line x1="12" y1="20" x2="12" y2="4"/>
+          <line x1="6" y1="20" x2="6" y2="14"/>
+        </svg>
+      </div>
+      <div class="setting-row__body">
+        <div class="setting-row__title">Share Usage Analytics</div>
+        <div class="setting-row__subtitle">Help improve Jio AI</div>
+      </div>
+      <div class="setting-row__right toggle-wrap">
+        <input type="checkbox" class="toggle-input" id="t-analytics" checked>
+        <label class="toggle-track" for="t-analytics"><div class="toggle-thumb"></div></label>
+      </div>
+    </div>
+
+    <!-- Privacy Policy -->
+    <div class="setting-row">
+      <div class="setting-row__icon-wrap ic-bg-grey">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+      </div>
+      <div class="setting-row__body">
+        <div class="setting-row__title">Privacy Policy</div>
+        <div class="setting-row__subtitle">How we handle your data</div>
+      </div>
+      <div class="setting-row__right chevron-right">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b3b3b3" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+
+    <!-- Export Data -->
+    <div class="setting-row">
+      <div class="setting-row__icon-wrap ic-bg-blue">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3535f3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+      </div>
+      <div class="setting-row__body">
+        <div class="setting-row__title">Export My Data</div>
+        <div class="setting-row__subtitle">Download your chat history</div>
+      </div>
+      <div class="setting-row__right chevron-right">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b3b3b3" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!--  SECTION: Danger Zone                       -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="section-label">Danger Zone</div>
+  <div class="settings-card">
+
+    <!-- Clear Chat History -->
+    <button class="danger-btn" onclick="confirmClear('Clear all chat history? This cannot be undone.')">
+      <div class="setting-row__icon-wrap ic-bg-red">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fa2f40" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="3 6 5 6 21 6"/>
+          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+          <path d="M10 11v6"/>
+          <path d="M14 11v6"/>
+          <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+        </svg>
+      </div>
+      <div class="danger-btn__text">
+        <div class="danger-btn__title">Clear Chat History</div>
+        <div class="danger-btn__subtitle">Permanently delete all conversations</div>
+      </div>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+
+    <!-- Reset AI Settings -->
+    <button class="danger-btn" onclick="confirmClear('Reset all AI settings to defaults?')">
+      <div class="setting-row__icon-wrap ic-bg-red">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fa2f40" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="1 4 1 10 7 10"/>
+          <path d="M3.51 15a9 9 0 1 0 .49-3.14"/>
+        </svg>
+      </div>
+      <div class="danger-btn__text">
+        <div class="danger-btn__title">Reset AI Settings</div>
+        <div class="danger-btn__subtitle">Restore all settings to factory defaults</div>
+      </div>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+
+  </div>
+
+  <!-- ─── Footer ─── -->
+  <div class="footer">
+    <div class="footer__logo">
+      <!-- JioDot icon -->
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="12" fill="#3535f3"/>
+        <circle cx="12" cy="12" r="5" fill="#fff"/>
+      </svg>
+      <span style="font-size:15px;font-weight:700;color:#3535f3;letter-spacing:-0.3px">Jio AI</span>
+    </div>
+    <div class="footer__version">Version 3.1.0 &nbsp;·&nbsp; Build 20260218</div>
+    <div class="footer__version" style="margin-top:2px">Powered by JioBharatIQ</div>
+  </div>
+
+</div>
+
+<!-- ─── Simple toast & interaction logic ─── -->
+<style>
+  .toast {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: #1a1a1a;
+    color: #fff;
+    font-family: 'JioType', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 12px 20px;
+    border-radius: 999px;
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(.34,1.56,.64,1);
+    z-index: 9999;
+    white-space: nowrap;
+    pointer-events: none;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.24);
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Dark Mode overrides */
+  body.dark-mode {
+    background: #0a0a0a;
+    color: #f0f0f0;
+  }
+  body.dark-mode .app-bar { background: #0a0a0a; }
+  body.dark-mode .settings-card { background: #1a1a1a; box-shadow: 0 1px 4px rgba(0,0,0,0.3); }
+  body.dark-mode .setting-row:hover { background: #222; }
+  body.dark-mode .setting-row + .setting-row::before { background: #2a2a2a; }
+  body.dark-mode .setting-row__title { color: #f0f0f0; }
+  body.dark-mode .setting-row__subtitle { color: #888; }
+  body.dark-mode .model-option { background: #1f1f1f; border-color: #2a2a2a; }
+  body.dark-mode .model-option:hover { background: #1a1a4a; border-color: #3535f3; }
+  body.dark-mode .model-option.selected { background: #1a1a4a; }
+  body.dark-mode .model-option__name { color: #f0f0f0; }
+  body.dark-mode .ic-bg-grey { background: #2a2a2a; }
+  body.dark-mode .memory-bar-label { color: #ccc; }
+  body.dark-mode .memory-bar-track { background: #2a2a2a; }
+  body.dark-mode .section-label { color: #666; }
+  body.dark-mode .app-bar__title { color: #f0f0f0; }
+  body.dark-mode .danger-btn:hover { background: #2a1010; }
+</style>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2400);
+  }
+
+  function selectModel(el) {
+    document.querySelectorAll('.model-option').forEach(m => m.classList.remove('selected'));
+    el.classList.add('selected');
+    showToast('AI model updated');
+  }
+
+  function confirmClear(msg) {
+    if (confirm(msg)) {
+      showToast('Done — settings cleared');
+    }
+  }
+
+  function toggleDark(cb) {
+    document.body.classList.toggle('dark-mode', cb.checked);
+    showToast(cb.checked ? 'Dark mode on' : 'Dark mode off');
+  }
+
+  // Show toast on any toggle change
+  document.querySelectorAll('.toggle-input:not(#t-dark)').forEach(inp => {
+    inp.addEventListener('change', () => {
+      const label = inp.closest('.setting-row')?.querySelector('.setting-row__title')?.textContent;
+      showToast((label || 'Setting') + (inp.checked ? ' enabled' : ' disabled'));
+    });
+  });
+
+  // Show toast on select change
+  document.querySelectorAll('.native-select').forEach(sel => {
+    sel.addEventListener('change', () => {
+      const row = sel.closest('.setting-row');
+      const label = row?.querySelector('.setting-row__title')?.textContent;
+      showToast((label || 'Setting') + ' set to ' + sel.value);
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>JioBharatIQ — Onboarding Prototype</title>
+<style>
+/* ── JioType Fonts ─────────────────────────────────────────── */
+@font-face { font-family:'JioType'; font-weight:400; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeVarW05-Regular.woff2') format('woff2'); }
+@font-face { font-family:'JioType'; font-weight:500; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Medium.woff2') format('woff2'); }
+@font-face { font-family:'JioType'; font-weight:700; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Bold.woff2') format('woff2'); }
+@font-face { font-family:'JioType'; font-weight:900; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Black.woff2') format('woff2'); }
+
+/* ── JDS Tokens ────────────────────────────────────────────── */
+:root {
+  --primary:#3535f3; --primary-light:#e8e8fc; --primary-mid:#6464ff;
+  --secondary:#f7ab20; --secondary-light:#fef7e9;
+  --sparkle:#1eccb0; --sparkle-light:#e8faf7;
+  --error:#fa2f40; --warning:#f06d0f; --success:#25ab21;
+  --grey-100:#141414; --grey-60:#b5b5b5; --grey-40:#e0e0e0; --grey-20:#f5f5f5;
+  --surface:#ffffff; --surface-ghost:#eeeeef; --surface-icon:#e7e9ff;
+  --surface-bold:#3900ad; --surface-min:#f5f5f5;
+  --text-hi:#141414; --text-lo:rgba(25,27,30,0.65); --text-dis:rgba(25,27,30,0.38);
+  --stroke:rgba(36,38,43,0.12);
+  --sp-xs:8px; --sp-s:12px; --sp-m:16px; --sp-l:20px; --sp-xl:24px; --sp-2xl:32px;
+  --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:24px; --r-2xl:32px; --r-pill:999px;
+  --font:'JioType','Outfit',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:#0f0f1a;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 16px}
+
+/* ── Phone ─────────────────────────────────────────────────── */
+.phone{width:360px;height:780px;background:#000;border-radius:44px;box-shadow:0 32px 80px rgba(0,0,0,0.7),inset 0 0 0 1px rgba(255,255,255,0.08);position:relative;overflow:hidden;flex-shrink:0}
+.notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:110px;height:26px;background:#000;border-radius:0 0 16px 16px;z-index:999}
+.ps{position:absolute;top:0;left:0;right:0;bottom:0;border-radius:44px;overflow:hidden;background:var(--surface)}
+
+/* ── Status bar ────────────────────────────────────────────── */
+.sb{height:44px;padding:14px 20px 0;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.sb-t{font-size:13px;font-weight:700;color:var(--text-hi)}
+.sb-ic{display:flex;gap:4px;align-items:center}
+.sb-ic svg{width:14px;height:14px;fill:var(--text-hi)}
+
+/* ── Screens ───────────────────────────────────────────────── */
+.scr{position:absolute;top:0;left:0;right:0;bottom:0;display:none;flex-direction:column;background:var(--surface);border-radius:44px;overflow:hidden}
+.scr.on{display:flex}
+
+/* ── Keyframes ─────────────────────────────────────────────── */
+@keyframes sIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes sOut{from{transform:translateX(0)}to{transform:translateX(-22%);opacity:0}}
+@keyframes fIn{from{opacity:0}to{opacity:1}}
+@keyframes fUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes ripple{0%{transform:scale(1);opacity:0.4}100%{transform:scale(2.5);opacity:0}}
+@keyframes shimmer{0%{background-position:-400px 0}100%{background-position:400px 0}}
+@keyframes tIn{from{transform:translateY(72px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes dotPulse{0%,80%,100%{opacity:0.25}40%{opacity:1}}
+
+/* ══ SPLASH ══════════════════════════════════════════════════ */
+#s-splash{background:#fff;align-items:center;justify-content:center;cursor:pointer}
+.sp-inner{display:flex;flex-direction:column;align-items:center;gap:var(--sp-l);animation:fUp 0.6s ease both}
+.logo-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;width:72px;height:72px}
+.ld{border-radius:50%;width:29px;height:29px}
+.ld1{background:#3535f3}.ld2{background:#f7ab20}.ld3{background:#6464ff}.ld4{background:#1eccb0}
+.sp-name{font-size:28px;font-weight:900;color:var(--text-hi);letter-spacing:-0.03em}
+.sp-tag{font-size:14px;font-weight:500;color:var(--text-lo);margin-top:-8px}
+.sp-hint{position:absolute;bottom:52px;font-size:12px;font-weight:500;color:var(--text-dis);animation:fUp 0.5s 1.1s ease both;opacity:0}
+
+/* ══ VOICE ═══════════════════════════════════════════════════ */
+#s-voice{background:#fafaf9}
+.v-body{flex:1;display:flex;flex-direction:column;align-items:center;padding:var(--sp-m) var(--sp-m) var(--sp-s)}
+.v-avatar{width:200px;height:200px;border-radius:50%;overflow:hidden;flex-shrink:0;margin-bottom:var(--sp-l)}
+.v-avatar video{width:100%;height:100%;object-fit:cover}
+.v-title{font-size:24px;font-weight:900;color:var(--text-hi);letter-spacing:-0.03em;text-align:center;line-height:1.25;margin-bottom:var(--sp-xs);animation:fUp 0.4s ease both}
+.v-sub{font-size:15px;font-weight:500;color:var(--text-lo);text-align:center;margin-bottom:var(--sp-2xl);animation:fUp 0.4s 0.1s ease both}
+.mic-wrap{position:relative;display:flex;align-items:center;justify-content:center;width:96px;height:96px;margin-bottom:var(--sp-m);flex-shrink:0}
+.mic-ring{position:absolute;width:80px;height:80px;border-radius:50%;background:rgba(53,53,243,0.16);animation:ripple 1.9s ease-out infinite}
+.mic-ring2{animation-delay:0.75s}
+.mic-btn{width:80px;height:80px;border-radius:50%;background:var(--primary);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative;z-index:2;box-shadow:0 8px 28px rgba(53,53,243,0.38);transition:transform 0.15s}
+.mic-btn:active{transform:scale(0.94)}
+.mic-btn img{width:32px;height:32px;filter:brightness(0) invert(1)}
+.mic-btn.lst{background:var(--error);box-shadow:0 8px 28px rgba(250,47,64,0.38)}
+.v-fb{font-size:14px;font-weight:700;color:var(--text-lo);text-align:center;min-height:20px;margin-bottom:var(--sp-s)}
+.v-fall{width:100%;display:none}
+.v-fall.on{display:block;animation:fUp 0.3s ease both}
+.jds-in{background:var(--surface-ghost);border-radius:var(--r-2xl);padding:14px 18px;display:flex;align-items:center;gap:var(--sp-xs)}
+.jds-in input{flex:1;background:none;border:none;outline:none;font-family:var(--font);font-size:15px;font-weight:500;color:var(--text-hi)}
+.jds-in input::placeholder{color:var(--text-dis)}
+.v-lang{font-size:13px;font-weight:700;color:var(--primary);cursor:pointer;margin-top:var(--sp-xs);text-align:center;display:block}
+
+/* ══ SIGN-UP ═════════════════════════════════════════════════ */
+#s-signup{background:#fff}
+.su-body{flex:1;display:flex;flex-direction:column;padding:var(--sp-l) var(--sp-m);overflow-y:auto}
+.su-body::-webkit-scrollbar{display:none}
+.su-row{display:flex;align-items:center;gap:var(--sp-m);margin-bottom:var(--sp-xl);animation:fUp 0.4s ease both}
+.su-circ{width:52px;height:52px;border-radius:50%;background:var(--surface-icon);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:var(--primary);flex-shrink:0}
+.su-hi{font-size:20px;font-weight:900;color:var(--text-hi);letter-spacing:-0.02em}
+.su-hi em{color:var(--primary);font-style:normal}
+.su-h{font-size:28px;font-weight:900;color:var(--text-hi);letter-spacing:-0.03em;line-height:1.2;margin-bottom:var(--sp-xs);animation:fUp 0.4s 0.06s ease both}
+.su-s{font-size:15px;font-weight:500;color:var(--text-lo);margin-bottom:var(--sp-xl);line-height:1.5;animation:fUp 0.4s 0.1s ease both}
+.ptabs{display:flex;background:var(--surface-ghost);border-radius:var(--r-pill);padding:4px;margin-bottom:var(--sp-xl);animation:fUp 0.4s 0.14s ease both}
+.ptab{flex:1;padding:9px 4px;text-align:center;font-size:12px;font-weight:700;color:var(--text-lo);border-radius:var(--r-pill);cursor:pointer;transition:all 0.2s}
+.ptab.on{background:#fff;color:var(--primary);box-shadow:0 1px 5px rgba(0,0,0,0.11)}
+.jio-card{background:var(--surface-min);border-radius:var(--r-lg);padding:var(--sp-m);display:flex;align-items:center;gap:var(--sp-m);margin-bottom:var(--sp-xl)}
+.jio-sim{width:44px;height:44px;border-radius:var(--r-sm);background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.jio-num{font-size:16px;font-weight:700;color:var(--text-hi)}
+.jio-det{font-size:13px;font-weight:500;color:var(--text-lo)}
+.jio-bdg{margin-left:auto;background:var(--success);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:var(--r-pill)}
+.ph-wrap{background:var(--surface-ghost);border-radius:var(--r-2xl);padding:16px 20px;display:flex;align-items:center;gap:var(--sp-xs);margin-bottom:var(--sp-m)}
+.ph-pre{font-size:16px;font-weight:700;color:var(--text-hi);padding-right:var(--sp-xs);border-right:1px solid var(--stroke)}
+.ph-wrap input{flex:1;background:none;border:none;outline:none;font-family:var(--font);font-size:16px;font-weight:700;color:var(--text-hi);letter-spacing:2px}
+.otp-hint{font-size:13px;font-weight:700;color:var(--primary);margin-bottom:var(--sp-m);display:flex;align-items:center;gap:var(--sp-xs)}
+.otp-hint::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--primary);flex-shrink:0}
+.otp-row{display:flex;gap:var(--sp-xs);margin-bottom:var(--sp-xl)}
+.otp-b{flex:1;height:52px;background:var(--surface-ghost);border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:var(--text-hi);border:2px solid transparent;transition:all 0.2s}
+.otp-b.on{background:var(--primary-light);border-color:var(--primary)}
+.btn-p{width:100%;height:52px;background:var(--primary);color:#fff;border:none;border-radius:var(--r-pill);font-family:var(--font);font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(53,53,243,0.26);transition:transform 0.15s;display:flex;align-items:center;justify-content:center;gap:var(--sp-xs)}
+.btn-p:active{transform:scale(0.98)}
+.btn-s{width:100%;height:48px;background:transparent;color:var(--primary);border:2px solid var(--primary-light);border-radius:var(--r-pill);font-family:var(--font);font-size:15px;font-weight:700;cursor:pointer;margin-top:var(--sp-xs);transition:background 0.15s}
+.btn-s:active{background:var(--primary-light)}
+.skip-l{text-align:center;font-size:13px;font-weight:700;color:var(--text-lo);cursor:pointer;margin-top:var(--sp-m);display:block}
+.sk-box{background:var(--surface-min);border-radius:var(--r-lg);padding:var(--sp-m);margin-bottom:var(--sp-xl)}
+.sk-box-t{font-size:15px;font-weight:700;color:var(--text-hi);margin-bottom:6px}
+.sk-box-s{font-size:13px;font-weight:500;color:var(--text-lo);line-height:1.5}
+
+/* ══ TOP NAV ════════════════════════════════════════════════ */
+.tnav{height:52px;display:flex;align-items:center;padding:0 var(--sp-m);gap:var(--sp-m);border-bottom:1px solid var(--stroke);background:#fff;flex-shrink:0}
+.tnav-menu{width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:var(--r-sm)}
+.tnav-menu img{width:24px;height:24px}
+.tnav-jio{width:36px;height:36px;border-radius:50%;background:#0055cc;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:900;letter-spacing:-0.5px;flex-shrink:0}
+.tnav-sp{flex:1}
+.tnav-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#f7ab20,#ff6644);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#fff;flex-shrink:0}
+
+/* ══ HOME (shared) ══════════════════════════════════════════ */
+.home-scr{flex:1;overflow-y:auto;padding-bottom:78px}
+.home-scr::-webkit-scrollbar{display:none}
+.greet{padding:var(--sp-m) var(--sp-m) var(--sp-xs)}
+.greet-t{font-size:22px;font-weight:900;color:var(--text-hi);letter-spacing:-0.03em;line-height:1.3}
+.greet-t em{color:var(--primary);font-style:normal}
+.tools-row{display:flex;gap:var(--sp-xs);padding:var(--sp-xs) var(--sp-m) var(--sp-s);overflow-x:auto;scrollbar-width:none}
+.tools-row::-webkit-scrollbar{display:none}
+.chip{flex-shrink:0;padding:8px 14px;background:#fff;border:1px solid var(--stroke);border-radius:var(--r-pill);font-size:13px;font-weight:700;color:var(--text-hi);cursor:pointer;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,0.05);transition:all 0.15s}
+.chip:active{background:var(--primary-light);border-color:var(--primary);color:var(--primary)}
+.sec-lbl{font-size:16px;font-weight:900;color:var(--text-hi);padding:var(--sp-s) var(--sp-m) var(--sp-xs);letter-spacing:-0.02em}
+.task-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-s);padding:0 var(--sp-m) var(--sp-m)}
+.tc{background:#fff;border-radius:var(--r-lg);padding:var(--sp-m);border:1px solid var(--stroke);box-shadow:0 1px 4px rgba(0,0,0,0.04);cursor:pointer;display:flex;flex-direction:column;gap:var(--sp-xs);min-height:104px;transition:all 0.15s}
+.tc:active{transform:scale(0.96);box-shadow:0 4px 16px rgba(53,53,243,0.12);border-color:var(--primary-light)}
+.tc-ico{width:40px;height:40px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.tc-ico img{width:22px;height:22px}
+.tc-lbl{font-size:14px;font-weight:700;color:var(--text-hi);line-height:1.3}
+/* Chat bar */
+.chat-bar{position:absolute;bottom:0;left:0;right:0;padding:var(--sp-xs) var(--sp-m) var(--sp-m);background:rgba(255,255,255,0.97);backdrop-filter:blur(10px);border-top:1px solid var(--stroke)}
+.chat-in{display:flex;align-items:center;gap:var(--sp-xs);background:var(--surface-ghost);border-radius:var(--r-pill);padding:8px 8px 8px 14px}
+.chat-plus{width:32px;height:32px;border-radius:50%;background:var(--primary-light);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+.chat-plus img{width:18px;height:18px}
+.chat-txt{flex:1;background:none;border:none;outline:none;font-family:var(--font);font-size:15px;font-weight:500;color:var(--text-hi)}
+.chat-txt::placeholder{color:var(--text-dis)}
+.chat-mic{width:36px;height:36px;border-radius:50%;border:2px solid var(--stroke);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+.chat-mic img{width:18px;height:18px}
+.spk-btn{background:var(--primary);color:#fff;border:none;border-radius:var(--r-pill);padding:10px 16px;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;flex-shrink:0;box-shadow:0 2px 8px rgba(53,53,243,0.26);transition:transform 0.15s}
+.spk-btn:active{transform:scale(0.96)}
+.spk-btn img{width:16px;height:16px;filter:brightness(0) invert(1)}
+
+/* ══ CAMERA ══════════════════════════════════════════════════ */
+.cam{position:absolute;top:0;left:0;right:0;bottom:0;background:#000;z-index:50;display:none;flex-direction:column;border-radius:44px;overflow:hidden}
+.cam.on{display:flex}
+.cam-top{background:#000;padding:12px 16px;display:flex;align-items:center;gap:var(--sp-m);flex-shrink:0}
+.cam-back{background:none;border:none;cursor:pointer;padding:4px;display:flex;align-items:center;justify-content:center}
+.cam-back svg{fill:#fff;width:24px;height:24px}
+.cam-lbl{color:#fff;font-size:15px;font-weight:700;font-family:var(--font)}
+.cam-frame{flex:1;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.cam-bg{position:absolute;inset:0;background:#111;display:flex;align-items:center;justify-content:center}
+.bill{width:73%;background:#fff;border-radius:var(--r-lg);padding:var(--sp-m);box-shadow:0 8px 40px rgba(0,0,0,0.5)}
+.bill-co{font-size:11px;font-weight:700;color:#444;margin-bottom:var(--sp-xs);padding-bottom:var(--sp-xs);border-bottom:1px solid #eee;line-height:1.4}
+.bill-r{display:flex;justify-content:space-between;font-size:12px;font-weight:500;color:var(--text-hi);padding:3px 0}
+.bill-div{border:none;border-top:1px solid #eee;margin:8px 0}
+.bill-lbl{font-size:11px;font-weight:500;color:#888}
+.bill-amt{font-size:26px;font-weight:900;color:var(--text-hi);margin:2px 0 4px}
+.bill-note{font-size:11px;color:#aaa;font-weight:500}
+.cam-corners{position:absolute;inset:0;pointer-events:none;display:flex;align-items:center;justify-content:center}
+.ci{position:relative;width:calc(73% + 24px);height:62%}
+.cn{position:absolute;width:22px;height:22px;border-color:#fff;border-style:solid;border-width:0}
+.cn-tl{top:0;left:0;border-top-width:3px;border-left-width:3px;border-radius:4px 0 0 0}
+.cn-tr{top:0;right:0;border-top-width:3px;border-right-width:3px;border-radius:0 4px 0 0}
+.cn-bl{bottom:0;left:0;border-bottom-width:3px;border-left-width:3px;border-radius:0 0 0 4px}
+.cn-br{bottom:0;right:0;border-bottom-width:3px;border-right-width:3px;border-radius:0 0 4px 0}
+.cam-hint{background:rgba(0,0,0,0.6);color:rgba(255,255,255,0.8);font-size:12px;font-weight:500;text-align:center;padding:10px var(--sp-m);font-family:var(--font)}
+.cam-ctrl{background:#000;padding:var(--sp-l) var(--sp-m);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.shutter{width:72px;height:72px;border-radius:50%;border:4px solid #fff;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform 0.15s}
+.shutter:active{transform:scale(0.92)}
+.shutter-in{width:56px;height:56px;border-radius:50%;background:#fff;transition:transform 0.15s}
+.shutter:active .shutter-in{transform:scale(0.88)}
+.analyzing{position:absolute;bottom:0;left:0;right:0;background:#fff;border-radius:var(--r-2xl) var(--r-2xl) 0 0;padding:var(--sp-m);z-index:10;display:none;animation:slUp 0.3s ease}
+.analyzing.on{display:block}
+.sk{height:13px;border-radius:var(--r-pill);background:linear-gradient(90deg,#f5f5f5 25%,#e8e8e8 50%,#f5f5f5 75%);background-size:400px 100%;animation:shimmer 1.2s infinite;margin-bottom:var(--sp-xs)}
+.sk.s{width:50%}.sk.m{width:75%}.sk.f{width:100%}
+
+/* ══ BOTTOM SHEET SYSTEM ═══════════════════════════════════ */
+.ov{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.46);z-index:100;display:none;border-radius:44px;overflow:hidden;animation:fIn 0.2s ease}
+.ov.on{display:block}
+.sheet{position:absolute;bottom:0;left:0;right:0;background:#fff;border-radius:var(--r-2xl) var(--r-2xl) 0 0;padding:var(--sp-m);animation:slUp 0.3s ease;max-height:82%}
+.sh{width:40px;height:4px;background:var(--grey-40);border-radius:var(--r-pill);margin:0 auto var(--sp-m)}
+.sh-t{font-size:20px;font-weight:900;color:var(--text-hi);letter-spacing:-0.02em;margin-bottom:var(--sp-xs)}
+.sh-b{font-size:14px;font-weight:500;color:var(--text-lo);margin-bottom:var(--sp-xl);line-height:1.6}
+.sh-b strong{color:var(--text-hi);font-weight:700}
+.sh-acts{display:flex;flex-direction:column;gap:var(--sp-xs)}
+.sh-p{height:52px;background:var(--primary);color:#fff;border:none;border-radius:var(--r-pill);font-family:var(--font);font-size:16px;font-weight:700;cursor:pointer;transition:transform 0.15s;box-shadow:0 4px 16px rgba(53,53,243,0.24)}
+.sh-p:active{transform:scale(0.98)}
+.sh-s{height:48px;background:transparent;color:var(--text-lo);border:none;border-radius:var(--r-pill);font-family:var(--font);font-size:15px;font-weight:700;cursor:pointer}
+
+/* ══ NOTIF DIALOG ══════════════════════════════════════════ */
+.nov{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.52);z-index:110;display:none;border-radius:44px;overflow:hidden;align-items:center;justify-content:center;animation:fIn 0.25s ease}
+.nov.on{display:flex}
+.ndlg{background:#fff;border-radius:var(--r-xl);padding:var(--sp-xl);margin:var(--sp-m);text-align:center;animation:fUp 0.3s ease both;width:100%}
+.ndlg-ico{width:64px;height:64px;border-radius:50%;background:var(--primary-light);display:flex;align-items:center;justify-content:center;margin:0 auto var(--sp-m)}
+.ndlg-ico img{width:32px;height:32px}
+.ndlg-t{font-size:18px;font-weight:900;color:var(--text-hi);letter-spacing:-0.02em;margin-bottom:var(--sp-xs)}
+.ndlg-s{font-size:14px;font-weight:500;color:var(--text-lo);margin-bottom:var(--sp-xl);line-height:1.5}
+.ndlg-acts{display:flex;flex-direction:column;gap:var(--sp-xs)}
+
+/* ══ TOAST ══════════════════════════════════════════════════ */
+.toast{position:absolute;bottom:82px;left:var(--sp-m);right:var(--sp-m);background:var(--grey-100);color:#fff;border-radius:var(--r-lg);padding:var(--sp-m);display:none;align-items:center;gap:var(--sp-s);z-index:200;box-shadow:0 8px 24px rgba(0,0,0,0.32)}
+.toast.on{display:flex;animation:tIn 0.3s ease}
+.t-ico{width:32px;height:32px;border-radius:50%;background:var(--success);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.t-ico img{width:18px;height:18px;filter:brightness(0) invert(1)}
+.t-txt{flex:1;font-size:14px;font-weight:700;color:#fff;line-height:1.4}
+
+/* ══ LANG SHEET ═════════════════════════════════════════════ */
+.lang-ov{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.46);z-index:120;display:none;border-radius:44px;overflow:hidden}
+.lang-ov.on{display:block;animation:fIn 0.2s ease}
+.lang-sh{position:absolute;bottom:0;left:0;right:0;background:#fff;border-radius:var(--r-2xl) var(--r-2xl) 0 0;padding:var(--sp-m);animation:slUp 0.3s ease;max-height:72%}
+.lang-t{font-size:20px;font-weight:900;color:var(--text-hi);letter-spacing:-0.02em;margin-bottom:var(--sp-m)}
+.lang-opts{display:flex;flex-direction:column;gap:4px;margin-bottom:var(--sp-m)}
+.lang-opt{padding:13px var(--sp-m);border-radius:var(--r-md);font-size:15px;font-weight:700;color:var(--text-hi);cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:background 0.15s}
+.lang-opt:active{background:var(--surface-min)}
+.lang-opt.sel{background:var(--primary-light);color:var(--primary)}
+.lang-close{height:44px;background:transparent;color:var(--text-lo);border:none;font-family:var(--font);font-size:15px;font-weight:700;cursor:pointer;width:100%;border-radius:var(--r-pill)}
+
+/* ══ DAY 1+ PINNED CARD ══════════════════════════════════════ */
+.pin{margin:var(--sp-m) var(--sp-m) var(--sp-xs);background:var(--surface-bold);border-radius:var(--r-lg);padding:var(--sp-m);color:#fff;animation:fUp 0.4s ease both}
+.pin-lbl{font-size:10px;font-weight:700;opacity:0.58;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:var(--sp-xs)}
+.pin-t{font-size:17px;font-weight:900;letter-spacing:-0.02em;margin-bottom:3px}
+.pin-s{font-size:13px;font-weight:500;opacity:0.72;margin-bottom:var(--sp-m)}
+.pin-acts{display:flex;gap:var(--sp-xs)}
+.pin-pay{flex:1;height:40px;background:#fff;color:var(--surface-bold);border:none;border-radius:var(--r-pill);font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;transition:transform 0.15s}
+.pin-pay:active{transform:scale(0.97)}
+.pin-snz{flex:1;height:40px;background:rgba(255,255,255,0.14);color:#fff;border:none;border-radius:var(--r-pill);font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;transition:transform 0.15s}
+.pin-snz:active{transform:scale(0.97)}
+/* Assistants */
+.asst-row{display:flex;gap:var(--sp-m);padding:4px var(--sp-m) var(--sp-s);overflow-x:auto;scrollbar-width:none}
+.asst-row::-webkit-scrollbar{display:none}
+.asst{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer}
+.asst-av{width:64px;height:64px;border-radius:50%;background:var(--surface-icon);border:2.5px solid var(--primary);display:flex;align-items:center;justify-content:center;font-size:26px;transition:transform 0.15s}
+.asst-av:active{transform:scale(0.93)}
+.asst-nm{font-size:11px;font-weight:700;color:var(--text-hi)}
+/* News card */
+.news-card{margin:var(--sp-xs) var(--sp-m) var(--sp-m);background:#fff;border-radius:var(--r-lg);padding:var(--sp-m);border:1px solid var(--stroke);box-shadow:0 1px 4px rgba(0,0,0,0.04)}
+.news-lbl{font-size:10px;font-weight:700;color:var(--text-lo);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:var(--sp-xs)}
+.news-t{font-size:17px;font-weight:900;color:var(--text-hi);letter-spacing:-0.02em;margin-bottom:4px}
+.news-s{font-size:13px;font-weight:500;color:var(--text-lo);margin-bottom:var(--sp-m)}
+.audio{background:var(--surface-ghost);border-radius:var(--r-md);padding:var(--sp-s);display:flex;align-items:center;gap:var(--sp-s)}
+.audio-btn{width:36px;height:36px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;border:none}
+.audio-btn svg{fill:#fff;width:18px;height:18px}
+.audio-bar{flex:1;height:4px;background:var(--primary-light);border-radius:var(--r-pill)}
+.audio-fill{width:28%;height:100%;background:var(--primary);border-radius:var(--r-pill)}
+.audio-dur{font-size:13px;font-weight:700;color:var(--text-lo)}
+
+/* ══ DEMO NAV ═══════════════════════════════════════════════ */
+.dnav{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(8,8,16,0.9);backdrop-filter:blur(12px);border-radius:var(--r-pill);padding:8px 12px;display:flex;gap:6px;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,0.4)}
+.db{padding:6px 12px;border-radius:var(--r-pill);background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.65);font-size:11px;font-weight:700;cursor:pointer;border:none;font-family:var(--font);white-space:nowrap;transition:all 0.15s}
+.db:hover{background:rgba(255,255,255,0.18);color:#fff}
+.db.cur{background:var(--primary);color:#fff}
+.pbadge{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(8,8,16,0.85);backdrop-filter:blur(10px);color:rgba(255,255,255,0.65);font-size:11px;font-weight:700;font-family:var(--font);padding:6px 14px;border-radius:var(--r-pill);white-space:nowrap;z-index:9998;letter-spacing:0.02em}
+</style>
+</head>
+<body>
+
+<div class="pbadge">👤 Ramesh Kumar · Raipur · Jio SIM · Hindi</div>
+
+<div class="dnav">
+  <button class="db cur" id="nb-splash" onclick="jump('s-splash')">Splash</button>
+  <button class="db"     id="nb-voice"  onclick="jump('s-voice')">Voice</button>
+  <button class="db"     id="nb-signup" onclick="jump('s-signup')">Sign-up</button>
+  <button class="db"     id="nb-home0"  onclick="jump('s-home0')">Day 0</button>
+  <button class="db"     id="nb-home1"  onclick="jump('s-home1')">Day 1+</button>
+</div>
+
+<div class="phone">
+  <div class="notch"></div>
+  <div class="ps">
+
+  <!-- ═══════════ SCREEN 1 — SPLASH ═══════════════════════════ -->
+  <div id="s-splash" class="scr on" onclick="go('s-voice')">
+    <div class="sp-inner">
+      <div class="logo-grid">
+        <div class="ld ld1"></div><div class="ld ld2"></div>
+        <div class="ld ld3"></div><div class="ld ld4"></div>
+      </div>
+      <div class="sp-name">JioBharatIQ</div>
+      <div class="sp-tag">Apni bhasha, apna AI</div>
+    </div>
+    <div class="sp-hint">Tap to continue</div>
+  </div>
+
+  <!-- ═══════════ SCREEN 2 — VOICE ENTRY ══════════════════════ -->
+  <div id="s-voice" class="scr">
+    <div class="sb">
+      <span class="sb-t">9:30</span>
+      <div class="sb-ic">
+        <svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+      </div>
+    </div>
+    <div class="v-body">
+      <div class="v-avatar">
+        <video id="vid-bot" autoplay loop muted playsinline
+          src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/states/Light/Speaking_State.mp4"></video>
+      </div>
+      <div class="v-title" id="v-title">Namaste! 🙏</div>
+      <div class="v-sub"   id="v-sub">Apni bhasha mein apna naam batayein</div>
+      <div class="mic-wrap" id="mic-wrap">
+        <div class="mic-ring"></div>
+        <div class="mic-ring mic-ring2"></div>
+        <button class="mic-btn" id="mic-btn" onclick="micTap()">
+          <img src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/icons/svg/ic_mic.svg" alt="mic">
+        </button>
+      </div>
+      <div class="v-fb" id="v-fb"></div>
+      <div class="v-fall" id="v-fall">
+        <div class="jds-in">
+          <img src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/icons/svg/ic_profile.svg"
+            width="18" height="18" style="opacity:0.35;flex-shrink:0"
+            onerror="this.style.display='none'">
+          <input id="name-inp" type="text" placeholder="Apna naam type karein..."
+            onkeydown="if(event.key==='Enter')typedName()">
+        </div>
+        <button class="btn-p" style="margin-top:12px" onclick="typedName()">Aage badhein →</button>
+      </div>
+      <a class="v-lang" onclick="showLang()">🌐 Bhasha badlein?</a>
+    </div>
+  </div>
+
+  <!-- ═══════════ SCREEN 3 — SIGN-UP ══════════════════════════ -->
+  <div id="s-signup" class="scr">
+    <div class="sb">
+      <span class="sb-t">9:30</span>
+      <div class="sb-ic">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="#141414"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="#141414"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+      </div>
+    </div>
+    <div class="su-body">
+      <div class="su-row">
+        <div class="su-circ" id="su-circ">R</div>
+        <div class="su-hi">Namaste, <em id="su-name">Ramesh ji</em>! 👋</div>
+      </div>
+      <div class="su-h">Taaki main yaad<br>rakh sakun</div>
+      <div class="su-s">Apna number save karo — reminders aur kaam yaad dilaunga</div>
+      <div class="ptabs">
+        <div class="ptab on"  id="pt-jio"   onclick="swPath('jio')">Jio SIM</div>
+        <div class="ptab"     id="pt-other" onclick="swPath('other')">Dusra number</div>
+        <div class="ptab"     id="pt-skip"  onclick="swPath('skip')">Baad mein</div>
+      </div>
+
+      <!-- Jio path -->
+      <div id="p-jio">
+        <div class="jio-card">
+          <div class="jio-sim">📱</div>
+          <div>
+            <div class="jio-num">+91 8XXXXXXXX1</div>
+            <div class="jio-det">Jio SIM detect hui</div>
+          </div>
+          <div class="jio-bdg">Jio ✓</div>
+        </div>
+        <button class="btn-p" onclick="doneSignup()">Haan, isi se continue karein</button>
+        <button class="btn-s" onclick="swPath('other')">Nahi, dusra number dunga</button>
+        <span class="skip-l" onclick="doneSignup()">Abhi nahi</span>
+      </div>
+
+      <!-- Non-Jio path -->
+      <div id="p-other" style="display:none">
+        <div class="ph-wrap">
+          <span class="ph-pre">+91</span>
+          <input type="tel" id="ph-inp" placeholder="Mobile number" maxlength="10" oninput="phInput(this)">
+        </div>
+        <button class="btn-p" id="otp-btn" style="display:none;margin-bottom:12px" onclick="fireOTP()">OTP bhejein</button>
+        <div id="otp-area" style="display:none">
+          <div class="otp-hint">SMS se OTP aa raha hai...</div>
+          <div class="otp-row">
+            <div class="otp-b" id="ob0"></div><div class="otp-b" id="ob1"></div>
+            <div class="otp-b" id="ob2"></div><div class="otp-b" id="ob3"></div>
+            <div class="otp-b" id="ob4"></div><div class="otp-b" id="ob5"></div>
+          </div>
+          <button class="btn-p" onclick="doneSignup()">Verify karein</button>
+        </div>
+        <span class="skip-l" onclick="doneSignup()">Abhi nahi</span>
+      </div>
+
+      <!-- Skip path -->
+      <div id="p-skip" style="display:none">
+        <div class="sk-box">
+          <div class="sk-box-t">Bina number ke bhi chalega</div>
+          <div class="sk-box-s">Reminders aur personal suggestions ke liye baad mein number add karo — tab bhi welcome ho</div>
+        </div>
+        <button class="btn-p" onclick="doneSignup()">Abhi ke liye skip karein</button>
+        <button class="btn-s" onclick="swPath('jio')">Number save karna chahta hoon</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ SCREEN 4 — DAY 0 HOME ═══════════════════════ -->
+  <div id="s-home0" class="scr">
+    <div class="sb" style="background:#fff">
+      <span class="sb-t">9:30</span>
+      <div class="sb-ic">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="#141414"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="#141414"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+      </div>
+    </div>
+    <div class="tnav">
+      <div class="tnav-menu">
+        <img src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/icons/svg/ic_burger_menu.svg"
+          onerror="this.outerHTML='<span style=\'font-size:20px;font-weight:900;color:#141414\'>≡</span>'">
+      </div>
+      <div class="tnav-jio">Jio</div>
+      <div class="tnav-sp"></div>
+      <div class="tnav-av" id="h0-av">R</div>
+    </div>
+
+    <div class="home-scr" style="background:#fafaf9">
+      <div class="greet">
+        <div class="greet-t" id="h0-greet">Shaam ko kya karein,<br><em>Ramesh ji?</em></div>
+      </div>
+      <div class="tools-row">
+        <div class="chip">✍️ Write</div>
+        <div class="chip">🖼️ Create an image</div>
+        <div class="chip">🔍 Analyse</div>
+        <div class="chip">✏️ Edit images</div>
+        <div class="chip">🌐 Translate</div>
+      </div>
+      <div class="sec-lbl">Abhi karo</div>
+      <div class="task-grid">
+        <div class="tc" onclick="doAct('bijli')">
+          <div class="tc-ico" style="background:#fff9ed">
+            <img src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/icons/svg/ic_document.svg" alt=""
+              onerror="this.outerHTML='<span style=\'font-size:20px\'>📄</span>'">
+          </div>
+          <div class="tc-lbl">Bijli bill scan karo</div>
+        </div>
+        <div class="tc" onclick="doAct('dawai')">
+          <div class="tc-ico" style="background:#e8faf7">
+            <img src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/icons/svg/ic_alarm.svg" alt=""
+              onerror="this.outerHTML='<span style=\'font-size:20px\'>⏰</span>'"
+              style="filter:hue-rotate(160deg) saturate(1.1)">
+          </div>
+          <div class="tc-lbl">Dawai ka reminder</div>
+        </div>
+        <div class="tc" onclick="doAct('mausam')">
+          <div class="tc-ico" style="background:#fef7e9">
+            <img src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/icons/svg/ic_sunny_clear.svg" alt=""
+              onerror="this.outerHTML='<span style=\'font-size:20px\'>☀️</span>'">
+          </div>
+          <div class="tc-lbl">Aaj ka mausam</div>
+        </div>
+        <div class="tc" onclick="doAct('yojana')">
+          <div class="tc-ico" style="background:var(--primary-light)">
+            <img src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/icons/svg/ic_task.svg" alt=""
+              onerror="this.outerHTML='<span style=\'font-size:20px\'>📋</span>'">
+          </div>
+          <div class="tc-lbl">Govt yojana dekho</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-bar">
+      <div class="chat-in">
+        <div class="chat-plus">
+          <img src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/icons/svg/ic_add.svg" alt="+"
+            onerror="this.outerHTML='<span style=\'font-size:18px;color:var(--primary)\'>+</span>'">
+        </div>
+        <input class="chat-txt" id="h0-inp" placeholder="Hey Ramesh ji, kya sochte hain?">
+        <button class="chat-mic">
+          <img src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/icons/svg/ic_mic.svg" alt="mic">
+        </button>
+        <button class="spk-btn">
+          <img src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/icons/svg/ic_mic.svg" alt="">
+          Speak
+        </button>
+      </div>
+    </div>
+
+    <!-- Camera overlay -->
+    <div class="cam" id="cam">
+      <div class="cam-top">
+        <button class="cam-back" onclick="closeCam()">
+          <svg viewBox="0 0 24 24"><path d="M20 11H7.83l4.88-4.88c.39-.39.39-1.03 0-1.42-.39-.39-1.02-.39-1.41 0l-6.59 6.59c-.39.39-.39 1.02 0 1.41l6.59 6.59c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L7.83 13H20c.55 0 1-.45 1-1s-.45-1-1-1z"/></svg>
+        </button>
+        <span class="cam-lbl">Bijli bill ka photo lo</span>
+      </div>
+      <div class="cam-frame">
+        <div class="cam-bg">
+          <div class="bill">
+            <div class="bill-co">⚡ Madhya Pradesh Poorv Kshetra Vidyut Vitaran Company Ltd.</div>
+            <div class="bill-r"><span>Consumer No.</span><span>1402xxxxxx</span></div>
+            <div class="bill-r"><span>Bill Month</span><span>March 2026</span></div>
+            <div class="bill-r"><span>Due Date</span><span style="font-weight:700;color:#e30412">18 April 2026</span></div>
+            <hr class="bill-div">
+            <div class="bill-lbl">Total Amount Due</div>
+            <div class="bill-amt">₹1,240</div>
+            <div class="bill-note">Pay before 18 April to avoid late payment surcharge</div>
+          </div>
+        </div>
+        <div class="cam-corners">
+          <div class="ci">
+            <div class="cn cn-tl"></div><div class="cn cn-tr"></div>
+            <div class="cn cn-bl"></div><div class="cn cn-br"></div>
+          </div>
+        </div>
+        <div class="analyzing" id="analyzing">
+          <div class="sh" style="background:var(--grey-40)"></div>
+          <div style="text-align:center;font-size:14px;font-weight:700;color:var(--text-lo);margin-bottom:14px">Padh raha hoon ✨</div>
+          <div class="sk f"></div><div class="sk m"></div><div class="sk s"></div>
+        </div>
+      </div>
+      <div class="cam-hint">Bill ko frame ke andar rakhein · Phir shutter dabayein</div>
+      <div class="cam-ctrl">
+        <button class="shutter" onclick="capturePhoto()"><div class="shutter-in"></div></button>
+      </div>
+    </div>
+
+    <!-- Bottom sheet overlay -->
+    <div class="ov" id="ov0" onclick="closeSheet()">
+      <div id="sh0" onclick="event.stopPropagation()"></div>
+    </div>
+
+    <!-- Notification dialog -->
+    <div class="nov" id="nov">
+      <div class="ndlg">
+        <div class="ndlg-ico">
+          <img src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/icons/svg/ic_notification.svg" alt=""
+            onerror="this.outerHTML='<span style=\'font-size:28px\'>🔔</span>'">
+        </div>
+        <div class="ndlg-t">Notification allow karein?</div>
+        <div class="ndlg-s">18 April ko bijli bill ka reminder bhejunga — time pe pay karo aur late fee bachao</div>
+        <div class="ndlg-acts">
+          <button class="sh-p" onclick="allowNotif()">Allow karein</button>
+          <button class="sh-s" onclick="skipNotif()">Abhi nahi</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+      <div class="t-ico">
+        <img src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/icons/svg/ic_success.svg" alt=""
+          onerror="this.outerHTML='<span style=\'color:#fff;font-weight:900\'>✓</span>'">
+      </div>
+      <div class="t-txt" id="toast-txt">Reminder set ho gaya!</div>
+    </div>
+  </div><!-- s-home0 -->
+
+  <!-- ═══════════ SCREEN 5 — DAY 1+ HOME ═══════════════════════ -->
+  <div id="s-home1" class="scr">
+    <div class="sb" style="background:#fff">
+      <span class="sb-t">6:15</span>
+      <div class="sb-ic">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="#141414"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="#141414"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+      </div>
+    </div>
+    <div class="tnav">
+      <div class="tnav-menu" style="font-size:20px;font-weight:900;color:var(--text-hi);cursor:pointer">≡</div>
+      <div class="tnav-jio">Jio</div>
+      <div class="tnav-sp"></div>
+      <div class="tnav-av">R</div>
+    </div>
+    <div class="home-scr" style="background:#fafaf9">
+      <div class="greet">
+        <div class="greet-t"><em>Ramesh ji,</em> bill 18 ko due hai</div>
+      </div>
+      <div class="pin">
+        <div class="pin-lbl">Active Task · Pinned</div>
+        <div class="pin-t">Bijli bill ₹1,240</div>
+        <div class="pin-s">18 April ko due · 11 din baaki</div>
+        <div class="pin-acts">
+          <button class="pin-pay">Pay karein</button>
+          <button class="pin-snz">Baad mein</button>
+        </div>
+      </div>
+      <div class="sec-lbl" style="margin-top:4px">Aapke Assistants</div>
+      <div class="asst-row">
+        <div class="asst"><div class="asst-av">🔮</div><div class="asst-nm">Jyotish</div></div>
+        <div class="asst"><div class="asst-av">🏏</div><div class="asst-nm">Cricket</div></div>
+        <div class="asst"><div class="asst-av">🎵</div><div class="asst-nm">Bollywood</div></div>
+        <div class="asst"><div class="asst-av">🙏</div><div class="asst-nm">Bhakti</div></div>
+        <div class="asst"><div class="asst-av" style="border-color:var(--grey-40);font-size:18px;color:var(--primary);font-weight:700">+</div><div class="asst-nm" style="color:var(--primary)">Aur</div></div>
+      </div>
+      <div class="sec-lbl">Tools</div>
+      <div class="tools-row" style="margin-bottom:var(--sp-xs)">
+        <div class="chip">✍️ Write</div>
+        <div class="chip">🖼️ Create an image</div>
+        <div class="chip">🔍 Analyse</div>
+        <div class="chip">✏️ Edit images</div>
+        <div class="chip">🌐 Translate</div>
+      </div>
+      <div class="news-card">
+        <div class="news-lbl">News Assistant</div>
+        <div class="news-t">Aaj ki 3 badi khabrein suniye</div>
+        <div class="news-s">IPL 2026 · Budget update · Mausam</div>
+        <div class="audio">
+          <button class="audio-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+          <div class="audio-bar"><div class="audio-fill"></div></div>
+          <span class="audio-dur">00:18</span>
+        </div>
+      </div>
+    </div>
+    <div class="chat-bar">
+      <div class="chat-in">
+        <div class="chat-plus">
+          <img src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/icons/svg/ic_add.svg" alt="+"
+            onerror="this.outerHTML='<span style=\'font-size:18px;color:var(--primary)\'>+</span>'">
+        </div>
+        <input class="chat-txt" placeholder="Hey Ramesh ji, kya sochte hain?">
+        <button class="chat-mic">
+          <img src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/icons/svg/ic_mic.svg" alt="mic">
+        </button>
+        <button class="spk-btn">
+          <img src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/icons/svg/ic_mic.svg" alt="">
+          Speak
+        </button>
+      </div>
+    </div>
+  </div><!-- s-home1 -->
+
+  <!-- ═══════════ LANGUAGE SHEET (global) ══════════════════════ -->
+  <div class="lang-ov" id="lang-ov" onclick="closeLang()">
+    <div class="lang-sh" onclick="event.stopPropagation()">
+      <div class="sh"></div>
+      <div class="lang-t">Bhasha chunein</div>
+      <div class="lang-opts">
+        <div class="lang-opt sel" onclick="pickLang(this)">हिन्दी — Hindi <span>✓</span></div>
+        <div class="lang-opt" onclick="pickLang(this)">मराठी — Marathi <span></span></div>
+        <div class="lang-opt" onclick="pickLang(this)">বাংলা — Bengali <span></span></div>
+        <div class="lang-opt" onclick="pickLang(this)">தமிழ் — Tamil <span></span></div>
+        <div class="lang-opt" onclick="pickLang(this)">తెలుగు — Telugu <span></span></div>
+        <div class="lang-opt" onclick="pickLang(this)">ગુજરાતી — Gujarati <span></span></div>
+        <div class="lang-opt" onclick="pickLang(this)">ಕನ್ನಡ — Kannada <span></span></div>
+      </div>
+      <button class="lang-close" onclick="closeLang()">Wapis jaayein</button>
+    </div>
+  </div>
+
+  </div><!-- ps -->
+</div><!-- phone -->
+
+<script>
+/* ── State ──────────────────────────────────────────────────── */
+let user = { name:'Ramesh', init:'R' };
+let micN = 0;
+
+/* ── Navigation ─────────────────────────────────────────────── */
+function jump(id) {
+  document.querySelectorAll('.scr').forEach(s => s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  updNav(id);
+  if (id === 's-voice') resetVoice();
+}
+
+function go(to) {
+  const from = document.querySelector('.scr.on');
+  if (!from || from.id === to) return;
+  from.style.animation = 'sOut 0.22s ease forwards';
+  const toEl = document.getElementById(to);
+  setTimeout(() => {
+    from.style.animation = '';
+    from.classList.remove('on');
+    toEl.classList.add('on');
+    toEl.style.animation = 'sIn 0.28s ease forwards';
+    setTimeout(() => toEl.style.animation = '', 300);
+    updNav(to);
+  }, 180);
+}
+
+function updNav(id) {
+  const map = { 's-splash':'nb-splash','s-voice':'nb-voice','s-signup':'nb-signup','s-home0':'nb-home0','s-home1':'nb-home1' };
+  document.querySelectorAll('.db').forEach(b => b.classList.remove('cur'));
+  const nb = document.getElementById(map[id]);
+  if (nb) nb.classList.add('cur');
+}
+
+/* ── Voice ──────────────────────────────────────────────────── */
+function resetVoice() {
+  micN = 0;
+  const btn = document.getElementById('mic-btn');
+  btn.classList.remove('lst');
+  document.getElementById('v-title').textContent = 'Namaste! 🙏';
+  document.getElementById('v-sub').textContent = 'Apni bhasha mein apna naam batayein';
+  document.getElementById('v-fb').textContent = '';
+  document.getElementById('v-fb').style.color = 'var(--text-lo)';
+  document.getElementById('v-fall').classList.remove('on');
+  document.getElementById('mic-wrap').style.opacity = '1';
+  document.getElementById('vid-bot').src =
+    'https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/states/Light/Speaking_State.mp4';
+}
+
+function micTap() {
+  micN++;
+  const btn = document.getElementById('mic-btn');
+  const fb  = document.getElementById('v-fb');
+  const vid = document.getElementById('vid-bot');
+
+  if (micN === 1) {
+    btn.classList.add('lst');
+    fb.textContent = 'Sun raha hoon...';
+    fb.style.color = 'var(--error)';
+    vid.src = 'https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/states/Light/Listening_state.mp4';
+    setTimeout(() => {
+      vid.src = 'https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/states/Light/Thinking_state.mp4';
+      btn.classList.remove('lst');
+      fb.textContent = '"Ramesh" — sun liya ✓';
+      fb.style.color = 'var(--success)';
+      setTimeout(() => go('s-signup'), 900);
+    }, 2000);
+  } else if (micN === 2) {
+    btn.classList.remove('lst');
+    fb.textContent = 'Sunaai nahi diya. Dobara bolein?';
+    fb.style.color = 'var(--error)';
+    vid.src = 'https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/states/Light/Idle_state.mp4';
+  } else {
+    fb.textContent = 'Theek hai, type kar lijiye';
+    fb.style.color = 'var(--text-lo)';
+    document.getElementById('v-fall').classList.add('on');
+    document.getElementById('mic-wrap').style.opacity = '0.38';
+  }
+}
+
+function typedName() {
+  const v = document.getElementById('name-inp').value.trim();
+  if (!v) { document.getElementById('name-inp').focus(); return; }
+  user.name = v; user.init = v[0].toUpperCase();
+  syncNames(); go('s-signup');
+}
+
+/* ── Sign-up ─────────────────────────────────────────────────── */
+function swPath(p) {
+  ['jio','other','skip'].forEach(x => {
+    document.getElementById('p-'+x).style.display = x===p ? 'block' : 'none';
+    document.getElementById('pt-'+x).classList.toggle('on', x===p);
+  });
+}
+
+function phInput(el) {
+  document.getElementById('otp-btn').style.display = el.value.length===10 ? 'flex' : 'none';
+}
+
+function fireOTP() {
+  document.getElementById('otp-btn').style.display = 'none';
+  document.getElementById('otp-area').style.display = 'block';
+  ['5','3','7','2','4','1'].forEach((d,i) => {
+    setTimeout(() => {
+      const b = document.getElementById('ob'+i);
+      b.textContent = d; b.classList.add('on');
+    }, 280 + i*160);
+  });
+  setTimeout(() => doneSignup(), 280 + 6*160 + 600);
+}
+
+function doneSignup() {
+  syncNames(); go('s-home0');
+}
+
+/* ── Sync names ──────────────────────────────────────────────── */
+function syncNames() {
+  const n=user.name, i=user.init;
+  const sn=document.getElementById('su-name'); if(sn) sn.textContent=n+' ji';
+  const sc=document.getElementById('su-circ'); if(sc) sc.textContent=i;
+  const av=document.getElementById('h0-av'); if(av) av.textContent=i;
+  const g=document.getElementById('h0-greet');
+  if(g) g.innerHTML=`Shaam ko kya karein,<br><em>${n} ji?</em>`;
+  const ip=document.getElementById('h0-inp');
+  if(ip) ip.placeholder=`Hey ${n} ji, kya sochte hain?`;
+}
+
+/* ── Activation ──────────────────────────────────────────────── */
+function doAct(type) {
+  if (type === 'bijli') {
+    document.getElementById('cam').classList.add('on');
+    return;
+  }
+  const cfgs = {
+    dawai: { t:'Dawai ka reminder set karo', b:'Kaun si dawai aur kab leni hai?<br>Bolo ya type karo — roz yaad dilaunga.', p:'Reminder set karo', s:'Wapis jaao' },
+    mausam: { t:'🌤 Aaj ka mausam — Raipur', b:'<strong>34°C · Aanshik badal</strong><br>Shaam 6 baje ke baad baarish ho sakti hai<br><br>Kal: 31°C · Baarish', p:'Weather alert on karo', s:'Theek hai' },
+    yojana: { t:'Aapke liye yojanaen', b:'<strong>PM Kisan Samman Nidhi</strong> — ₹6,000/saal<br><strong>Ayushman Bharat</strong> — ₹5 lakh health cover<br><strong>PM Ujjwala Yojana</strong> — Free LPG connection', p:'Aur jaankari chahiye', s:'Wapis jaao' }
+  };
+  openSheet(cfgs[type].t, cfgs[type].b, cfgs[type].p, cfgs[type].s, closeSheet, closeSheet);
+}
+
+function closeCam() {
+  document.getElementById('cam').classList.remove('on');
+  document.getElementById('analyzing').classList.remove('on');
+}
+
+function capturePhoto() {
+  const an = document.getElementById('analyzing');
+  an.classList.add('on');
+  setTimeout(() => {
+    an.classList.remove('on');
+    document.getElementById('cam').classList.remove('on');
+    openSheet(
+      'Yeh sahi hai?',
+      'Maine padha:<br><strong>Amount ₹1,240 · Due 18 April 2026</strong><br><br>Kya yeh sahi hai?',
+      'Haan, bilkul sahi', 'Nahi, dobara lo',
+      () => {
+        closeSheet();
+        setTimeout(() => openSheet(
+          '18 ko remind karoon?',
+          'Bijli bill ₹1,240 ki due date se pehle reminder bhejunga',
+          'Haan, reminder set karo', 'Nahi, zaroorat nahi',
+          () => { closeSheet(); document.getElementById('nov').classList.add('on'); },
+          closeSheet
+        ), 200);
+      },
+      () => { closeSheet(); document.getElementById('cam').classList.add('on'); }
+    );
+  }, 1800);
+}
+
+/* ── Sheet helper ────────────────────────────────────────────── */
+function openSheet(title, body, pTxt, sTxt, onP, onS) {
+  document.getElementById('sh0').innerHTML = `
+    <div class="sheet">
+      <div class="sh"></div>
+      <div class="sh-t">${title}</div>
+      <div class="sh-b">${body}</div>
+      <div class="sh-acts">
+        <button class="sh-p" id="sp">${pTxt}</button>
+        <button class="sh-s" id="ss">${sTxt}</button>
+      </div>
+    </div>`;
+  document.getElementById('sp').onclick = onP;
+  document.getElementById('ss').onclick = onS;
+  document.getElementById('ov0').classList.add('on');
+}
+function closeSheet() { document.getElementById('ov0').classList.remove('on'); }
+
+/* ── Notification ────────────────────────────────────────────── */
+function allowNotif() {
+  document.getElementById('nov').classList.remove('on');
+  showToast('Reminder set! ⏰ 18 April ko yaad dilaunga');
+  setTimeout(() => { hideToast(); go('s-home1'); }, 2600);
+}
+function skipNotif() {
+  document.getElementById('nov').classList.remove('on');
+  showToast('Theek hai — Settings se baad mein on kar sakte ho');
+  setTimeout(hideToast, 2400);
+}
+function showToast(m) {
+  document.getElementById('toast-txt').textContent = m;
+  document.getElementById('toast').classList.add('on');
+}
+function hideToast() { document.getElementById('toast').classList.remove('on'); }
+
+/* ── Language ────────────────────────────────────────────────── */
+function showLang() { document.getElementById('lang-ov').classList.add('on'); }
+function closeLang() { document.getElementById('lang-ov').classList.remove('on'); }
+function pickLang(el) {
+  document.querySelectorAll('.lang-opt').forEach(o => { o.classList.remove('sel'); o.querySelector('span').textContent=''; });
+  el.classList.add('sel'); el.querySelector('span').textContent='✓';
+  setTimeout(closeLang, 380);
+}
+
+/* ── Init ────────────────────────────────────────────────────── */
+syncNames();
+</script>
+</body>
+</html>

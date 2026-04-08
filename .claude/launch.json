@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "JBIQ Prototypes",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "3000", "--directory", "/Users/sridhar.iruvanti/Downloads/DEMO"],
+      "port": 3000
+    }
+  ]
+}
