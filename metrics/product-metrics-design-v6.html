@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JioBharatIQ — Product Metrics Design v5</title>
+<style>
+:root {
+  --blue:        #1A3A6B;
+  --blue-mid:    #2E6094;
+  --blue-light:  #EDF3FA;
+  --blue-xlight: #F6F9FD;
+  --red:         #C8303A;
+  --green-light: #EAF4E2;
+  --green-dark:  #2D6A0A;
+  --amber-light: #FEF3E2;
+  --amber-dark:  #7D4E00;
+  --gray-light:  #F4F3F0;
+  --gray-mid:    #888;
+  --gray-dark:   #444;
+  --border:      #E0E0EA;
+  --text:        #0a0a14;
+  --sidebar-w:   252px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;font-size:14px;line-height:1.55;color:var(--text);background:#f8f8f8}
+
+/* ─ SIDEBAR ─ */
+#sidebar{position:fixed;top:0;left:0;width:var(--sidebar-w);height:100vh;background:var(--blue);overflow-y:auto;z-index:100;padding-bottom:2rem}
+#sidebar .logo{padding:16px 16px 12px;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:6px}
+#sidebar .logo h1{font-size:13px;font-weight:700;color:#fff;line-height:1.3}
+#sidebar .logo p{font-size:11px;color:rgba(255,255,255,.45);margin-top:2px}
+#sidebar nav a{display:block;padding:6px 16px;font-size:12px;color:rgba(255,255,255,.65);text-decoration:none;border-left:3px solid transparent;transition:all .15s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#sidebar nav a:hover,#sidebar nav a.active{color:#fff;background:rgba(255,255,255,.08);border-left-color:rgba(255,255,255,.55)}
+.nav-group{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.28);padding:12px 16px 3px}
+.nav-sub{padding-left:26px!important;font-size:11.5px;color:rgba(255,255,255,.5)!important}
+.nav-sub:hover,.nav-sub.active{color:rgba(255,255,255,.9)!important}
+
+/* ─ MAIN ─ */
+#main{margin-left:var(--sidebar-w);padding:2rem 2.5rem 5rem;max-width:920px}
+
+/* ─ TYPE ─ */
+.page-title{font-size:25px;font-weight:700;color:var(--blue);border-bottom:3px solid var(--red);padding-bottom:7px;margin-bottom:4px}
+.page-meta{font-size:12px;color:var(--gray-mid);margin-bottom:1.8rem}
+h2{font-size:16px;font-weight:700;color:var(--blue);border-bottom:1px solid var(--border);padding-bottom:4px;margin:2.2rem 0 .8rem}
+h3{font-size:13.5px;font-weight:600;color:var(--blue-mid);margin:1.2rem 0 .35rem}
+p{margin-bottom:.65rem;color:var(--gray-dark);font-size:13px}
+hr{border:none;border-top:1px solid var(--border);margin:1.8rem 0}
+.section-note{font-size:12px;color:var(--gray-mid);font-style:italic;margin-bottom:.8rem}
+
+/* ─ CALLOUTS ─ */
+.callout{border-radius:6px;padding:11px 15px;margin-bottom:.8rem;font-size:13px;line-height:1.6}
+.callout.blue  {background:var(--blue-light); border-left:4px solid var(--blue-mid)}
+.callout.green {background:var(--green-light);border-left:4px solid var(--green-dark)}
+.callout.amber {background:var(--amber-light);border-left:4px solid var(--amber-dark)}
+.callout.gray  {background:var(--gray-light); border-left:4px solid #ccc}
+.callout strong{color:var(--text)}
+
+/* ─ GOALS STRIP (top of page) ─ */
+.goals-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:1.4rem}
+.goal-card{border-radius:6px;padding:10px 12px;border:1px solid var(--border);background:#fff}
+.goal-card.user{border-left:4px solid var(--green-dark);background:var(--green-light)}
+.goal-card.system{border-left:4px solid var(--blue-mid);background:var(--blue-light)}
+.goal-card.org{border-left:4px solid #bbb;background:var(--gray-light)}
+.goal-num{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+.goal-card.user   .goal-num{color:var(--green-dark)}
+.goal-card.system .goal-num{color:var(--blue-mid)}
+.goal-card.org    .goal-num{color:var(--gray-mid)}
+.goal-text{font-size:12px;color:var(--gray-dark);line-height:1.4}
+.goal-tag{font-size:10px;color:var(--gray-mid);margin-top:4px}
+
+/* ─ NORTH STAR ─ */
+.ns-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:.8rem}
+.ns-card{background:var(--blue-light);border:1.5px solid var(--blue-mid);border-radius:8px;padding:13px 15px}
+.ns-card .label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--blue-mid);margin-bottom:3px}
+.ns-card .name {font-size:14px;font-weight:700;color:var(--blue);margin-bottom:3px}
+.ns-card .def  {font-size:11px;color:var(--blue-mid);font-family:SF Mono,Monaco,monospace;background:rgba(255,255,255,.6);padding:2px 7px;border-radius:4px;display:inline-block;margin-bottom:5px}
+.ns-card .why  {font-size:12px;color:var(--gray-dark)}
+
+/* ─ LAYER OBJECTIVES GRID ─ */
+.objectives-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:1.2rem}
+.obj-card{background:#fff;border:1px solid var(--border);border-radius:6px;padding:9px 10px;text-align:center}
+.obj-num{width:22px;height:22px;border-radius:50%;background:var(--blue);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 5px}
+.obj-name{font-size:10.5px;font-weight:600;color:var(--blue);margin-bottom:3px}
+.obj-text{font-size:10px;color:var(--gray-dark);line-height:1.4}
+
+/* ─ TABLES ─ */
+table{width:100%;border-collapse:collapse;margin:.5rem 0 1rem;font-size:13px}
+th{background:var(--blue);color:#fff;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:7px 10px;text-align:left;vertical-align:top}
+td{border:1px solid var(--border);padding:7px 10px;vertical-align:top;line-height:1.5}
+tr:hover td{background:var(--blue-xlight)}
+.td-l0{background:var(--blue-light)!important;font-weight:600;color:var(--blue)}
+.td-l2{background:var(--amber-light)!important;color:var(--amber-dark)}
+.td-grp{background:var(--gray-light)!important;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--gray-mid)}
+
+/* ─ LAYER BLOCKS ─ */
+.layer-block{margin-bottom:6px;border-radius:8px;overflow:hidden;border:1px solid var(--border)}
+.layer-toggle{display:flex;align-items:center;gap:10px;padding:12px 15px;background:var(--blue);cursor:pointer;user-select:none;border:none;width:100%;text-align:left;transition:background .15s}
+.layer-toggle:hover{background:var(--blue-mid)}
+.layer-num{width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.18);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.layer-title{flex:1;min-width:0}
+.lt-name{font-size:13.5px;font-weight:700;color:#fff}
+.lt-obj {font-size:11px;color:rgba(255,255,255,.7);margin-top:1px;font-style:italic}
+.lt-dir {font-size:10px;color:rgba(255,255,255,.38);margin-top:1px}
+.layer-l0-pill{font-size:10px;font-weight:600;background:rgba(255,255,255,.12);color:rgba(255,255,255,.88);padding:3px 9px;border-radius:10px;max-width:220px;text-align:right;line-height:1.4;flex-shrink:0}
+.layer-chevron{color:rgba(255,255,255,.45);font-size:13px;transition:transform .2s;flex-shrink:0}
+.layer-toggle.open .layer-chevron{transform:rotate(180deg)}
+.layer-body{display:none;padding:14px;background:#fff}
+.layer-body.open{display:block}
+
+/* ─ STRUCTURE VIEW ─ */
+.sv-layer{margin-bottom:5px;border-radius:7px;overflow:hidden;border:1px solid var(--border)}
+.sv-head{display:flex;align-items:center;gap:9px;padding:9px 13px;background:var(--blue);cursor:pointer;user-select:none}
+.sv-head:hover{background:var(--blue-mid)}
+.sv-num{width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.18);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sv-title{font-size:12.5px;font-weight:600;color:#fff;flex:1}
+.sv-subtitle{font-size:10.5px;color:rgba(255,255,255,.55);font-style:italic}
+.sv-l0-text{font-size:10.5px;color:rgba(255,255,255,.7);max-width:280px;text-align:right;line-height:1.3;flex-shrink:0}
+.sv-chev{color:rgba(255,255,255,.4);font-size:12px;transition:transform .2s;flex-shrink:0}
+.sv-head.open .sv-chev{transform:rotate(180deg)}
+.sv-body{display:none;background:#fff}
+.sv-body.open{display:block}
+.sv-hdr{display:grid;grid-template-columns:44px 100px 1fr 1fr;background:var(--blue);border-top:1px solid rgba(255,255,255,.1)}
+.sv-hdr>div{padding:5px 9px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:rgba(255,255,255,.6);border-right:1px solid rgba(255,255,255,.08)}
+.sv-hdr>div:last-child{border-right:none}
+.sv-row{display:grid;grid-template-columns:44px 100px 1fr 1fr;border-bottom:1px solid var(--border)}
+.sv-row:last-child{border-bottom:none}
+.sv-row:hover .sv-cell{background:var(--blue-xlight)}
+.sv-cell{padding:6px 9px;font-size:12px;line-height:1.45;border-right:1px solid var(--border)}
+.sv-cell:last-child{border-right:none}
+.c-l0{background:var(--blue-light)!important;font-weight:600;color:var(--blue)}
+.c-l1{background:#fff;color:var(--text)}
+.c-l2{background:var(--amber-light)!important;color:var(--amber-dark)}
+.c-grp{background:var(--gray-light)!important;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--gray-mid);grid-column:1/-1;padding:4px 9px}
+
+/* ─ HIERARCHY ─ */
+.hierarchy{background:var(--gray-light);border-radius:6px;padding:12px 16px;font-family:SF Mono,Monaco,Consolas,monospace;font-size:11.5px;line-height:2;color:var(--gray-dark);margin-bottom:.8rem}
+.hl{color:var(--blue);font-weight:600}
+.hn{font-family:-apple-system,Arial,sans-serif;font-size:11px;color:var(--gray-mid);margin-left:5px}
+
+/* ─ CROSS-CUTS ─ */
+.cuts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:.8rem}
+.cut-card{background:var(--blue-xlight);border:1px solid var(--blue-light);border-radius:5px;padding:8px 10px}
+.cut-num{font-size:10px;font-weight:600;color:var(--blue-mid);margin-bottom:2px}
+.cut-name{font-size:12px;font-weight:600;color:var(--blue);margin-bottom:2px}
+.cut-vals{font-size:11px;color:var(--gray-dark);line-height:1.5}
+.cut-rel{font-size:10.5px;color:var(--gray-mid);margin-top:2px;font-style:italic}
+
+/* ─ TAGS ─ */
+.tag{display:inline-block;font-size:10px;font-weight:600;padding:2px 6px;border-radius:9px;text-transform:uppercase;letter-spacing:.04em;vertical-align:middle;margin-left:4px}
+.tag-user  {background:var(--green-light);color:var(--green-dark)}
+.tag-system{background:var(--blue-light); color:var(--blue-mid)}
+.tag-org   {background:var(--gray-light); color:var(--gray-dark);border:1px solid #ccc}
+
+/* ─ USE CASES ─ */
+.uc-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:8px 0 4px}
+.uc-domain{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--blue-mid);margin-bottom:4px}
+.uc-item{font-size:11.5px;color:var(--gray-dark);line-height:1.8}
+</style>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<div id="sidebar">
+  <div class="logo">
+    <h1>JioBharatIQ</h1>
+    <p>Product Metrics · v5</p>
+  </div>
+  <nav>
+    <div class="nav-group">Overview</div>
+    <a href="#goals">Org Goals</a>
+    <a href="#promise">Product Promise</a>
+    <a href="#northstar">North Star</a>
+    <a href="#objectives">Layer Objectives</a>
+    <a href="#principles">Layer Principles</a>
+
+    <div class="nav-group">7 Layers — Detail</div>
+    <a href="#layer1" class="nav-sub">1 · User Loop</a>
+    <a href="#layer2" class="nav-sub">2 · Personalisation</a>
+    <a href="#layer3" class="nav-sub">3 · Conversation</a>
+    <a href="#layer4" class="nav-sub">4 · Task Delivery</a>
+    <a href="#layer5" class="nav-sub">5 · Quality</a>
+    <a href="#layer6" class="nav-sub">6 · Platform</a>
+    <a href="#layer7" class="nav-sub">7 · Partners</a>
+
+    <div class="nav-group">Structure View</div>
+    <a href="#structure">All Layers at a Glance</a>
+
+    <div class="nav-group">Reference</div>
+    <a href="#ref-units">Activity Units</a>
+    <a href="#ref-crosscuts">Cross-Cutting Attributes</a>
+    <a href="#ref-surface">Surface Navigation</a>
+    <a href="#ref-outtree">Out of the Tree</a>
+    <a href="#ref-glossary">Glossary</a>
+    <a href="#ref-audit">Design Audit</a>
+  </nav>
+</div>
+
+<!-- ═══ MAIN ═══ -->
+<div id="main">
+
+  <h1 class="page-title">JioBharatIQ — Product Metrics Design</h1>
+  <p class="page-meta">Owner: Sridhar &nbsp;·&nbsp; v5 &nbsp;·&nbsp; 2026-05-12 &nbsp;·&nbsp; Working draft · Internal · Reliance Intelligence</p>
+
+  <!-- ══ ORG GOALS ══ -->
+  <section id="goals">
+    <h2>Org Goals</h2>
+    <p class="section-note">What the org committed to. Three directions — user outcomes, platform capability, business scale. Targets live in the goals doc, not in this tree.</p>
+    <div class="goals-strip">
+      <div class="goal-card user"><div class="goal-num">G03 · Consumer Outcome</div><div class="goal-text">First-time users complete a task in first session. Task completion sustained across returning users.</div><div class="goal-tag">→ Layer 4 L0</div></div>
+      <div class="goal-card user"><div class="goal-num">G04 · Consumer Outcome</div><div class="goal-text">Monthly users return daily without a push trigger.</div><div class="goal-tag">→ Layer 1 L0 = Product L0</div></div>
+      <div class="goal-card user"><div class="goal-num">G05 · Consumer Outcome</div><div class="goal-text">Response satisfaction across all signature experiences, with a per-domain floor.</div><div class="goal-tag">→ Layer 5 L0</div></div>
+      <div class="goal-card system"><div class="goal-num">G06 · Platform Capability</div><div class="goal-text">12+ Indian languages in production, each beating benchmark speech recognition accuracy.</div><div class="goal-tag">→ Layer 3 L1</div></div>
+      <div class="goal-card system"><div class="goal-num">G07 · Platform Capability</div><div class="goal-text">Quality eval pass rate and platform stability at scale.</div><div class="goal-tag">→ Layer 5 L1 + Layer 6 L1</div></div>
+      <div class="goal-card org"><div class="goal-num">G08 · Scale Readiness</div><div class="goal-text">Partners live on JioBharatIQ, with new partners onboarding every month.</div><div class="goal-tag">→ Layer 7 L0 + L1</div></div>
+      <div class="goal-card org"><div class="goal-num">G09 · Scale Readiness</div><div class="goal-text">New signature experiences live every month, built by partners or autonomously.</div><div class="goal-tag">→ Layer 1 G.4</div></div>
+      <div class="goal-card org"><div class="goal-num">G01 · Market Reach</div><div class="goal-text">JioBharatIQ reaches 1M+ Indians every month within 90 days of GA.</div><div class="goal-tag">→ GTM track (out of tree)</div></div>
+      <div class="goal-card org"><div class="goal-num">G02 · Market Reach</div><div class="goal-text">15+ signature experiences across 5+ domains of Indian daily life.</div><div class="goal-tag">→ Layer 1 Group G</div></div>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- ══ PRODUCT PROMISE ══ -->
+  <section id="promise">
+    <h2>Product Promise</h2>
+    <div class="callout blue">
+      <strong>The product is working when</strong> a user opens JBIQ, gets something done, comes back tomorrow without being pushed, and the next session starts smarter than the last. Repeat across 1.4B Indians, 12 languages, 12 domains.<br><br>
+      <strong>Knows you</strong> — language, context, history &nbsp;·&nbsp; <strong>Knows what you need right now</strong> — proactive, situational &nbsp;·&nbsp; <strong>Does the work</strong> — completes tasks, doesn't suggest
+    </div>
+  </section>
+
+  <!-- ══ NORTH STAR ══ -->
+  <section id="northstar">
+    <h2>Paired North Star</h2>
+    <p>Two metrics. Both must move together. Neither alone is sufficient.</p>
+    <div class="ns-grid">
+      <div class="ns-card">
+        <div class="label">Loop</div>
+        <div class="name">Active Habit Rate</div>
+        <div class="def">Organic DEU ÷ MEU</div>
+        <div class="why">Push-attributed returns excluded. Did the product earn the return, or did push pay for it?</div>
+      </div>
+      <div class="ns-card">
+        <div class="label">Work</div>
+        <div class="name">Useful Task Rate</div>
+        <div class="def">% tasks resolved AND user signaled value</div>
+        <div class="why">Did the AI deliver something useful? Composed from Layer 4 L0 × Layer 5 L0.</div>
+      </div>
+    </div>
+    <div class="callout gray" style="font-size:12px"><strong>Composite:</strong> Compounding Habit Index = Active Habit Rate × Useful Task Rate &nbsp;·&nbsp; One-number reporting only, never a substitute for the pair.</div>
+  </section>
+
+  <!-- ══ LAYER OBJECTIVES ══ -->
+  <section id="objectives">
+    <h2>Layer Objectives</h2>
+    <p>Seven layers, each with one objective — what the product delivers to the user at that layer.</p>
+    <div class="objectives-grid">
+      <div class="obj-card"><div class="obj-num">1</div><div class="obj-name">User Loop</div><div class="obj-text">Users return on their own, without being pushed</div></div>
+      <div class="obj-card"><div class="obj-num">2</div><div class="obj-name">Personalisation</div><div class="obj-text">Every session feels tailored to that specific user</div></div>
+      <div class="obj-card"><div class="obj-num">3</div><div class="obj-name">Conversation</div><div class="obj-text">Talking to JBIQ feels as natural as talking to a person</div></div>
+      <div class="obj-card"><div class="obj-num">4</div><div class="obj-name">Task Delivery</div><div class="obj-text">The AI completes what the user came to get done</div></div>
+      <div class="obj-card"><div class="obj-num">5</div><div class="obj-name">Quality</div><div class="obj-text">Every response is accurate, safe, and sounds native</div></div>
+      <div class="obj-card"><div class="obj-num">6</div><div class="obj-name">Platform</div><div class="obj-text">Available and fast whenever a user shows up</div></div>
+      <div class="obj-card"><div class="obj-num">7</div><div class="obj-name">Partners</div><div class="obj-text">The catalog grows beyond what core engineering can build</div></div>
+    </div>
+  </section>
+
+  <!-- ══ LAYER DESIGN PRINCIPLES ══ -->
+  <section id="principles">
+    <h2>Layer Design Principles</h2>
+    <table>
+      <thead><tr><th style="width:14%">Layers</th><th style="width:18%">Direction</th><th style="width:36%">L0 tests</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td><strong>1–5</strong> <span class="tag tag-user">User-backwards</span></td><td>User experience</td><td>What the user felt, did, or returned for</td><td>Cannot be gamed by system improvements that don't reach users</td></tr>
+        <tr><td><strong>6</strong> <span class="tag tag-system">System</span></td><td>System output</td><td>Uptime, latency, stability</td><td>Users experience task failure when platform fails — not uptime directly</td></tr>
+        <tr><td><strong>7</strong> <span class="tag tag-org">Org</span></td><td>Business scale</td><td>Partner count, catalog scale</td><td>Users experience the skills partners build, not the partnership</td></tr>
+      </tbody>
+    </table>
+    <div class="callout gray" style="font-size:12px"><strong>L0</strong> — did the layer work? &nbsp;·&nbsp; <strong>L1</strong> — what drove it? &nbsp;·&nbsp; <strong>L2</strong> — where exactly is the problem?<br>L2 metrics never appear in a leadership review. If they do, the team is confused about what level they're at.</div>
+  </section>
+
+  <hr>
+
+  <!-- ══ 7 LAYERS ══ -->
+  <h2 id="layers-hdr" style="margin-top:0">The 7 Layers</h2>
+
+  <!-- LAYER 1 -->
+  <div class="layer-block" id="layer1">
+    <button class="layer-toggle" onclick="tog(this)">
+      <div class="layer-num">1</div>
+      <div class="layer-title">
+        <div class="lt-name">The User Loop</div>
+        <div class="lt-obj">Users return on their own, without being pushed</div>
+        <div class="lt-dir">User-backwards</div>
+      </div>
+      <div class="layer-l0-pill">Active Habit Rate<br>Organic DEU ÷ MEU</div>
+      <div class="layer-chevron">▼</div>
+    </button>
+    <div class="layer-body">
+      <table>
+        <thead><tr><th style="width:8%">Level</th><th style="width:17%">Group</th><th style="width:38%">Metric</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td class="td-l0" colspan="2">L0</td><td class="td-l0">Active Habit Rate = Organic DEU ÷ MEU</td><td class="td-l0">Product L0. Push-excluded. If this moves, the loop is working.</td></tr>
+          <tr><td class="td-grp" colspan="4">L1 — Activation</td></tr>
+          <tr><td>L1</td><td>Activation</td><td>Activation Rate = % installs completing ≥1 task within D7</td><td>Entry to the loop — did they use the AI at all?</td></tr>
+          <tr><td>L1</td><td>Activation</td><td>First-session task rate &nbsp;·&nbsp; Delayed activation rate &nbsp;·&nbsp; Time-to-first-task</td><td>Speed and shape of activation</td></tr>
+          <tr><td class="td-grp" colspan="4">L1 — Engagement</td></tr>
+          <tr><td>L1</td><td>Engagement</td><td>Tasks per DEU/day &nbsp;·&nbsp; Sessions per DEU/day &nbsp;·&nbsp; Avg session duration &nbsp;·&nbsp; Multi-task session rate &nbsp;·&nbsp; Active days/week</td><td>Depth and frequency</td></tr>
+          <tr><td>L1</td><td>Engagement</td><td>Content-only rate = (MEU − MQU) ÷ MEU &nbsp;·&nbsp; Audio/video completion rate &nbsp;·&nbsp; Content-to-query conversion rate</td><td>Consuming vs tasking — high in Devotion/Cricket is fine, high in Career/Finance is a problem</td></tr>
+          <tr><td class="td-grp" colspan="4">L1 — Retention</td></tr>
+          <tr><td>L1</td><td>Retention</td><td>D1 / D7 / D30 / D90 organic return rate</td><td>Did the product earn the next visit?</td></tr>
+          <tr><td class="td-grp" colspan="4">L1 — Loop quality</td></tr>
+          <tr><td>L1</td><td>Loop quality</td><td>Loop Self-Sufficiency = Organic ÷ Total returns</td><td>What share of returns are unprompted?</td></tr>
+          <tr><td>L1</td><td>Loop quality</td><td>Habit Formation Rate = Inorganic → Organic within 60d</td><td>Does the loop strengthen or stay push-dependent?</td></tr>
+          <tr><td class="td-grp" colspan="4">L1 — Sentiment + Value</td></tr>
+          <tr><td>L1</td><td>Sentiment</td><td>NPS &nbsp;·&nbsp; User Satisfaction Rate &nbsp;·&nbsp; Surface time-to-meaningful p95</td><td>Did the user feel served?</td></tr>
+          <tr><td class="td-grp" colspan="4">L1 — Expansion</td></tr>
+          <tr><td>L1</td><td>Expansion</td><td>Experience discovery rate &nbsp;·&nbsp; Vertical breadth &nbsp;·&nbsp; Cross-domain engagement rate</td><td>Is the catalog being explored?</td></tr>
+          <tr><td class="td-grp" colspan="4">L1 — Outcome Value</td></tr>
+          <tr><td>L1</td><td>Outcome value</td><td>Time saved/user/day &nbsp;·&nbsp; Money saved/user/month &nbsp;·&nbsp; Substitution rate</td><td>Tangible value delivered — GA aspirational</td></tr>
+          <tr><td class="td-grp" colspan="4">L1 — Experience Metrics (G)</td></tr>
+          <tr><td>L1</td><td>Per-experience</td><td>Attempt rate &nbsp;·&nbsp; Completion rate &nbsp;·&nbsp; 24h Return &nbsp;·&nbsp; D7/D30 Stickiness &nbsp;·&nbsp; Cohort Penetration &nbsp;·&nbsp; In-context NPS</td><td>Which experiences are working?</td></tr>
+          <tr><td>L1</td><td>Signature</td><td>Signature Qualification Score (0–3, only 3/3 qualifies) &nbsp;·&nbsp; D7 Retention Delta &nbsp;·&nbsp; Completion Delta &nbsp;·&nbsp; NPS Delta vs Generic</td><td>Is Signature designation justified? Flat/negative deltas = label is theatre.</td></tr>
+          <tr><td>L1</td><td>Catalog</td><td>New experiences live/month &nbsp;·&nbsp; Time idea→live &nbsp;·&nbsp; % clearing D7 threshold in 30d</td><td>Are we shipping experiences that work?</td></tr>
+          <tr><td class="td-grp" colspan="4">L2 — Diagnostics</td></tr>
+          <tr><td class="td-l2">L2</td><td class="td-l2">User buckets</td><td class="td-l2">MAU / MEU / MQU / MCU counts and % of installed base</td><td class="td-l2">Where are users sitting? Tasking vs content-only vs inactive?</td></tr>
+          <tr><td class="td-l2">L2</td><td class="td-l2">Cohort</td><td class="td-l2">Cohort Variance = max(Active Habit Rate) − min across A–E</td><td class="td-l2">Product winning evenly across Bharat cohorts?</td></tr>
+          <tr><td class="td-l2">L2</td><td class="td-l2">Signals</td><td class="td-l2">Rephrase rate &nbsp;·&nbsp; Re-ask rate &nbsp;·&nbsp; At-risk % &nbsp;·&nbsp; PN/WA open + post-click &nbsp;·&nbsp; History-to-query conversion rate</td><td class="td-l2">Early warning, comms effectiveness, re-entry surface health</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- LAYER 2 -->
+  <div class="layer-block" id="layer2">
+    <button class="layer-toggle" onclick="tog(this)">
+      <div class="layer-num">2</div>
+      <div class="layer-title">
+        <div class="lt-name">The Personalisation</div>
+        <div class="lt-obj">Every session feels tailored to that specific user</div>
+        <div class="lt-dir">User-backwards</div>
+      </div>
+      <div class="layer-l0-pill">Personalisation Resonance Rate<br>% sessions product knew the user</div>
+      <div class="layer-chevron">▼</div>
+    </button>
+    <div class="layer-body">
+      <table>
+        <thead><tr><th style="width:8%">Level</th><th style="width:17%">Group</th><th style="width:38%">Metric</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td class="td-l0" colspan="2">L0</td><td class="td-l0">Personalisation Resonance Rate = % of sessions where the product demonstrated it knew the user<br><span style="font-weight:400;font-size:11.5px">At least ONE of: correct language auto-served · prior context applied without re-explanation · personalised surface element engaged · proactive suggestion accepted</span></td><td class="td-l0">User-backwards. Works D0 through D90. Not anchored to cold start only.</td></tr>
+          <tr><td class="td-grp" colspan="4">L1 — Identity &nbsp;·&nbsp; Did the product know who this user is before they said anything?</td></tr>
+          <tr><td>L1</td><td>Identity</td><td>Warm start rate = % of sessions where correct language served AND ≥1 UCP attribute applied before first input</td><td>User-experienced outcome of the identity layer</td></tr>
+          <tr><td>L1</td><td>Identity</td><td>Cold start rate = % sessions with zero UCP context loaded</td><td>Failure signal — how many users hit a generic experience?</td></tr>
+          <tr><td>L1</td><td>Identity</td><td>Cold→warm transition rate = % cold-start users with a warm session within D7</td><td>Recovery — does the product learn fast enough?</td></tr>
+          <tr><td class="td-grp" colspan="4">L1 — Memory &nbsp;·&nbsp; Did the product remember what this user told it before?</td></tr>
+          <tr><td>L1</td><td>Memory</td><td>Context carry-through rate = % returning sessions where prior context applied without re-explanation</td><td>Did the AI remember without being reminded?</td></tr>
+          <tr><td class="td-grp" colspan="4">L1 — Surface relevance &nbsp;·&nbsp; Did what was shown reflect this user?</td></tr>
+          <tr><td>L1</td><td>Surface</td><td>Personalised surface engagement rate = % sessions where user engaged with a personalised home element or suggestion</td><td>Did the home surface earn a tap from this specific user?</td></tr>
+          <tr><td class="td-grp" colspan="4">L1 — Anticipation &nbsp;·&nbsp; Did the product get ahead of what the user needed?</td></tr>
+          <tr><td>L1</td><td>Anticipation</td><td>Proactive suggestion acceptance rate = % personalised suggestions accepted &nbsp;·&nbsp; Time-of-day relevance rate</td><td>Correct anticipation at the right moment — wrong timing or content = ignored</td></tr>
+          <tr><td class="td-grp" colspan="4">L1 — Language &nbsp;·&nbsp; Native across sessions?</td></tr>
+          <tr><td>L1</td><td>Language</td><td>Correct-language session rate &nbsp;·&nbsp; Cross-language continuity rate</td><td>Set in Hindi, recalled in Tamil — must work</td></tr>
+          <tr><td class="td-grp" colspan="4">L1 — Validation</td></tr>
+          <tr><td>L1</td><td>Validation</td><td>N=1 Retention Lift = D30(personalisation on) − D30(personalisation off cohort)</td><td>Periodic causal test — not always-on</td></tr>
+          <tr><td class="td-grp" colspan="4">L2 — Diagnostics</td></tr>
+          <tr><td class="td-l2">L2</td><td class="td-l2">UCP</td><td class="td-l2">UCP parameter coverage = % UCP attributes populated at session start &nbsp;·&nbsp; UCP utilisation ratio = attributes used ÷ attributes available</td><td class="td-l2">Zero coverage = guaranteed cold start. High coverage + low utilisation = underusing UCP data.</td></tr>
+          <tr><td class="td-l2">L2</td><td class="td-l2">Identity</td><td class="td-l2">JioID context load rate &nbsp;·&nbsp; Language auto-detect accuracy</td><td class="td-l2">System inputs that drive warm start rate</td></tr>
+          <tr><td class="td-l2">L2</td><td class="td-l2">Memory</td><td class="td-l2">Memory capture / retrieval precision + recall &nbsp;·&nbsp; Hallucinated facts per audit &nbsp;·&nbsp; Re-explanation rate &nbsp;·&nbsp; Per-language memory accuracy</td><td class="td-l2">Is memory accurate and being used?</td></tr>
+          <tr><td class="td-l2">L2</td><td class="td-l2">Surface</td><td class="td-l2">Widget / tile tap rate by position &nbsp;·&nbsp; Cold home rate = % sessions where no personalised element surfaced</td><td class="td-l2">Is the surface layer surfacing the right things?</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- LAYER 3 -->
+  <div class="layer-block" id="layer3">
+    <button class="layer-toggle" onclick="tog(this)">
+      <div class="layer-num">3</div>
+      <div class="layer-title">
+        <div class="lt-name">The Conversation</div>
+        <div class="lt-obj">Talking to JBIQ feels as natural as talking to a person</div>
+        <div class="lt-dir">User-backwards</div>
+      </div>
+      <div class="layer-l0-pill">Multi-turn Coherence Rate<br>context held + modality switches</div>
+      <div class="layer-chevron">▼</div>
+    </button>
+    <div class="layer-body">
+      <div class="callout gray" style="font-size:12px;margin-bottom:10px">Single-turn sessions excluded — no coherence to test. Multi-turn is where the conversation surface is proved.</div>
+      <table>
+        <thead><tr><th style="width:8%">Level</th><th style="width:17%">Group</th><th style="width:38%">Metric</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td class="td-l0" colspan="2">L0</td><td class="td-l0">Multi-turn Coherence Rate = % multi-turn sessions where context held across all turns AND modality switches succeeded</td><td class="td-l0">Conversation surface quality as the user experiences it</td></tr>
+          <tr><td class="td-grp" colspan="4">L1 — Voice (Key Bet)</td></tr>
+          <tr><td>L1</td><td>Voice</td><td>Voice Primary User Share &nbsp;·&nbsp; ASR WER per language &nbsp;·&nbsp; E2E Voice Latency p95 ≤1.5s &nbsp;·&nbsp; Barge-in ≤300ms &nbsp;·&nbsp; TTS Naturalness MOS &nbsp;·&nbsp; Voice Carry-Through &nbsp;·&nbsp; Misunderstanding Recovery Rate</td><td>Full voice pipeline end to end. Maps to G06.</td></tr>
+          <tr><td class="td-grp" colspan="4">L1 — Text</td></tr>
+          <tr><td>L1</td><td>Text</td><td>Text Query Latency &nbsp;·&nbsp; Text Completion Rate &nbsp;·&nbsp; Suggested-prompt usage rate</td><td>Table stakes for text</td></tr>
+          <tr><td class="td-grp" colspan="4">L1 — Image</td></tr>
+          <tr><td>L1</td><td>Image</td><td>Image Upload Success &nbsp;·&nbsp; Vision Accuracy &nbsp;·&nbsp; Image-to-Task Completion</td><td>Document analysis, fact-check, image generation</td></tr>
+          <tr><td class="td-grp" colspan="4">L1 — Cross-modal</td></tr>
+          <tr><td>L1</td><td>Cross-modal</td><td>Modality Switch Success &nbsp;·&nbsp; Turn-Taking Quality</td><td>Fluidity across input types mid-session</td></tr>
+          <tr><td class="td-grp" colspan="4">L2 — Diagnostics</td></tr>
+          <tr><td class="td-l2">L2</td><td class="td-l2">Environment</td><td class="td-l2">Noise-ASR retention &nbsp;·&nbsp; Per-network latency (4G/3G/2G) &nbsp;·&nbsp; Per-device-tier voice metrics</td><td class="td-l2">Real Indian conditions — noisy, slow, low-end</td></tr>
+          <tr><td class="td-l2">L2</td><td class="td-l2">Signals</td><td class="td-l2">Mic Permission Grant Rate &nbsp;·&nbsp; Voice Abandonment Rate &nbsp;·&nbsp; Audio Replay Rate</td><td class="td-l2">Failure mode diagnostics</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- LAYER 4 -->
+  <div class="layer-block" id="layer4">
+    <button class="layer-toggle" onclick="tog(this)">
+      <div class="layer-num">4</div>
+      <div class="layer-title">
+        <div class="lt-name">The Task Delivery</div>
+        <div class="lt-obj">The AI completes what the user came to get done</div>
+        <div class="lt-dir">User-backwards</div>
+      </div>
+      <div class="layer-l0-pill">Task Completion Rate<br>% tasks that reached resolved state</div>
+      <div class="layer-chevron">▼</div>
+    </button>
+    <div class="layer-body">
+      <table>
+        <thead><tr><th style="width:8%">Level</th><th style="width:17%">Group</th><th style="width:38%">Metric</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td class="td-l0" colspan="2">L0</td><td class="td-l0">Task Completion Rate = % of tasks that reached a resolved state</td><td class="td-l0">System-measurable. Intent addressed, response delivered, no error. No user signal required at L0.</td></tr>
+          <tr><td class="td-grp" colspan="4">L1 — Qualified</td></tr>
+          <tr><td>L1</td><td>Qualified</td><td>Qualified Task Rate = % of completed tasks where user signaled value</td><td>Satisfaction layer on top of completion. Completed + valued = useful task.</td></tr>
+          <tr><td class="td-grp" colspan="4">L1 — Accuracy</td></tr>
+          <tr><td>L1</td><td>Accuracy</td><td>Intent Classification Accuracy &nbsp;·&nbsp; Routing Accuracy &nbsp;·&nbsp; Execution Success Rate &nbsp;·&nbsp; Multi-step Task Success Rate</td><td>Right intent → right skill → successful execution</td></tr>
+          <tr><td class="td-grp" colspan="4">L1 — Speed</td></tr>
+          <tr><td>L1</td><td>Speed</td><td>TTFT p95 &nbsp;·&nbsp; E2E Latency p95</td><td>Perceived responsiveness</td></tr>
+          <tr><td class="td-grp" colspan="4">L2 — Diagnostics</td></tr>
+          <tr><td class="td-l2">L2</td><td class="td-l2">Diagnostics</td><td class="td-l2">Per-skill completion &nbsp;·&nbsp; Per-domain completion &nbsp;·&nbsp; Confirmation-bypass rate (must = 0) &nbsp;·&nbsp; Per-network latency &nbsp;·&nbsp; Per-device-tier latency</td><td class="td-l2">Where is task delivery weakest?</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- LAYER 5 -->
+  <div class="layer-block" id="layer5">
+    <button class="layer-toggle" onclick="tog(this)">
+      <div class="layer-num">5</div>
+      <div class="layer-title">
+        <div class="lt-name">The Quality</div>
+        <div class="lt-obj">Every response is accurate, safe, and sounds native</div>
+        <div class="lt-dir">User-backwards</div>
+      </div>
+      <div class="layer-l0-pill">Response Satisfaction Rate<br>% chats where user was satisfied</div>
+      <div class="layer-chevron">▼</div>
+    </button>
+    <div class="layer-body">
+      <table>
+        <thead><tr><th style="width:8%">Level</th><th style="width:17%">Group</th><th style="width:38%">Metric</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td class="td-l0" colspan="2">L0</td><td class="td-l0">Response Satisfaction Rate = % of chats where user was satisfied</td><td class="td-l0">User-backwards. Per-domain cut required — a strong average can mask a failing vertical.</td></tr>
+          <tr><td class="td-grp" colspan="4">L1 — System gate</td></tr>
+          <tr><td>L1</td><td>System gate</td><td>Production Quality Floor = % responses passing all eval dimensions (relevance, accuracy, safety, language) &nbsp;·&nbsp; Per-domain Response Satisfaction Rate</td><td>Primary system driver of L0. Gates what reaches users.</td></tr>
+          <tr><td class="td-grp" colspan="4">L1 — Quality dimensions</td></tr>
+          <tr><td>L1</td><td>Quality</td><td>Eval pass rate &nbsp;·&nbsp; Hallucination rate &nbsp;·&nbsp; Guardrail block rate &nbsp;·&nbsp; Drift online vs offline ≤10pp &nbsp;·&nbsp; CI/CD eval gating coverage</td><td>Pre-production gate + production truth signal</td></tr>
+          <tr><td class="td-grp" colspan="4">L1 — Authenticity</td></tr>
+          <tr><td>L1</td><td>Authenticity</td><td>Brand-voice adherence &nbsp;·&nbsp; Language authenticity (native-speaker blind eval per language)</td><td>Sounds native or translated? The Bharat-first promise.</td></tr>
+          <tr><td class="td-grp" colspan="4">L2 — Diagnostics</td></tr>
+          <tr><td class="td-l2">L2</td><td class="td-l2">Diagnostics</td><td class="td-l2">Per-language eval score &nbsp;·&nbsp; Per-language satisfaction rate &nbsp;·&nbsp; Satisfaction gap by domain &nbsp;·&nbsp; Eval misses that reached users &nbsp;·&nbsp; Red-team violation count</td><td class="td-l2">Where is quality failing? Which domain risks breaching the floor?</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- LAYER 6 -->
+  <div class="layer-block" id="layer6">
+    <button class="layer-toggle" onclick="tog(this)">
+      <div class="layer-num">6</div>
+      <div class="layer-title">
+        <div class="lt-name">The Platform</div>
+        <div class="lt-obj">Available and fast whenever a user shows up</div>
+        <div class="lt-dir">System-backwards</div>
+      </div>
+      <div class="layer-l0-pill">Reliability-Adjusted Availability<br>up AND latency SLO AND crash</div>
+      <div class="layer-chevron">▼</div>
+    </button>
+    <div class="layer-body">
+      <div class="callout blue" style="font-size:12px;margin-bottom:10px">System-backwards by design. Users experience task failure (L4) and conversation breaks (L3) when the platform fails — not uptime directly.</div>
+      <table>
+        <thead><tr><th style="width:8%">Level</th><th style="width:17%">Group</th><th style="width:38%">Metric</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td class="td-l0" colspan="2">L0</td><td class="td-l0">Reliability-Adjusted Availability = % of seconds up AND within latency SLO AND below crash threshold</td><td class="td-l0">Three conditions. All must hold simultaneously.</td></tr>
+          <tr><td class="td-grp" colspan="4">L1 — Components</td></tr>
+          <tr><td>L1</td><td>Components</td><td>Service uptime % &nbsp;·&nbsp; Latency SLO compliance (voice ≤1.5s / agentic ≤700ms) &nbsp;·&nbsp; Crash rate per 100 sessions</td><td>The three legs of the L0</td></tr>
+          <tr><td>L1</td><td>Scale</td><td>Scale headroom ≥30% at 100K concurrent &nbsp;·&nbsp; PR-to-production velocity ≤2h</td><td>Capacity must lead demand</td></tr>
+          <tr><td class="td-grp" colspan="4">L2 — Diagnostics</td></tr>
+          <tr><td class="td-l2">L2</td><td class="td-l2">Diagnostics</td><td class="td-l2">Per-service availability &nbsp;·&nbsp; Per-region latency &nbsp;·&nbsp; Incident detect→ack time</td><td class="td-l2">Where is reliability weakest?</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- LAYER 7 -->
+  <div class="layer-block" id="layer7">
+    <button class="layer-toggle" onclick="tog(this)">
+      <div class="layer-num">7</div>
+      <div class="layer-title">
+        <div class="lt-name">The Partners</div>
+        <div class="lt-obj">The catalog grows beyond what core engineering can build</div>
+        <div class="lt-dir">Org-backwards</div>
+      </div>
+      <div class="layer-l0-pill">Partner Skill Coverage<br>% skills served by partners</div>
+      <div class="layer-chevron">▼</div>
+    </button>
+    <div class="layer-body">
+      <table>
+        <thead><tr><th style="width:8%">Level</th><th style="width:17%">Group</th><th style="width:38%">Metric</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td class="td-l0" colspan="2">L0</td><td class="td-l0">Partner Skill Coverage = % of skills served by partners</td><td class="td-l0">Org-backwards. Users experience the skills, not the partnership.</td></tr>
+          <tr><td class="td-grp" colspan="4">L1 — Ecosystem</td></tr>
+          <tr><td>L1</td><td>Ecosystem</td><td>Partner-built skills in production &nbsp;·&nbsp; Self-serve onboarding gate time ≤7d &nbsp;·&nbsp; New skills/month autonomous &nbsp;·&nbsp; External partners live</td><td>Is the ecosystem real and growing?</td></tr>
+          <tr><td class="td-grp" colspan="4">L2 — Diagnostics</td></tr>
+          <tr><td class="td-l2">L2</td><td class="td-l2">Health</td><td class="td-l2">Per-partner skill share &nbsp;·&nbsp; Per-partner task completion rate &nbsp;·&nbsp; Manual steps per onboarding (must → 0)</td><td class="td-l2">Concentration risk + quality consistency</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ══ STRUCTURE VIEW ══ -->
+  <section id="structure">
+    <h2>All Layers — Structure View</h2>
+    <p class="section-note">Compact reference. L0 in blue, L1 in white, L2 diagnostics in amber. Click any layer to expand.</p>
+
+    <!-- SV Layer 1 -->
+    <div class="sv-layer">
+      <div class="sv-head" onclick="togSV(this)">
+        <div class="sv-num">1</div>
+        <div class="sv-title">User Loop <span class="sv-subtitle">&nbsp;·&nbsp; Users return on their own, without being pushed</span></div>
+        <div class="sv-l0-text">Active Habit Rate = Organic DEU ÷ MEU</div>
+        <div class="sv-chev">▼</div>
+      </div>
+      <div class="sv-body">
+        <div class="sv-hdr"><div>Level</div><div>Group</div><div>Metric</div><div>Tests</div></div>
+        <div class="sv-row"><div class="sv-cell c-l0">L0</div><div class="sv-cell c-l0"></div><div class="sv-cell c-l0">Active Habit Rate = Organic DEU ÷ MEU</div><div class="sv-cell c-l0">Product L0</div></div>
+        <div class="sv-row"><div class="sv-cell c-grp">L1</div></div>
+        <div class="sv-row"><div class="sv-cell c-l1">L1</div><div class="sv-cell c-l1">Activation</div><div class="sv-cell c-l1">Activation Rate · First-session task rate · Time-to-first-task</div><div class="sv-cell c-l1">Entry to the loop</div></div>
+        <div class="sv-row"><div class="sv-cell c-l1">L1</div><div class="sv-cell c-l1">Engagement</div><div class="sv-cell c-l1">Tasks/DEU/day · Session depth · Active days/week · Content-only rate · Content-to-query conversion</div><div class="sv-cell c-l1">Depth, frequency, task vs content split</div></div>
+        <div class="sv-row"><div class="sv-cell c-l1">L1</div><div class="sv-cell c-l1">Retention</div><div class="sv-cell c-l1">D1 / D7 / D30 / D90 organic return rate</div><div class="sv-cell c-l1">Did product earn the next visit?</div></div>
+        <div class="sv-row"><div class="sv-cell c-l1">L1</div><div class="sv-cell c-l1">Loop quality</div><div class="sv-cell c-l1">Loop Self-Sufficiency · Habit Formation Rate</div><div class="sv-cell c-l1">Organic vs push-dependent</div></div>
+        <div class="sv-row"><div class="sv-cell c-l1">L1</div><div class="sv-cell c-l1">Sentiment</div><div class="sv-cell c-l1">NPS · User Satisfaction Rate · Surface time-to-meaningful p95</div><div class="sv-cell c-l1">Did user feel served?</div></div>
+        <div class="sv-row"><div class="sv-cell c-l1">L1</div><div class="sv-cell c-l1">Expansion</div><div class="sv-cell c-l1">Experience discovery rate · Vertical breadth · Cross-domain engagement</div><div class="sv-cell c-l1">Catalog being explored?</div></div>
+        <div class="sv-row"><div class="sv-cell c-l1">L1</div><div class="sv-cell c-l1">Outcome value</div><div class="sv-cell c-l1">Time saved/day · Money saved/month · Substitution rate</div><div class="sv-cell c-l1">Tangible value — GA aspirational</div></div>
+        <div class="sv-row"><div class="sv-cell c-l1">L1</div><div class="sv-cell c-l1">Experience (G)</div><div class="sv-cell c-l1">Attempt · Completion · D7/D30 Stickiness · Signature Score · Delta validators · Catalog velocity</div><div class="sv-cell c-l1">Which experiences work?</div></div>
+        <div class="sv-row"><div class="sv-cell c-grp">L2</div></div>
+        <div class="sv-row"><div class="sv-cell c-l2">L2</div><div class="sv-cell c-l2">Diagnostics</div><div class="sv-cell c-l2">User bucket counts · Cohort Variance · Rephrase rate · At-risk % · PN/WA effectiveness · History-to-query conversion</div><div class="sv-cell c-l2">Where are users? Winning evenly?</div></div>
+      </div>
+    </div>
+
+    <!-- SV Layer 2 -->
+    <div class="sv-layer">
+      <div class="sv-head" onclick="togSV(this)">
+        <div class="sv-num">2</div>
+        <div class="sv-title">Personalisation <span class="sv-subtitle">&nbsp;·&nbsp; Every session feels tailored to that specific user</span></div>
+        <div class="sv-l0-text">Personalisation Resonance Rate = % sessions product knew the user</div>
+        <div class="sv-chev">▼</div>
+      </div>
+      <div class="sv-body">
+        <div class="sv-hdr"><div>Level</div><div>Group</div><div>Metric</div><div>Tests</div></div>
+        <div class="sv-row"><div class="sv-cell c-l0">L0</div><div class="sv-cell c-l0"></div><div class="sv-cell c-l0">Personalisation Resonance Rate = % sessions where product demonstrated it knew the user</div><div class="sv-cell c-l0">Language auto-served OR context applied OR surface engaged OR suggestion accepted</div></div>
+        <div class="sv-row"><div class="sv-cell c-grp">L1</div></div>
+        <div class="sv-row"><div class="sv-cell c-l1">L1</div><div class="sv-cell c-l1">Identity</div><div class="sv-cell c-l1">Warm start rate · Cold start rate · Cold→warm transition rate (D7)</div><div class="sv-cell c-l1">Known before they spoke?</div></div>
+        <div class="sv-row"><div class="sv-cell c-l1">L1</div><div class="sv-cell c-l1">Memory</div><div class="sv-cell c-l1">Context carry-through rate</div><div class="sv-cell c-l1">Remembered without being reminded?</div></div>
+        <div class="sv-row"><div class="sv-cell c-l1">L1</div><div class="sv-cell c-l1">Surface</div><div class="sv-cell c-l1">Personalised surface engagement rate</div><div class="sv-cell c-l1">Home earned a tap from this user?</div></div>
+        <div class="sv-row"><div class="sv-cell c-l1">L1</div><div class="sv-cell c-l1">Anticipation</div><div class="sv-cell c-l1">Proactive suggestion acceptance rate · Time-of-day relevance rate</div><div class="sv-cell c-l1">Got ahead of what they needed?</div></div>
+        <div class="sv-row"><div class="sv-cell c-l1">L1</div><div class="sv-cell c-l1">Language</div><div class="sv-cell c-l1">Correct-language session rate · Cross-language continuity rate</div><div class="sv-cell c-l1">Language native across sessions</div></div>
+        <div class="sv-row"><div class="sv-cell c-l1">L1</div><div class="sv-cell c-l1">Validation</div><div class="sv-cell c-l1">N=1 Retention Lift = D30(on) − D30(off cohort)</div><div class="sv-cell c-l1">Causal test — periodic</div></div>
+        <div class="sv-row"><div class="sv-cell c-grp">L2</div></div>
+        <div class="sv-row"><div class="sv-cell c-l2">L2</div><div class="sv-cell c-l2">Diagnostics</div><div class="sv-cell c-l2">UCP coverage · UCP utilisation ratio · JioID load rate · Language auto-detect accuracy · Memory precision/recall · Hallucinations · Re-explanation rate · Cold home rate</div><div class="sv-cell c-l2">System inputs explaining why L1s moved</div></div>
+      </div>
+    </div>
+
+    <!-- SV Layer 3 -->
+    <div class="sv-layer">
+      <div class="sv-head" onclick="togSV(this)">
+        <div class="sv-num">3</div>
+        <div class="sv-title">Conversation <span class="sv-subtitle">&nbsp;·&nbsp; Talking to JBIQ feels as natural as talking to a person</span></div>
+        <div class="sv-l0-text">Multi-turn Coherence Rate</div>
+        <div class="sv-chev">▼</div>
+      </div>
+      <div class="sv-body">
+        <div class="sv-hdr"><div>Level</div><div>Group</div><div>Metric</div><div>Tests</div></div>
+        <div class="sv-row"><div class="sv-cell c-l0">L0</div><div class="sv-cell c-l0"></div><div class="sv-cell c-l0">Multi-turn Coherence Rate = % multi-turn sessions where context held AND modality switches succeeded</div><div class="sv-cell c-l0">Conversation surface quality</div></div>
+        <div class="sv-row"><div class="sv-cell c-grp">L1</div></div>
+        <div class="sv-row"><div class="sv-cell c-l1">L1</div><div class="sv-cell c-l1">Voice</div><div class="sv-cell c-l1">Voice Primary User Share · ASR WER · E2E Latency ≤1.5s · Barge-in ≤300ms · TTS MOS · Carry-Through · Recovery Rate</div><div class="sv-cell c-l1">Full pipeline end to end</div></div>
+        <div class="sv-row"><div class="sv-cell c-l1">L1</div><div class="sv-cell c-l1">Text</div><div class="sv-cell c-l1">Text Latency · Completion Rate · Suggested-prompt usage</div><div class="sv-cell c-l1">Text table stakes</div></div>
+        <div class="sv-row"><div class="sv-cell c-l1">L1</div><div class="sv-cell c-l1">Image</div><div class="sv-cell c-l1">Upload Success · Vision Accuracy · Image-to-Task Completion</div><div class="sv-cell c-l1">Document, fact-check, generation</div></div>
+        <div class="sv-row"><div class="sv-cell c-l1">L1</div><div class="sv-cell c-l1">Cross-modal</div><div class="sv-cell c-l1">Modality Switch Success · Turn-Taking Quality</div><div class="sv-cell c-l1">Fluidity across input types</div></div>
+        <div class="sv-row"><div class="sv-cell c-grp">L2</div></div>
+        <div class="sv-row"><div class="sv-cell c-l2">L2</div><div class="sv-cell c-l2">Diagnostics</div><div class="sv-cell c-l2">Noise-ASR retention · Per-network latency · Per-device-tier · Mic Permission · Voice Abandonment Rate</div><div class="sv-cell c-l2">Real Indian conditions</div></div>
+      </div>
+    </div>
+
+    <!-- SV Layer 4 -->
+    <div class="sv-layer">
+      <div class="sv-head" onclick="togSV(this)">
+        <div class="sv-num">4</div>
+        <div class="sv-title">Task Delivery <span class="sv-subtitle">&nbsp;·&nbsp; The AI completes what the user came to get done</span></div>
+        <div class="sv-l0-text">Task Completion Rate</div>
+        <div class="sv-chev">▼</div>
+      </div>
+      <div class="sv-body">
+        <div class="sv-hdr"><div>Level</div><div>Group</div><div>Metric</div><div>Tests</div></div>
+        <div class="sv-row"><div class="sv-cell c-l0">L0</div><div class="sv-cell c-l0"></div><div class="sv-cell c-l0">Task Completion Rate = % of tasks that reached a resolved state</div><div class="sv-cell c-l0">System-measurable task outcome</div></div>
+        <div class="sv-row"><div class="sv-cell c-grp">L1</div></div>
+        <div class="sv-row"><div class="sv-cell c-l1">L1</div><div class="sv-cell c-l1">Qualified</div><div class="sv-cell c-l1">Qualified Task Rate = % completed tasks where user signaled value</div><div class="sv-cell c-l1">Satisfaction on top of completion</div></div>
+        <div class="sv-row"><div class="sv-cell c-l1">L1</div><div class="sv-cell c-l1">Accuracy</div><div class="sv-cell c-l1">Intent Accuracy · Routing Accuracy · Execution Success · Multi-step Task Success</div><div class="sv-cell c-l1">Intent → skill → execution chain</div></div>
+        <div class="sv-row"><div class="sv-cell c-l1">L1</div><div class="sv-cell c-l1">Speed</div><div class="sv-cell c-l1">TTFT p95 · E2E Latency p95</div><div class="sv-cell c-l1">Perceived responsiveness</div></div>
+        <div class="sv-row"><div class="sv-cell c-grp">L2</div></div>
+        <div class="sv-row"><div class="sv-cell c-l2">L2</div><div class="sv-cell c-l2">Diagnostics</div><div class="sv-cell c-l2">Per-skill completion · Per-domain completion · Confirmation-bypass (must = 0) · Per-network latency · Per-device latency</div><div class="sv-cell c-l2">Where is delivery weakest?</div></div>
+      </div>
+    </div>
+
+    <!-- SV Layer 5 -->
+    <div class="sv-layer">
+      <div class="sv-head" onclick="togSV(this)">
+        <div class="sv-num">5</div>
+        <div class="sv-title">Quality <span class="sv-subtitle">&nbsp;·&nbsp; Every response is accurate, safe, and sounds native</span></div>
+        <div class="sv-l0-text">Response Satisfaction Rate</div>
+        <div class="sv-chev">▼</div>
+      </div>
+      <div class="sv-body">
+        <div class="sv-hdr"><div>Level</div><div>Group</div><div>Metric</div><div>Tests</div></div>
+        <div class="sv-row"><div class="sv-cell c-l0">L0</div><div class="sv-cell c-l0"></div><div class="sv-cell c-l0">Response Satisfaction Rate = % of chats where user was satisfied</div><div class="sv-cell c-l0">User-reported quality</div></div>
+        <div class="sv-row"><div class="sv-cell c-grp">L1</div></div>
+        <div class="sv-row"><div class="sv-cell c-l1">L1</div><div class="sv-cell c-l1">System gate</div><div class="sv-cell c-l1">Production Quality Floor · Per-domain Response Satisfaction Rate</div><div class="sv-cell c-l1">System driver of L0</div></div>
+        <div class="sv-row"><div class="sv-cell c-l1">L1</div><div class="sv-cell c-l1">Quality</div><div class="sv-cell c-l1">Eval pass rate · Hallucination rate · Guardrail block rate · Drift ≤10pp · CI/CD coverage</div><div class="sv-cell c-l1">Pre-production gate</div></div>
+        <div class="sv-row"><div class="sv-cell c-l1">L1</div><div class="sv-cell c-l1">Authenticity</div><div class="sv-cell c-l1">Brand-voice adherence · Language authenticity (native-speaker eval)</div><div class="sv-cell c-l1">Native or translated?</div></div>
+        <div class="sv-row"><div class="sv-cell c-grp">L2</div></div>
+        <div class="sv-row"><div class="sv-cell c-l2">L2</div><div class="sv-cell c-l2">Diagnostics</div><div class="sv-cell c-l2">Per-language eval score · Per-language satisfaction · Satisfaction gap by domain · Eval misses · Red-team violations</div><div class="sv-cell c-l2">Which domain risks breaching floor?</div></div>
+      </div>
+    </div>
+
+    <!-- SV Layer 6 -->
+    <div class="sv-layer">
+      <div class="sv-head" onclick="togSV(this)">
+        <div class="sv-num">6</div>
+        <div class="sv-title">Platform <span class="sv-subtitle">&nbsp;·&nbsp; Available and fast whenever a user shows up</span></div>
+        <div class="sv-l0-text">Reliability-Adjusted Availability</div>
+        <div class="sv-chev">▼</div>
+      </div>
+      <div class="sv-body">
+        <div class="sv-hdr"><div>Level</div><div>Group</div><div>Metric</div><div>Tests</div></div>
+        <div class="sv-row"><div class="sv-cell c-l0">L0</div><div class="sv-cell c-l0"></div><div class="sv-cell c-l0">Reliability-Adjusted Availability = % seconds up AND within latency SLO AND below crash threshold</div><div class="sv-cell c-l0">Platform enabling condition</div></div>
+        <div class="sv-row"><div class="sv-cell c-grp">L1</div></div>
+        <div class="sv-row"><div class="sv-cell c-l1">L1</div><div class="sv-cell c-l1">Components</div><div class="sv-cell c-l1">Service uptime · Latency SLO compliance · Crash rate · Scale headroom · PR-to-production</div><div class="sv-cell c-l1">Three legs plus scale</div></div>
+        <div class="sv-row"><div class="sv-cell c-grp">L2</div></div>
+        <div class="sv-row"><div class="sv-cell c-l2">L2</div><div class="sv-cell c-l2">Diagnostics</div><div class="sv-cell c-l2">Per-service availability · Per-region latency · Incident detect→ack time</div><div class="sv-cell c-l2">Where is reliability weakest?</div></div>
+      </div>
+    </div>
+
+    <!-- SV Layer 7 -->
+    <div class="sv-layer">
+      <div class="sv-head" onclick="togSV(this)">
+        <div class="sv-num">7</div>
+        <div class="sv-title">Partners <span class="sv-subtitle">&nbsp;·&nbsp; Catalog grows beyond what core engineering can build</span></div>
+        <div class="sv-l0-text">Partner Skill Coverage</div>
+        <div class="sv-chev">▼</div>
+      </div>
+      <div class="sv-body">
+        <div class="sv-hdr"><div>Level</div><div>Group</div><div>Metric</div><div>Tests</div></div>
+        <div class="sv-row"><div class="sv-cell c-l0">L0</div><div class="sv-cell c-l0"></div><div class="sv-cell c-l0">Partner Skill Coverage = % of skills served by partners</div><div class="sv-cell c-l0">Catalog scale beyond core eng</div></div>
+        <div class="sv-row"><div class="sv-cell c-grp">L1</div></div>
+        <div class="sv-row"><div class="sv-cell c-l1">L1</div><div class="sv-cell c-l1">Ecosystem</div><div class="sv-cell c-l1">Partner-built skills · Onboarding gate time ≤7d · New skills/month autonomous · External partners live</div><div class="sv-cell c-l1">Real and growing?</div></div>
+        <div class="sv-row"><div class="sv-cell c-grp">L2</div></div>
+        <div class="sv-row"><div class="sv-cell c-l2">L2</div><div class="sv-cell c-l2">Diagnostics</div><div class="sv-cell c-l2">Per-partner skill share · Per-partner task completion · Manual steps per onboarding (→ 0)</div><div class="sv-cell c-l2">Concentration risk + quality</div></div>
+      </div>
+    </div>
+
+  </section>
+
+  <hr>
+
+  <!-- ══ REFERENCE ══ -->
+  <h2 id="ref-hdr" style="margin-top:0">Reference</h2>
+
+  <!-- ACTIVITY UNITS -->
+  <section id="ref-units">
+    <h3>Activity Units</h3>
+    <div class="hierarchy">
+      <span class="hl">MAU</span><span class="hn">— opened the app in last 30d</span><br>
+      &nbsp;&nbsp;└── <span class="hl">MEU</span><span class="hn">— query OR audio/video ≥10s in last 30d &nbsp;(MQU ∪ MCU)</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── <span class="hl">MQU</span><span class="hn">— ≥1 query sent (text / voice / image). All queries are tasks. MQU ⊂ MEU.</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <span class="hl">MCU</span><span class="hn">— ≥1 audio/video played ≥10s. Card taps are surface events, not MCU.</span>
+    </div>
+    <table>
+      <thead><tr><th style="width:11%">Unit</th><th style="width:38%">Definition</th><th style="width:22%">Denominator for</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td><strong>MAU</strong></td><td>Opened app in last 30 days</td><td>Funnel diagnostic only</td><td>Opened ≠ engaged</td></tr>
+        <tr><td><strong>MEU</strong></td><td>Query OR audio/video ≥10s in last 30 days</td><td>Active Habit Rate · retention · engagement</td><td>Captures content-heavy verticals (Devotion, Cricket, News)</td></tr>
+        <tr><td><strong>MQU</strong></td><td>≥1 query in last 30 days. MQU ⊂ MEU.</td><td>Query-depth analytics</td><td>Voice vs text split, per-language, per-skill</td></tr>
+        <tr><td><strong>MCU</strong></td><td>≥1 audio/video ≥10s in last 30 days. MCU ⊂ MEU.</td><td>Content analytics</td><td>Completion rate, content-to-query conversion</td></tr>
+      </tbody>
+    </table>
+    <div class="callout green" style="font-size:12px">
+      <strong>Useful Task</strong> — a task that resolved AND the user signaled value. Derivable from events.<br>
+      ALL of: no rephrase within 60s · no thumbs-down · no restart pattern.<br>
+      Plus ≥1 positive: conversation continued · domain return within 24h · explicit thumbs-up.
+    </div>
+    <div class="callout gray" style="font-size:12px"><strong>A query is a task.</strong> A task is not always a single query — one user intent can span multiple queries.</div>
+  </section>
+
+  <!-- CROSS-CUTTING ATTRIBUTES -->
+  <section id="ref-crosscuts">
+    <h3>Cross-Cutting Attributes</h3>
+    <p class="section-note">Every L0 and L1 sliceable by all of these.</p>
+    <div class="cuts-grid">
+      <div class="cut-card"><div class="cut-num">#1</div><div class="cut-name">Cohort A–E</div><div class="cut-vals">5 cohorts per jbiq_user_cohort_gtm__v1.docx</div><div class="cut-rel">Active Habit Rate, NPS, Useful Task Rate</div></div>
+      <div class="cut-card"><div class="cut-num">#2</div><div class="cut-name">Language</div><div class="cut-vals">Hindi · English · Tamil · Telugu · Gujarati · Bengali · Marathi · Kannada · Malayalam · Punjabi · Odia · Assamese</div><div class="cut-rel">ASR WER, Satisfaction Rate, Authenticity</div></div>
+      <div class="cut-card"><div class="cut-num">#4</div><div class="cut-name">Modality</div><div class="cut-vals">Voice · Text · Image</div><div class="cut-rel">Voice Share, Multi-turn Coherence</div></div>
+      <div class="cut-card"><div class="cut-num">#5</div><div class="cut-name">Device tier</div><div class="cut-vals">Low-end · Mid-end · Flagship</div><div class="cut-rel">Latency SLO, crash rate, voice abandonment</div></div>
+      <div class="cut-card"><div class="cut-num">#6</div><div class="cut-name">Network type</div><div class="cut-vals">4G · 3G · 2G</div><div class="cut-rel">Voice latency, task completion</div></div>
+      <div class="cut-card"><div class="cut-num">#7</div><div class="cut-name">Region</div><div class="cut-vals">Urban · Tier-2 · Tier-3 · Rural</div><div class="cut-rel">Per-region latency, Bharat cohorts</div></div>
+      <div class="cut-card"><div class="cut-num">#8</div><div class="cut-name">User type</div><div class="cut-vals">First-time · Returning</div><div class="cut-rel">Task Completion Rate — G03 split</div></div>
+      <div class="cut-card"><div class="cut-num">#9</div><div class="cut-name">Experience type</div><div class="cut-vals">Signature · Vertical · Generic chat</div><div class="cut-rel">Qualifier: 3/3 benchmarks required — proprietary data + loop-forming + cultural irreplaceability. Flat/negative deltas vs Generic = label is theatre.</div></div>
+      <div class="cut-card"><div class="cut-num">#10</div><div class="cut-name">Session depth</div><div class="cut-vals">Single-turn · Multi-turn (≥3) · Extended (≥5)</div><div class="cut-rel">Multi-turn Coherence, engagement depth</div></div>
+      <div class="cut-card"><div class="cut-num">#11</div><div class="cut-name">Time horizon</div><div class="cut-vals">D1 · D7 · D30 · D90</div><div class="cut-rel">Retention curve, cohort analysis</div></div>
+      <div class="cut-card"><div class="cut-num">#12</div><div class="cut-name">Acquisition channel</div><div class="cut-vals">Jio retail · MyJio · JioFiber · Organic · Paid · Referral</div><div class="cut-rel">Per-channel D7 organic return</div></div>
+      <div class="cut-card"><div class="cut-num">#13</div><div class="cut-name">Skill class</div><div class="cut-vals">1P · 2P · 3P · Generic chat</div><div class="cut-rel">Partner skill share, task completion</div></div>
+      <div class="cut-card"><div class="cut-num">#14</div><div class="cut-name">Time of day</div><div class="cut-vals">Morning · Day · Evening · Night</div><div class="cut-rel">Time-of-day relevance, adaptive personalisation</div></div>
+      <div class="cut-card"><div class="cut-num">#15</div><div class="cut-name">Day of week</div><div class="cut-vals">Weekday · Weekend</div><div class="cut-rel">Engagement frequency</div></div>
+      <div class="cut-card"><div class="cut-num">#16</div><div class="cut-name">Loop type</div><div class="cut-vals">Daily · Task · Life</div><div class="cut-rel">Active Habit Rate per loop type</div></div>
+      <div class="cut-card"><div class="cut-num">#17</div><div class="cut-name">Task type</div><div class="cut-vals">Query (text / voice / image) · Structured skill action</div><div class="cut-rel">MTU breakdown, MQU vs non-query</div></div>
+      <div class="cut-card"><div class="cut-num">#18</div><div class="cut-name">Surface</div><div class="cut-vals">Home · Persona page · Widget · Deep link · Notification · History · Settings</div><div class="cut-rel">Time-to-meaningful, tap-to-action, history-to-query conversion</div></div>
+    </div>
+    <!-- USE CASES -->
+    <div style="background:var(--blue-xlight);border:1px solid var(--blue-light);border-radius:6px;padding:11px 13px;margin-top:3px">
+      <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--blue-mid);margin-bottom:6px">#3 &nbsp;Use Cases &nbsp;<span style="font-weight:400;color:var(--gray-mid);font-style:italic">Directional — new use cases added as product grows</span></div>
+      <div class="uc-grid">
+        <div><div class="uc-domain">Astrology</div><div class="uc-item">Meri Kundli<br>Shubh Muhurat<br>Kundali Matching</div></div>
+        <div><div class="uc-domain">Spirituality</div><div class="uc-item">Live Darshan<br>Aaj Ka Panchang<br>Aane Wale Tyohar<br>Mera Daily Ritual</div></div>
+        <div><div class="uc-domain">News</div><div class="uc-item">Breaking News<br>Fact Check<br>Market Pulse</div></div>
+        <div><div class="uc-domain">Entertainment</div><div class="uc-item">AI Podcast</div></div>
+        <div><div class="uc-domain">Career</div><div class="uc-item">Interview Prep<br>Learn New Skills<br>Government Exams</div></div>
+        <div><div class="uc-domain">Daily Assistant</div><div class="uc-item">Create Image<br>Edit Image<br>Quick Translate<br>Email Writer<br>Analyse Doc</div></div>
+      </div>
+      <div style="font-size:11px;color:var(--gray-mid);font-style:italic;margin-top:5px">Cricket, Health, Finance, Commerce, Jobs, Local Services, Govt Services use cases added as verticals ship.</div>
+    </div>
+  </section>
+
+  <!-- SURFACE NAVIGATION -->
+  <section id="ref-surface">
+    <h3>Surface Navigation Events</h3>
+    <p class="section-note">Settings, previous chats, and history are navigation events — not tasks, not engagement units.</p>
+    <table>
+      <thead><tr><th style="width:26%">Action</th><th style="width:22%">Layer + level</th><th style="width:26%">Signal</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td>Settings page visit</td><td>Layer 1 L2 — surface navigation</td><td>User investment, product trust</td><td>Does not count as MEU</td></tr>
+        <tr><td>History / previous chats — no query fired</td><td>Layer 2 L2 — memory diagnostics</td><td>Memory gap signal</td><td>User finding context AI should have remembered. Feeds re-explanation rate.</td></tr>
+        <tr><td>History accessed → query fired</td><td>Layer 1 L1 — loop quality</td><td>Organic return via history surface</td><td>Counts as organic DEU. Tracked via history-to-query conversion rate at L2.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- OUT OF TREE -->
+  <section id="ref-outtree">
+    <h3>Out of the Product Tree</h3>
+    <p class="section-note">Real, measurable, important — not measures of whether the product is working for users.</p>
+    <table>
+      <thead><tr><th style="width:24%">Track</th><th>What it covers &nbsp;·&nbsp; Why it's not in the tree</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Growth / Distribution</strong></td><td>Acquisition, CAC, channel mix, paid attribution. GTM produces installs → consumed by Activation Rate (Layer 1 L1).</td></tr>
+        <tr><td><strong>A/B Experimentation</strong></td><td>Causal inference engine. Currently blocked at FnF (GrowthBook InfoSec gate). All FnF movements are correlational.</td></tr>
+        <tr><td><strong>Unit Economics</strong></td><td>Tokens/user, cost/query, cost/task. The product earns engagement; the operations layer pays for it.</td></tr>
+        <tr><td><strong>Data / Instrumentation</strong></td><td>Insight velocity, dashboard coverage, join freshness. 16 P0 gaps in FnF workbook — close before May 15 Wave 1.</td></tr>
+        <tr><td><strong>Vertical Portfolio</strong></td><td>SE count at maturity levels, idea→live velocity. Informs what to build — not whether the product works today.</td></tr>
+        <tr><td><strong>Customer Lifecycle</strong></td><td>8 user-journey stages, per-campaign attribution. Push-attributed Return Rate (Layer 1 L1) is the product-tree interface.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- GLOSSARY -->
+  <section id="ref-glossary">
+    <h3>Glossary</h3>
+    <table>
+      <thead><tr><th style="width:18%">Term</th><th>Definition</th></tr></thead>
+      <tbody>
+        <tr><td><strong>L0</strong></td><td>The single primary metric for a layer — the outcome that defines whether the layer is doing its job. One per layer. Non-negotiable.</td></tr>
+        <tr><td><strong>L1</strong></td><td>Primary drivers — the metrics that cause or compose the L0. What pod leads own and optimise. Independently movable.</td></tr>
+        <tr><td><strong>L2</strong></td><td>Diagnostics — signals that explain why an L1 moved or didn't. Leading indicators, input metrics, operational health checks. Never in a leadership review.</td></tr>
+        <tr><td><strong>MAU</strong></td><td>Monthly Active Users — users who opened the app in last 30 days. Funnel diagnostic only. Opened ≠ engaged.</td></tr>
+        <tr><td><strong>MEU</strong></td><td>Monthly Engaged Users — users who sent ≥1 query OR played audio/video ≥10s in last 30 days. Primary engaged base. MQU ∪ MCU.</td></tr>
+        <tr><td><strong>MQU</strong></td><td>Monthly Query Users — users who sent ≥1 conversational query (text / voice / image) in last 30 days. MQU ⊂ MEU. All queries are tasks.</td></tr>
+        <tr><td><strong>MCU</strong></td><td>Monthly Content Users — users who played ≥1 audio or video item for ≥10s in last 30 days. MCU ⊂ MEU. Card taps are not MCU.</td></tr>
+        <tr><td><strong>DEU</strong></td><td>Daily Engaged Users — daily snapshot of MEU. Used in Active Habit Rate numerator (Organic DEU ÷ MEU).</td></tr>
+        <tr><td><strong>DTU</strong></td><td>Daily Task Users — daily snapshot of MTU. Used in task-specific daily stickiness calculations.</td></tr>
+        <tr><td><strong>Active Habit Rate</strong></td><td>Organic DEU ÷ MEU — push-attributed returns excluded. Product L0 (Layer 1). Tests whether the product earned the return.</td></tr>
+        <tr><td><strong>Useful Task Rate</strong></td><td>% of tasks that resolved AND user signaled value. Product Work L0. Composed from Layer 4 L0 × Layer 5 L0.</td></tr>
+        <tr><td><strong>Useful Task</strong></td><td>A task that resolved AND the user signaled value. Signals: no rephrase within 60s, no thumbs-down, no restart, plus ≥1 positive (continued / domain return 24h / thumbs-up).</td></tr>
+        <tr><td><strong>Task</strong></td><td>A user-initiated interaction where the user directed intent at the AI — query (text/voice/image) or structured skill action. A task is not always a single query; one intent can span multiple queries.</td></tr>
+        <tr><td><strong>UCP</strong></td><td>User Central Profile — the user's data profile, populated from JioID and session behaviour. UCP parameter coverage = % of attributes populated at session start. UCP utilisation ratio = attributes used ÷ available per session.</td></tr>
+        <tr><td><strong>JioID</strong></td><td>Reliance Jio user identity — the source of pre-loaded context for Jio users on Day 0.</td></tr>
+        <tr><td><strong>Warm start</strong></td><td>A session where the product already knew the user before they said anything — correct language auto-served AND ≥1 UCP attribute applied AND JioID context loaded (for Jio users). All three must hold.</td></tr>
+        <tr><td><strong>Cold start</strong></td><td>A session with zero UCP context loaded — generic language, generic home, no prior context. The failure state of the identity layer.</td></tr>
+        <tr><td><strong>Personalisation Resonance Rate</strong></td><td>% of sessions where the product demonstrated it knew the user. At least ONE of: correct language auto-served · prior context applied without re-explanation · personalised surface element engaged · proactive suggestion accepted.</td></tr>
+        <tr><td><strong>Loop Self-Sufficiency</strong></td><td>Organic returns ÷ Total returns. What share of returns are unprompted. High = product earning the habit. Low = comms propping up the loop.</td></tr>
+        <tr><td><strong>Habit Formation Rate</strong></td><td>% of push-prompted users who become organic returners within 60 days. Tests whether comms builds the habit or just sustains dependency.</td></tr>
+        <tr><td><strong>Cohort A–E</strong></td><td>5 user cohorts per jbiq_user_cohort_gtm__v1.docx — each encapsulating language, device tier, geography, and segment. The primary Bharat-first slicing dimension.</td></tr>
+        <tr><td><strong>Cohort Variance</strong></td><td>max(Active Habit Rate across A–E) − min. High variance = product winning unevenly. Even a healthy average can hide one cohort failing.</td></tr>
+        <tr><td><strong>Signature Experience (SE)</strong></td><td>A vertical experience that passes all 3 qualification benchmarks — proprietary data binding, loop-forming threshold, cultural irreplaceability. Score 0–3; only 3/3 qualifies. Re-baselined quarterly.</td></tr>
+        <tr><td><strong>BPC</strong></td><td>Bharat Persona Composite — weighted average of Cohort Score across Cohorts A–E. See bharat-metrics.md.</td></tr>
+        <tr><td><strong>NPS</strong></td><td>Net Promoter Score — will the user recommend the product?</td></tr>
+        <tr><td><strong>ASR</strong></td><td>Automatic Speech Recognition — converts voice input to text.</td></tr>
+        <tr><td><strong>WER</strong></td><td>Word Error Rate — ASR accuracy measure. Lower is better.</td></tr>
+        <tr><td><strong>TTS</strong></td><td>Text-to-Speech — converts text responses to audio output.</td></tr>
+        <tr><td><strong>MOS</strong></td><td>Mean Opinion Score — TTS naturalness rating on a 1–5 scale. Validated by native-speaker blind evaluation.</td></tr>
+        <tr><td><strong>VAD</strong></td><td>Voice Activity Detection — detects when the user is speaking vs silent.</td></tr>
+        <tr><td><strong>TTFT</strong></td><td>Time to First Token — latency from query submission to first response token. Key responsiveness signal.</td></tr>
+        <tr><td><strong>E2E Latency</strong></td><td>End-to-end latency — time from query to complete response delivered.</td></tr>
+        <tr><td><strong>p95</strong></td><td>95th percentile latency — the latency value that 95% of requests fall under. The SLO target percentile.</td></tr>
+        <tr><td><strong>SLO</strong></td><td>Service Level Objective — the internal reliability/latency target. Voice ≤1.5s p95, agentic ≤700ms p95.</td></tr>
+        <tr><td><strong>CI/CD</strong></td><td>Continuous Integration / Continuous Deployment — the pipeline through which every code change is tested and shipped.</td></tr>
+        <tr><td><strong>Production Quality Floor</strong></td><td>% of production responses passing all critical eval dimensions (relevance, accuracy, safety, language). Layer 5 L1 — the system gate below Response Satisfaction Rate.</td></tr>
+        <tr><td><strong>FnF</strong></td><td>Friends and Family — the pre-Beta testing program. Wave 1: May 15, 2026. Target: 3,000–4,000 active users.</td></tr>
+        <tr><td><strong>GA</strong></td><td>General Availability — public launch.</td></tr>
+        <tr><td><strong>D1 / D7 / D30 / D90</strong></td><td>Day 1 / 7 / 30 / 90 organic return rate — retention curve checkpoints.</td></tr>
+        <tr><td><strong>1P / 2P / 3P</strong></td><td>First party (Jio/RIL built) / Second party (Jio ecosystem partner) / Third party (external partner).</td></tr>
+        <tr><td><strong>PN / WA</strong></td><td>Push Notification / WhatsApp — the two comms channels for re-engagement.</td></tr>
+        <tr><td><strong>pp</strong></td><td>Percentage points — e.g. moving from 30% to 40% is a 10pp increase, not a 33% increase.</td></tr>
+        <tr><td><strong>MCP</strong></td><td>Model Context Protocol — the standard for partner skill integration.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- AUDIT -->
+  <section id="ref-audit">
+    <h3>Metrics-Design Audit</h3>
+    <table>
+      <thead><tr><th style="width:54%">Principle</th><th style="width:9%">Pass?</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td>Layers organised by user experience, not internal pods</td><td>✓</td><td>Each layer answers a user-experienced objective</td></tr>
+        <tr><td>L0s are user-backwards for Layers 1–5</td><td>✓</td><td>All five user-backwards. L4, L5 rewritten in v3. L2 rewritten in v4. Targets removed from L0s in v5.</td></tr>
+        <tr><td>No target numbers in L0 definitions</td><td>✓</td><td>v5: all target numbers removed from L0 definitions. Targets live in the goals doc.</td></tr>
+        <tr><td>L1 decomposes L0</td><td>Partial ✓</td><td>Useful Task Rate = L4 L0 × L5 L0 (clean math). Active Habit Rate causal only.</td></tr>
+        <tr><td>Org goals have homes in the tree</td><td>✓</td><td>All G01–G09 mapped to layer + level + direction. Goals section now leads the document.</td></tr>
+        <tr><td>Activity units clean and non-overlapping</td><td>✓</td><td>MAU ⊃ MEU ⊃ MQU/MCU. Card taps excluded. Reading excluded.</td></tr>
+        <tr><td>Personalisation L0 is user-backwards and lifecycle-complete</td><td>✓</td><td>% sessions product demonstrated it knew the user — works D0 through D90</td></tr>
+        <tr><td>Each metric Measurable today</td><td>⚠</td><td>16 P0 instrumentation gaps remain. Context carry-through rate and personalisation surface engagement need new events.</td></tr>
+        <tr><td>No vanity metrics at the top</td><td>✓</td><td>MAU at Layer 1 L2 only. Growth, A/B, Unit Economics out of tree.</td></tr>
+        <tr><td>Causal validation has a home</td><td>⚠</td><td>A/B blocked at FnF. All movements correlational until GrowthBook unblocked.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <hr>
+  <p style="font-size:11px;color:var(--gray-mid);text-align:center">JioBharatIQ Product Metrics Design v5 &nbsp;·&nbsp; Sridhar &nbsp;·&nbsp; 2026-05-12 &nbsp;·&nbsp; Internal · Reliance Intelligence</p>
+
+</div>
+
+<script>
+function tog(btn){const o=btn.classList.contains('open');btn.classList.toggle('open',!o);btn.nextElementSibling.classList.toggle('open',!o)}
+function togSV(h){const b=h.nextElementSibling;const o=b.classList.contains('open');b.classList.toggle('open',!o);h.classList.toggle('open',!o)}
+const secs=document.querySelectorAll('section[id],div.layer-block[id],h2[id],h3[id]');
+const links=document.querySelectorAll('#sidebar nav a');
+window.addEventListener('scroll',()=>{let c='';secs.forEach(s=>{if(window.scrollY>=s.offsetTop-110)c=s.id});links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+c))},{passive:true});
+links.forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();const t=document.querySelector(a.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'})})});
+</script>
+</body>
+</html>

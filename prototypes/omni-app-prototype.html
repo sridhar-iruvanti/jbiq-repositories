@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>OMNI — Jio Family Intelligence</title>
+<style>
+@font-face { font-family:'JioType'; font-weight:400; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeVarW05-Regular.woff2') format('woff2'); }
+@font-face { font-family:'JioType'; font-weight:500; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Medium.woff2') format('woff2'); }
+@font-face { font-family:'JioType'; font-weight:700; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Bold.woff2') format('woff2'); }
+@font-face { font-family:'JioType'; font-weight:900; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Black.woff2') format('woff2'); }
+
+:root {
+  --surface:#ffffff; --surface-ghost:#eeeeef; --surface-ghost-icon:#e7e9ff;
+  --surface-bold:#3535f3; --surface-minimal:#f5f5f6; --surface-moderate:#e3e3e4;
+  --text-high:#0c0d10; --text-medium:#191b1e; --text-low:rgba(25,27,30,0.55);
+  --text-on-bold:#ffffff; --icon-medium:#170054; --icon-high:#0c0d10;
+  --primary-20:#e8e8fc; --primary-30:#9999ff; --primary-50:#3535f3;
+  --primary-60:#000093; --primary-70:#00004c;
+  --sparkle-20:#e8faf7; --sparkle-30:#a7f6e9; --sparkle-50:#1eccb0;
+  --secondary-20:#fef7e9; --secondary-30:#ffe3ae; --secondary-50:#f7ab20; --secondary-60:#ac660c;
+  --success:#25ab21; --success-20:#e6f7e6;
+  --error:#fa2f40; --error-20:#fde8ea;
+  --grey-100:#141414; --grey-80:rgba(0,0,0,0.66); --grey-60:#b5b5b5; --grey-40:#e0e0e0; --grey-20:#f5f5f5;
+  --shape-4xl:23px; --shape-pill:999px; --shape-large:16px; --shape-medium:12px; --shape-small:8px; --shape-xsmall:4px;
+  --spacing-2xs:6px; --spacing-xs:8px; --spacing-s:12px; --spacing-m:16px; --spacing-l:20px; --spacing-xl:24px;
+  --stroke-minimal:rgba(36,38,43,0.13); --stroke-subtle:rgba(36,38,43,0.10);
+  --spring:350ms linear(0,0.3667,0.8271,1.0379,1.0652,1.0332,1.006,0.9961,0.996,0.9984,0.9999,1);
+  --ease-standard:cubic-bezier(0.4,0.0,0.2,1); --ease-decelerate:cubic-bezier(0.0,0.0,0.2,1);
+  --dur-quick:150ms; --dur-mod:250ms; --dur-del:350ms;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{overscroll-behavior:none;touch-action:manipulation;}
+body{font-family:'JioType',-apple-system,BlinkMacSystemFont,sans-serif;background:#e8e8e8;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:24px 0;}
+@media(max-width:768px){body{background:#fff!important;padding:0!important;align-items:stretch!important;}.phone-frame{width:100%!important;height:100vh!important;height:100dvh!important;border-radius:0!important;box-shadow:none!important;}}
+
+.phone-frame{width:360px;height:800px;background:var(--surface);position:relative;overflow:hidden;display:flex;flex-direction:column;border-radius:32px;box-shadow:0 24px 80px rgba(0,0,0,0.15);}
+
+/* STATUS BAR */
+.status-bar{height:52px;padding:14px 24px 0;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;background:var(--surface);}
+.status-bar .time{font-size:15px;font-weight:600;color:var(--text-high);}
+.status-bar .icons{display:flex;gap:6px;align-items:center;}
+
+/* HEADER */
+.header-nav{height:56px;padding:0 12px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;border-bottom:1px solid var(--surface-moderate);background:var(--surface);}
+.header-left{display:flex;align-items:center;gap:10px;}
+.omni-logo{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--primary-70),var(--primary-50));display:flex;align-items:center;justify-content:center;}
+.omni-logo svg{width:18px;height:18px;fill:#fff;}
+.header-title-area{}
+.header-title{font-size:16px;font-weight:700;color:var(--text-high);line-height:1;letter-spacing:-0.02em;}
+.header-domain{font-size:11px;color:var(--sparkle-50);font-weight:600;line-height:1.3;}
+.header-right{display:flex;gap:4px;}
+.icon-btn-ghost{width:36px;height:36px;border-radius:var(--shape-pill);display:flex;align-items:center;justify-content:center;background:var(--surface-ghost);border:none;cursor:pointer;transition:background var(--dur-quick) var(--ease-standard);}
+.icon-btn-ghost:active{background:var(--surface-moderate);}
+.icon-btn-ghost svg{width:20px;height:20px;fill:var(--icon-medium);}
+
+/* CHAT CONTAINER */
+.chat-container{flex:1;overflow-y:auto;overflow-x:clip;padding:16px;display:flex;flex-direction:column;gap:16px;scrollbar-width:none;}
+.chat-container::-webkit-scrollbar{display:none;}
+
+@keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes cardIn{from{opacity:0;transform:translateY(6px) scale(0.99)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes dotBounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-5px)}}
+@keyframes chipAppear{0%{opacity:0;transform:translateY(5px) scale(0.96)}100%{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes pulse{0%,100%{opacity:0.7;transform:scale(1)}50%{opacity:1;transform:scale(1.06)}}
+
+/* AI MESSAGE */
+.ai-msg{display:flex;gap:8px;align-items:flex-start;animation:msgIn var(--dur-del) var(--ease-decelerate);}
+.ai-avatar{width:32px;height:32px;border-radius:50%;flex-shrink:0;margin-top:2px;background:linear-gradient(135deg,var(--primary-70),var(--primary-50));display:flex;align-items:center;justify-content:center;font-size:14px;}
+.ai-content{flex:1;max-width:calc(100% - 40px);min-width:0;}
+.ai-text{font-size:14px;line-height:1.5;color:var(--text-high);letter-spacing:-0.005em;}
+.ai-text p{margin-bottom:8px;}
+.ai-text p:last-child{margin-bottom:0;}
+.ai-text strong{font-weight:700;}
+
+/* USER MESSAGE */
+.user-msg{display:flex;justify-content:flex-end;animation:msgIn var(--dur-del) var(--ease-decelerate);}
+.user-bubble{max-width:270px;background:var(--surface-ghost);color:var(--text-high);padding:12px 16px;border-radius:24px 24px 0 24px;font-size:14px;line-height:1.4;letter-spacing:-0.005em;font-weight:500;}
+
+/* THINKING */
+.thinking-row{display:flex;align-items:center;gap:8px;animation:msgIn var(--dur-mod) var(--ease-decelerate);}
+.thinking-avatar{width:32px;height:32px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--primary-70),var(--primary-50));display:flex;align-items:center;justify-content:center;font-size:14px;}
+.thinking-dots{display:flex;gap:4px;}
+.thinking-dots span{width:6px;height:6px;border-radius:50%;background:var(--primary-50);animation:dotBounce 1.2s infinite;}
+.thinking-dots span:nth-child(2){animation-delay:.15s;}
+.thinking-dots span:nth-child(3){animation-delay:.3s;}
+
+/* FEEDBACK ROW */
+.feedback-row{display:flex;gap:2px;margin-top:8px;}
+.fb-btn{width:29px;height:29px;border-radius:var(--shape-pill);background:var(--surface);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background var(--dur-quick);}
+.fb-btn:active{background:var(--grey-20);}
+.fb-btn svg{width:16px;height:16px;fill:var(--icon-high);}
+
+/* CHIPS */
+.chip-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;width:100%;}
+.chip-row.scroll{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:4px;}
+.chip-row.scroll::-webkit-scrollbar{display:none;}
+.chip-appear-1{animation:chipAppear 220ms var(--ease-decelerate) 0ms both}
+.chip-appear-2{animation:chipAppear 220ms var(--ease-decelerate) 70ms both}
+.chip-appear-3{animation:chipAppear 220ms var(--ease-decelerate) 140ms both}
+.chip-appear-4{animation:chipAppear 220ms var(--ease-decelerate) 210ms both}
+.chip-appear-5{animation:chipAppear 220ms var(--ease-decelerate) 280ms both}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border:1.5px solid var(--stroke-minimal);border-radius:var(--shape-pill);background:var(--surface);font-family:'JioType',sans-serif;font-size:13px;font-weight:500;color:var(--text-high);cursor:pointer;transition:all var(--dur-quick) var(--ease-standard);letter-spacing:-0.005em;white-space:nowrap;flex-shrink:0;}
+.chip:active{transform:scale(0.97);}
+.chip:hover{border-color:var(--primary-30);background:var(--primary-20);}
+.chip.cta{background:var(--surface-bold);border-color:var(--surface-bold);color:#fff;font-weight:700;}
+.chip.cta:hover{background:var(--primary-60);}
+.chip.teal{background:var(--sparkle-20);border-color:var(--sparkle-30);color:var(--sparkle-50);font-weight:600;}
+.chip.teal:hover{background:var(--sparkle-30);}
+
+/* BOTTOM INPUT */
+.bottom-widget{width:100%;padding:2px 12px 8px;background:var(--surface);flex-shrink:0;}
+.bw-container{background:var(--surface-ghost);border-radius:var(--shape-4xl);padding:var(--spacing-2xs);display:flex;flex-direction:column;}
+.bw-input{padding:12px 8px;}
+.bw-real-input{flex:1;border:none;outline:none;font-family:'JioType',sans-serif;font-size:14px;color:var(--text-high);background:transparent;width:100%;}
+.bw-real-input::placeholder{color:var(--text-low);}
+.bw-actions{display:flex;align-items:center;gap:8px;height:43px;padding:0 2px;}
+.wib{width:36px;height:36px;border-radius:var(--shape-pill);display:flex;align-items:center;justify-content:center;background:var(--surface-ghost-icon);border:none;cursor:pointer;flex-shrink:0;transition:background var(--dur-quick) var(--ease-standard);}
+.wib:active{background:var(--surface-moderate);}
+.wib svg{width:20px;height:20px;fill:var(--icon-medium);}
+.speak-btn{background:var(--surface-bold);border:none;border-radius:var(--shape-pill);padding:10px 20px;display:flex;align-items:center;gap:6px;cursor:pointer;margin-left:auto;transition:opacity var(--dur-quick);}
+.speak-btn:active{opacity:0.85;}
+.speak-btn svg{width:16px;height:16px;fill:#fff;}
+.speak-btn span{font-family:'JioType',sans-serif;font-weight:700;font-size:14px;color:#fff;}
+
+
+/* ═══════════════════════════════
+   OMNI-SPECIFIC CARDS
+   ═══════════════════════════════ */
+
+/* MORNING BRIEF CARD */
+.brief-card{background:linear-gradient(150deg,var(--primary-70),var(--primary-60),var(--primary-70));border-radius:var(--shape-large);padding:0;overflow:hidden;animation:cardIn var(--spring);width:100%;}
+.bc-top{padding:16px 16px 14px;position:relative;}
+.bc-eyebrow{font-size:10px;font-weight:800;color:rgba(30,204,176,0.9);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px;display:flex;align-items:center;gap:5px;}
+.bc-dot{width:5px;height:5px;border-radius:50%;background:var(--sparkle-50);animation:pulse 2.5s infinite;}
+.bc-greeting{font-size:20px;font-weight:900;color:#fff;letter-spacing:-0.03em;line-height:1.15;margin-bottom:4px;}
+.bc-sub{font-size:12px;color:rgba(255,255,255,0.5);line-height:1.4;}
+.bc-members{padding:0 16px 14px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;}
+.bc-members::-webkit-scrollbar{display:none;}
+.bc-member{flex-shrink:0;text-align:center;}
+.bcm-avatar{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:900;color:#fff;border:2px solid transparent;position:relative;}
+.bcm-avatar.alert::after{content:'';position:absolute;top:-2px;right:-2px;width:10px;height:10px;border-radius:50%;background:var(--secondary-50);border:2px solid var(--primary-70);}
+.bcm-avatar.ok::after{content:'';position:absolute;top:-2px;right:-2px;width:10px;height:10px;border-radius:50%;background:var(--success);border:2px solid var(--primary-70);}
+.bcm-name{font-size:9px;font-weight:700;color:rgba(255,255,255,0.55);text-transform:uppercase;letter-spacing:0.03em;margin-top:5px;}
+.bc-divider{height:1px;background:rgba(255,255,255,0.08);margin:0 16px;}
+.bc-items{padding:12px 16px 14px;display:flex;flex-direction:column;gap:8px;}
+.bci{display:flex;align-items:flex-start;gap:10px;}
+.bci-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px;}
+.bci-icon.warn{background:rgba(247,171,32,0.18);}
+.bci-icon.ok{background:rgba(37,171,33,0.18);}
+.bci-icon.info{background:rgba(30,204,176,0.15);}
+.bci-body{flex:1;}
+.bci-title{font-size:13px;font-weight:700;color:#fff;line-height:1.3;}
+.bci-sub{font-size:11px;color:rgba(255,255,255,0.45);margin-top:2px;line-height:1.4;}
+
+/* MEMBER CONTEXT CARD */
+.member-card{border:1px solid var(--stroke-subtle);border-radius:var(--shape-large);overflow:hidden;animation:cardIn var(--spring);width:100%;}
+.mc-header{padding:12px 14px;background:var(--surface-ghost);display:flex;align-items:center;gap:10px;}
+.mc-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:#fff;flex-shrink:0;}
+.mc-info{flex:1;min-width:0;}
+.mc-name{font-size:14px;font-weight:700;color:var(--text-high);}
+.mc-role{font-size:11px;color:var(--text-low);margin-top:1px;}
+.mc-status{padding:3px 9px;border-radius:var(--shape-pill);font-size:10px;font-weight:700;}
+.mc-status.alert{background:var(--error-20);color:var(--error);}
+.mc-status.ok{background:var(--success-20);color:var(--success);}
+.mc-status.info{background:var(--primary-20);color:var(--primary-60);}
+.mc-body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:8px;}
+.mc-row{display:flex;align-items:center;gap:8px;}
+.mc-row-icon{width:20px;height:20px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;}
+.mc-row-label{font-size:11px;color:var(--text-low);width:80px;flex-shrink:0;}
+.mc-row-value{font-size:12px;font-weight:600;color:var(--text-high);flex:1;}
+.mc-row-value.warn{color:var(--secondary-60);}
+.mc-row-value.ok{color:var(--success);}
+.mc-divider{height:1px;background:var(--grey-40);margin:4px 0;}
+.mc-note{padding:8px 10px;background:var(--secondary-20);border-radius:var(--shape-small);border-left:3px solid var(--secondary-50);font-size:12px;color:var(--secondary-60);line-height:1.5;}
+
+/* REMINDER CARD */
+.reminder-card{border:1px solid var(--sparkle-30);border-radius:var(--shape-large);overflow:hidden;animation:cardIn var(--spring);width:100%;}
+.rc-header{padding:10px 14px;background:var(--sparkle-20);display:flex;align-items:center;gap:8px;}
+.rc-icon{font-size:16px;}
+.rc-title{font-size:13px;font-weight:700;color:var(--sparkle-50);flex:1;}
+.rc-badge{font-size:10px;font-weight:700;color:var(--sparkle-50);background:rgba(30,204,176,0.15);padding:2px 8px;border-radius:var(--shape-pill);}
+.rc-list{padding:12px 14px;display:flex;flex-direction:column;gap:10px;}
+.rc-item{display:flex;align-items:center;gap:10px;}
+.rc-check{width:20px;height:20px;border-radius:50%;border:2px solid var(--grey-40);flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all var(--dur-quick);}
+.rc-check.done{background:var(--sparkle-50);border-color:var(--sparkle-50);}
+.rc-check.done::after{content:'✓';font-size:10px;font-weight:900;color:#fff;}
+.rc-item-body{flex:1;}
+.rc-item-title{font-size:13px;font-weight:600;color:var(--text-high);}
+.rc-item-meta{font-size:11px;color:var(--text-low);margin-top:2px;}
+.rc-time{font-size:11px;font-weight:700;color:var(--sparkle-50);}
+
+/* GRAPH CONTEXT STRIP */
+.graph-strip{background:var(--primary-20);border-radius:var(--shape-medium);padding:10px 12px;display:flex;align-items:center;gap:10px;border:1px solid rgba(53,53,243,0.12);}
+.gs-icon{font-size:18px;flex-shrink:0;}
+.gs-body{flex:1;}
+.gs-label{font-size:10px;font-weight:800;color:var(--primary-60);text-transform:uppercase;letter-spacing:0.05em;}
+.gs-text{font-size:12px;color:var(--text-medium);margin-top:2px;line-height:1.4;}
+.gs-arrow{font-size:16px;color:var(--primary-50);}
+
+/* REASONING STRIP */
+.reasoning-strip{background:var(--primary-20);border-radius:var(--shape-medium);padding:10px 12px;margin-top:10px;border-left:3px solid var(--primary-50);}
+.rs-label{font-size:10px;font-weight:800;color:var(--primary-60);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;}
+.rs-tags{display:flex;flex-wrap:wrap;gap:5px;}
+.rs-tag{padding:3px 9px;background:rgba(255,255,255,0.75);border-radius:var(--shape-pill);font-size:11px;font-weight:600;color:var(--primary-60);}
+</style>
+</head>
+<body>
+<div class="phone-frame">
+
+  <!-- STATUS BAR -->
+  <div class="status-bar">
+    <span class="time">9:41</span>
+    <div class="icons">
+      <svg viewBox="0 0 24 24"><path d="M1.5 8.5C5.5 4.5 10.5 2.5 12 2.5s6.5 2 10.5 6l-2 2C17.2 7.3 14.6 5.5 12 5.5S6.8 7.3 3.5 10.5l-2-2zm3 3C6.7 9.3 9.2 8 12 8s5.3 1.3 7.5 3.5l-2 2C15.8 11.8 14 11 12 11s-3.8.8-5.5 2.5l-2-2zm3 3c1.1-1.1 2.5-1.7 4.5-1.7s3.4.6 4.5 1.7l-2 2c-.7-.7-1.6-1-2.5-1s-1.8.3-2.5 1l-2-2zM12 17.5a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/></svg>
+      <svg viewBox="0 0 24 24"><rect x="2" y="7" width="18" height="11" rx="2" ry="2"/><path d="M22 11v3"/></svg>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <div class="header-nav">
+    <div class="header-left">
+      <div class="omni-logo">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08s5.97 1.09 6 3.08c-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+      </div>
+      <div class="header-title-area">
+        <div class="header-title">OMNI</div>
+        <div class="header-domain">Family Intelligence</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <button class="icon-btn-ghost">
+        <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+      </button>
+      <button class="icon-btn-ghost" id="familyBtn">
+        <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- CHAT CONTAINER -->
+  <div class="chat-container" id="chat">
+
+    <!-- Morning Brief Card — proactive open -->
+    <div class="ai-msg" id="briefMsg">
+      <div class="ai-avatar">✦</div>
+      <div class="ai-content">
+        <div class="brief-card">
+          <div class="bc-top">
+            <div class="bc-eyebrow"><div class="bc-dot"></div> Good morning</div>
+            <div class="bc-greeting">Gargi, here's your<br>family for today</div>
+            <div class="bc-sub">Sunday · 12 Apr · Sawant household · 5 members</div>
+          </div>
+          <div class="bc-members">
+            <div class="bc-member">
+              <div class="bcm-avatar alert" style="background:linear-gradient(135deg,var(--primary-70),var(--primary-50))">G</div>
+              <div class="bcm-name">Gargi</div>
+            </div>
+            <div class="bc-member">
+              <div class="bcm-avatar ok" style="background:var(--primary-50)">R</div>
+              <div class="bcm-name">Rajesh</div>
+            </div>
+            <div class="bc-member">
+              <div class="bcm-avatar ok" style="background:var(--sparkle-50)">N</div>
+              <div class="bcm-name">Neha</div>
+            </div>
+            <div class="bc-member">
+              <div class="bcm-avatar ok" style="background:var(--secondary-50)">Rv</div>
+              <div class="bcm-name">Ravi</div>
+            </div>
+            <div class="bc-member">
+              <div class="bcm-avatar alert" style="background:var(--primary-60)">K</div>
+              <div class="bcm-name">Dadi</div>
+            </div>
+          </div>
+          <div class="bc-divider"></div>
+          <div class="bc-items">
+            <div class="bci">
+              <div class="bci-icon warn">⚠️</div>
+              <div class="bci-body">
+                <div class="bci-title">Dadi's BP meds — not confirmed today</div>
+                <div class="bci-sub">Last taken yesterday 8:15am · Amlodipine 5mg due</div>
+              </div>
+            </div>
+            <div class="bci">
+              <div class="bci-icon ok">✅</div>
+              <div class="bci-body">
+                <div class="bci-title">Neha's exam prep — on track</div>
+                <div class="bci-sub">Class 12 Boards · 18 days left · 3 sessions logged this week</div>
+              </div>
+            </div>
+            <div class="bci">
+              <div class="bci-icon info">📍</div>
+              <div class="bci-body">
+                <div class="bci-title">Rajesh back from Pune · 6:30pm today</div>
+                <div class="bci-sub">Flight IndiGo 6E-427 · On time</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="chip-row">
+          <button class="chip teal chip-appear-1" onclick="chipTap('meds','Check Dadi\'s meds')">💊 Check Dadi's meds</button>
+          <button class="chip chip-appear-2" onclick="chipTap('neha','Neha's prep')">📚 Neha's prep</button>
+          <button class="chip chip-appear-3" onclick="chipTap('rajesh','Rajesh's flight')">✈️ Rajesh's flight</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /chat -->
+
+  <!-- BOTTOM INPUT -->
+  <div class="bottom-widget">
+    <div class="bw-container">
+      <div class="bw-input">
+        <input class="bw-real-input" id="inputField" placeholder="Ask about your family…" onkeydown="handleKey(event)">
+      </div>
+      <div class="bw-actions">
+        <button class="wib">
+          <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+        </button>
+        <button class="wib">
+          <svg viewBox="0 0 24 24"><path d="M12 15c1.66 0 2.99-1.34 2.99-3L15 6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 15 6.7 12H5c0 3.41 2.72 6.23 6 6.72V22h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/></svg>
+        </button>
+        <button class="speak-btn" onclick="chipTap('voice','')">
+          <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+          <span>Speak</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+</div><!-- /phone-frame -->
+
+<script>
+const chat = document.getElementById('chat');
+
+/* ── CONVERSATIONS ─────────────────────────── */
+const FLOWS = {
+  meds: {
+    user: "Has Dadi taken her BP meds today?",
+    think: 1800,
+    respond: () => {
+      addMemberCard();
+      addAIText(
+        `<p>Dadi <strong>hasn't confirmed her meds yet today.</strong> Her Amlodipine 5mg was last logged yesterday at 8:15am.</p><p>She mentioned to Rajesh on Tuesday that she sometimes forgets on Sunday mornings.</p>`,
+        [
+          { label: '📲 Send reminder to Dadi', key: 'remind_dadi', cls: 'teal' },
+          { label: '🔔 Set daily 8am alert', key: 'set_alert', cls: '' },
+          { label: '📋 View med history', key: 'med_history', cls: '' },
+        ],
+        true
+      );
+    }
+  },
+  remind_dadi: {
+    user: "Send her a reminder",
+    think: 1400,
+    respond: () => {
+      addReminderCard();
+      addAIText(
+        `<p><strong>Done.</strong> Reminder sent to Dadi's Jio phone — "Kamala ji, BP meds time 💊". She usually responds within a few minutes.</p><p>I'll notify you once she confirms.</p>`,
+        [
+          { label: '✅ Mark as done manually', key: 'done', cls: 'teal' },
+          { label: '📋 View all reminders', key: 'reminders', cls: '' },
+        ],
+        true
+      );
+    }
+  },
+  neha: {
+    user: "How is Neha's exam prep going?",
+    think: 1600,
+    respond: () => {
+      addNehaCard();
+      addAIText(
+        `<p>Neha has been <strong>consistent this week</strong> — 3 study sessions, avg 2.4 hours each. She's strongest in Chemistry and weakest in Math right now.</p><p>Boards are in 18 days. She asked Ravi for help with integration last night.</p>`,
+        [
+          { label: '📚 See subject breakdown', key: 'subjects', cls: '' },
+          { label: '🗓 Study schedule', key: 'schedule', cls: '' },
+          { label: '💬 Message Neha', key: 'msg_neha', cls: 'teal' },
+        ],
+        true
+      );
+    }
+  },
+  rajesh: {
+    user: "When does Rajesh land today?",
+    think: 1200,
+    respond: () => {
+      addFlightCard();
+      addAIText(
+        `<p>Rajesh's flight <strong>IndiGo 6E-427</strong> from Pune lands at 6:30pm — currently on time. BOM T2, gate info available 90 min before landing.</p><p>Should I remind the family to expect him for dinner?</p>`,
+        [
+          { label: '🍽 Remind family for dinner', key: 'dinner', cls: 'teal' },
+          { label: '🚗 Book cab to airport', key: 'cab', cls: '' },
+        ],
+        true
+      );
+    }
+  },
+  set_alert: {
+    user: "Yes, set a daily 8am reminder for Dadi's meds",
+    think: 1000,
+    respond: () => {
+      addAIText(
+        `<p><strong>Daily reminder set</strong> — Dadi will get a push notification every morning at 8:00am for her Amlodipine 5mg.</p><p>I've also added it to the family health log. You can manage all of Dadi's health routines from the Family tab.</p>`,
+        [
+          { label: '👥 View family health', key: 'health', cls: '' },
+          { label: '✏️ Adjust time', key: 'adjust', cls: '' },
+        ],
+        false
+      );
+    }
+  },
+  dinner: {
+    user: "Yes, tell everyone Rajesh is coming for dinner",
+    think: 900,
+    respond: () => {
+      addAIText(
+        `<p>Notified <strong>Gargi, Ravi, Neha, and Dadi</strong> — "Rajesh lands at 6:30pm, home for dinner by 8pm."</p><p>Dadi replied "Achha, main khana bana leti hoon 😊"</p>`,
+        [
+          { label: '🛒 Check grocery needs', key: 'grocery', cls: '' },
+          { label: '👍 Great, thanks', key: 'done', cls: 'teal' },
+        ],
+        false
+      );
+    }
+  },
+  done: {
+    user: "Thanks OMNI!",
+    think: 800,
+    respond: () => {
+      addAIText(
+        `<p>Always here for the Sawant family 🏠</p><p>I'll keep an eye on Dadi's meds and Rajesh's flight — I'll ping you if anything changes.</p>`,
+        [],
+        false
+      );
+    }
+  }
+};
+
+let busy = false;
+
+function chipTap(key, label) {
+  if (busy) return;
+  const flow = FLOWS[key];
+  if (!flow) return;
+  const displayLabel = label || flow.user;
+  addUserMsg(displayLabel);
+  showThinking(flow.think, flow.respond);
+}
+
+function sendMessage() {
+  const input = document.getElementById('inputField');
+  const text = input.value.trim();
+  if (!text || busy) return;
+  input.value = '';
+  addUserMsg(text);
+  showThinking(1600, () => {
+    addAIText(
+      `<p>I'm looking across the Sawant family graph for context on that…</p><p>OMNI sees <strong>5 members</strong>, their routines, calendars, health records, and recent interactions. Ask me about any of them or what's coming up for the household.</p>`,
+      [
+        { label: '💊 Dadi\'s health', key: 'meds', cls: '' },
+        { label: '📚 Neha\'s prep', key: 'neha', cls: '' },
+        { label: '✈️ Rajesh\'s travel', key: 'rajesh', cls: '' },
+      ],
+      true
+    );
+  });
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter') sendMessage();
+}
+
+/* ── DOM HELPERS ───────────────────────────── */
+function addUserMsg(text) {
+  const el = document.createElement('div');
+  el.className = 'user-msg';
+  el.innerHTML = `<div class="user-bubble">${text}</div>`;
+  chat.appendChild(el);
+  scrollDown();
+}
+
+function showThinking(delay, callback) {
+  busy = true;
+  disableChips();
+  const row = document.createElement('div');
+  row.className = 'thinking-row';
+  row.id = 'thinking';
+  row.innerHTML = `<div class="thinking-avatar">✦</div><div class="thinking-dots"><span></span><span></span><span></span></div>`;
+  chat.appendChild(row);
+  scrollDown();
+  setTimeout(() => {
+    row.remove();
+    callback();
+    busy = false;
+    scrollDown();
+  }, delay);
+}
+
+function addAIText(html, chips, showFeedback) {
+  const el = document.createElement('div');
+  el.className = 'ai-msg';
+  let chipsHtml = '';
+  if (chips && chips.length) {
+    chipsHtml = `<div class="chip-row">` +
+      chips.map((c, i) => `<button class="chip ${c.cls || ''} chip-appear-${i+1}" onclick="chipTap('${c.key}','${c.label}')">${c.label}</button>`).join('') +
+      `</div>`;
+  }
+  const fbHtml = showFeedback ? `<div class="feedback-row">
+    <button class="fb-btn"><svg viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg></button>
+    <button class="fb-btn"><svg viewBox="0 0 24 24"><path d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/></svg></button>
+    <button class="fb-btn"><svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg></button>
+  </div>` : '';
+  el.innerHTML = `<div class="ai-avatar">✦</div>
+    <div class="ai-content">
+      <div class="ai-text">${html}</div>
+      ${fbHtml}
+      ${chipsHtml}
+    </div>`;
+  chat.appendChild(el);
+  scrollDown();
+}
+
+function addMemberCard() {
+  const el = document.createElement('div');
+  el.className = 'ai-msg';
+  el.innerHTML = `<div class="ai-avatar">✦</div>
+    <div class="ai-content">
+      <div class="member-card">
+        <div class="mc-header">
+          <div class="mc-avatar" style="background:var(--primary-60)">K</div>
+          <div class="mc-info">
+            <div class="mc-name">Kamala (Dadi)</div>
+            <div class="mc-role">Sawant household · Age 72</div>
+          </div>
+          <div class="mc-status alert">Needs attention</div>
+        </div>
+        <div class="mc-body">
+          <div class="mc-row">
+            <div class="mc-row-icon" style="background:var(--error-20)">💊</div>
+            <div class="mc-row-label">BP Medication</div>
+            <div class="mc-row-value warn">Not confirmed today</div>
+          </div>
+          <div class="mc-row">
+            <div class="mc-row-icon" style="background:var(--sparkle-20)">🩺</div>
+            <div class="mc-row-label">Last BP reading</div>
+            <div class="mc-row-value">134/88 · Fri, 10 Apr</div>
+          </div>
+          <div class="mc-row">
+            <div class="mc-row-icon" style="background:var(--primary-20)">📅</div>
+            <div class="mc-row-label">Next checkup</div>
+            <div class="mc-row-value">Dr. Kulkarni · Tue, 15 Apr</div>
+          </div>
+          <div class="mc-divider"></div>
+          <div class="mc-note">
+            Rajesh mentioned on Tuesday that Dadi skips meds on lazy mornings. Worth a gentle nudge today.
+          </div>
+        </div>
+      </div>
+    </div>`;
+  chat.appendChild(el);
+}
+
+function addReminderCard() {
+  const el = document.createElement('div');
+  el.className = 'ai-msg';
+  el.innerHTML = `<div class="ai-avatar">✦</div>
+    <div class="ai-content">
+      <div class="reminder-card">
+        <div class="rc-header">
+          <div class="rc-icon">📲</div>
+          <div class="rc-title">Reminder sent to Dadi</div>
+          <div class="rc-badge">Just now</div>
+        </div>
+        <div class="rc-list">
+          <div class="rc-item">
+            <div class="rc-check done" id="dadiCheck" onclick="toggleCheck(this)"></div>
+            <div class="rc-item-body">
+              <div class="rc-item-title">Amlodipine 5mg — morning dose</div>
+              <div class="rc-item-meta">Kamala · Sent via Jio push notification</div>
+            </div>
+            <div class="rc-time">8:00am</div>
+          </div>
+          <div class="rc-item">
+            <div class="rc-check" onclick="toggleCheck(this)"></div>
+            <div class="rc-item-body">
+              <div class="rc-item-title">Log confirmation when taken</div>
+              <div class="rc-item-meta">Auto-logs when Dadi replies</div>
+            </div>
+            <div class="rc-time">Pending</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  chat.appendChild(el);
+}
+
+function addNehaCard() {
+  const el = document.createElement('div');
+  el.className = 'ai-msg';
+  el.innerHTML = `<div class="ai-avatar">✦</div>
+    <div class="ai-content">
+      <div class="member-card">
+        <div class="mc-header">
+          <div class="mc-avatar" style="background:var(--sparkle-50)">N</div>
+          <div class="mc-info">
+            <div class="mc-name">Neha Sawant</div>
+            <div class="mc-role">Class 12 · CBSE Boards in 18 days</div>
+          </div>
+          <div class="mc-status ok">On track</div>
+        </div>
+        <div class="mc-body">
+          <div class="mc-row">
+            <div class="mc-row-icon" style="background:var(--success-20)">📗</div>
+            <div class="mc-row-label">Chemistry</div>
+            <div class="mc-row-value ok">Strong · 87%</div>
+          </div>
+          <div class="mc-row">
+            <div class="mc-row-icon" style="background:var(--error-20)">📘</div>
+            <div class="mc-row-label">Mathematics</div>
+            <div class="mc-row-value warn">Needs work · 64%</div>
+          </div>
+          <div class="mc-row">
+            <div class="mc-row-icon" style="background:var(--primary-20)">⏱</div>
+            <div class="mc-row-label">This week</div>
+            <div class="mc-row-value">3 sessions · 7.2 hrs total</div>
+          </div>
+          <div class="mc-divider"></div>
+          <div class="graph-strip">
+            <div class="gs-icon">🔗</div>
+            <div class="gs-body">
+              <div class="gs-label">Graph context</div>
+              <div class="gs-text">Neha asked Ravi for integration help last night (11pm). Ravi has a tutor session cancelled tomorrow — could be re-purposed.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  chat.appendChild(el);
+}
+
+function addFlightCard() {
+  const el = document.createElement('div');
+  el.className = 'ai-msg';
+  el.innerHTML = `<div class="ai-avatar">✦</div>
+    <div class="ai-content">
+      <div class="member-card">
+        <div class="mc-header">
+          <div class="mc-avatar" style="background:var(--primary-50)">R</div>
+          <div class="mc-info">
+            <div class="mc-name">Rajesh Sawant</div>
+            <div class="mc-role">Returning from Pune · Business trip</div>
+          </div>
+          <div class="mc-status ok">On time</div>
+        </div>
+        <div class="mc-body">
+          <div class="mc-row">
+            <div class="mc-row-icon" style="background:var(--primary-20)">✈️</div>
+            <div class="mc-row-label">Flight</div>
+            <div class="mc-row-value">IndiGo 6E-427 · PNQ→BOM</div>
+          </div>
+          <div class="mc-row">
+            <div class="mc-row-icon" style="background:var(--success-20)">🕐</div>
+            <div class="mc-row-label">Arrival</div>
+            <div class="mc-row-value ok">6:30pm · On time</div>
+          </div>
+          <div class="mc-row">
+            <div class="mc-row-icon" style="background:var(--sparkle-20)">🏢</div>
+            <div class="mc-row-label">Terminal</div>
+            <div class="mc-row-value">BOM T2 · Gate TBA at 5pm</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  chat.appendChild(el);
+}
+
+function toggleCheck(el) {
+  el.classList.toggle('done');
+}
+
+function disableChips() {
+  document.querySelectorAll('.chip').forEach(c => c.style.pointerEvents = 'none');
+}
+
+function scrollDown() {
+  setTimeout(() => chat.scrollTo({ top: chat.scrollHeight, behavior: 'smooth' }), 60);
+}
+
+</script>
+</body>
+</html>

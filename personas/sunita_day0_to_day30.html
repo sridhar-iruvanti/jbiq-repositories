@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sunita · JBIQ Personalisation Journey · Day 0–30</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#1a1a1f;--ink2:#3d3d46;--ink3:#7a7a88;--ink4:#b0afc0;
+  --paper:#faf9f6;--paper2:#f2f0eb;--paper3:#e5e2da;
+  --accent:#4a3fa8;--accent-s:rgba(74,63,168,.09);--accent-b:rgba(74,63,168,.22);
+  --teal:#0e8a68;--teal-s:rgba(14,138,104,.1);
+  --amber:#b86d0e;--amber-s:rgba(184,109,14,.09);
+  --coral:#b83a24;--coral-s:rgba(184,58,36,.09);
+  --slate:#2e3442;
+  --font:'IBM Plex Sans',sans-serif;
+  --serif:'Playfair Display',Georgia,serif;
+  --mono:'IBM Plex Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font);background:var(--paper);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased;}
+
+/* PAGE SHELL */
+.page{display:flex;min-height:100vh;}
+
+/* SIDEBAR */
+.sidebar{
+  width:250px;flex-shrink:0;
+  background:var(--slate);
+  color:#fff;
+  padding:36px 26px 32px;
+  position:sticky;top:0;height:100vh;
+  overflow:hidden;display:flex;flex-direction:column;
+}
+.sb-eyebrow{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:26px;}
+.sb-avatar{
+  width:72px;height:72px;border-radius:50%;
+  background:linear-gradient(140deg,#5c52c8 0%,#8c7ef0 100%);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:16px;flex-shrink:0;
+}
+.sb-initials{font-family:var(--serif);font-size:26px;color:#fff;font-style:italic;}
+.sb-name{font-family:var(--serif);font-size:24px;font-weight:400;color:#fff;margin-bottom:3px;}
+.sb-desc{font-size:12px;color:rgba(255,255,255,.4);margin-bottom:22px;line-height:1.5;}
+.sb-line{height:1px;background:rgba(255,255,255,.07);margin-bottom:18px;}
+.sb-row{margin-bottom:13px;}
+.sb-label{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:3px;}
+.sb-val{font-size:12px;color:rgba(255,255,255,.68);line-height:1.45;}
+.sb-footer{margin-top:auto;padding-top:18px;border-top:1px solid rgba(255,255,255,.07);}
+.sb-footer-text{font-size:11px;color:rgba(255,255,255,.22);line-height:1.6;font-style:italic;}
+
+/* MAIN */
+.main{flex:1;min-width:0;display:flex;flex-direction:column;}
+
+/* TOP BAR */
+.topbar{
+  padding:26px 44px 20px;
+  border-bottom:1px solid var(--paper3);
+  background:var(--paper);
+  position:sticky;top:0;z-index:20;
+}
+.topbar-title{font-family:var(--serif);font-size:20px;font-weight:400;color:var(--ink);margin-bottom:3px;}
+.topbar-sub{font-size:12px;color:var(--ink3);}
+
+/* DAY TABS */
+.tabs{
+  display:flex;gap:0;overflow-x:auto;scrollbar-width:none;
+  border-bottom:1px solid var(--paper3);
+  background:var(--paper);
+  position:sticky;top:80px;z-index:19;
+  flex-shrink:0;
+}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{
+  flex-shrink:0;padding:12px 18px;cursor:pointer;
+  border-bottom:2px solid transparent;transition:all .13s;user-select:none;
+}
+.tab:hover .t-day,.tab:hover .t-label{color:var(--ink);}
+.tab.active{border-bottom-color:var(--accent);}
+.tab.active .t-day{color:var(--accent);}
+.tab.active .t-label{color:var(--ink);font-weight:500;}
+.t-day{font-family:var(--mono);font-size:9px;color:var(--ink4);display:block;margin-bottom:2px;transition:color .13s;}
+.t-label{font-size:12px;color:var(--ink3);display:block;white-space:nowrap;transition:color .13s;}
+
+/* PANELS */
+.panel{display:none;animation:fadeup .22s ease;}
+.panel.active{display:flex;flex-direction:column;}
+@keyframes fadeup{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
+
+/* HERO */
+.hero{
+  padding:32px 44px 0;
+  display:grid;grid-template-columns:1fr 220px;
+  gap:36px;align-items:start;
+}
+.hero-left{}
+.surface-tag{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:var(--mono);font-size:10px;padding:3px 11px;border-radius:20px;
+  margin-bottom:14px;font-weight:500;letter-spacing:.03em;
+}
+.s-home   {background:var(--teal-s);color:var(--teal);border:1px solid rgba(14,138,104,.2);}
+.s-voice  {background:var(--amber-s);color:var(--amber);border:1px solid rgba(184,109,14,.2);}
+.s-chat   {background:var(--accent-s);color:var(--accent);border:1px solid rgba(74,63,168,.18);}
+.s-notif  {background:var(--coral-s);color:var(--coral);border:1px solid rgba(184,58,36,.2);}
+.s-settings{background:var(--paper2);color:var(--ink3);border:1px solid var(--paper3);}
+
+.hero-num{font-family:var(--mono);font-size:10px;color:var(--ink4);margin-bottom:7px;}
+.hero-title{font-family:var(--serif);font-size:28px;font-weight:400;line-height:1.2;color:var(--ink);margin-bottom:12px;}
+.hero-feel{font-family:var(--serif);font-size:16px;font-style:italic;color:var(--accent);line-height:1.4;}
+
+/* PHONE */
+.phone-outer{padding-top:8px;}
+.phone{
+  background:var(--slate);border-radius:26px;
+  padding:12px 10px;
+  box-shadow:0 16px 48px rgba(0,0,0,.16),0 3px 8px rgba(0,0,0,.08);
+  max-width:190px;margin:0 auto;
+}
+.phone-notch{width:52px;height:7px;background:rgba(255,255,255,.1);border-radius:4px;margin:0 auto 8px;}
+.phone-screen{background:#0c0d13;border-radius:16px;min-height:260px;overflow:hidden;}
+.ph-time{font-family:var(--mono);font-size:9px;color:rgba(255,255,255,.3);text-align:right;padding:9px 12px 4px;}
+.ph-body{padding:4px 11px 12px;}
+.ph-app{font-family:var(--mono);font-size:8px;letter-spacing:.14em;color:rgba(255,255,255,.2);text-transform:uppercase;margin-bottom:8px;}
+.ph-greet{font-size:12px;font-weight:500;color:#fff;line-height:1.45;margin-bottom:10px;}
+.ph-greet .hl{color:#a89cf5;}
+.ph-tiles{display:flex;gap:5px;margin-bottom:5px;flex-wrap:wrap;}
+.ph-tile{
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09);
+  border-radius:7px;padding:6px 8px;font-size:9px;color:rgba(255,255,255,.55);
+  line-height:1.3;flex:1;min-width:68px;
+}
+.ph-tile b{display:block;color:rgba(255,255,255,.85);font-weight:500;font-size:10px;margin-bottom:1px;}
+.ph-bub{
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09);
+  border-radius:9px 9px 9px 2px;padding:7px 9px;
+  font-size:10px;color:rgba(255,255,255,.7);line-height:1.5;margin-bottom:5px;
+}
+.ph-bub.ai{background:rgba(74,63,168,.22);border-color:rgba(74,63,168,.32);border-radius:9px 9px 2px 9px;color:rgba(255,255,255,.82);}
+.ph-card{background:rgba(14,138,104,.14);border:1px solid rgba(14,138,104,.28);border-radius:9px;padding:8px 9px;font-size:10px;color:rgba(255,255,255,.75);line-height:1.5;margin-bottom:5px;}
+.ph-card .cta{color:#5dcaa5;font-size:9px;font-weight:500;margin-top:3px;}
+.ph-mem{background:rgba(239,159,39,.1);border:1px solid rgba(239,159,39,.22);border-radius:20px;padding:4px 9px;font-size:9px;color:#f5c166;margin-bottom:5px;line-height:1.4;}
+.ph-wa{background:rgba(37,211,102,.09);border:1px solid rgba(37,211,102,.2);border-radius:9px;padding:8px 9px;font-size:10px;color:rgba(255,255,255,.75);line-height:1.5;}
+.ph-wa .wa-tag{font-size:8px;color:#25d366;font-weight:500;margin-bottom:2px;display:block;text-transform:uppercase;letter-spacing:.07em;}
+
+/* BODY */
+.body{padding:24px 44px 52px;display:grid;grid-template-columns:1fr 280px;gap:36px;}
+
+.story p{font-size:14px;color:var(--ink2);line-height:1.82;margin-bottom:16px;}
+.story p:last-child{margin-bottom:0;}
+.story em{color:var(--ink);font-style:normal;font-weight:500;}
+
+.side-cards{display:flex;flex-direction:column;gap:10px;}
+.scard{background:var(--paper2);border:1px solid var(--paper3);border-radius:10px;padding:14px 15px;}
+.scard-lbl{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink4);margin-bottom:7px;}
+.scard-val{font-size:13px;color:var(--ink2);line-height:1.55;}
+.scard-val strong{color:var(--ink);font-weight:500;}
+.dpills{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:7px;}
+.dp{font-size:11px;padding:3px 9px;border-radius:20px;font-weight:400;}
+.dp-ambient{background:var(--teal-s);color:var(--teal);border:1px solid rgba(14,138,104,.18);}
+.dp-device {background:var(--accent-s);color:var(--accent);border:1px solid rgba(74,63,168,.15);}
+.dp-ucp    {background:#fff8ec;color:#92580a;border:1px solid rgba(146,88,10,.2);}
+.dp-ai     {background:var(--amber-s);color:var(--amber);border:1px solid rgba(184,109,14,.18);}
+
+/* NAV */
+.nav{display:flex;align-items:center;gap:8px;padding:0 44px;margin:18px 0 0;}
+.nbtn{padding:6px 14px;font-size:11px;font-family:var(--font);background:none;border:1px solid var(--paper3);border-radius:20px;color:var(--ink3);cursor:pointer;transition:all .1s;}
+.nbtn:hover{border-color:var(--ink3);color:var(--ink);}
+.nbtn:disabled{opacity:.3;cursor:not-allowed;}
+.ncount{font-family:var(--mono);font-size:10px;color:var(--ink4);}
+</style>
+</head>
+<body>
+<div class="page">
+
+<aside class="sidebar">
+  <div class="sb-eyebrow">JBIQ · FnF · Mock User</div>
+  <div class="sb-avatar"><span class="sb-initials">S</span></div>
+  <div class="sb-name">Sunita</div>
+  <div class="sb-desc">34 · Coimbatore, Tamil Nadu</div>
+  <div class="sb-line"></div>
+  <div class="sb-row"><div class="sb-label">Occupation</div><div class="sb-val">Garment factory worker</div></div>
+  <div class="sb-row"><div class="sb-label">Device</div><div class="sb-val">₹8,000 Android<br>Small screen, shared</div></div>
+  <div class="sb-row"><div class="sb-label">Languages</div><div class="sb-val">Tamil + Hindi<br>Code-switches naturally</div></div>
+  <div class="sb-row"><div class="sb-label">Household</div><div class="sb-val">Mother, 68, diabetic<br>Daughter, school-age</div></div>
+  <div class="sb-row"><div class="sb-label">Prior AI use</div><div class="sb-val">None. First time.</div></div>
+  <div class="sb-footer"><div class="sb-footer-text">She configured nothing.<br>JBIQ learned everything.</div></div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div class="topbar-title">Day 0 → Day 30 · 10 Personalisation Moments</div>
+    <div class="topbar-sub">How JBIQ goes from a stranger to something that feels genuinely hers — without her doing any setup.</div>
+  </div>
+  <div class="tabs" id="tabs"></div>
+  <div id="panels"></div>
+</main>
+</div>
+
+<script>
+const M = [
+  {
+    day:0,label:'First open',
+    surface:'Home screen',sc:'s-home',
+    title:'It opens like it already knows her',
+    feel:'"This was made for me"',
+    where:'Home screen — app open',
+    story:[
+      `Sunita downloads JBIQ through a Jio offer. She has never used an AI assistant before. She expects a blank screen and a blinking cursor.`,
+      `Instead, the app opens in <em>Tamil</em>. Her name appears in the greeting — "Vanakkam Sunita, kaalaai vanakkam." It's 8:47am on a Wednesday. Below the greeting, three tiles: a welfare scheme checker, the day's weather, a quick calculator.`,
+      `Not a generic ask-me-anything bar. Not "How can I help you today?" She didn't set any of this up. She tapped nothing. The app just <em>knew</em>.`
+    ],
+    data:[{l:'Ambient',c:'dp-ambient'},{l:'Device + SIM',c:'dp-device'}],
+    note:'Time of day tells JBIQ it\'s a weekday morning. Device locale confirms Tamil Nadu. JioID provides her name. Works for every user from Day 1 — no additional data needed.',
+    phone:`<div class="ph-time">8:47</div><div class="ph-body"><div class="ph-app">JBIQ</div><div class="ph-greet">வணக்கம் <span class="hl">Sunita</span>,<br>காலை வணக்கம் 🌅</div><div class="ph-tiles"><div class="ph-tile"><b>Welfare schemes</b>Check eligibility</div><div class="ph-tile"><b>Weather</b>Coimbatore</div></div><div class="ph-tiles"><div class="ph-tile"><b>Calculator</b>Quick math</div></div></div>`
+  },
+  {
+    day:1,label:'Talks back her way',
+    surface:'Voice',sc:'s-voice',
+    title:'It talks back the way she talks',
+    feel:'"It doesn\'t correct me"',
+    where:'Voice mode — hands-free while cooking',
+    story:[
+      `That evening, Sunita is cooking. Her hands are dirty. She tries voice for the first time — a little nervous about whether it'll understand her.`,
+      `She speaks the way she always speaks: fast Tamil with Hindi mixed in. "Amma Vodi ke liye documents kya chahiye?"`,
+      `JBIQ doesn't correct her. Doesn't switch to formal Tamil. Doesn't ask her to repeat in one language. It responds in the same register — Tamil-Hindi mix, three sentences. She's still stirring the pot. She never looks at the screen. The answer comes through the speaker.`,
+      `The delight is what <em>didn't happen</em>. No friction. No language police. No feeling of doing it wrong.`
+    ],
+    data:[{l:'Ambient',c:'dp-ambient'}],
+    note:'Speech rate, sentence structure, and code-mix pattern are detected from the voice itself — in real time. No stored profile needed. Works from the very first word on Day 1.',
+    phone:`<div class="ph-time">7:22 PM</div><div class="ph-body"><div class="ph-app">JBIQ · Voice</div><div class="ph-bub">"Amma Vodi ke liye documents kya chahiye?"</div><div class="ph-bub ai">Amma Vodi ku birth certificate, income proof, aur school certificate — intha moonu documents vennum. Nearest ration shop la apply panlaam.</div></div>`
+  },
+  {
+    day:3,label:'Resumes mid-task',
+    surface:'Home screen',sc:'s-home',
+    title:'It kept her work while she was gone',
+    feel:'"I don\'t have to start over"',
+    where:'Home screen — return visit',
+    story:[
+      `Two days ago, Sunita was mid-way through checking if she qualified for a state welfare scheme. Her mother called. She closed the app.`,
+      `Today she opens JBIQ. Before she even types anything, there's a card at the top of the home screen: "Scheme check kal adhari rahi — jaari rakhe?" (Your scheme check was left incomplete — continue?)`,
+      `One tap. The conversation picks up exactly where she left off. She doesn't have to re-explain her income bracket. She doesn't have to start the form again.`,
+      `For someone whose life is full of interruptions — <em>this is the feature</em>.`
+    ],
+    data:[{l:'AI learning',c:'dp-ai'}],
+    note:'Session state was preserved when she closed the app. JBIQ knows which task was incomplete, how far she got, and all the context she\'d already provided.',
+    phone:`<div class="ph-time">6:15 PM</div><div class="ph-body"><div class="ph-app">JBIQ</div><div class="ph-greet">Vanakkam Sunita</div><div class="ph-card"><b>Scheme check adhari</b><br>Kal ki jaankaari poori nahi hui — wahan se shuru karein?<div class="cta">Resume →</div></div><div class="ph-tiles"><div class="ph-tile"><b>Weather</b></div><div class="ph-tile"><b>Calculator</b></div></div></div>`
+  },
+  {
+    day:5,label:'Remembers her mother',
+    surface:'Chat',sc:'s-chat',
+    title:'It tells her exactly what it remembered',
+    feel:'"I know what it knows about me"',
+    where:'Chat — at the end of a conversation',
+    story:[
+      `Sunita is asking about a medicine for her mother. Mid-conversation, she mentions almost in passing that her mother is 68 and diabetic.`,
+      `JBIQ answers the medicine question. Then, at the end, one line: "Ungal amma pathi naan ninaivil vaippein — 68 vayadu, neerizhinai." (I'll remember about your mother — 68 years old, diabetic.)`,
+      `It didn't quietly store the information. <em>It told her it did</em>. In plain language. In Tamil. Exactly what was saved.`,
+      `Two weeks later, when she photographs a medicine packet, JBIQ already responds as a caregiver — dosage for the elderly, side effects in diabetics. She never has to explain again.`
+    ],
+    data:[{l:'AI learning',c:'dp-ai'}],
+    note:'User-stated facts are stored at the highest confidence level. The acknowledgement is specific — not just "Saved" but a precise restatement of what was actually remembered and why it matters.',
+    phone:`<div class="ph-time">9:04 PM</div><div class="ph-body"><div class="ph-app">JBIQ</div><div class="ph-bub">"Amma ke liye kaunsi tablet safe hai?"</div><div class="ph-bub ai">Paracetamol 500mg safe hai. Diabetic patients ke liye din mein 3 se zyada nahi.</div><div class="ph-mem">நினைவில் வைத்தேன் — அம்மா, 68 வயது, நீரிழிவு</div></div>`
+  },
+  {
+    day:7,label:'WhatsApp brings her back',
+    surface:'Notification',sc:'s-notif',
+    title:'It reaches her where she actually is',
+    feel:'"It gave me a real reason to come back"',
+    where:'WhatsApp → resumes in app',
+    story:[
+      `Life got busy. Sunita hasn't opened JBIQ in four days.`,
+      `On Day 7, she gets a WhatsApp message. In Tamil. Not "We miss you! Come back to JBIQ!" Instead: "Sunita, ungal scheme jaankaari adhari — indru paarkkalama?" (Your scheme check is still incomplete — shall we look at it today?)`,
+      `She taps it. The app opens. The conversation resumes exactly where she left off.`,
+      `The difference between this and a generic notification is the difference between a <em>nudge from someone who knows you</em> and a broadcast from a brand. She didn't feel sold to. She felt remembered.`
+    ],
+    data:[{l:'AI learning',c:'dp-ai'},{l:'UCP',c:'dp-ucp'},{l:'Device + SIM',c:'dp-device'}],
+    note:'UCP provides Tamil as her preferred language and WhatsApp as her preferred channel. Last session topic recalled from memory. Fires only if she hasn\'t returned by Day 7 and hasn\'t opted into push notifications.',
+    phone:`<div class="ph-time">11:30 AM</div><div class="ph-body"><div class="ph-app">Notification</div><div class="ph-wa"><span class="wa-tag">WhatsApp · JBIQ</span>Sunita, ungal scheme jaankaari adhari irukku — indru paarkkalama?</div><div style="font-size:9px;color:rgba(255,255,255,.25);margin-top:8px;">Taps → app opens at exact point she left</div></div>`
+  },
+  {
+    day:10,label:'Bullet points, unprompted',
+    surface:'Chat',sc:'s-chat',
+    title:'It applies her preference before she asks',
+    feel:'"It already knows how I like things"',
+    where:'Chat — silent session initialisation',
+    story:[
+      `Sunita has asked for bullet points three times in the past two weeks. She never told JBIQ "always use bullets." She just said it when responses felt too long.`,
+      `Today she opens JBIQ and asks a new question about a government scheme. She says nothing about format.`,
+      `The response comes in bullet points.`,
+      `No announcement. No "I've noticed you prefer bullets." Just bullets. <em>The way she likes it</em>. Applied quietly, before the conversation even started.`,
+      `Small thing. But this is the moment an assistant stops feeling like a tool and starts feeling like something that <em>knows you</em>.`
+    ],
+    data:[{l:'AI learning',c:'dp-ai'}],
+    note:'Format preference stored from past sessions. Applied silently at the start of every new conversation — never announced, never re-confirmed, never requiring her to repeat herself.',
+    phone:`<div class="ph-time">8:15 PM</div><div class="ph-body"><div class="ph-app">JBIQ</div><div class="ph-bub">"PM Awas Yojana ke liye kya chahiye?"</div><div class="ph-bub ai">PM Awas Yojana ke liye:<br>• Income below ₹3L<br>• No pucca house ownership<br>• Aadhaar + ration card<br>• Apply at local panchayat</div></div>`
+  },
+  {
+    day:14,label:'Connects two sessions',
+    surface:'Chat',sc:'s-chat',
+    title:'Her history starts working for her',
+    feel:'"It connected things I didn\'t"',
+    where:'Chat — within a response',
+    story:[
+      `Last week, in a Hindi conversation, Sunita asked about her daughter's board exams — which subjects, which books, the schedule. Today, in Tamil, she asks about a scholarship for her daughter.`,
+      `JBIQ answers the scholarship question. Then: "Pichhle hafte aapne beti ki exams ke baare mein poocha tha — yeh scholarship uss ke liye applicable hai." (Last week you asked about your daughter's exams — this scholarship applies to her.)`,
+      `She didn't ask JBIQ to connect these two things. It happened across <em>different languages</em>, a week apart, completely on its own.`,
+      `This is the moment memory stops being a feature and starts being the product.`
+    ],
+    data:[{l:'AI learning',c:'dp-ai'}],
+    note:'Cross-language memory connects a Hindi conversation (daughter\'s exams) to a Tamil conversation (scholarship). Only fires when the connection is genuinely relevant — the system gates on relevance, not just recency.',
+    phone:`<div class="ph-time">7:48 PM</div><div class="ph-body"><div class="ph-app">JBIQ</div><div class="ph-bub">"Magal ku scholarship irukka?"</div><div class="ph-bub ai">Inge irukku oru scholarship — State Merit Scholarship, Class 10 results ku. Ungal magal exams ku padikira — ivan ku applicable.</div><div class="ph-mem">Recalled: daughter's exams, mentioned last week</div></div>`
+  },
+  {
+    day:18,label:'Medicine photo',
+    surface:'Chat',sc:'s-chat',
+    title:'It knows who the medicine is for',
+    feel:'"I didn\'t have to explain"',
+    where:'Chat — image input',
+    story:[
+      `Sunita photographs a medicine packet. She doesn't say anything. She doesn't explain it's for her mother.`,
+      `JBIQ's response is already framed for a caregiver. Dosage for elderly people. Side effects to watch for in someone with diabetes. What to do if her mother misses a dose.`,
+      `She never said "this is for my mother." JBIQ already knew — from Day 5, when she mentioned her mother's age and condition, and JBIQ told her it was remembering.`,
+      `The context she gave <em>three weeks ago</em> is now silently shaping every health interaction going forward.`
+    ],
+    data:[{l:'AI learning',c:'dp-ai'},{l:'UCP',c:'dp-ucp'}],
+    note:'Household context from memory (mother, 68, diabetic) combines with image recognition to switch response framing to caregiver mode automatically. UCP household signals further strengthen this when available.',
+    phone:`<div class="ph-time">9:30 PM</div><div class="ph-body"><div class="ph-app">JBIQ</div><div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:7px;padding:7px 9px;font-size:9px;color:rgba(255,255,255,.4);margin-bottom:7px;">📷 Medicine packet</div><div class="ph-bub ai">Amma ku inta tablet — Metformin 500mg. Diabetic patients ku safe. Morning food sapida pinna kudunga. First week stomach upset — normal aagidum.</div></div>`
+  },
+  {
+    day:20,label:'Corrects a wrong fact',
+    surface:'Chat',sc:'s-chat',
+    title:'She takes back control in two lines',
+    feel:'"I decide what it learns"',
+    where:'Chat — within a conversation',
+    story:[
+      `JBIQ has her occupation wrong. It inferred "retail" from a conversation about a local shop weeks ago. She notices it today.`,
+      `"Nahi, main factory mein kaam karti hoon. Retail nahi."`,
+      `JBIQ asks one question: "Sirf aaj ke liye, ya hamesha badal doon?" (Just for today, or should I change it permanently?)`,
+      `She says hamesha. JBIQ updates it. Then tells her what it changed.`,
+      `Two lines. No form. No settings page. No explanation of what memory means. Just: <em>you're in control, here's how to use it</em>. This is the moment trust is built, not lost.`
+    ],
+    data:[{l:'AI learning',c:'dp-ai'}],
+    note:'Two-step confirmation before updating memory. Her choice — not JBIQ\'s assumption. One-time means current session only. "Always" means permanent update with confirmation of what changed.',
+    phone:`<div class="ph-time">8:50 PM</div><div class="ph-body"><div class="ph-app">JBIQ</div><div class="ph-bub">"Nahi, main factory worker hoon, retail nahi"</div><div class="ph-bub ai">Sirf aaj ke liye badloon, ya hamesha?</div><div class="ph-bub">"Hamesha"</div><div class="ph-bub ai">Done — याद रखूंगी: factory worker, Coimbatore.</div></div>`
+  },
+  {
+    day:25,label:'Sees what it knows',
+    surface:'Settings',sc:'s-settings',
+    title:'She looks inside. She feels safe.',
+    feel:'"I am always in control"',
+    where:'Settings — My Preferences screen',
+    story:[
+      `A friend told Sunita that apps "store everything about you." She opens JBIQ settings — a little worried about what's in there.`,
+      `Three taps from home. She reaches My Preferences. She sees everything JBIQ has stored — in Tamil, in plain language: her language preference, her format preference, her daughter's exam context, her mother's health details, her corrected job.`,
+      `No jargon. No system strings. Just: <em>here is what I know about you</em>.`,
+      `She decides she's not ready to keep her mother's health details stored. She taps delete. It's gone in one tap. No dark pattern. No "are you sure" loop.`,
+      `She feels safe. She keeps using JBIQ. That is the only outcome that matters.`
+    ],
+    data:[{l:'AI learning',c:'dp-ai'}],
+    note:'Full memory visibility in plain language. Delete in one tap. Pause mode stops new learning without erasing existing memory. Also a DPDP compliance requirement.',
+    phone:`<div class="ph-time">10:15 PM</div><div class="ph-body"><div class="ph-app">My Preferences</div><div class="ph-tiles" style="flex-direction:column;gap:5px;"><div class="ph-tile" style="flex:none;display:flex;justify-content:space-between;"><span><b>Language</b> Tamil + Hindi</span><span style="color:#5dcaa5;">✓</span></div><div class="ph-tile" style="flex:none;display:flex;justify-content:space-between;"><span><b>Format</b> Bullet points</span><span style="color:#5dcaa5;">✓</span></div><div class="ph-tile" style="flex:none;display:flex;justify-content:space-between;background:rgba(192,67,42,.12);border-color:rgba(192,67,42,.25);"><span><b>Amma health</b></span><span style="color:#e07060;font-size:9px;">Delete</span></div><div class="ph-tile" style="flex:none;display:flex;justify-content:space-between;"><span><b>Job</b> Factory, Coimbatore</span><span style="color:#5dcaa5;">✓</span></div></div></div>`
+  }
+];
+
+const SI = {'Home screen':'⌂','Voice':'◎','Chat':'◉','Notification':'▲','Settings':'◈'};
+
+function buildTabs(){
+  const el = document.getElementById('tabs');
+  M.forEach((m,i)=>{
+    const t = document.createElement('div');
+    t.className='tab'+(i===0?' active':'');
+    t.id='tab'+i;
+    t.innerHTML=`<span class="t-day">Day ${m.day}</span><span class="t-label">${m.label}</span>`;
+    t.onclick=()=>go(i);
+    el.appendChild(t);
+  });
+}
+
+function buildPanels(){
+  const el = document.getElementById('panels');
+  M.forEach((m,i)=>{
+    const pills = m.data.map(d=>`<span class="dp ${d.c}">${d.l}</span>`).join('');
+    const story = m.story.map(p=>`<p>${p}</p>`).join('');
+    const div = document.createElement('div');
+    div.className='panel'+(i===0?' active':'');
+    div.id='panel'+i;
+    div.innerHTML=`
+<div class="hero">
+  <div class="hero-left">
+    <div class="surface-tag ${m.sc}">${SI[m.surface]||'◉'} ${m.surface}</div>
+    <div class="hero-num">Moment ${String(i+1).padStart(2,'0')} of ${M.length}</div>
+    <div class="hero-title">${m.title}</div>
+    <div class="hero-feel">${m.feel}</div>
+  </div>
+  <div class="phone-outer">
+    <div class="phone">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">${m.phone}</div>
+    </div>
+  </div>
+</div>
+<div class="nav">
+  <button class="nbtn" onclick="go(${i-1})" ${i===0?'disabled':''}>← Prev</button>
+  <span class="ncount">${i+1} / ${M.length}</span>
+  <button class="nbtn" onclick="go(${i+1})" ${i===M.length-1?'disabled':''}>Next →</button>
+</div>
+<div class="body">
+  <div class="story">${story}</div>
+  <div class="side-cards">
+    <div class="scard">
+      <div class="scard-lbl">Where in the app</div>
+      <div class="scard-val"><strong>${m.where}</strong></div>
+    </div>
+    <div class="scard">
+      <div class="scard-lbl">What makes it personal</div>
+      <div class="dpills">${pills}</div>
+      <div class="scard-val">${m.note}</div>
+    </div>
+  </div>
+</div>`;
+    el.appendChild(div);
+  });
+}
+
+function go(i){
+  if(i<0||i>=M.length)return;
+  document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',j===i));
+  document.querySelectorAll('.panel').forEach((p,j)=>p.classList.toggle('active',j===i));
+  document.getElementById('tab'+i).scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+buildTabs();
+buildPanels();
+</script>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JBIQ Beta Personalisation Framework</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:24px;background:#fff;color:#1a1a1a}
+.w{max-width:1100px;margin:0 auto}
+.hdr{background:#FFF8E6;border:0.5px solid #EF9F27;border-radius:10px;padding:12px 16px;margin-bottom:14px}
+.hdr-title{font-size:15px;font-weight:500;color:#412402}
+.hdr-sub{font-size:11px;color:#633806;margin-top:3px}
+.legend{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
+.leg{display:flex;align-items:center;gap:5px;font-size:11px;color:#1a1a1a}
+.sw{width:12px;height:12px;border-radius:2px;flex-shrink:0}
+table{width:100%;border-collapse:collapse}
+thead th{font-size:10px;font-weight:500;color:#5F5E5A;text-align:left;padding:5px 8px;border-bottom:1.5px solid #D3D1C7;background:#F7F6F2;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+tbody td{padding:5px 8px;border-bottom:0.5px solid #ECEAE3;vertical-align:top;font-size:11px;line-height:1.5;color:#1a1a1a}
+tbody tr:hover td{background:#F7F6F2}
+.sec td{background:#F1EFE8!important;font-size:9px;font-weight:600;color:#888780;text-transform:uppercase;letter-spacing:.07em;padding:4px 8px;border-bottom:0.5px solid #D3D1C7}
+.r-att td{border-left:3px solid #B4B2A9}
+.r-rem td{border-left:3px solid #85B7EB}
+.r-jio td{border-left:3px solid #5DCAA5}
+.uc{font-weight:500;color:#1a1a1a;display:block;font-size:11px}
+.sig{font-size:10px;color:#5F5E5A;margin-top:1px}
+.pill{font-size:9px;font-weight:500;padding:1px 6px;border-radius:10px;white-space:nowrap;display:inline-block}
+.no{background:#EAF3DE;color:#173404;border:0.5px solid #97C459}
+.enh{background:#FFF5D6;color:#7D4E00;border:0.5px solid #EF9F27}
+.req{background:#FFF0E8;color:#4A1B0C;border:0.5px solid #D85A30}
+.mod{font-size:10px;color:#888780;white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="w">
+<div class="hdr">
+  <div class="hdr-title">Beta · ~50K users</div>
+  <div class="hdr-sub">Remember you · Sessions 6–20 · Memory compounds · Behaviour-driven · +16 new experiences on top of FnF</div>
+</div>
+<div class="legend">
+  <div class="leg"><div class="sw" style="background:#F1EFE8;border:0.5px solid #B4B2A9"></div>Attentive</div>
+  <div class="leg"><div class="sw" style="background:#EBF4FF;border:0.5px solid #85B7EB"></div>Remembers — memory store · no UCP</div>
+  <div class="leg"><div class="sw" style="background:#E1F5EE;border:0.5px solid #5DCAA5"></div>Jio-connected — UCP</div>
+  <div class="leg"><span class="pill no">No UCP</span></div>
+  <div class="leg"><span class="pill enh">Enhances</span> ships without · richer with Jio</div>
+  <div class="leg"><span class="pill req">Required</span> doesn't exist without Jio</div>
+</div>
+<table>
+<thead>
+<tr>
+  <th style="width:10%">User type</th>
+  <th style="width:9%">Arc</th>
+  <th style="width:9%">Moment</th>
+  <th style="width:9%">Surface</th>
+  <th style="width:25%">Use case</th>
+  <th style="width:8%">Modality</th>
+  <th style="width:22%">Data input</th>
+  <th style="width:8%">Jio?</th>
+</tr>
+</thead>
+<tbody>
+
+<tr class="sec"><td colspan="8">Home — adaptive surface deepens · behaviour-driven</td></tr>
+
+<tr class="r-rem">
+  <td>Early user</td><td>Retention</td><td>Any open</td><td>Home</td>
+  <td><span class="uc">Per-user time-of-day home</span><span class="sig">THIS user's morning ≠ evening from actual usage. Overrides cohort default.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">Procedural: time_of_day_usage_pattern · Device: clock</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-rem">
+  <td>Early user</td><td>Retention</td><td>Any open</td><td>Home</td>
+  <td><span class="uc">Usage-weighted home — precise</span><span class="sig">Recency + frequency + time-of-day. Real-time via event pipeline.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">Event pipeline: tool_tap_events · Procedural: recency, frequency</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-rem">
+  <td>Early user</td><td>Engagement</td><td>Any open</td><td>Home</td>
+  <td><span class="uc">Interest affinity cards</span><span class="sig">Cricket / health visible on home. ≥90% classifier gate. Removable.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">Semantic: interest_affinities (≥3 signals) · Gate: topic_classifier ≥90%</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-rem">
+  <td>Established</td><td>Retention</td><td>Return</td><td>Home</td>
+  <td><span class="uc">Habit loop card</span><span class="sig">Monday morning → "Weekly summary banana hai?" ≥3 sessions. Never a push.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">Procedural: recurring_pattern, day_of_week_trigger · Gate: ≥3 sessions</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-rem">
+  <td>Returning</td><td>Retention</td><td>Return</td><td>Home</td>
+  <td><span class="uc">Gap-aware context richness</span><span class="sig">&gt;5 day: specific topic recap, not just warmer tone.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Episodic: last_session_topic, session_gap_days</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-jio">
+  <td>All users</td><td>Engagement</td><td>Any open</td><td>Home</td>
+  <td><span class="uc">Occupational seasonal cards</span><span class="sig">GST March for SMB. Exam tools for students. Degrades to generic seasonal.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">UCP: occupational_status, age_bracket</span></td>
+  <td><span class="pill enh">Enhances</span></td>
+</tr>
+
+<tr class="sec"><td colspan="8">Conversation — chat · memory compounds</td></tr>
+
+<tr class="r-rem">
+  <td>Established</td><td>Depth</td><td>Any turn</td><td>Conversation</td>
+  <td><span class="uc">Interest affinity shapes response</span><span class="sig">Cricket follower gets cricket framing on relevant queries.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Semantic: interest_affinities · Gate: ≥90% classifier</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-rem">
+  <td>Established</td><td>Depth</td><td>Any turn</td><td>Conversation</td>
+  <td><span class="uc">Relationship context in response</span><span class="sig">"Meri maa ke liye" → JBIQ recalls age, state. Doesn't ask again.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Episodic: relationship_entities (name, age, location, health_flags)</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-rem">
+  <td>Established</td><td>Depth</td><td>Any turn</td><td>Conversation</td>
+  <td><span class="uc">Cross-domain recall constrained</span><span class="sig">Health info recalled only when user raises it. Never volunteered.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Episodic: sensitive_domain_flags · Rule: user_initiates_topic</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="sec"><td colspan="8">Conversation — image · multimodal deepens</td></tr>
+
+<tr class="r-rem">
+  <td>Established</td><td>Depth</td><td>Any turn</td><td>Conversation</td>
+  <td><span class="uc">Intent inference without asking</span><span class="sig">Priya sends invoice → tracks expenses, no prompt. ≥3 confirming sessions.</span></td>
+  <td class="mod">Image</td>
+  <td><span class="sig">Procedural: image_type_intent_pattern · Gate: ≥3 sessions</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-jio">
+  <td>Established</td><td>Depth</td><td>Any turn</td><td>Conversation</td>
+  <td><span class="uc">Product photo — personalised buy decision</span><span class="sig">Worth it for you given what you own and your budget tier?</span></td>
+  <td class="mod">Image</td>
+  <td><span class="sig">UCP: device_brand, device_price_range, affluence_percentile · Episodic: prior queries</span></td>
+  <td><span class="pill enh">Enhances</span></td>
+</tr>
+
+<tr class="sec"><td colspan="8">Re-engagement — PN · WhatsApp · behaviour-triggered</td></tr>
+
+<tr class="r-rem">
+  <td>Returning</td><td>Re-engagement</td><td>Habit trigger</td><td>PN</td>
+  <td><span class="uc">Habit-triggered PN</span><span class="sig">"Aaj Monday hai — JBIQ mein aaiye." From pattern, not a scheduler.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">Procedural: recurring_day_pattern · Gate: ≥3 sessions</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-rem">
+  <td>Returning</td><td>Re-engagement</td><td>Habit trigger</td><td>WhatsApp</td>
+  <td><span class="uc">Habit-triggered WA</span><span class="sig">Same habit signal. WA channel for non-PN users.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">Procedural: recurring_day_pattern · CRM: pn_opt_in_status</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-rem">
+  <td>Returning</td><td>Re-engagement</td><td>Event trigger</td><td>PN</td>
+  <td><span class="uc">Interest-triggered PN</span><span class="sig">IPL tonight — sent only to confirmed cricket followers.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">Semantic: interest_sports_cricket (confirmed) · Ecosystem: ipl_match_today</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+</tbody>
+</table>
+</div>
+</body>
+</html>

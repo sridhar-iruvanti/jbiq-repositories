@@ -1,0 +1,1490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sunita · N=1 Arc · JBIQ</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'JioType';font-weight:400;src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeVarW05-Regular.woff2') format('woff2')}
+@font-face{font-family:'JioType';font-weight:700;src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Bold.woff2') format('woff2')}
+
+:root{
+  --jb:#3900ad;--jg:#f8f8f9;--jgi:#e7e9ff;--jstr:rgba(36,38,43,.1);
+  --jth:#0c0d10;--jtm:#191b1e;--jtl:rgba(25,27,30,.55);
+  --know:#3535f3;--know-l:#eeeeff;
+  --rem:#f7ab20;--rem-l:#fff8e7;--rem-d:#7a4800;
+  --ant:#1eccb0;--ant-l:#e6faf7;--ant-d:#096b5a;
+  --sans:'IBM Plex Sans',sans-serif;
+  --border:rgba(0,0,0,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'JioType',var(--sans);background:#fff;color:var(--jth);-webkit-font-smoothing:antialiased;}
+
+/* ─── NAV ─── */
+.nav{position:sticky;top:0;z-index:100;background:white;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 48px;height:52px;}
+.nav-brand{font-size:12px;font-weight:700;color:var(--know);letter-spacing:-.01em;margin-right:auto;}
+.nl{font-size:12px;color:#666;cursor:pointer;padding:16px 14px;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;}
+.nl:hover{color:var(--jth);}
+.nl.on{color:var(--jth);border-bottom-color:var(--know);}
+
+/* ─── SECTION ─── */
+.sec{padding:64px 48px;max-width:1080px;margin:0 auto;}
+.sec-full{background:var(--jg);}
+.sec-inner{max-width:1080px;margin:0 auto;padding:64px 48px;}
+.slabel{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#999;margin-bottom:10px;}
+.stitle{font-size:34px;font-weight:700;letter-spacing:-.03em;line-height:1.1;margin-bottom:10px;}
+.ssub{font-size:14px;color:#555;line-height:1.7;max-width:520px;}
+.divider{height:1px;background:var(--border);}
+
+/* ─── PERSONA BAND ─── */
+.persona-band{margin-top:40px;border-radius:20px;background:linear-gradient(135deg,#1e0050 0%,#3900ad 50%,#6d28d9 100%);padding:32px 36px;display:flex;align-items:center;gap:36px;}
+.p-av{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#f7ab20,#ff7043);display:flex;align-items:center;justify-content:center;font-size:34px;flex-shrink:0;border:3px solid rgba(255,255,255,.2);}
+.p-info{flex:1;}
+.p-name{font-size:24px;font-weight:700;color:#fff;letter-spacing:-.02em;margin-bottom:3px;}
+.p-tagline{font-size:13px;color:rgba(255,255,255,.65);margin-bottom:14px;}
+.p-attrs{display:flex;flex-wrap:wrap;gap:7px;}
+.pattr{font-size:11px;padding:4px 11px;border-radius:99px;background:rgba(255,255,255,.12);color:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,.15);}
+.p-quote{max-width:240px;padding:20px 24px;background:rgba(255,255,255,.08);border-radius:14px;border:1px solid rgba(255,255,255,.12);}
+.p-quote-text{font-size:14px;color:rgba(255,255,255,.9);line-height:1.6;font-style:italic;}
+.p-quote-src{font-size:10px;color:rgba(255,255,255,.45);margin-top:8px;text-transform:uppercase;letter-spacing:.08em;}
+
+/* ─── MESH ─── */
+.m2-grid{display:grid;grid-template-columns:148px 1fr 1fr 1fr;gap:1px;background:var(--border);border-radius:18px 18px 0 0;overflow:hidden;margin-top:36px;}
+.m2-corner{background:#f7f7f9;}
+.m2-stage-hdr{padding:20px 20px 18px;background:#fff;border-top:3px solid transparent;}
+.m2-stage-hdr.know{border-top-color:var(--know);}
+.m2-stage-hdr.rem{border-top-color:var(--rem);}
+.m2-stage-hdr.ant{border-top-color:var(--ant);}
+.m2-stage-name{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px;}
+.m2-stage-name.know{color:var(--know);}
+.m2-stage-name.rem{color:var(--rem-d);}
+.m2-stage-name.ant{color:var(--ant-d);}
+.m2-sessions{font-size:11px;color:#aaa;margin-bottom:3px;}
+.m2-model{font-size:12px;color:var(--jth);font-weight:600;}
+.m2-layer-lbl{background:#f7f7f9;padding:16px 18px;display:flex;flex-direction:column;justify-content:center;gap:2px;}
+.m2-lbl-name{font-size:11px;font-weight:700;color:var(--jth);margin-bottom:2px;}
+.m2-lbl-sub{font-size:9.5px;color:#aaa;letter-spacing:.03em;}
+.m2-cell{background:#fff;padding:16px 20px;display:flex;flex-direction:column;justify-content:center;gap:6px;}
+.m2-tag{font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:2px 8px;border-radius:99px;display:inline-flex;width:fit-content;}
+.m2-tag.on{background:#e8fdf5;color:#065f46;}
+.m2-tag.passive{background:#f3f4f6;color:#9ca3af;}
+.m2-tag.forming{background:var(--know-l);color:var(--know);}
+.m2-tag.building{background:var(--rem-l);color:var(--rem-d);}
+.m2-tag.complete{background:var(--ant-l);color:var(--ant-d);}
+.m2-desc{font-size:11px;color:#666;line-height:1.5;}
+.m2-moments-lbl{background:#f7f7f9;padding:14px 18px;display:flex;align-items:center;}
+.m2-moments-lbl-txt{font-size:9px;font-weight:700;color:#ccc;text-transform:uppercase;letter-spacing:.08em;}
+.m2-moments-cell{background:#fafafa;padding:14px 20px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.mdot{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;cursor:pointer;transition:transform .15s;}
+.mdot:hover{transform:scale(1.15);}
+.mdot.k{background:var(--know);color:#fff;}
+.mdot.r{background:var(--rem);color:#333;}
+.mdot.a{background:var(--ant);color:#0a3d34;}
+.m2-surfaces{background:var(--jth);border-radius:0 0 18px 18px;padding:18px 24px;display:flex;align-items:center;flex-wrap:wrap;gap:10px;}
+.m2-surf-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.35);flex-shrink:0;margin-right:6px;}
+.m2-surf-items{display:flex;gap:7px;flex-wrap:wrap;flex:1;}
+.m2-surf-item{font-size:11px;font-weight:500;color:rgba(255,255,255,.8);padding:5px 13px;border-radius:99px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);}
+.m2-surf-item.future{color:rgba(255,255,255,.35);border-style:dashed;background:transparent;}
+.m2-surf-note{font-size:11px;color:rgba(255,255,255,.35);font-style:italic;width:100%;margin-top:4px;}
+
+/* ─── STORY HEADER ─── */
+.story-hdr{padding:48px 48px 0;max-width:1080px;margin:0 auto;}
+.story-tabs-wrap{position:sticky;top:52px;z-index:90;background:white;border-bottom:1px solid var(--border);}
+.story-tabs{display:flex;overflow-x:auto;scrollbar-width:none;padding:0 48px;max-width:1080px;margin:0 auto;}
+.story-tabs::-webkit-scrollbar{display:none;}
+.stab{flex-shrink:0;padding:13px 16px;cursor:pointer;border-bottom:2.5px solid transparent;transition:all .15s;}
+.stab .td{font-size:9px;color:#999;letter-spacing:.06em;display:block;margin-bottom:2px;font-weight:700;text-transform:uppercase;}
+.stab .tl{font-size:11px;color:var(--jth);white-space:nowrap;font-weight:500;}
+.stab.k.on{border-bottom-color:var(--know);}
+.stab.k.on .td{color:var(--know);}
+.stab.r.on{border-bottom-color:var(--rem);}
+.stab.r.on .td{color:var(--rem-d);}
+.stab.a.on{border-bottom-color:var(--ant);}
+.stab.a.on .td{color:var(--ant-d);}
+
+/* ─── STORY PANELS ─── */
+.story-panel{display:none;max-width:1080px;margin:0 auto;padding:52px 48px 72px;align-items:start;gap:72px;}
+.story-panel.on{display:grid;grid-template-columns:1fr auto;animation:fu .2s ease;}
+@keyframes fu{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+.sp-pill{display:inline-flex;align-items:center;gap:5px;font-size:9px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;padding:4px 10px;border-radius:99px;margin-bottom:12px;}
+.sp-num{font-size:10px;color:#999;letter-spacing:.06em;margin-bottom:7px;}
+.sp-title{font-size:28px;font-weight:700;letter-spacing:-.025em;line-height:1.2;margin-bottom:8px;}
+.sp-hindi{font-size:13px;color:#666;font-style:italic;margin-bottom:20px;line-height:1.6;}
+.sp-body{font-size:13px;line-height:1.8;color:#3a3a3a;margin-bottom:20px;}
+.sp-delight{padding:14px 18px;border-radius:12px;margin-bottom:18px;}
+.sp-dl{font-size:9px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-bottom:4px;}
+.sp-dt{font-size:15px;font-weight:700;font-style:italic;}
+.sp-source{margin-top:14px;padding:11px 14px;background:#f8f8f9;border-radius:10px;border-left:3px solid var(--border);}
+.sp-source-l{font-size:8.5px;text-transform:uppercase;letter-spacing:.1em;font-weight:700;color:#bbb;margin-bottom:5px;}
+.sp-source-v{font-size:11px;color:#666;line-height:1.6;}
+.sp-siglabel{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:#999;font-weight:700;margin-bottom:7px;}
+.sp-chips{display:flex;flex-wrap:wrap;gap:5px;}
+
+/* ─── PHONE ─── */
+.ph-wrap{position:sticky;top:104px;}
+.ph-ml{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#bbb;text-align:center;margin-bottom:8px;}
+.dev{font-family:'JioType','IBM Plex Sans',sans-serif;background:#fff;border-radius:30px;overflow:hidden;box-shadow:0 14px 44px rgba(0,0,0,.14),0 2px 8px rgba(0,0,0,.08);border:1.5px solid rgba(0,0,0,.16);width:244px;display:flex;flex-direction:column;}
+.ph-st{height:38px;display:flex;align-items:flex-end;justify-content:space-between;padding:6px 18px 4px;background:#fff;flex-shrink:0;}
+.ph-st-t{font-size:12px;font-weight:500;color:#333;}
+.ph-st-ic{display:flex;gap:4px;align-items:center;}
+.ph-st-ic svg{width:13px;height:13px;fill:#333;}
+.ph-nv{height:42px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:#fff;flex-shrink:0;}
+.ph-ham{display:flex;flex-direction:column;gap:4px;}
+.ph-ham span{display:block;width:18px;height:2px;background:var(--jth);border-radius:1px;}
+.ph-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#a855f7);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;}
+.ph-sc{overflow:hidden;padding:0 16px 8px;background:#fff;flex:1;}
+.ph-greet{font-size:13px;color:var(--jth);padding:5px 0 10px;}
+.ph-sec{font-size:9.5px;font-weight:700;color:var(--jth);margin:8px 0 5px;text-transform:uppercase;letter-spacing:.07em;}
+.ar{display:flex;gap:10px;margin-bottom:7px;}
+.ai{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;}
+.ac{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid rgba(0,0,0,.06);}
+.ac.act{border:2.5px solid var(--jb);box-shadow:0 0 0 2px rgba(57,0,173,.12);}
+.ac.ca{background:linear-gradient(135deg,#1e0050,#7c3aed);}
+.ac.cb{background:linear-gradient(135deg,#9d174d,#ec4899);}
+.ac.cc{background:linear-gradient(135deg,#064e3b,#10b981);}
+.ac.cd{background:linear-gradient(135deg,#78350f,#f59e0b);}
+.ac svg{width:19px;height:19px;}
+.al{font-size:9px;color:#555;text-align:center;line-height:1.2;}
+.al.act{color:var(--jb);font-weight:600;}
+.tg{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:7px;}
+.tp{display:flex;align-items:center;gap:7px;padding:9px 10px;border-radius:18px;background:#f5f5f7;border:1px solid var(--jstr);font-size:10px;font-weight:500;color:var(--jth);}
+.tp.hi{background:var(--jgi);border-color:rgba(91,33,182,.22);color:#5b21b6;}
+.tic{width:20px;height:20px;border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.tic svg{width:12px;height:12px;}
+.uc{border-radius:11px;padding:10px;margin-bottom:6px;border:1px solid var(--jstr);background:#fff;}
+.uc.ast{background:linear-gradient(135deg,#1e0050,#2d1b69);border:none;}
+.uc.res{background:var(--jgi);border-color:rgba(91,33,182,.22);}
+.uc.nav{background:linear-gradient(135deg,#78350f,#b45309);border:none;}
+.uc.ant{background:var(--ant-l);border-color:rgba(30,204,176,.2);}
+.uc.sug{background:#fffbeb;border-color:rgba(180,83,9,.2);}
+.ut{font-size:11.5px;font-weight:700;color:var(--jth);margin-bottom:2px;}
+.ut.w{color:#fff;}
+.us{font-size:10px;color:#555;line-height:1.4;}
+.us.w{color:rgba(255,255,255,.65);}
+.lp-row{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px;}
+.lp{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);border-radius:5px;padding:2px 6px;font-size:9px;color:#fff;font-weight:500;}
+.mp{display:inline-flex;align-items:center;gap:4px;background:#fffbeb;border:1px solid rgba(180,83,9,.18);border-radius:99px;padding:2px 8px;font-size:9px;color:#92400e;margin-top:5px;}
+.mp svg{width:9px;height:9px;fill:#92400e;}
+.mp.d{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.18);color:rgba(255,255,255,.8);}
+.mp.d svg{fill:rgba(255,255,255,.8);}
+.mp.mem{background:var(--rem-l);border-color:rgba(247,171,32,.25);color:var(--rem-d);}
+.mp.mem svg{fill:var(--rem-d);}
+.consent-box{background:var(--jgi);border:1px solid rgba(91,33,182,.22);border-radius:12px;padding:11px;margin-bottom:7px;}
+.consent-q{font-size:11.5px;font-weight:600;color:#5b21b6;margin-bottom:8px;line-height:1.4;}
+.consent-btns{display:flex;gap:6px;}
+.c-yes{flex:1;background:var(--jb);color:#fff;border:none;border-radius:99px;padding:8px;font-size:11px;font-weight:700;font-family:'JioType',sans-serif;cursor:pointer;}
+.c-no{flex:1;background:#fff;color:#333;border:1px solid var(--jstr);border-radius:99px;padding:8px;font-size:11px;}
+.c-nv{flex:1;background:#f3f4f6;color:#6b7280;border:none;border-radius:99px;padding:8px;font-size:11px;}
+.ch{display:flex;flex-direction:column;gap:6px;padding-top:4px;}
+.bu{align-self:flex-end;background:var(--jg);border-radius:16px 16px 3px 16px;padding:7px 10px;max-width:90%;font-size:10.5px;color:var(--jth);line-height:1.45;}
+.bai{display:flex;gap:5px;align-items:flex-start;}
+.bai-av{width:21px;height:21px;border-radius:50%;background:var(--jb);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.bai-av svg{width:11px;height:11px;fill:#fff;}
+.bai-t{background:#fff;border:1px solid var(--jstr);border-radius:3px 14px 14px 14px;padding:7px 10px;font-size:10.5px;color:var(--jth);line-height:1.5;flex:1;}
+.ph-bt{padding:4px 12px 14px;background:#fff;flex-shrink:0;}
+.ph-inp{background:var(--jg);border-radius:20px;padding:5px 5px 5px 10px;display:flex;align-items:center;gap:5px;}
+.ph-inp-t{flex:1;font-size:10px;color:#999;}
+.ph-ab{width:28px;height:28px;border-radius:99px;background:var(--jgi);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ph-ab svg{width:14px;height:14px;fill:var(--jb);}
+.ph-sp{background:var(--jb);border:none;border-radius:99px;padding:7px 13px;display:flex;align-items:center;gap:5px;cursor:pointer;}
+.ph-sp svg{width:11px;height:11px;fill:#fff;}
+.ph-sp span{font-family:'JioType',sans-serif;font-weight:700;font-size:10.5px;color:#fff;}
+.wa-wrap{font-family:'IBM Plex Sans',sans-serif;background:#ece5dd;border-radius:30px;overflow:hidden;box-shadow:0 14px 44px rgba(0,0,0,.14),0 2px 8px rgba(0,0,0,.08);border:1.5px solid rgba(0,0,0,.16);width:244px;display:flex;flex-direction:column;}
+.wa-hdr{background:#075e54;padding:28px 14px 10px;display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.wa-hdr-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#3900ad,#7c4dff);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;}
+.wa-hdr-name{font-size:13px;font-weight:600;color:#fff;}
+.wa-hdr-sub{font-size:10px;color:rgba(255,255,255,.7);}
+.wa-chat{flex:1;padding:10px;display:flex;flex-direction:column;justify-content:flex-end;gap:7px;min-height:320px;}
+.wa-prev{align-self:flex-end;background:#dcf8c6;border-radius:10px 10px 2px 10px;padding:7px 9px;max-width:160px;font-size:10px;color:#111;opacity:.4;}
+.wa-prev-t{font-size:8px;color:#999;text-align:right;margin-top:2px;}
+.wa-msg{align-self:flex-start;background:#fff;border-radius:2px 10px 10px 10px;padding:9px 11px;max-width:200px;box-shadow:0 1px 2px rgba(0,0,0,.08);}
+.wa-sender{font-size:9.5px;font-weight:700;color:#128c7e;margin-bottom:4px;}
+.wa-text{font-size:11px;color:#111;line-height:1.45;margin-bottom:6px;}
+.wa-cta{background:#128c7e;color:#fff;border-radius:7px;padding:6px 10px;font-size:10.5px;font-weight:700;text-align:center;}
+.wa-time{font-size:8px;color:#999;text-align:right;margin-top:4px;}
+.wa-inp{background:#f0f0f0;padding:6px 10px;display:flex;align-items:center;gap:7px;flex-shrink:0;}
+.wa-inp-bar{flex:1;background:#fff;border-radius:18px;padding:7px 11px;font-size:10px;color:#aaa;}
+.wa-mic{width:32px;height:32px;border-radius:50%;background:#128c7e;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.wa-mic svg{width:14px;height:14px;fill:#fff;}
+.ph-sig{margin-top:12px;width:244px;}
+.ph-sig-l{font-size:7.5px;text-transform:uppercase;letter-spacing:.12em;color:#bbb;font-weight:700;margin-bottom:5px;text-align:center;}
+.ph-sig-c{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;align-items:center;}
+.stag{font-size:8.5px;padding:2px 7px;border-radius:5px;border:1px solid transparent;white-space:nowrap;line-height:1.4;font-family:-apple-system,'Segoe UI','Noto Sans',sans-serif;}
+.stag.amb{background:#fff7ed;color:#c2410c;border-color:rgba(194,65,12,.15);}
+.stag.dv{background:#eff6ff;color:#1d4ed8;border-color:rgba(29,78,216,.14);}
+.stag.ucp{background:#eeeeff;color:var(--know);border-color:rgba(53,53,243,.15);}
+.stag.ia{background:var(--ant-l);color:var(--ant-d);border-color:rgba(30,204,176,.18);}
+.stag.mem{background:var(--rem-l);color:var(--rem-d);border-color:rgba(247,171,32,.2);}
+.stag.lka{background:#f0fdf4;color:#166534;border-color:rgba(22,101,52,.14);}
+
+/* ─── IMAP: INTERACTION MESH ─── */
+.imap-grid{display:grid;grid-template-columns:148px 1fr 1fr 1fr;gap:1px;background:var(--border);border-radius:18px 18px 0 0;overflow:hidden;margin-top:36px;}
+.imap-surf-hdr{background:#f7f7f9;padding:16px 18px;display:flex;flex-direction:column;justify-content:center;gap:2px;}
+.imap-surf-icon{font-size:20px;margin-bottom:5px;}
+.imap-surf-name{font-size:11px;font-weight:700;color:var(--jth);}
+.imap-surf-sub{font-size:9px;color:#aaa;letter-spacing:.02em;}
+.imap-cell{background:#fff;padding:16px 20px;display:flex;flex-direction:column;gap:5px;}
+.imap-tag{font-size:8.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:2px 7px;border-radius:99px;display:inline-flex;width:fit-content;margin-bottom:3px;}
+.imap-tag.none{background:#f3f4f6;color:#9ca3af;}
+.imap-tag.k{background:var(--know-l);color:var(--know);}
+.imap-tag.r{background:var(--rem-l);color:var(--rem-d);}
+.imap-tag.a{background:var(--ant-l);color:var(--ant-d);}
+.imap-item{font-size:11px;color:var(--jth);font-weight:600;line-height:1.35;}
+.imap-sub{font-size:10px;color:#888;line-height:1.5;}
+.imap-rule{height:1px;background:var(--border);margin:6px 0;}
+
+/* ─── SMAP: SURFACE MAP ─── */
+.smap-subnav{display:flex;border-bottom:1px solid var(--border);margin-top:36px;}
+.smap-stab{font-size:11px;font-weight:600;color:#888;padding:10px 16px;border-bottom:2.5px solid transparent;cursor:pointer;transition:all .15s;white-space:nowrap;display:flex;align-items:center;gap:6px;}
+.smap-stab:hover{color:var(--jth);}
+.smap-stab.on{color:var(--jth);border-bottom-color:var(--know);}
+.smap-stab .cnt{font-size:9px;background:var(--know-l);color:var(--know);border-radius:9px;padding:1px 6px;font-weight:700;}
+.smap-stab.on .cnt{background:var(--know);color:#fff;}
+.smap-panel{display:none;padding-top:28px;}
+.smap-panel.on{display:block;}
+.smap-surf-lbl{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--jb);margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+.smap-surf-lbl::after{content:'';flex:1;height:1px;background:var(--border);}
+.smap-legend{display:flex;flex-wrap:wrap;gap:7px;margin-top:20px;margin-bottom:24px;}
+.smap-leg{display:flex;align-items:center;gap:6px;background:var(--jg);border:1px solid var(--border);border-radius:99px;padding:4px 12px;font-size:10px;color:#666;}
+.smap-leg-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.smap-row{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;}
+.smap-row::-webkit-scrollbar{height:3px;}
+.smap-row::-webkit-scrollbar-track{background:#f5f5f7;}
+.smap-row::-webkit-scrollbar-thumb{background:#ddd;border-radius:3px;}
+.smap-card{background:#fff;border:1px solid var(--border);border-radius:14px;min-width:190px;max-width:205px;flex-shrink:0;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.05);}
+.smap-card-head{padding:11px 14px;background:var(--jg);border-bottom:1px solid var(--border);}
+.smap-screen-n{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#aaa;margin-bottom:2px;}
+.smap-screen-t{font-size:13px;font-weight:700;color:var(--jth);line-height:1.2;margin-bottom:6px;}
+.smap-stage{display:inline-flex;align-items:center;gap:3px;border-radius:99px;padding:2px 8px;font-size:9px;font-weight:700;}
+.smap-stage.k{background:var(--know-l);color:var(--know);}
+.smap-stage.r{background:var(--rem-l);color:var(--rem-d);}
+.smap-stage.a{background:var(--ant-l);color:var(--ant-d);}
+.smap-stage.j{background:#f0ecff;color:var(--jb);}
+.smap-stage.kr{background:linear-gradient(90deg,var(--know-l) 30%,var(--rem-l));color:var(--know);}
+.smap-stage.ra{background:linear-gradient(90deg,var(--rem-l) 30%,var(--ant-l));color:var(--rem-d);}
+.smap-card-body{padding:5px 0;}
+.smap-irow{display:flex;align-items:flex-start;gap:8px;padding:7px 14px;border-bottom:1px solid #f5f5f7;transition:background .1s;}
+.smap-irow:last-child{border-bottom:none;}
+.smap-irow:hover{background:#fafafa;}
+.smap-dot{width:7px;height:7px;border-radius:50%;margin-top:4px;flex-shrink:0;}
+.smap-dot.k{background:var(--know);}
+.smap-dot.r{background:var(--rem);}
+.smap-dot.a{background:var(--ant);}
+.smap-dot.j{background:var(--jb);}
+.smap-icont{flex:1;min-width:0;}
+.smap-ilbl{font-size:11px;font-weight:700;color:var(--jth);line-height:1.3;}
+.smap-idesc{font-size:10px;color:#666;margin-top:2px;line-height:1.45;}
+/* Dynamic Island */
+.smap-di .smap-card-head{background:#0a0a0a;border-bottom:none;}
+.smap-di .smap-screen-n{color:rgba(255,255,255,.3);}
+.smap-di .smap-screen-t{color:#fff;}
+.smap-di-pill{background:#0a0a0a;display:flex;justify-content:center;padding:4px 0 10px;border-bottom:1px solid #1c1c1e;}
+.smap-di-inner{background:#000;border:1px solid #2a2a2a;border-radius:18px;padding:5px 14px;display:flex;align-items:center;gap:8px;min-width:108px;justify-content:center;}
+.smap-di-live{width:6px;height:6px;background:#34c759;border-radius:50%;animation:di-pulse 2s infinite;}
+@keyframes di-pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.smap-di-lbl{font-size:10.5px;color:#fff;font-weight:500;letter-spacing:-.01em;}
+/* WA card accent */
+.smap-wa .smap-card-head{background:#f0faf2;}
+.smap-wa .smap-screen-n{color:#0a8043;}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">JBIQ · Sunita · N=1 Arc</div>
+  <div class="nl on" onclick="scrollToSec('sunita',this)">Meet Sunita</div>
+  <div class="nl" onclick="scrollToSec('mesh',this)">The Mesh</div>
+  <div class="nl" onclick="scrollToSec('arc',this)">Day 0 &rarr; Day 30</div>
+  <div class="nl" onclick="scrollToSec('imap',this)">Interaction Mesh</div>
+  <div class="nl" onclick="scrollToSec('smap',this)">Surface Map</div>
+</nav>
+
+<!-- ═══ PART 1A · MEET SUNITA ═══ -->
+<div id="sunita">
+<div class="sec">
+  <div class="slabel">N=1 &middot; Personalised Experiences</div>
+  <div class="stitle">Meet Sunita</div>
+  <div class="ssub">One user. 500 million like her. Everything JBIQ builds must work for her &mdash; without asking her to configure anything.</div>
+
+  <div class="persona-band">
+    <div class="p-av">&#x1F469;&#x200D;&#x1F3E0;</div>
+    <div class="p-info">
+      <div class="p-name">Sunita</div>
+      <div class="p-tagline">38 &middot; Varanasi, UP &middot; Homemaker &middot; Hindi &middot; No prior AI experience</div>
+      <div class="p-attrs">
+        <span class="pattr">&#x1F3E5; Mummy has diabetes &mdash; Sunita is the caregiver</span>
+        <span class="pattr">&#x1F467; Daughter Priya &middot; Class 5 &middot; UP Board</span>
+        <span class="pattr">&#x1F4B0; Budget-conscious household</span>
+        <span class="pattr">&#x1F3A4; Voice-first by instinct</span>
+        <span class="pattr">&#x1F4F1; Jio SIM &middot; Hindi &middot; ~₹12K Android</span>
+        <span class="pattr">&#x1F9E1; Has never used an AI assistant before</span>
+      </div>
+    </div>
+    <div class="p-quote">
+      <div class="p-quote-text">&ldquo;She&rsquo;s never used an AI assistant. She&rsquo;s skeptical. She warms with familiarity &mdash; but only if it earns it.&rdquo;</div>
+      <div class="p-quote-src">User truth</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══ PART 1B · THE MESH ═══ -->
+<div id="mesh">
+<div class="sec">
+  <div class="slabel">The Framework</div>
+  <div class="stitle">The Mesh</div>
+  <div class="ssub">Four signal types that compound across three stages. The App, WhatsApp, and future surfaces stay constant &mdash; what changes is the intelligence underneath.</div>
+
+  <div class="m2-grid">
+
+    <!-- Row 1: Stage headers -->
+    <div class="m2-corner"></div>
+    <div class="m2-stage-hdr know">
+      <div class="m2-stage-name know">Know You</div>
+      <div class="m2-sessions">Day 0 &middot; Sessions 1&ndash;5</div>
+      <div class="m2-model">Look-alike model</div>
+    </div>
+    <div class="m2-stage-hdr rem">
+      <div class="m2-stage-name rem">Remember You</div>
+      <div class="m2-sessions">Sessions 6&ndash;20</div>
+      <div class="m2-model">Persona model</div>
+    </div>
+    <div class="m2-stage-hdr ant">
+      <div class="m2-stage-name ant">Anticipate You</div>
+      <div class="m2-sessions">Sessions 20+</div>
+      <div class="m2-model">N=1 individual</div>
+    </div>
+
+    <!-- Row 2: Ambient -->
+    <div class="m2-layer-lbl">
+      <div class="m2-lbl-name">Ambient</div>
+      <div class="m2-lbl-sub">Time &middot; season &middot; location</div>
+    </div>
+    <div class="m2-cell">
+      <span class="m2-tag forming">Passive baseline</span>
+      <div class="m2-desc">Time of day, region, calendar &mdash; shapes tone and greeting from Day 0.</div>
+    </div>
+    <div class="m2-cell">
+      <span class="m2-tag building">Context-aware</span>
+      <div class="m2-desc">Regional events and seasonal signals layer into proactive suggestions.</div>
+    </div>
+    <div class="m2-cell">
+      <span class="m2-tag complete">Rhythm known</span>
+      <div class="m2-desc">Sunita&rsquo;s daily and weekly patterns are anticipated, not just observed.</div>
+    </div>
+
+    <!-- Row 3: Device/SIM -->
+    <div class="m2-layer-lbl">
+      <div class="m2-lbl-name">Device &middot; SIM</div>
+      <div class="m2-lbl-sub">Hardware &middot; carrier signals</div>
+    </div>
+    <div class="m2-cell">
+      <span class="m2-tag on">Active from Day 0</span>
+      <div class="m2-desc">SIM language (Hindi), device tier (~₹12K) &mdash; sets voice-first mode, font size, response brevity.</div>
+    </div>
+    <div class="m2-cell">
+      <span class="m2-tag on">Continues</span>
+      <div class="m2-desc">Device signals inform surface decisions &mdash; TTS auto-play, layout, notification channel.</div>
+    </div>
+    <div class="m2-cell">
+      <span class="m2-tag on">Continues</span>
+      <div class="m2-desc">Stable foundation. Never needs re-reading.</div>
+    </div>
+
+    <!-- Row 4: UCP -->
+    <div class="m2-layer-lbl">
+      <div class="m2-lbl-name">UCP &middot; Jio Profile</div>
+      <div class="m2-lbl-sub">Before Turn 1</div>
+    </div>
+    <div class="m2-cell">
+      <span class="m2-tag on">Active from Day 0</span>
+      <div class="m2-desc">Name, city, occupation &mdash; JBIQ greets Sunita by name in Hindi before she speaks.</div>
+    </div>
+    <div class="m2-cell">
+      <span class="m2-tag on">Validated</span>
+      <div class="m2-desc">Behaviour confirms or corrects what UCP assumed about Sunita.</div>
+    </div>
+    <div class="m2-cell">
+      <span class="m2-tag on">Enriched</span>
+      <div class="m2-desc">UCP + memory + behaviour all connected. Complete picture.</div>
+    </div>
+
+    <!-- Row 5: In-app Behaviour -->
+    <div class="m2-layer-lbl">
+      <div class="m2-lbl-name">In-app Behaviour</div>
+      <div class="m2-lbl-sub">Builds from Session 1</div>
+    </div>
+    <div class="m2-cell">
+      <span class="m2-tag forming">Forming</span>
+      <div class="m2-desc">Queries, tools, language &mdash; observed. Memory not yet writing.</div>
+    </div>
+    <div class="m2-cell">
+      <span class="m2-tag building">Memory on</span>
+      <div class="m2-desc">Preferences, patterns, history write to episodic memory after consent (Day 8).</div>
+    </div>
+    <div class="m2-cell">
+      <span class="m2-tag complete">N=1 model</span>
+      <div class="m2-desc">Only-Sunita model. Switching to another AI means starting over.</div>
+    </div>
+
+    <!-- Row 6: Sunita's arc — 10 dots: 4 / 3 / 3 -->
+    <div class="m2-moments-lbl">
+      <span class="m2-moments-lbl-txt">Sunita&rsquo;s arc &middot; 10 moments</span>
+    </div>
+    <div class="m2-moments-cell">
+      <div class="mdot k" onclick="showM(1)" title="M1 · Onboarding">1</div>
+      <div class="mdot k" onclick="showM(2)" title="M2 · First Open">2</div>
+      <div class="mdot k" onclick="showM(3)" title="M3 · Mummy&#x2019;s Diabetes">3</div>
+      <div class="mdot k" onclick="showM(4)" title="M4 · Priya Introduced">4</div>
+    </div>
+    <div class="m2-moments-cell">
+      <div class="mdot r" onclick="showM(5)" title="M5 · Home Shifts">5</div>
+      <div class="mdot r" onclick="showM(6)" title="M6 · Consent">6</div>
+      <div class="mdot r" onclick="showM(7)" title="M7 · WhatsApp">7</div>
+    </div>
+    <div class="m2-moments-cell">
+      <div class="mdot a" onclick="showM(8)" title="M8 · Language Locked">8</div>
+      <div class="mdot a" onclick="showM(9)" title="M9 · Memory in Action">9</div>
+      <div class="mdot a" onclick="showM(10)" title="M10 · Only Hers">10</div>
+    </div>
+
+  </div>
+
+  <div class="m2-surfaces">
+    <div class="m2-surf-lbl">Surfaces</div>
+    <div class="m2-surf-items">
+      <div class="m2-surf-item">App</div>
+      <div class="m2-surf-item">WhatsApp</div>
+      <div class="m2-surf-item">Push &amp; PN</div>
+      <div class="m2-surf-item future">Earbuds &middot; Smart TV &#x2197;</div>
+    </div>
+    <div class="m2-surf-note">Consistent across all stages. What changes is the intelligence underneath.</div>
+  </div>
+
+</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══ PART 2 · STORYBOARD ═══ -->
+<div id="arc" style="background:var(--jg);border-top:2px solid var(--border);">
+  <div class="story-hdr">
+    <div class="slabel">Part 2 &middot; Her arc</div>
+    <div class="stitle">Day 0 &rarr; Day 30</div>
+    <div class="ssub" style="margin-bottom:0;">10 moments. One user. Every data point sourced. What personalisation actually feels like &mdash; from the inside.</div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="story-tabs-wrap" style="background:var(--jg);">
+  <div class="story-tabs">
+    <div class="stab k on" onclick="showM(1)"><span class="td">M1 &middot; Before Day 0 &middot; Know You</span><span class="tl">Onboarding</span></div>
+    <div class="stab k" onclick="showM(2)"><span class="td">M2 &middot; Day 0 &middot; Know You</span><span class="tl">First Open</span></div>
+    <div class="stab k" onclick="showM(3)"><span class="td">M3 &middot; Day 2 &middot; Know You</span><span class="tl">Mummy&#x2019;s Diabetes</span></div>
+    <div class="stab k" onclick="showM(4)"><span class="td">M4 &middot; Day 4 &middot; Know You</span><span class="tl">Priya Introduced</span></div>
+    <div class="stab r" onclick="showM(5)"><span class="td">M5 &middot; Day 5 &middot; Remember You</span><span class="tl">Home Shifts</span></div>
+    <div class="stab r" onclick="showM(6)"><span class="td">M6 &middot; Day 8 &middot; Remember You</span><span class="tl">Consent</span></div>
+    <div class="stab r" onclick="showM(7)"><span class="td">M7 &middot; Day 12 &middot; Remember You</span><span class="tl">WhatsApp Finds Her</span></div>
+    <div class="stab a" onclick="showM(8)"><span class="td">M8 &middot; Day 20 &middot; Anticipate You</span><span class="tl">Language Locked</span></div>
+    <div class="stab a" onclick="showM(9)"><span class="td">M9 &middot; Day 25 &middot; Anticipate You</span><span class="tl">Memory in Action</span></div>
+    <div class="stab a" onclick="showM(10)"><span class="td">M10 &middot; Day 30 &middot; N=1</span><span class="tl">Only Hers</span></div>
+  </div>
+</div>
+
+<!-- SVG DEFS -->
+<svg style="display:none">
+  <defs>
+    <symbol id="ico-wifi" viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></symbol>
+    <symbol id="ico-sig" viewBox="0 0 24 24"><path d="M2 20h2V10H2v10zm4 0h2V6H6v14zm4 0h2V2h-2v18zm4 0h2V8h-2v12zm4 0h2V4h-2v16z"/></symbol>
+    <symbol id="ico-bat" viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></symbol>
+    <symbol id="ico-star" viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></symbol>
+    <symbol id="ico-play" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></symbol>
+    <symbol id="ico-edit" viewBox="0 0 24 24"><path d="M21.71 3.29l-1-1a1 1 0 00-1.42 0L8 13.59V16h2.41L21.71 4.71a1 1 0 000-1.42z"/></symbol>
+    <symbol id="ico-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+    <symbol id="ico-plus" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></symbol>
+    <symbol id="ico-mic" viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm6 0c0 3-2.54 5.1-5 5.5V21h-2v-1.5C8.54 19.1 6 17 6 14h2c0 2.21 1.79 4 4 4s4-1.79 4-4h2z"/></symbol>
+    <symbol id="ico-speak" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></symbol>
+    <symbol id="ico-jbiq" viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></symbol>
+    <symbol id="ico-wa-phone" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></symbol>
+    <symbol id="ico-back" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></symbol>
+    <symbol id="ico-bell" viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></symbol>
+  </defs>
+</svg>
+
+<!-- ═══ M1: Onboarding ═══ -->
+<div class="story-panel on" id="m1">
+  <div>
+    <div class="sp-pill" style="background:var(--know-l);color:var(--know);">&#x25CF; Know You &middot; Before Day 0</div>
+    <div class="sp-num">Moment 01 of 10</div>
+    <div class="sp-title">She hasn&rsquo;t opened it yet.<br>JBIQ already knows her.</div>
+    <div class="sp-hindi">&ldquo;Hindi SIM. Varanasi. Homemaker. ₹12K Android. &mdash; 1.2 second mein padh liya.&rdquo;</div>
+    <div class="sp-body">Before Sunita taps the app icon, JBIQ has already read her Jio SIM (language = Hindi), her device tier (~₹12K &rarr; voice-first mode), and her UCP record (name, city, occupation).<br><br>The screen that opens is not a setup wizard. Language is already set. Her name is pre-filled. Her city is detected. Three things she never had to tell JBIQ &mdash; already known.</div>
+    <div class="sp-delight" style="background:var(--know-l);">
+      <div class="sp-dl" style="color:var(--know);">What she feels</div>
+      <div class="sp-dt" style="color:var(--know);">&ldquo;Setup nahi kiya &mdash; phir bhi sab taiyaar tha&rdquo;</div>
+    </div>
+    <div class="sp-source">
+      <div class="sp-source-l">Source of data</div>
+      <div class="sp-source-v">&#x2705; Hindi &rarr; SIM language setting &nbsp;&middot;&nbsp; &#x2705; Sunita &rarr; UCP / JioID &nbsp;&middot;&nbsp; &#x2705; Varanasi &rarr; Jio subscriber record &nbsp;&middot;&nbsp; &#x2705; Voice-first &rarr; Device tier ~₹12K</div>
+    </div>
+  </div>
+  <div class="ph-wrap">
+    <div class="ph-ml">M1 &middot; Onboarding</div>
+    <div class="dev" id="ph-m1"></div>
+    <div class="ph-sig">
+      <div class="ph-sig-l">Signals active</div>
+      <div class="ph-sig-c">
+        <span class="stag dv">SIM &middot; Hindi</span>
+        <span class="stag ucp">UCP &middot; Varanasi</span>
+        <span class="stag dv">~₹12K &middot; Voice</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ M2: Day 0 First Open ═══ -->
+<div class="story-panel" id="m2">
+  <div>
+    <div class="sp-pill" style="background:var(--know-l);color:var(--know);">&#x25CF; Know You &middot; Day 0</div>
+    <div class="sp-num">Moment 02 of 10</div>
+    <div class="sp-title">She says nothing.<br>Home is already in Hindi.</div>
+    <div class="sp-hindi">&ldquo;Namaste, Sunita ji &#x1F64F;&rdquo; &mdash; no setup, no language picker, no &lsquo;tell us about yourself.&rsquo;</div>
+    <div class="sp-body">Sunita opens JBIQ for the first time. The app opens in Hindi. Greets her by name. Home shows Health and Education tiles &mdash; not because JBIQ knows about her family yet, but because the look-alike model for <em>Varanasi homemaker, age 35&ndash;45</em> says these are the two highest-probability domains for this cohort.<br><br>No mummy. No Priya. Not yet. Just a smart first guess based on who she statistically is.</div>
+    <div class="sp-delight" style="background:var(--know-l);">
+      <div class="sp-dl" style="color:var(--know);">What she feels</div>
+      <div class="sp-dt" style="color:var(--know);">&ldquo;Meri bhasha &mdash; mera naam &mdash; sab ready tha. Kuch poochha nahi&rdquo;</div>
+    </div>
+    <div class="sp-source">
+      <div class="sp-source-l">Source of data</div>
+      <div class="sp-source-v">&#x2705; Name + Hindi &rarr; UCP + SIM &nbsp;&middot;&nbsp; &#x1F7E1; Health + Education domains &rarr; Look-alike model (Varanasi homemaker cohort) &mdash; not individual knowledge yet</div>
+    </div>
+  </div>
+  <div class="ph-wrap">
+    <div class="ph-ml">M2 &middot; Day 0 &middot; First Open</div>
+    <div class="dev" id="ph-m2"></div>
+    <div class="ph-sig">
+      <div class="ph-sig-l">Signals active</div>
+      <div class="ph-sig-c">
+        <span class="stag ucp">Name &middot; city &middot; occupation</span>
+        <span class="stag lka">Look-alike &middot; homemaker cohort</span>
+        <span class="stag amb">Morning &middot; Varanasi</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ M3: Day 2 Mummy Diabetes ═══ -->
+<div class="story-panel" id="m3">
+  <div>
+    <div class="sp-pill" style="background:var(--know-l);color:var(--know);">&#x25CF; Know You &middot; Day 2</div>
+    <div class="sp-num">Moment 03 of 10</div>
+    <div class="sp-title">She asks about mummy&rsquo;s medicine.<br>JBIQ answers for the caregiver.</div>
+    <div class="sp-hindi">&ldquo;Mummy ki sugar ki dawa ka dosage kya hoga?&rdquo; &mdash; JBIQ answers as caregiver, not patient.</div>
+    <div class="sp-body">Sunita asks about her mother&rsquo;s diabetes medication. This is the moment JBIQ learns about mummy and diabetes &mdash; she said it in the query. JBIQ did not know before this.<br><br>JBIQ answers as the caregiver: dosage timing, what to watch in an elderly person, a generic brand that costs less. She didn&rsquo;t say &ldquo;I am the caregiver.&rdquo; JBIQ inferred it &mdash; she asked about someone else&rsquo;s medication, and her UCP occupation is Homemaker.</div>
+    <div class="sp-delight" style="background:var(--know-l);">
+      <div class="sp-dl" style="color:var(--know);">What she feels</div>
+      <div class="sp-dt" style="color:var(--know);">&ldquo;Mummy ke liye &mdash; bilkul sahi jawaab. Mujhe explain nahi karna pada&rdquo;</div>
+    </div>
+    <div class="sp-source">
+      <div class="sp-source-l">Source of data</div>
+      <div class="sp-source-v">&#x2705; Mummy has diabetes &rarr; <strong>in-app query (she said it now)</strong> &nbsp;&middot;&nbsp; &#x1F7E1; Caregiver framing &rarr; query pattern (&ldquo;mummy ki dawa&rdquo;) + UCP occupation = Homemaker</div>
+    </div>
+  </div>
+  <div class="ph-wrap">
+    <div class="ph-ml">M3 &middot; Day 2 &middot; Mummy&rsquo;s Diabetes</div>
+    <div class="dev" id="ph-m3"></div>
+    <div class="ph-sig">
+      <div class="ph-sig-l">Signals active</div>
+      <div class="ph-sig-c">
+        <span class="stag ia">First health query &middot; mummy diabetes</span>
+        <span class="stag ucp">Homemaker &rarr; caregiver inferred</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ M4: Day 4 Priya ═══ -->
+<div class="story-panel" id="m4">
+  <div>
+    <div class="sp-pill" style="background:var(--know-l);color:var(--know);">&#x25CF; Know You &middot; Day 4</div>
+    <div class="sp-num">Moment 04 of 10</div>
+    <div class="sp-title">She asks about Priya&rsquo;s homework.<br>Education gets a real anchor.</div>
+    <div class="sp-hindi">&ldquo;Priya ka maths homework &mdash; fractions samjhao&rdquo; &mdash; JBIQ now knows Priya exists.</div>
+    <div class="sp-body">Sunita asks for help with Priya&rsquo;s maths homework on fractions. This is the moment Priya enters JBIQ&rsquo;s knowledge. Not from UCP &mdash; from what Sunita just said.<br><br>JBIQ infers Class 4&ndash;6 from the curriculum level (fractions = standard UP Board Class 5 syllabus). Education is no longer a look-alike guess &mdash; it&rsquo;s a confirmed, named need.</div>
+    <div class="sp-delight" style="background:var(--know-l);">
+      <div class="sp-dl" style="color:var(--know);">What she feels</div>
+      <div class="sp-dt" style="color:var(--know);">&ldquo;Priya ki help bhi wahi se mili &mdash; ek hi jagah&rdquo;</div>
+    </div>
+    <div class="sp-source">
+      <div class="sp-source-l">Source of data</div>
+      <div class="sp-source-v">&#x2705; Priya exists &rarr; <strong>in-app query (she said the name)</strong> &nbsp;&middot;&nbsp; &#x1F7E1; Class 5 inferred &rarr; fractions = UP Board Class 5 Maths syllabus</div>
+    </div>
+  </div>
+  <div class="ph-wrap">
+    <div class="ph-ml">M4 &middot; Day 4 &middot; Priya Introduced</div>
+    <div class="dev" id="ph-m4"></div>
+    <div class="ph-sig">
+      <div class="ph-sig-l">Signals active</div>
+      <div class="ph-sig-c">
+        <span class="stag ia">Priya &middot; Class 5 inferred</span>
+        <span class="stag ia">Education &middot; confirmed need</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ M5: Day 5 Home Shifts ═══ -->
+<div class="story-panel" id="m5">
+  <div>
+    <div class="sp-pill" style="background:var(--rem-l);color:var(--rem-d);">&#x25CF; Remember You &middot; Day 5</div>
+    <div class="sp-num">Moment 05 of 10</div>
+    <div class="sp-title">She never asked.<br>Home already moved.</div>
+    <div class="sp-hindi">&ldquo;Health tools &mdash; 4 baar use kiya. Home re-ranked. Koi setting nahi.&rdquo;</div>
+    <div class="sp-body">Sunita has used Health 4 times in 5 days. Education twice. She never set a preference &mdash; never asked JBIQ to reorganise anything.<br><br>Day 5. She opens the app. Health is the leading domain. School Helper is first. Home reflects what she actually does, not what a generic homemaker might do. The app shifted because she used it.</div>
+    <div class="sp-delight" style="background:var(--rem-l);">
+      <div class="sp-dl" style="color:var(--rem-d);">What she feels</div>
+      <div class="sp-dt" style="color:var(--rem-d);">&ldquo;Maine nahi maanga &mdash; phir bhi ho gaya&rdquo;</div>
+    </div>
+    <div class="sp-source">
+      <div class="sp-source-l">Source of data</div>
+      <div class="sp-source-v">&#x2705; Health 4&times; &rarr; in-app behaviour &nbsp;&middot;&nbsp; &#x2705; Education 2&times; &rarr; in-app behaviour &nbsp;&middot;&nbsp; &#x2705; Home re-rank &rarr; usage-weighted surfacing</div>
+    </div>
+  </div>
+  <div class="ph-wrap">
+    <div class="ph-ml">M5 &middot; Day 5 &middot; Home Shifts</div>
+    <div class="dev" id="ph-m5"></div>
+    <div class="ph-sig">
+      <div class="ph-sig-l">Signals active</div>
+      <div class="ph-sig-c">
+        <span class="stag ia">Health 4&times; &middot; pattern</span>
+        <span class="stag ia">Home tiles re-ranked by usage</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ M6: Day 8 Consent ═══ -->
+<div class="story-panel" id="m6">
+  <div>
+    <div class="sp-pill" style="background:var(--rem-l);color:var(--rem-d);">&#x25CF; Remember You &middot; Day 8</div>
+    <div class="sp-num">Moment 06 of 10</div>
+    <div class="sp-title">It asked before<br>it remembered.</div>
+    <div class="sp-hindi">&ldquo;Mummy ki health, Priya ki padhai &mdash; kya main yeh yaad rakhuun?&rdquo;</div>
+    <div class="sp-body">Session 3. JBIQ has observed Sunita&rsquo;s health queries about mummy, Priya&rsquo;s homework questions, her voice patterns. It hasn&rsquo;t stored anything yet &mdash; no consent.<br><br>Now it asks. In Hindi. References real things she shared &mdash; not a generic pop-up. Three plain choices. She says always. Memory starts writing from here.</div>
+    <div class="sp-delight" style="background:var(--rem-l);">
+      <div class="sp-dl" style="color:var(--rem-d);">What she feels</div>
+      <div class="sp-dt" style="color:var(--rem-d);">&ldquo;Pehle poocha &mdash; toh bharosa hua&rdquo;</div>
+    </div>
+    <div class="sp-source">
+      <div class="sp-source-l">Source of data</div>
+      <div class="sp-source-v">&#x2705; Session 3 trigger &rarr; in-app session count &nbsp;&middot;&nbsp; &#x2705; References mummy + Priya &rarr; grounded in actual queries (M3, M4)</div>
+    </div>
+  </div>
+  <div class="ph-wrap">
+    <div class="ph-ml">M6 &middot; Day 8 &middot; Consent</div>
+    <div class="dev" id="ph-m6"></div>
+    <div class="ph-sig">
+      <div class="ph-sig-l">Signals active</div>
+      <div class="ph-sig-c">
+        <span class="stag ia">Session 3 &middot; consent trigger</span>
+        <span class="stag mem">Memory write begins</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ M7: Day 12 WhatsApp ═══ -->
+<div class="story-panel" id="m7">
+  <div>
+    <div class="sp-pill" style="background:var(--rem-l);color:var(--rem-d);">&#x25CF; Remember You &middot; Day 12</div>
+    <div class="sp-num">Moment 07 of 10</div>
+    <div class="sp-title">She&rsquo;s on WhatsApp.<br>JBIQ finds her there.</div>
+    <div class="sp-hindi">&ldquo;Sunita ji &mdash; mummy ki diabetes ki baat adhoori reh gayi. Continue karein?&rdquo;</div>
+    <div class="sp-body">Sunita hasn&rsquo;t opened JBIQ in 7 days. Life got busy. JBIQ doesn&rsquo;t send a generic &ldquo;We miss you.&rdquo;<br><br>A WhatsApp message arrives in Hindi. Her name. A reference to the specific conversation she left unfinished &mdash; mummy&rsquo;s diabetes follow-up. Not a broadcast. A continuation. One tap opens JBIQ exactly where she left off.</div>
+    <div class="sp-delight" style="background:var(--rem-l);">
+      <div class="sp-dl" style="color:var(--rem-d);">What she feels</div>
+      <div class="sp-dt" style="color:var(--rem-d);">&ldquo;7 din baad &mdash; aur usne bilkul sahi waqt pe yaad dilaya&rdquo;</div>
+    </div>
+    <div class="sp-source">
+      <div class="sp-source-l">Source of data</div>
+      <div class="sp-source-v">&#x2705; 7-day gap &rarr; session inactivity signal &nbsp;&middot;&nbsp; &#x2705; Mummy diabetes reference &rarr; episodic memory (written post-consent M6) &nbsp;&middot;&nbsp; &#x2705; WhatsApp channel &rarr; same Jio number</div>
+    </div>
+  </div>
+  <div class="ph-wrap">
+    <div class="ph-ml">M7 &middot; Day 12 &middot; WhatsApp</div>
+    <div class="wa-wrap" id="ph-m7"></div>
+    <div class="ph-sig">
+      <div class="ph-sig-l">Signals active</div>
+      <div class="ph-sig-c">
+        <span class="stag mem">Episodic memory &middot; mummy thread</span>
+        <span class="stag ia">7-day inactivity &middot; WA trigger</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ M8: Day 20 Language Locked ═══ -->
+<div class="story-panel" id="m8">
+  <div>
+    <div class="sp-pill" style="background:var(--ant-l);color:var(--ant-d);">&#x25CF; Anticipate You &middot; Day 20</div>
+    <div class="sp-num">Moment 08 of 10</div>
+    <div class="sp-title">20 sessions. All Hindi.<br>JBIQ stops guessing.</div>
+    <div class="sp-hindi">&ldquo;Retinopathy&rdquo; &mdash; complex medical term, complex question. JBIQ answers entirely in Hindi. No language switch.</div>
+    <div class="sp-body">Sunita has never used English in 20 sessions. Not once. JBIQ has locked Hindi as her permanent mode &mdash; not a preference setting she toggled, a behavioural conclusion it reached on its own.<br><br>When she asks about a complex medical term related to mummy&rsquo;s diabetes, JBIQ answers in clear Hindi. No &ldquo;shall I switch to English?&rdquo; No fallback. It already knows.</div>
+    <div class="sp-delight" style="background:var(--ant-l);">
+      <div class="sp-dl" style="color:var(--ant-d);">What she feels</div>
+      <div class="sp-dt" style="color:var(--ant-d);">&ldquo;Kabhi English mein shift nahi hua &mdash; samjha mujhe&rdquo;</div>
+    </div>
+    <div class="sp-source">
+      <div class="sp-source-l">Source of data</div>
+      <div class="sp-source-v">&#x2705; Hindi lock &rarr; 20 sessions, 0% English usage &nbsp;&middot;&nbsp; &#x2705; No language switch &rarr; behavioural conclusion, not user setting</div>
+    </div>
+  </div>
+  <div class="ph-wrap">
+    <div class="ph-ml">M8 &middot; Day 20 &middot; Language Locked</div>
+    <div class="dev" id="ph-m8"></div>
+    <div class="ph-sig">
+      <div class="ph-sig-l">Signals active</div>
+      <div class="ph-sig-c">
+        <span class="stag mem">Hindi &middot; 20 sessions</span>
+        <span class="stag ia">Language locked &middot; no fallback</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ M9: Day 25 Memory in Action ═══ -->
+<div class="story-panel" id="m9">
+  <div>
+    <div class="sp-pill" style="background:var(--ant-l);color:var(--ant-d);">&#x25CF; Anticipate You &middot; Day 25</div>
+    <div class="sp-num">Moment 09 of 10</div>
+    <div class="sp-title">23 din baad bhi yaad tha.<br>Dobara batana nahi pada.</div>
+    <div class="sp-hindi">&ldquo;Day 2 mein Metformin ke baare mein poocha tha &mdash; doctor appointment hua kya?&rdquo;</div>
+    <div class="sp-body">Sunita asks again about mummy&rsquo;s diabetes &mdash; more detail this time. JBIQ opens the thread: &ldquo;Sunita ji, 23 din pehle Metformin dosage ke baare mein poocha tha. Doctor appointment hua kya?&rdquo;<br><br>It held the thread for 23 days without being reminded. It then suggests BHU Hospital&rsquo;s Tuesday diabetes OPD as the next practical step. The booking mechanism is something we&rsquo;ll build &mdash; but the intelligence is already there.</div>
+    <div class="sp-delight" style="background:var(--ant-l);">
+      <div class="sp-dl" style="color:var(--ant-d);">What she feels</div>
+      <div class="sp-dt" style="color:var(--ant-d);">&ldquo;23 din baad bhi yaad tha &mdash; mujhe dobara batana nahi pada&rdquo;</div>
+    </div>
+    <div class="sp-source">
+      <div class="sp-source-l">Source of data</div>
+      <div class="sp-source-v">&#x2705; Metformin recall &rarr; episodic memory (post-consent Day 8, from M3) &nbsp;&middot;&nbsp; &#x2705; BHU Hospital OPD &rarr; Varanasi healthcare directory + diabetes context &nbsp;&middot;&nbsp; &#x26A0; Appointment booking mechanic &rarr; TBD</div>
+    </div>
+  </div>
+  <div class="ph-wrap">
+    <div class="ph-ml">M9 &middot; Day 25 &middot; Memory in Action</div>
+    <div class="dev" id="ph-m9"></div>
+    <div class="ph-sig">
+      <div class="ph-sig-l">Signals active</div>
+      <div class="ph-sig-c">
+        <span class="stag mem">Episodic memory &middot; Day 2 thread</span>
+        <span class="stag amb">BHU Hospital &middot; Varanasi</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ M10: Day 30 N=1 ═══ -->
+<div class="story-panel" id="m10">
+  <div>
+    <div class="sp-pill" style="background:var(--ant-l);color:var(--ant-d);">&#x25CF; N=1 &middot; Day 30</div>
+    <div class="sp-num">Moment 10 of 10</div>
+    <div class="sp-title">This home belongs<br>to no one else.</div>
+    <div class="sp-hindi">&ldquo;Yeh sirf mera hai &mdash; kisi aur ka nahi.&rdquo;</div>
+    <div class="sp-body">30 days. 10+ sessions. Sunita opens JBIQ and the home is not a homemaker template. It&rsquo;s hers.<br><br>Three proactive cards &mdash; none asked for. Mummy&rsquo;s BHU appointment (agreed in M9). A local health camp 2km away (ambient + diabetes context). A suggestion about school fees &mdash; Varanasi UP Board schools typically have October term deadlines. JBIQ surfaces it as a prompt. If she acts, it remembers for next year.</div>
+    <div class="sp-delight" style="background:var(--ant-l);">
+      <div class="sp-dl" style="color:var(--ant-d);">What she feels</div>
+      <div class="sp-dt" style="color:var(--ant-d);">&ldquo;Yeh sirf mera hai &mdash; kisi aur ka nahi&rdquo;</div>
+    </div>
+    <div class="sp-source">
+      <div class="sp-source-l">Source of data</div>
+      <div class="sp-source-v">&#x2705; BHU appointment &rarr; agreed in M9 conversation &nbsp;&middot;&nbsp; &#x2705; Health camp &rarr; Varanasi ambient + diabetes context (memory) &nbsp;&middot;&nbsp; &#x1F7E1; Priya fees &rarr; October ambient signal (UP Board school fee season) &mdash; suggestion only; if she confirms &rarr; memory write</div>
+    </div>
+  </div>
+  <div class="ph-wrap">
+    <div class="ph-ml">M10 &middot; Day 30 &middot; Only Hers</div>
+    <div class="dev" id="ph-m10"></div>
+    <div class="ph-sig">
+      <div class="ph-sig-l">Signals active</div>
+      <div class="ph-sig-c">
+        <span class="stag mem">Memory &middot; 25+ days</span>
+        <span class="stag amb">October &middot; Varanasi</span>
+        <span class="stag ia">N=1 model &middot; 30 sessions</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══ PART 3 · INTERACTION MESH ═══ -->
+<div id="imap">
+<div class="sec">
+  <div class="slabel">Framework &middot; Surface &times; Stage</div>
+  <div class="stitle">Interaction Mesh</div>
+  <div class="ssub">Where personalisation shows up &mdash; across every surface, at every stage of Sunita&rsquo;s journey. Not something she sets up. Built in from Day 0.</div>
+
+  <div class="imap-grid">
+    <!-- Header row -->
+    <div class="m2-corner"></div>
+    <div class="m2-stage-hdr know">
+      <div class="m2-stage-name know">Know You</div>
+      <div class="m2-sessions">Day 0 &middot; Sessions 1&ndash;5</div>
+      <div class="m2-model">Look-alike model</div>
+    </div>
+    <div class="m2-stage-hdr rem">
+      <div class="m2-stage-name rem">Remember You</div>
+      <div class="m2-sessions">Sessions 6&ndash;20</div>
+      <div class="m2-model">Persona model</div>
+    </div>
+    <div class="m2-stage-hdr ant">
+      <div class="m2-stage-name ant">Anticipate You</div>
+      <div class="m2-sessions">Sessions 20+</div>
+      <div class="m2-model">N=1 individual</div>
+    </div>
+
+    <!-- App row -->
+    <div class="imap-surf-hdr">
+      <div class="imap-surf-icon">&#x1F4F1;</div>
+      <div class="imap-surf-name">App</div>
+      <div class="imap-surf-sub">7 screens</div>
+    </div>
+    <div class="imap-cell">
+      <span class="imap-tag k">Active</span>
+      <div class="imap-item">Silent onboarding</div>
+      <div class="imap-sub">Name &middot; language &middot; modality from JioID + SIM. No blank form shown.</div>
+      <div class="imap-rule"></div>
+      <div class="imap-item">UCP-anchored start prompts</div>
+      <div class="imap-sub">Occupation + city shapes first suggestions. Voice-first on mid-tier devices.</div>
+    </div>
+    <div class="imap-cell">
+      <span class="imap-tag r">Active</span>
+      <div class="imap-item">Ranked cards &middot; Memory recall</div>
+      <div class="imap-sub">Tiles re-ranked by actual usage. Incomplete task surfaces on return. Time-aware layout.</div>
+      <div class="imap-rule"></div>
+      <div class="imap-item">Personalised conversation tone</div>
+      <div class="imap-sub">Register deepens session-to-session. Response adapts to engagement level.</div>
+    </div>
+    <div class="imap-cell">
+      <span class="imap-tag a">Active</span>
+      <div class="imap-item">Proactive ecosystem cards</div>
+      <div class="imap-sub">JioHealth &middot; JioMart &middot; JioPay &mdash; surfaced before she opens those apps.</div>
+      <div class="imap-rule"></div>
+      <div class="imap-item">Seasonal moments</div>
+      <div class="imap-sub">UP Board window &middot; Navratri &middot; welfare deadlines by pincode. Calendar-driven, not generic.</div>
+    </div>
+
+    <!-- Push Notification row -->
+    <div class="imap-surf-hdr">
+      <div class="imap-surf-icon">&#x1F514;</div>
+      <div class="imap-surf-name">Push Notification</div>
+      <div class="imap-surf-sub">6 types</div>
+    </div>
+    <div class="imap-cell">
+      <span class="imap-tag none">&mdash;</span>
+      <div class="imap-sub" style="color:#ccc;font-style:italic;">No PNs in Know You. First impression stays in-app.</div>
+    </div>
+    <div class="imap-cell">
+      <span class="imap-tag r">Active</span>
+      <div class="imap-item">Contextual re-engagement</div>
+      <div class="imap-sub">Specific pending task. Deep-links to exact conversation state. Always her language.</div>
+    </div>
+    <div class="imap-cell">
+      <span class="imap-tag a">Active</span>
+      <div class="imap-item">Habit triggers &middot; Event alerts</div>
+      <div class="imap-sub">Pattern-detected timing. Welfare deadlines. Exam windows. Dynamic Island live activity for ambient reminders.</div>
+    </div>
+
+    <!-- WhatsApp row -->
+    <div class="imap-surf-hdr">
+      <div class="imap-surf-icon">&#x1F4AC;</div>
+      <div class="imap-surf-name">WhatsApp</div>
+      <div class="imap-surf-sub">3 types</div>
+    </div>
+    <div class="imap-cell">
+      <span class="imap-tag none">&mdash;</span>
+      <div class="imap-sub" style="color:#ccc;font-style:italic;">Trust channel. Not used until conversational context is established.</div>
+    </div>
+    <div class="imap-cell">
+      <span class="imap-tag r">Active</span>
+      <div class="imap-item">Lapsed re-entry with specific hook</div>
+      <div class="imap-sub">One reason. Tied to remembered context. Never a broadcast.</div>
+    </div>
+    <div class="imap-cell">
+      <span class="imap-tag a">Active</span>
+      <div class="imap-item">Seasonal &middot; New capability in context</div>
+      <div class="imap-sub">Feature introduced only when she&rsquo;s already expressed the underlying need.</div>
+    </div>
+  </div><!-- /imap-grid -->
+
+  <div class="m2-surfaces">
+    <div class="m2-surf-lbl">Signals</div>
+    <div class="m2-surf-items">
+      <span class="m2-surf-item">JioID &middot; Name + Language</span>
+      <span class="m2-surf-item">SIM &middot; Language + Device tier</span>
+      <span class="m2-surf-item">UCP &middot; Profile + Location</span>
+      <span class="m2-surf-item">In-App Behaviour &middot; Session to session</span>
+      <span class="m2-surf-item">Memory Store &middot; Episodic + Procedural</span>
+      <span class="m2-surf-item future">Ecosystem Loop</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══ PART 4 · SURFACE MAP ═══ -->
+<div id="smap">
+<div class="sec">
+  <div class="slabel">Sunita &middot; Surface &times; Screen &times; Interaction</div>
+  <div class="stitle">Surface Map</div>
+  <div class="ssub">Every touchpoint, every screen, every personalised interaction in Sunita&rsquo;s journey &mdash; mapped by surface and stage.</div>
+
+  <!-- Sub-nav: 3 surfaces -->
+  <div class="smap-subnav">
+    <div class="smap-stab on" onclick="showSmap('smap-app',this)">&#x1F4F1; App <span class="cnt">7 screens</span></div>
+    <div class="smap-stab" onclick="showSmap('smap-pn',this)">&#x1F514; Push Notification <span class="cnt">6 types</span></div>
+    <div class="smap-stab" onclick="showSmap('smap-wa',this)">&#x1F4AC; WhatsApp <span class="cnt">3 types</span></div>
+  </div>
+
+  <!-- Signal legend (always visible) -->
+  <div class="smap-legend">
+    <div class="smap-leg"><div class="smap-leg-dot" style="background:var(--know);"></div>Know You &middot; Day 0&ndash;5</div>
+    <div class="smap-leg"><div class="smap-leg-dot" style="background:var(--rem);"></div>Remember You &middot; Day 6&ndash;20</div>
+    <div class="smap-leg"><div class="smap-leg-dot" style="background:var(--ant);"></div>Anticipate You &middot; Day 20+</div>
+    <div class="smap-leg"><div class="smap-leg-dot" style="background:var(--jb);"></div>All stages</div>
+  </div>
+
+  <!-- ── APP ── -->
+  <div id="smap-app" class="smap-panel on">
+    <div class="smap-surf-lbl">Surface 1 &middot; App &middot; Primary JBIQ interface</div>
+    <div class="smap-row">
+
+      <div class="smap-card">
+        <div class="smap-card-head">
+          <div class="smap-screen-n">Screen 1</div>
+          <div class="smap-screen-t">Onboarding</div>
+          <div class="smap-stage k">&#x25CF; Know You &middot; Day 0</div>
+        </div>
+        <div class="smap-card-body">
+          <div class="smap-irow"><div class="smap-dot k"></div><div class="smap-icont"><div class="smap-ilbl">Name</div><div class="smap-idesc">&ldquo;Sunita&rdquo; pulled from JioID silently. No form.</div></div></div>
+          <div class="smap-irow"><div class="smap-dot k"></div><div class="smap-icont"><div class="smap-ilbl">Language</div><div class="smap-idesc">Hindi set from SIM + UCP. No selection screen shown.</div></div></div>
+          <div class="smap-irow"><div class="smap-dot k"></div><div class="smap-icont"><div class="smap-ilbl">Starter prompts</div><div class="smap-idesc">Homemaker &middot; Varanasi &rarr; welfare, JioHealth, Priya school tools.</div></div></div>
+          <div class="smap-irow"><div class="smap-dot k"></div><div class="smap-icont"><div class="smap-ilbl">Modality</div><div class="smap-idesc">Voice entry offered first. &#x20B912K mid-tier device detected.</div></div></div>
+          <div class="smap-irow"><div class="smap-dot k"></div><div class="smap-icont"><div class="smap-ilbl">Returning user</div><div class="smap-idesc">Skips onboarding if known Jio user. Picks up directly.</div></div></div>
+        </div>
+      </div>
+
+      <div class="smap-card">
+        <div class="smap-card-head">
+          <div class="smap-screen-n">Screen 2</div>
+          <div class="smap-screen-t">Home Screen</div>
+          <div class="smap-stage ra">&#x25CF; Remember &rarr; Anticipate</div>
+        </div>
+        <div class="smap-card-body">
+          <div class="smap-irow"><div class="smap-dot k"></div><div class="smap-icont"><div class="smap-ilbl">Greeting card</div><div class="smap-idesc">&ldquo;Sunita ji, namaste &middot; Subah ki shubhkamnayein&rdquo;</div></div></div>
+          <div class="smap-irow"><div class="smap-dot r"></div><div class="smap-icont"><div class="smap-ilbl">Quick action tiles</div><div class="smap-idesc">Re-ranked by her actual usage after every session.</div></div></div>
+          <div class="smap-irow"><div class="smap-dot r"></div><div class="smap-icont"><div class="smap-ilbl">Incomplete task card</div><div class="smap-idesc">Last unfinished task at top on return. Resume in one tap.</div></div></div>
+          <div class="smap-irow"><div class="smap-dot r"></div><div class="smap-icont"><div class="smap-ilbl">Time-aware layout</div><div class="smap-idesc">Morning &rarr; news + welfare. Evening &rarr; health + family.</div></div></div>
+          <div class="smap-irow"><div class="smap-dot r"></div><div class="smap-icont"><div class="smap-ilbl">Seasonal card</div><div class="smap-idesc">UP Board window &middot; Navratri &middot; welfare deadlines by Varanasi pincode.</div></div></div>
+          <div class="smap-irow"><div class="smap-dot a"></div><div class="smap-icont"><div class="smap-ilbl">Ecosystem cards</div><div class="smap-idesc">JioHealth &middot; JioMart &middot; JioPay &mdash; surfaced before she opens those apps.</div></div></div>
+        </div>
+      </div>
+
+      <div class="smap-card">
+        <div class="smap-card-head">
+          <div class="smap-screen-n">Screen 3</div>
+          <div class="smap-screen-t">Conversation</div>
+          <div class="smap-stage kr">&#x25CF; Know &rarr; Remember</div>
+        </div>
+        <div class="smap-card-body">
+          <div class="smap-irow"><div class="smap-dot k"></div><div class="smap-icont"><div class="smap-ilbl">Register + tone</div><div class="smap-idesc">Casual Hindi &middot; &ldquo;aap&rdquo; form. Matched from Turn 1. Never defaults to English.</div></div></div>
+          <div class="smap-irow"><div class="smap-dot k"></div><div class="smap-icont"><div class="smap-ilbl">Response length</div><div class="smap-idesc">Voice-first &middot; &#x2264;3 sentences &middot; no bullets. Literacy-adaptive.</div></div></div>
+          <div class="smap-irow"><div class="smap-dot k"></div><div class="smap-icont"><div class="smap-ilbl">Code-mix handling</div><div class="smap-idesc">Hinglish handled naturally. No correction, no mode switch.</div></div></div>
+          <div class="smap-irow"><div class="smap-dot k"></div><div class="smap-icont"><div class="smap-ilbl">TTS auto-play</div><div class="smap-idesc">Voice responses auto-play. No extra tap needed.</div></div></div>
+          <div class="smap-irow"><div class="smap-dot r"></div><div class="smap-icont"><div class="smap-ilbl">Personalised depth</div><div class="smap-idesc">Goes deeper when she engages; concise when she disengages.</div></div></div>
+        </div>
+      </div>
+
+      <div class="smap-card">
+        <div class="smap-card-head">
+          <div class="smap-screen-n">Screen 4</div>
+          <div class="smap-screen-t">Memory / Recall</div>
+          <div class="smap-stage r">&#x25CF; Remember You &middot; S3+</div>
+        </div>
+        <div class="smap-card-body">
+          <div class="smap-irow"><div class="smap-dot r"></div><div class="smap-icont"><div class="smap-ilbl">Confirmation nudge</div><div class="smap-idesc">&ldquo;Yaad aa gaya &mdash; Mummy ko diabetes hai.&rdquo; In-conversation, not a PN.</div></div></div>
+          <div class="smap-irow"><div class="smap-dot r"></div><div class="smap-icont"><div class="smap-ilbl">Cross-session recall</div><div class="smap-idesc">&ldquo;Pichhli baar diabetes diet ki baat ho rahi thi.&rdquo;</div></div></div>
+          <div class="smap-irow"><div class="smap-dot r"></div><div class="smap-icont"><div class="smap-ilbl">Consent prompt</div><div class="smap-idesc">Session 3 &middot; Hindi &middot; &ldquo;Hamesha / Sirf is baar / Kabhi nahi&rdquo;</div></div></div>
+          <div class="smap-irow"><div class="smap-dot r"></div><div class="smap-icont"><div class="smap-ilbl">Topic link</div><div class="smap-idesc">School deadline + Mummy follow-up connected. Sunita didn&rsquo;t bridge them.</div></div></div>
+        </div>
+      </div>
+
+      <div class="smap-card">
+        <div class="smap-card-head">
+          <div class="smap-screen-n">Screen 5</div>
+          <div class="smap-screen-t">Discovery</div>
+          <div class="smap-stage ra">&#x25CF; Remember &rarr; Anticipate</div>
+        </div>
+        <div class="smap-card-body">
+          <div class="smap-irow"><div class="smap-dot r"></div><div class="smap-icont"><div class="smap-ilbl">Post-task inline nudge</div><div class="smap-idesc">&ldquo;JioHealth pe nearby diagnostic bhi dikh sakta hai?&rdquo; Max 1 per session.</div></div></div>
+          <div class="smap-irow"><div class="smap-dot r"></div><div class="smap-icont"><div class="smap-ilbl">Capability gap surfacing</div><div class="smap-idesc">Welfare scheme never opened &mdash; introduced in context of her query.</div></div></div>
+          <div class="smap-irow"><div class="smap-dot r"></div><div class="smap-icont"><div class="smap-ilbl">Cohort suggestion</div><div class="smap-idesc">&ldquo;Aap jaise log ye bhi use karte hain&hellip;&rdquo; via look-alike model.</div></div></div>
+          <div class="smap-irow"><div class="smap-dot a"></div><div class="smap-icont"><div class="smap-ilbl">Seasonal prompt</div><div class="smap-idesc">UP Board results week &rarr; exam prep tools surface before she searches.</div></div></div>
+        </div>
+      </div>
+
+      <div class="smap-card">
+        <div class="smap-card-head">
+          <div class="smap-screen-n">Screen 6</div>
+          <div class="smap-screen-t">Re-engagement</div>
+          <div class="smap-stage ra">&#x25CF; Remember &rarr; Anticipate</div>
+        </div>
+        <div class="smap-card-body">
+          <div class="smap-irow"><div class="smap-dot r"></div><div class="smap-icont"><div class="smap-ilbl">Return greeting + context</div><div class="smap-idesc">&ldquo;Wapas aai, Sunita ji &mdash; diabetes follow-up pending tha.&rdquo;</div></div></div>
+          <div class="smap-irow"><div class="smap-dot r"></div><div class="smap-icont"><div class="smap-ilbl">Incomplete task card</div><div class="smap-idesc">Mummy appointment card at top. Resumable in one tap.</div></div></div>
+          <div class="smap-irow"><div class="smap-dot a"></div><div class="smap-icont"><div class="smap-ilbl">Habit card</div><div class="smap-idesc">&ldquo;Mangalvar hai &mdash; welfare scheme update dekhna hai?&rdquo; Tuesday pattern.</div></div></div>
+          <div class="smap-irow"><div class="smap-dot r"></div><div class="smap-icont"><div class="smap-ilbl">Gap-aware tone</div><div class="smap-idesc">Warmer if &gt;5 day gap. Lighter for same-day return.</div></div></div>
+        </div>
+      </div>
+
+      <div class="smap-card">
+        <div class="smap-card-head">
+          <div class="smap-screen-n">Screen 7</div>
+          <div class="smap-screen-t">Trust &amp; Control</div>
+          <div class="smap-stage j">&#x25CF; All stages</div>
+        </div>
+        <div class="smap-card-body">
+          <div class="smap-irow"><div class="smap-dot j"></div><div class="smap-icont"><div class="smap-ilbl">Consent prompt</div><div class="smap-idesc">Session 3. Hindi. Three choices: Hamesha / Sirf is baar / Kabhi nahi.</div></div></div>
+          <div class="smap-irow"><div class="smap-dot j"></div><div class="smap-icont"><div class="smap-ilbl">My Preferences</div><div class="smap-idesc">All stored memory in plain Hindi. Each item editable or deletable.</div></div></div>
+          <div class="smap-irow"><div class="smap-dot j"></div><div class="smap-icont"><div class="smap-ilbl">Pause mode</div><div class="smap-idesc">Stops new additions without deleting what already exists.</div></div></div>
+          <div class="smap-irow"><div class="smap-dot j"></div><div class="smap-icont"><div class="smap-ilbl">Delete in &#x2264;3 taps</div><div class="smap-idesc">Any preference gone in 3 taps. 24hr purge SLA enforced.</div></div></div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /smap-app -->
+
+  <!-- ── PUSH NOTIFICATION ── -->
+  <div id="smap-pn" class="smap-panel">
+    <div class="smap-surf-lbl">Surface 2 &middot; Push Notification &middot; Contextual re-entry</div>
+    <div class="smap-row">
+
+      <div class="smap-card">
+        <div class="smap-card-head">
+          <div class="smap-screen-n">PN Type 1</div>
+          <div class="smap-screen-t">D+3 Re-engagement</div>
+          <div class="smap-stage r">&#x25CF; Remember You</div>
+        </div>
+        <div class="smap-card-body">
+          <div class="smap-irow"><div class="smap-dot r"></div><div class="smap-icont"><div class="smap-ilbl">Hook message</div><div class="smap-idesc">&ldquo;Mummy ki diabetes follow-up pending hai.&rdquo; Specific, not generic.</div></div></div>
+          <div class="smap-irow"><div class="smap-dot r"></div><div class="smap-icont"><div class="smap-ilbl">Deep link</div><div class="smap-idesc">Tapping drops into the exact conversation state &mdash; not home.</div></div></div>
+          <div class="smap-irow"><div class="smap-dot r"></div><div class="smap-icont"><div class="smap-ilbl">Language</div><div class="smap-idesc">Always Hindi. Matches Sunita&rsquo;s stored preference.</div></div></div>
+        </div>
+      </div>
+
+      <div class="smap-card">
+        <div class="smap-card-head">
+          <div class="smap-screen-n">PN Type 2</div>
+          <div class="smap-screen-t">Habit-triggered PN</div>
+          <div class="smap-stage a">&#x25CF; Anticipate You</div>
+        </div>
+        <div class="smap-card-body">
+          <div class="smap-irow"><div class="smap-dot a"></div><div class="smap-icont"><div class="smap-ilbl">Pattern trigger</div><div class="smap-idesc">Tuesday habit detected. &ldquo;Aaj Mangalvar hai &mdash; welfare update dekhna hai?&rdquo;</div></div></div>
+          <div class="smap-irow"><div class="smap-dot a"></div><div class="smap-icont"><div class="smap-ilbl">Timing</div><div class="smap-idesc">Fires at Sunita&rsquo;s observed time-of-day for this habit.</div></div></div>
+          <div class="smap-irow"><div class="smap-dot a"></div><div class="smap-icont"><div class="smap-ilbl">Suppression</div><div class="smap-idesc">Dismissed twice &rarr; stops permanently for this habit type.</div></div></div>
+        </div>
+      </div>
+
+      <div class="smap-card">
+        <div class="smap-card-head">
+          <div class="smap-screen-n">PN Type 3</div>
+          <div class="smap-screen-t">Event / Interest PN</div>
+          <div class="smap-stage a">&#x25CF; Anticipate You</div>
+        </div>
+        <div class="smap-card-body">
+          <div class="smap-irow"><div class="smap-dot a"></div><div class="smap-icont"><div class="smap-ilbl">Exam window trigger</div><div class="smap-idesc">&ldquo;Priya ki pariksha ke liye tools ready hain.&rdquo; UP Board calendar + UCP pincode.</div></div></div>
+          <div class="smap-irow"><div class="smap-dot a"></div><div class="smap-icont"><div class="smap-ilbl">Welfare deadline</div><div class="smap-idesc">Scheme registration closing &mdash; fires 3 days before deadline.</div></div></div>
+        </div>
+      </div>
+
+      <div class="smap-card">
+        <div class="smap-card-head">
+          <div class="smap-screen-n">PN Type 4</div>
+          <div class="smap-screen-t">Ecosystem Trigger PN</div>
+          <div class="smap-stage a">&#x25CF; Anticipate You</div>
+        </div>
+        <div class="smap-card-body">
+          <div class="smap-irow"><div class="smap-dot a"></div><div class="smap-icont"><div class="smap-ilbl">JioHealth signal</div><div class="smap-idesc">&ldquo;Mummy ke liye nearby diagnostic centre available hai.&rdquo; From JBIQ conversation signal.</div></div></div>
+          <div class="smap-irow"><div class="smap-dot a"></div><div class="smap-icont"><div class="smap-ilbl">JioMart signal</div><div class="smap-idesc">Household items she buys regularly &mdash; restock prompt when depleted.</div></div></div>
+        </div>
+      </div>
+
+      <div class="smap-card">
+        <div class="smap-card-head">
+          <div class="smap-screen-n">PN Type 5</div>
+          <div class="smap-screen-t">Seasonal PN</div>
+          <div class="smap-stage r">&#x25CF; Remember You</div>
+        </div>
+        <div class="smap-card-body">
+          <div class="smap-irow"><div class="smap-dot r"></div><div class="smap-icont"><div class="smap-ilbl">Navratri</div><div class="smap-idesc">Festival-relevant content by UCP Varanasi pincode and religious affinity.</div></div></div>
+          <div class="smap-irow"><div class="smap-dot r"></div><div class="smap-icont"><div class="smap-ilbl">UP Board results</div><div class="smap-idesc">&ldquo;Priya ke results aa gaye &mdash; check karein?&rdquo; Pincode-specific timing.</div></div></div>
+        </div>
+      </div>
+
+      <!-- Dynamic Island -->
+      <div class="smap-card smap-di">
+        <div class="smap-card-head">
+          <div class="smap-screen-n">PN Type 6</div>
+          <div class="smap-screen-t">Dynamic Island</div>
+          <div class="smap-stage a" style="background:rgba(10,156,130,.18);color:#0a9a86;">&#x25CF; Live Activity</div>
+        </div>
+        <div class="smap-di-pill">
+          <div class="smap-di-inner">
+            <div class="smap-di-live"></div>
+            <span class="smap-di-lbl">JBIQ &middot; 2 din baaki</span>
+          </div>
+        </div>
+        <div class="smap-card-body">
+          <div class="smap-irow"><div class="smap-dot a"></div><div class="smap-icont"><div class="smap-ilbl">Welfare deadline countdown</div><div class="smap-idesc">Persistent ambient display. No tap needed. Disappears after deadline.</div></div></div>
+          <div class="smap-irow"><div class="smap-dot a"></div><div class="smap-icont"><div class="smap-ilbl">Priya exam countdown</div><div class="smap-idesc">&ldquo;UP Board &middot; 3 din baaki&rdquo; &mdash; live pill on lock screen.</div></div></div>
+          <div class="smap-irow"><div class="smap-dot a"></div><div class="smap-icont"><div class="smap-ilbl">Mummy appointment</div><div class="smap-idesc">Reminder persists until appointment passed or dismissed.</div></div></div>
+          <div class="smap-irow"><div class="smap-dot a"></div><div class="smap-icont"><div class="smap-ilbl">Tap to expand</div><div class="smap-idesc">Deep links into the relevant JBIQ conversation or JioHealth screen.</div></div></div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /smap-pn -->
+
+  <!-- ── WHATSAPP ── -->
+  <div id="smap-wa" class="smap-panel">
+    <div class="smap-surf-lbl">Surface 3 &middot; WhatsApp &middot; Highest-trust re-engagement channel in Bharat</div>
+    <div class="smap-row">
+
+      <div class="smap-card smap-wa">
+        <div class="smap-card-head">
+          <div class="smap-screen-n">WA Type 1</div>
+          <div class="smap-screen-t">Lapsed Re-entry</div>
+          <div class="smap-stage r">&#x25CF; 30+ day gap</div>
+        </div>
+        <div class="smap-card-body">
+          <div class="smap-irow"><div class="smap-dot r"></div><div class="smap-icont"><div class="smap-ilbl">Personalised hook</div><div class="smap-idesc">&ldquo;Sunita ji, kaafi din ho gaye &mdash; Mummy ki diabetes ke baare mein kuch new aya hai.&rdquo;</div></div></div>
+          <div class="smap-irow"><div class="smap-dot r"></div><div class="smap-icont"><div class="smap-ilbl">Language</div><div class="smap-idesc">Always Hindi. Warm, conversational. Not a marketing message.</div></div></div>
+          <div class="smap-irow"><div class="smap-dot r"></div><div class="smap-icont"><div class="smap-ilbl">Single specific hook</div><div class="smap-idesc">One reason. Tied to real remembered context. Not a list of features.</div></div></div>
+        </div>
+      </div>
+
+      <div class="smap-card smap-wa">
+        <div class="smap-card-head">
+          <div class="smap-screen-n">WA Type 2</div>
+          <div class="smap-screen-t">Seasonal Re-entry</div>
+          <div class="smap-stage a">&#x25CF; Event-triggered</div>
+        </div>
+        <div class="smap-card-body">
+          <div class="smap-irow"><div class="smap-dot a"></div><div class="smap-icont"><div class="smap-ilbl">UP Board result window</div><div class="smap-idesc">&ldquo;Priya ke result aane wale hain &mdash; result check karna ho toh JBIQ pe aayein.&rdquo;</div></div></div>
+          <div class="smap-irow"><div class="smap-dot a"></div><div class="smap-icont"><div class="smap-ilbl">Welfare registration</div><div class="smap-idesc">Scheme deadline in Varanasi approaching &mdash; contextual, not a broadcast.</div></div></div>
+          <div class="smap-irow"><div class="smap-dot r"></div><div class="smap-icont"><div class="smap-ilbl">Festival-linked</div><div class="smap-idesc">Navratri &mdash; relevant household or devotional context surfaced.</div></div></div>
+        </div>
+      </div>
+
+      <div class="smap-card smap-wa">
+        <div class="smap-card-head">
+          <div class="smap-screen-n">WA Type 3</div>
+          <div class="smap-screen-t">New Capability</div>
+          <div class="smap-stage r">&#x25CF; Contextual intro</div>
+        </div>
+        <div class="smap-card-body">
+          <div class="smap-irow"><div class="smap-dot r"></div><div class="smap-icont"><div class="smap-ilbl">Relevant feature intro</div><div class="smap-idesc">&ldquo;JioHealth pe Mummy ke liye appointment book kar sakte ho ab &mdash; seedha JBIQ se.&rdquo;</div></div></div>
+          <div class="smap-irow"><div class="smap-dot r"></div><div class="smap-icont"><div class="smap-ilbl">In-context framing</div><div class="smap-idesc">Feature introduced because of something Sunita has already expressed need for.</div></div></div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /smap-wa -->
+
+</div>
+</div>
+
+<!-- FOOTER -->
+<div style="border-top:1px solid var(--border);padding:24px 48px;display:flex;align-items:center;justify-content:space-between;background:var(--jg);">
+  <div style="font-size:11px;color:#999;">JBIQ &middot; Personalised Experiences &middot; Core Experience POD &middot; 2026</div>
+  <div style="font-size:11px;color:#999;">Sunita &middot; Varanasi &middot; Day 0 &rarr; Day 30 &middot; 10 Moments &middot; Validated</div>
+</div>
+
+<script>
+const ST=`<div class="ph-st"><span class="ph-st-t">9:41</span><div class="ph-st-ic"><svg><use href="#ico-wifi"/></svg><svg><use href="#ico-sig"/></svg><svg><use href="#ico-bat"/></svg></div></div>`;
+const NV=`<div class="ph-nv"><div class="ph-ham"><span></span><span></span><span></span></div><div class="ph-av">S</div></div>`;
+const BT=`<div class="ph-bt"><div class="ph-inp"><div class="ph-ab"><svg width="14" height="14"><use href="#ico-plus"/></svg></div><div class="ph-inp-t">Bolen ya likhen...</div><div class="ph-ab"><svg width="14" height="14"><use href="#ico-mic"/></svg></div><div class="ph-sp"><svg width="11" height="11"><use href="#ico-speak"/></svg><span>Speak</span></div></div></div>`;
+const BAIAV=`<div class="bai-av"><svg width="11" height="11"><use href="#ico-jbiq"/></svg></div>`;
+
+const HSVG=`<svg width="19" height="19" fill="#fff"><use href="#ico-shield"/></svg>`;
+const ESVG=`<svg width="19" height="19" fill="#fff"><use href="#ico-edit"/></svg>`;
+const TSVG=`<svg width="19" height="19" fill="#fff"><use href="#ico-play"/></svg>`;
+const FSVG=`<svg width="19" height="19" fill="#fff"><use href="#ico-star"/></svg>`;
+
+function aRow(active){
+  const its=[{c:'cc',s:HSVG,l:'Health'},{c:'ca',s:ESVG,l:'Education'},{c:'cb',s:TSVG,l:'Hindi'},{c:'cd',s:FSVG,l:'Finance'}];
+  return `<div class="ar">${its.map((it,i)=>`<div class="ai"><div class="ac ${it.c}${i===active?' act':''}">${it.s}</div><span class="al${i===active?' act':''}">${it.l}</span></div>`).join('')}</div>`;
+}
+function tGrid(hi){
+  const tools=[{l:'Health Info',ic:'ico-shield',hi:hi.includes(0)},{l:'School Helper',ic:'ico-edit',hi:hi.includes(1)},{l:'Summarise',ic:'ico-play',hi:hi.includes(2)},{l:'Translate',ic:'ico-star',hi:hi.includes(3)}];
+  return `<div class="tg">${tools.map(t=>`<div class="tp${t.hi?' hi':''}"><div class="tic" style="background:${t.hi?'rgba(91,33,182,.1)':'#eee'}"><svg width="12" height="12" fill="${t.hi?'#5b21b6':'#888'}"><use href="#${t.ic}"/></svg></div>${t.l}</div>`).join('')}</div>`;
+}
+const bu=t=>`<div class="bu">${t}</div>`;
+const bai=t=>`<div class="bai">${BAIAV}<div class="bai-t">${t}</div></div>`;
+const mpNote=(t,cls)=>`<div class="mp${cls?' '+cls:''}"><svg width="9" height="9"><use href="#ico-star"/></svg>${t}</div>`;
+const ann=t=>`<div style="font-size:9px;color:#aaa;font-style:italic;padding:2px 4px;">${t}</div>`;
+
+document.addEventListener('DOMContentLoaded',()=>{
+
+  // M1 — Onboarding: light gradient, no setup
+  document.getElementById('ph-m1').innerHTML=`
+    <div style="display:flex;flex-direction:column;height:480px;background:linear-gradient(180deg,#dde8f4 0%,#eaeff8 15%,#f0e8d8 42%,#f4e0c4 62%,#f0d8b8 80%,#e8cfa8 100%);position:relative;overflow:hidden;">
+      <div style="height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font-size:8px;font-weight:700;color:#3a2a18;flex-shrink:0;position:relative;z-index:5;">
+        <span>9:41</span><span>4G &#9646;&#9646;&#9646;</span>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-bottom:175px;position:relative;z-index:5;">
+        <div style="width:46px;height:46px;border-radius:14px;background:var(--jb);display:flex;align-items:center;justify-content:center;margin-bottom:8px;box-shadow:0 4px 18px rgba(57,0,173,.28);">
+          <svg width="22" height="22" fill="#fff"><use href="#ico-jbiq"/></svg>
+        </div>
+        <div style="font-size:13px;font-weight:800;color:#1a0e38;letter-spacing:-.02em;margin-bottom:2px;">JioBharatIQ</div>
+        <div style="font-size:9px;color:rgba(40,25,80,.62);">Sunita ji ke liye taiyaar &#x2728;</div>
+      </div>
+      <div style="position:absolute;bottom:0;left:0;right:0;height:200px;background:radial-gradient(ellipse 200% 60% at 50% 100%,rgba(210,148,65,.16) 0%,transparent 70%);pointer-events:none;z-index:2;"></div>
+      <div style="position:absolute;bottom:52px;left:0;right:0;background:#fff;border-radius:14px 14px 0 0;z-index:10;padding:10px 12px 8px;box-shadow:0 -3px 16px rgba(0,0,0,.10);">
+        <div style="width:22px;height:2.5px;background:#e0e0e0;border-radius:2px;margin:0 auto 9px;"></div>
+        <div style="background:#f7f6ff;border-radius:9px;border:1px solid #ebe8f8;overflow:hidden;margin-bottom:6px;">
+          <div style="display:flex;align-items:center;padding:7px 10px;gap:7px;border-bottom:1px solid #f0eefc;">
+            <span style="font-size:8px;color:#bbb;width:38px;flex-shrink:0;">Bhasha</span>
+            <span style="font-size:11px;font-weight:700;color:#0a0a1e;flex:1;">&#x939;&#x93F;&#x902;&#x926;&#x940;</span>
+            <div style="width:16px;height:16px;border-radius:50%;background:#eaf4ee;border:1px solid #b6ddc4;display:flex;align-items:center;justify-content:center;"><svg width="9" height="9" fill="none" stroke="#1a7a3c" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 12 12"><path d="M1.5 6l3 3 6-7"/></svg></div>
+          </div>
+          <div style="display:flex;align-items:center;padding:7px 10px;gap:7px;border-bottom:1px solid #f0eefc;">
+            <span style="font-size:8px;color:#bbb;width:38px;flex-shrink:0;">Naam</span>
+            <span style="font-size:11px;font-weight:700;color:#0a0a1e;flex:1;">Sunita</span>
+            <div style="width:16px;height:16px;border-radius:50%;background:#eaf4ee;border:1px solid #b6ddc4;display:flex;align-items:center;justify-content:center;"><svg width="9" height="9" fill="none" stroke="#1a7a3c" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 12 12"><path d="M1.5 6l3 3 6-7"/></svg></div>
+          </div>
+          <div style="display:flex;align-items:center;padding:7px 10px;gap:7px;">
+            <span style="font-size:8px;color:#bbb;width:38px;flex-shrink:0;">Sheher</span>
+            <span style="font-size:11px;font-weight:700;color:#0a0a1e;flex:1;">Varanasi</span>
+            <div style="width:16px;height:16px;border-radius:50%;background:#eaf4ee;border:1px solid #b6ddc4;display:flex;align-items:center;justify-content:center;"><svg width="9" height="9" fill="none" stroke="#1a7a3c" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 12 12"><path d="M1.5 6l3 3 6-7"/></svg></div>
+          </div>
+        </div>
+        <div style="font-size:7.5px;color:#ccc;text-align:center;">Koi setup nahi &nbsp;&middot;&nbsp; Koi language picker nahi</div>
+      </div>
+      <div style="position:absolute;bottom:0;left:0;right:0;background:#fff;z-index:11;padding:6px 12px 10px;">
+        <button style="background:var(--jb);color:#fff;border:none;border-radius:9px;padding:9px;font-size:11px;font-weight:700;font-family:'JioType',sans-serif;width:100%;cursor:pointer;">Shuru karein &#x2192;</button>
+      </div>
+    </div>`;
+
+  // M2 — Day 0: Generic homemaker home, NO mummy/Priya
+  document.getElementById('ph-m2').innerHTML=`
+    ${ST}${NV}
+    <div class="ph-sc">
+      <div class="ph-greet">Namaste, <strong>Sunita ji</strong> &#x1F64F;</div>
+      ${aRow(0)}
+      ${tGrid([0,1])}
+      <div class="ph-sec">Aapke liye</div>
+      <div class="uc res">
+        <div class="ut">&#x1F3E5; Sehat ki jaankari</div>
+        <div class="us">Ghar ke liye health tips &mdash; Varanasi homemakers ke liye top picks</div>
+      </div>
+      <div class="uc">
+        <div class="ut">&#x1F4DA; Padhai mein madad</div>
+        <div class="us">Homework help &middot; UP Board &middot; Hindi medium</div>
+      </div>
+    </div>
+    ${BT}`;
+
+  // M3 — Day 2: Mummy diabetes query — learned NOW
+  document.getElementById('ph-m3').innerHTML=`
+    ${ST}${NV}
+    <div class="ph-sc">
+      <div class="ch">
+        ${bu('"Mummy ki sugar ki dawa ka dosage kya hoga?"')}
+        ${bai('Sunita ji, agar Metformin 500mg hai toh &mdash; khana khane ke baad dein, subah aur raat. Zyada mushkil nahi.<br><br>Generic brand &mdash; &#x20B940/strip. Bilkul same kaam karta hai.')}
+        ${mpNote('Caregiver framing &middot; query se seekha',false)}
+        ${bu('"Side effects kya hain?"')}
+        ${bai('Pehle hafte pet mein thodi taklif &mdash; khane ke baad dene se theek ho jaata hai. Zyada pareshani ho toh doctor se milein.')}
+      </div>
+    </div>
+    ${BT}`;
+
+  // M4 — Day 4: Priya introduced via homework query
+  document.getElementById('ph-m4').innerHTML=`
+    ${ST}${NV}
+    <div class="ph-sc">
+      <div class="ch">
+        ${bu('"Priya ka maths homework &mdash; fractions samjhao"')}
+        ${bai('Bilkul Sunita ji! Fractions matlab &mdash; ek cheez ke hisse.<br><br>Jaise ek roti ke 4 tukde karein &mdash; har tukda 1/4 hai. Priya ko yeh example do &#x1F60A;')}
+        ${ann('&#x1F4DA; Priya &middot; Class 5 inferred from UP Board syllabus')}
+        ${bu('"Aur ek example do"')}
+        ${bai('Pizza ke 8 tukde &mdash; Priya ne 3 khaaye. Kitna khaya? 3/8! Aasaan hai na?')}
+      </div>
+    </div>
+    ${BT}`;
+
+  // M5 — Day 5: Home shifted by usage
+  document.getElementById('ph-m5').innerHTML=`
+    ${ST}${NV}
+    <div class="ph-sc">
+      <div class="ph-greet">Namaste, <strong>Sunita ji</strong> &#x1F64F;</div>
+      ${aRow(0)}
+      ${tGrid([0,1])}
+      <div class="ph-sec">Aapke liye</div>
+      <div class="uc res">
+        <div class="ut">&#x1F3E5; Health &mdash; aapka top tool</div>
+        <div class="us">Aapne Health 4 baar use kiya. Home re-ranked automatically.</div>
+        ${mpNote('Usage-weighted &middot; Health promoted',false)}
+      </div>
+      <div class="uc">
+        <div class="ut">&#x1F4DA; School Helper &mdash; ready</div>
+        <div class="us">Priya ka homework &middot; Class 5 &middot; UP Board</div>
+      </div>
+    </div>
+    ${BT}`;
+
+  // M6 — Day 8: Consent — references real things
+  document.getElementById('ph-m6').innerHTML=`
+    ${ST}${NV}
+    <div class="ph-sc" style="padding-top:10px;">
+      <div class="consent-box">
+        <div class="consent-q">Aapne mummy ki health ke baare mein poocha, Priya ki padhai ke baare mein bhi. Kya main yeh yaad rakhuun &mdash; taaki baar baar poochna na pade?</div>
+        <div class="consent-btns">
+          <button class="c-yes">Haan, yaad rakho</button>
+          <button class="c-no">Sirf aaj</button>
+        </div>
+        <div style="margin-top:6px;">
+          <button class="c-nv" style="width:100%;">Nahi chahiye</button>
+        </div>
+      </div>
+      <div style="font-size:9.5px;color:#aaa;padding:4px 2px;line-height:1.5;">Kabhi bhi Settings &rarr; Preferences mein jaake badal sakti hain.</div>
+    </div>
+    ${BT}`;
+
+  // M7 — Day 12: WhatsApp (wa-wrap, not dev)
+  document.getElementById('ph-m7').innerHTML=`
+    <div class="wa-hdr">
+      <svg width="16" height="16" fill="rgba(255,255,255,.8)"><use href="#ico-back"/></svg>
+      <div class="wa-hdr-av">J</div>
+      <div><div class="wa-hdr-name">JBIQ</div><div class="wa-hdr-sub">Official &middot; Tap to open</div></div>
+      <svg width="18" height="18" fill="rgba(255,255,255,.8)" style="margin-left:auto;"><use href="#ico-wa-phone"/></svg>
+    </div>
+    <div class="wa-chat">
+      <div class="wa-prev">Mummy ki medicine ke baare mein poocha tha<div class="wa-prev-t">7 din pehle &#x2713;&#x2713;</div></div>
+      <div class="wa-msg">
+        <div class="wa-sender">JBIQ</div>
+        <div class="wa-text">Sunita ji &#x1F64F;<br><br>Mummy ki <strong>diabetes follow-up</strong> adhoori reh gayi &mdash; doctor appointment ke baare mein socha kya?<br><br>Continue karein?</div>
+        <div class="wa-cta">Haan, chalein &#x2192;</div>
+        <div class="wa-time">Abhi &#x2713;&#x2713;</div>
+      </div>
+    </div>
+    <div class="wa-inp">
+      <div class="wa-inp-bar">Message</div>
+      <div class="wa-mic"><svg width="14" height="14" fill="#fff"><use href="#ico-mic"/></svg></div>
+    </div>`;
+
+  // M8 — Day 20: Language locked, complex Hindi answer
+  document.getElementById('ph-m8').innerHTML=`
+    ${ST}${NV}
+    <div class="ph-sc">
+      <div class="ch">
+        ${bu('"Mummy ki aankh ki doctor ne Retinopathy bola &mdash; yeh kya hota hai?"')}
+        ${bai('Sunita ji, Diabetic Retinopathy matlab &mdash; sugar ki wajah se aankh ki peeche ki nason mein nuqsan. Zyada sugar hone se ye naseein kamzor hoti hain.<br><br>Aapko mummy ko har saal aankh ki jaanch karwaani chahiye.')}
+        ${ann('&#x1F510; Hindi locked &middot; 20 sessions &middot; no English fallback')}
+        ${bu('"Kya yeh theek ho sakta hai?"')}
+        ${bai('Shuru mein pakda jaaye toh haan &mdash; sugar control aur regular check-up se rokaa ja sakta hai. BHU mein eye OPD bhi hai.')}
+      </div>
+    </div>
+    ${BT}`;
+
+  // M9 — Day 25: Memory recall + BHU suggestion
+  document.getElementById('ph-m9').innerHTML=`
+    ${ST}${NV}
+    <div class="ph-sc">
+      <div class="ch">
+        ${bu('"Mummy ki diabetes ke baare mein aur jaanna hai"')}
+        ${bai('Sunita ji &mdash; 23 din pehle Metformin dosage ke baare mein poocha tha. Doctor appointment hua kya?')}
+        ${ann('&#x1F4C5; Day 2 ki yaadaasht &middot; episodic memory')}
+        ${bu('"Nahi hua abhi tak"')}
+        ${bai('BHU Hospital mein Diabetes OPD hai &mdash; Tuesday aur Thursday. Main appointment suggest kar sakta huun &#x1F3E5;<br><br>Kya chalein?')}
+        ${mpNote('Memory &middot; Day 2 &rarr; Day 25 thread','mem')}
+      </div>
+    </div>
+    ${BT}`;
+
+  // M10 — Day 30: N=1 proactive home
+  document.getElementById('ph-m10').innerHTML=`
+    ${ST}${NV}
+    <div class="ph-sc">
+      <div class="ph-greet" style="color:var(--ant-d);">Subah ki shubhkamanayein, Sunita ji &#x1F64F;</div>
+      ${aRow(0)}
+      ${tGrid([0,1])}
+      <div class="ph-sec">Aapke liye taiyaar</div>
+      <div class="uc ant">
+        <div class="ut" style="color:var(--ant-d);">&#x1F3E5; Mummy ka doctor &middot; BHU &middot; Tuesday</div>
+        <div class="us" style="color:var(--ant-d);">Diabetes OPD 10am &middot; M9 mein taiy hua</div>
+        ${mpNote('Aapki yaadaasht &middot; confirmed','mem')}
+      </div>
+      <div class="uc sug">
+        <div class="ut">&#x1F4DA; Priya ki school fees &mdash; October deadline?</div>
+        <div class="us">UP Board schools mein October mein fees hoti hain. Confirm karein?</div>
+        <div style="display:flex;gap:5px;margin-top:6px;">
+          <button style="flex:1;background:var(--jb);color:#fff;border:none;border-radius:7px;padding:5px;font-size:9.5px;font-weight:700;font-family:'JioType',sans-serif;">Haan, yaad rakho</button>
+          <button style="flex:1;background:#f3f4f6;color:#555;border:none;border-radius:7px;padding:5px;font-size:9.5px;">Nahi</button>
+        </div>
+      </div>
+      <div class="uc">
+        <div class="ut">&#x1F3EF; Varanasi &mdash; free health camp</div>
+        <div class="us">Diabetes screening &middot; 2km paas &middot; Aaj</div>
+      </div>
+    </div>
+    ${BT}`;
+
+});
+
+// Tab switching
+function showM(n){
+  document.querySelectorAll('.story-panel').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.stab').forEach(t=>t.classList.remove('on'));
+  const panel=document.getElementById('m'+n);
+  const tab=document.querySelectorAll('.stab')[n-1];
+  if(panel) panel.classList.add('on');
+  if(tab) tab.classList.add('on');
+  document.getElementById('arc').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// Nav scroll
+function scrollToSec(id,el){
+  document.querySelectorAll('.nl').forEach(l=>l.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById(id).scrollIntoView({behavior:'smooth'});
+}
+
+// Smap surface switching
+function showSmap(id,el){
+  document.querySelectorAll('.smap-panel').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.smap-stab').forEach(t=>t.classList.remove('on'));
+  const panel=document.getElementById(id);
+  if(panel) panel.classList.add('on');
+  if(el) el.classList.add('on');
+}
+
+// Intersection nav highlight
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const map={sunita:0,mesh:1,arc:2,imap:3,smap:4};
+      if(e.target.id in map){
+        document.querySelectorAll('.nl').forEach((l,i)=>l.classList.toggle('on',i===map[e.target.id]));
+      }
+    }
+  });
+},{threshold:0.15});
+['sunita','mesh','arc','imap','smap'].forEach(id=>{const el=document.getElementById(id);if(el)obs.observe(el);});
+</script>
+</body>
+</html>

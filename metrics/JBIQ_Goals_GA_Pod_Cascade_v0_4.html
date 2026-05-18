@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JBIQ Goals — Pod Cascade v0.4</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #1a1a1a;
+    background: #fff;
+    padding: 40px 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .doc-header {
+    border-bottom: 2px solid #1a1a1a;
+    padding-bottom: 16px;
+    margin-bottom: 32px;
+  }
+
+  .doc-header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .doc-meta {
+    font-size: 12px;
+    color: #666;
+  }
+
+  .vision-block {
+    background: #f5f5f5;
+    border-left: 3px solid #1a1a1a;
+    padding: 14px 18px;
+    margin-bottom: 36px;
+    font-size: 14px;
+  }
+
+  .vision-block strong {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #666;
+    margin-bottom: 6px;
+  }
+
+  h2 {
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #444;
+    margin: 40px 0 16px;
+  }
+
+  .floor-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #888;
+    border-top: 1px solid #ddd;
+    padding-top: 12px;
+    margin-top: 48px;
+    margin-bottom: 20px;
+  }
+
+  .pod-section {
+    margin-bottom: 40px;
+  }
+
+  .pod-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+
+  .pod-header h3 {
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .pod-meta {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 14px;
+  }
+
+  .pod-meta span {
+    margin-right: 16px;
+  }
+
+  .pod-meta strong {
+    color: #333;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+
+  thead tr {
+    background: #1a1a1a;
+    color: #fff;
+  }
+
+  thead th {
+    padding: 9px 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 12px;
+  }
+
+  thead th:first-child { width: 18%; }
+  thead th:nth-child(2) { width: 41%; }
+  thead th:nth-child(3) { width: 41%; }
+
+  tbody tr:nth-child(even) { background: #f9f9f9; }
+
+  tbody td {
+    padding: 9px 12px;
+    vertical-align: top;
+    border-bottom: 1px solid #eee;
+  }
+
+  tbody td:first-child {
+    font-weight: 600;
+    color: #444;
+    white-space: nowrap;
+  }
+
+  /* Org-level goals table */
+  .org-table thead th:first-child { width: 4%; }
+  .org-table thead th:nth-child(2) { width: 12%; }
+  .org-table thead th:nth-child(3) { width: 42%; }
+  .org-table thead th:nth-child(4) { width: 42%; }
+
+  .beta-tag {
+    display: inline-block;
+    background: #e8f0fe;
+    color: #1a56db;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .ga-tag {
+    display: inline-block;
+    background: #def7ec;
+    color: #03543f;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .cluster-badge {
+    display: inline-block;
+    background: #f0f0f0;
+    color: #555;
+    font-size: 11px;
+    padding: 2px 7px;
+    border-radius: 3px;
+  }
+
+  /* Glossary */
+  .glossary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .glossary-item {
+    padding: 10px 14px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    gap: 12px;
+  }
+
+  .glossary-item:nth-child(odd) { background: #fafafa; }
+
+  .glossary-term {
+    font-weight: 700;
+    min-width: 80px;
+    color: #1a1a1a;
+    flex-shrink: 0;
+  }
+
+  .glossary-def {
+    color: #444;
+    font-size: 13px;
+  }
+
+  .doc-footer {
+    margin-top: 48px;
+    padding-top: 16px;
+    border-top: 1px solid #ddd;
+    font-size: 12px;
+    color: #888;
+  }
+
+  @media (max-width: 700px) {
+    .glossary-grid { grid-template-columns: 1fr; }
+    table { font-size: 12px; }
+    thead th:first-child { width: 22%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="doc-header">
+  <h1>JBIQ Goals — Pod Cascade</h1>
+  <div class="doc-meta">Draft v0.4 &nbsp;·&nbsp; May 8, 2026 &nbsp;·&nbsp; Internal &nbsp;·&nbsp; Awaiting Rushabh + Naroo review</div>
+</div>
+
+<p style="font-size:13px; color:#444; margin-bottom:24px; max-width:760px;">
+  This document cascades Naroo's 10 org goals to pod-level objectives across <strong>Beta</strong> and <strong>GA</strong> milestones. Beta goals are learning goals — each names what we are trying to prove, validate, or understand. GA goals are outcome goals — what the product must deliver at scale.
+</p>
+
+<div class="vision-block">
+  <strong>Vision</strong>
+  Democratize intelligence for 1.4 billion Indians — making AI abundant, affordable, and accessible to every Indian, in every language, across every domain of daily life.
+</div>
+
+
+<!-- ORG GOALS -->
+<h2>Org-Level Goals</h2>
+
+<table class="org-table">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Cluster</th>
+      <th><span class="beta-tag">Beta</span> by June 30, 2026</th>
+      <th><span class="ga-tag">GA</span> within 60 days of launch</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td><span class="cluster-badge">Market Reach</span></td>
+      <td>Prove that JBIQ earns organic, sustained daily use from a diverse internal cohort of 50K+ Reliance/Jio employees — without relying on push or management pressure. DAU/MAU ≥25% without push triggers by Beta exit.</td>
+      <td>JBIQ reaches <strong>1M+ MAU</strong> within 90 days of GA launch.</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td><span class="cluster-badge">Market Reach</span></td>
+      <td>Validate which experiences earn a second conversation — 10+ signature experiences live across 3+ domains, each with measured D7 retention ≥25%. At least 1 must reach L3.</td>
+      <td><strong>15+ signature experiences</strong> live across <strong>5+ domains</strong>, each with D7 retention ≥40%.</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td><span class="cluster-badge">Consumer Outcomes</span></td>
+      <td>Validate that the agentic stack resolves tasks reliably — 30%+ of first-time users complete a task in their first session across all Beta cohorts by June 30, 2026.</td>
+      <td><strong>40%+</strong> of first-time users complete a task in their first session — measured within 30 days of GA launch.</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td><span class="cluster-badge">Consumer Outcomes</span></td>
+      <td>Prove the product earns habit — 25–30% of monthly Beta users return daily without a push trigger, and 70%+ of tasks initiated are resolved. Both must hold by Beta exit.</td>
+      <td><strong>40%+</strong> of monthly users return daily without a push trigger; <strong>80%+</strong> of tasks initiated are resolved — within 60 days of GA launch.</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td><span class="cluster-badge">Platform Capability</span></td>
+      <td>Validate voice quality across Indian conditions — 8+ Indian languages in production at parity with benchmark ASR WER, with voice initiation rate ≥30% across Beta cohorts.</td>
+      <td><strong>12+ Indian languages</strong> beating benchmark ASR WER by 5%+ within 30 days of GA launch.</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td><span class="cluster-badge">Platform Capability</span></td>
+      <td>Validate platform reliability at Beta scale — 95%+ eval pass rate, platform stable under 25K concurrent users. Any SLO breach root-caused and closed before GA scale is approved.</td>
+      <td><strong>99%+</strong> quality eval pass rate; platform stable at <strong>100K+ concurrent users</strong> within 30 days of GA launch.</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td><span class="cluster-badge">Scale Readiness</span></td>
+      <td>Validate partner integration at FnF/Beta scale — 3+ Jio partners live and powering ≥25% of queries, with at least 1 external partner onboarded end-to-end without core engineering involvement.</td>
+      <td><strong>5+ Jio partners</strong> live and powering <strong>≥40%</strong> of queries; <strong>5+ external partners</strong> live within 60 days of GA.</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td><span class="cluster-badge">Scale Readiness</span></td>
+      <td>Prove the use-case factory model works — 1+ net new signature experience ships per month in Beta, built by partners or autonomously without core engineering involvement.</td>
+      <td><strong>2+ net new signature experiences</strong> per month — built by partners or autonomously, without core engineering involvement.</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td><span class="cluster-badge">Scale Readiness</span></td>
+      <td>Validate self-serve partner onboarding — 3+ external partners live in production by Beta exit, with 1+ new partner per month through self-serve dashboards, compliance gate ≤7 days.</td>
+      <td><strong>5+ external partners</strong> live; <strong>3+ new partners</strong> onboard per month through self-serve, compliance gate ≤7 days.</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td><span class="cluster-badge">AI-Native Org</span></td>
+      <td>Identify adoption gaps before GA scaling — 70%+ of org using AI tooling as primary workflow by Beta exit, with bottom 3 pods by adoption identified and remediated.</td>
+      <td><strong>100%</strong> of org uses AI tooling as primary workflow within 30 days of GA launch.</td>
+    </tr>
+  </tbody>
+</table>
+
+
+<!-- TOP FLOOR -->
+<div class="floor-label">Top Floor — Experience</div>
+
+<!-- 1. Core Experience -->
+<div class="pod-section">
+  <div class="pod-header"><h3>1. Core Experience</h3></div>
+  <div class="pod-meta">
+    <span><strong>Owns:</strong> Goal 4 (return-rate portion)</span>
+    <span><strong>Supports:</strong> Goal 1, Goal 2, Goal 3</span>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Goal</th><th><span class="beta-tag">Beta</span> by June 30, 2026</th><th><span class="ga-tag">GA</span> within 60 days of launch</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>First-session activation</td><td>Validate that the onboarding flow reliably activates users — 50%+ of first-time users issue at least one query in their first session, across all Beta cohorts.</td><td><strong>70%+</strong> of first-time users issue at least one query in their first session.</td></tr>
+      <tr><td>Organic daily return</td><td>Prove the product earns unprompted daily return — 25–30% of monthly Beta users return daily without a push trigger. If not achieved, identify whether the gap is onboarding, experience discovery, or engagement loop before GA.</td><td><strong>40%+</strong> of monthly users return daily without a push trigger.</td></tr>
+      <tr><td>Experience discovery</td><td>Validate that users find value beyond the first interaction — 40%+ of Beta users discover at least 2 signature experiences in their first week via persona tiles, morning briefing, or in-conversation suggestions.</td><td><strong>60%+</strong> of users find at least 2 signature experiences in their first week.</td></tr>
+      <tr><td>Satisfaction</td><td>Establish an NPS baseline and understand its drivers — NPS ≥30 across Beta monthly users via in-app survey with ≥30% response rate. Top 3 NPS drivers and detractors identified and documented by Beta exit.</td><td>NPS <strong>≥50</strong> — in-app survey with ≥30% response rate.</td></tr>
+      <tr><td>Homepage performance</td><td>Validate personalised homepage performance under Beta load — user lands on personalised homepage in under 3 seconds at p95, validated under 25K concurrent users.</td><td>Under <strong>2 seconds</strong> at p95 — validated under 100K concurrent load.</td></tr>
+      <tr><td>D7 return signal</td><td>Identify the top 3 experiences driving D7 organic return and the top 3 drop-off points — with causal signal from diary study and session data — by Beta exit.</td><td>Apply Beta learnings; D7 retention improves by <strong>≥5pp</strong> over Beta baseline within 30 days of GA.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 2. Vertical Experience -->
+<div class="pod-section">
+  <div class="pod-header"><h3>2. Vertical Experience</h3></div>
+  <div class="pod-meta">
+    <span><strong>Owns:</strong> Goal 2</span>
+    <span><strong>Supports:</strong> Goal 4, Goal 8</span>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Goal</th><th><span class="beta-tag">Beta</span> by June 30, 2026</th><th><span class="ga-tag">GA</span> within 60 days of launch</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Breadth</td><td>Validate cross-vertical coverage — 10+ vertical experiences live at L2+ across 3+ verticals by Beta exit, each with a measured D7 retention signal.</td><td><strong>15+ vertical experiences</strong> live at L2+ across <strong>5+ verticals</strong>.</td></tr>
+      <tr><td>Depth</td><td>Prove at least one experience is structurally unreplicable — ≥1 experience reaches L3 (signature), requiring proprietary data, hosted services, or interaction patterns no general AI can replicate for India. D7 retention ≥25% confirmed before GA scope is locked.</td><td><strong>≥3 experiences</strong> at L3 — each with D7 retention ≥40%.</td></tr>
+      <tr><td>Delivery velocity</td><td>Validate the use-case factory model — time from validated idea to live experience compressed to ≤10 days, measured across ≥3 new experiences shipped during Beta.</td><td>Time to live compressed to <strong>≤7 days</strong> — measured across ≥5 new experiences in first 60 days of GA.</td></tr>
+      <tr><td>Retention signal</td><td>Prove experiences earn repeat engagement — every Beta signature experience clears D7 retention ≥25%, measured from first use within each cohort.</td><td>Every signature experience clears D7 retention <strong>≥40%</strong>.</td></tr>
+      <tr><td>Engagement depth</td><td>Validate that signature experiences drive deeper engagement than generic chat — users spend 2x more time on signature experiences than on generic chat.</td><td>Users spend <strong>3x</strong> more time on signature experiences than on generic chat.</td></tr>
+      <tr><td>Roadmap signal</td><td>Identify the top 2 verticals to double-down on at GA and the bottom performers to redesign — with per-experience D7 retention, drop-off, and session depth data by Beta exit.</td><td>GA roadmap prioritises top 2 Beta-validated verticals.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 3. Partner Experience -->
+<div class="pod-section">
+  <div class="pod-header"><h3>3. Partner Experience</h3></div>
+  <div class="pod-meta">
+    <span><strong>Owns:</strong> Goal 7, Goal 8, Goal 9</span>
+    <span><strong>Supports:</strong> Goal 2</span>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Goal</th><th><span class="beta-tag">Beta</span> by June 30, 2026</th><th><span class="ga-tag">GA</span> within 60 days of launch</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Jio partner coverage</td><td>Validate Jio partner integration at Beta scale — 3+ Jio partners (JioMart, JioSaavn, JioNews) live and powering ≥25% of queries by Beta exit.</td><td><strong>5+ Jio partners</strong> live and powering <strong>≥40%</strong> of queries.</td></tr>
+      <tr><td>External partners</td><td>Prove the platform can onboard external partners — 3+ external partners live in production by Beta exit.</td><td><strong>5+ external partners</strong> live in production.</td></tr>
+      <tr><td>Self-serve onboarding</td><td>Validate that partner onboarding is genuinely self-serve — at least 1 external partner completes end-to-end onboarding with zero core engineering involvement, compliance gate ≤7 days.</td><td><strong>3+ new partners</strong> per month through self-serve dashboards, ≤7 days compliance gate, zero core engineering involvement — validated across ≥3 consecutive onboardings.</td></tr>
+      <tr><td>Experience cadence</td><td>Prove the use-case factory model works without core engineering — 1+ net new signature experience ships per month in Beta, built by partners or autonomously.</td><td><strong>2+ net new signature experiences</strong> per month — zero core engineering involvement.</td></tr>
+      <tr><td>Onboarding gaps</td><td>Surface and close every manual step in the partner onboarding flow — all gaps identified during Beta documented as ADO tickets and resolved before GA partner scaling begins.</td><td>GA onboarding requires zero core engineering involvement — validated across ≥3 consecutive new partner onboardings.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- MIDDLE FLOOR -->
+<div class="floor-label">Middle Floor — Capability</div>
+
+<!-- 4. Agentic Orchestration -->
+<div class="pod-section">
+  <div class="pod-header"><h3>4. Agentic Orchestration</h3></div>
+  <div class="pod-meta">
+    <span><strong>Owns:</strong> Goal 3, Goal 4 (task resolution portion)</span>
+    <span><strong>Supports:</strong> Goal 6</span>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Goal</th><th><span class="beta-tag">Beta</span> by June 30, 2026</th><th><span class="ga-tag">GA</span> within 60 days of launch</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Task completion</td><td>Validate that the agentic stack gets users to task completion in the first session — 30%+ of first-time users complete a task in their first session, across all Beta cohorts.</td><td><strong>40%+</strong> of first-time users complete a task in their first session.</td></tr>
+      <tr><td>Task resolution</td><td>Validate that the platform resolves the majority of user intents reliably — 70%+ of tasks initiated are resolved, measured by eval pipeline across all active skills.</td><td><strong>80%+</strong> of tasks initiated are resolved.</td></tr>
+      <tr><td>Routing accuracy</td><td>Prove the orchestrator routes reliably across 50+ skills — JBIQ picks the right skill/tool on the first attempt 85%+ of the time, measured against golden dataset weekly.</td><td><strong>90%+</strong> routing accuracy across <strong>100+ live skills</strong> — no regression from Beta baseline.</td></tr>
+      <tr><td>Latency</td><td>Validate TTFT SLO holds under Beta load — TTFT ≤900ms at p95, measured from query end to first response token under 25K concurrent users.</td><td>TTFT <strong>≤700ms</strong> at p95 — under 100K concurrent load.</td></tr>
+      <tr><td>Safety</td><td>Prove safety guardrails hold at Beta scale — every irreversible action completes only after explicit user confirmation, narrated in the user's language. Zero violations in monthly red-team audit.</td><td><strong>Zero violations</strong> in monthly red-team audit at GA scale.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 5. Speech / Voice -->
+<div class="pod-section">
+  <div class="pod-header"><h3>5. Speech / Voice</h3></div>
+  <div class="pod-meta">
+    <span><strong>Owns:</strong> Goal 5</span>
+    <span><strong>Supports:</strong> Goal 4</span>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Goal</th><th><span class="beta-tag">Beta</span> by June 30, 2026</th><th><span class="ga-tag">GA</span> within 60 days of launch</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>ASR accuracy</td><td>Validate voice quality at parity across 8 Indian languages — ASR at parity with benchmark WER across 8+ Indian languages and their English code-mixes, validated on a frozen test set.</td><td>ASR <strong>beats benchmark</strong> WER by 5%+ across <strong>12+ Indian languages</strong>.</td></tr>
+      <tr><td>Noise robustness</td><td>Validate voice holds in real Indian conditions — noise-ASR retains ≥85% of clean-signal accuracy across Indian environment test sets (kitchen, street, market, traffic).</td><td>Noise-ASR retains <strong>≥90%</strong> of clean-signal accuracy.</td></tr>
+      <tr><td>VAD</td><td>Prove VAD reliability across Beta languages — VAD F1 ≥0.85 across all 8 Beta languages and their English code-mixes.</td><td>VAD F1 <strong>≥0.95</strong> across all 12 GA languages.</td></tr>
+      <tr><td>TTS naturalness</td><td>Validate TTS quality meets user expectations — TTS naturalness MOS ≥3.7 in blind evaluation by native speakers per language within Beta.</td><td>TTS naturalness MOS <strong>≥4.0</strong> per language.</td></tr>
+      <tr><td>E2E latency</td><td>Validate voice latency SLO at Beta load — E2E voice latency ≤2s at p95, from speech end to first response audio, under 25K concurrent users.</td><td>E2E voice latency <strong>≤1.5s</strong> at p95 — under 100K concurrent load.</td></tr>
+      <tr><td>Barge-in</td><td>Prove barge-in reliability across Beta languages — AI stops speaking within 500ms of user starting to talk, across all 8 Beta languages.</td><td>AI stops speaking within <strong>300ms</strong> across all 12 GA languages.</td></tr>
+      <tr><td>Trust signal</td><td>Identify where voice earns trust vs. where it gets abandoned — voice initiation rate, STT success vs. abandonment rate, and code-mix completion rate measured by language, cohort, and device tier.</td><td>Voice abandonment rate drops by <strong>≥10pp</strong> over Beta baseline within 30 days of GA.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 6. Memory -->
+<div class="pod-section">
+  <div class="pod-header"><h3>6. Memory</h3></div>
+  <div class="pod-meta">
+    <span><strong>Supports:</strong> Goal 3, Goal 4</span>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Goal</th><th><span class="beta-tag">Beta</span> by June 30, 2026</th><th><span class="ga-tag">GA</span> within 60 days of launch</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Capture accuracy</td><td>Validate memory capture quality — memory captures user signals with ≥85% precision and ≥85% recall, validated monthly against a frozen audit set. Zero hallucinated facts.</td><td><strong>≥95% precision and ≥95% recall</strong> — zero hallucinated facts in monthly audits.</td></tr>
+      <tr><td>Retrieval accuracy</td><td>Prove memory retrieval is reliable — relevant context retrieved with ≥85% precision and ≥85% recall, measured against frozen test set weekly.</td><td><strong>≥95% precision and ≥95% recall</strong>.</td></tr>
+      <tr><td>Cross-session recall</td><td>Validate memory persists across sessions and languages — preferences set in one session or language recalled correctly in another ≥80% of the time, validated across EN/HI sessions.</td><td>Cross-session recall <strong>≥95%</strong> across all 12 GA languages.</td></tr>
+      <tr><td>JioID pre-load</td><td>Validate JioID integration reduces setup friction — ≥50% of Beta Jio users open JBIQ with name, language, and Day-0 context pre-loaded from JioID, no setup screens.</td><td><strong>≥70%</strong> of GA Jio users pre-loaded from JioID — no setup screens.</td></tr>
+      <tr><td>Personalisation lift</td><td>Prove that personalisation measurably improves engagement — measure delta in session frequency, chats initiated per user, and D7 retention between users with 0 memories vs. 1–5 vs. 6+ memories.</td><td>N=1 personalisation improves D30 retention by <strong>≥5pp</strong> over non-personalised baseline — across ≥100K GA users.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- BOTTOM FLOOR -->
+<div class="floor-label">Bottom Floor — Foundation</div>
+
+<!-- 7. Data -->
+<div class="pod-section">
+  <div class="pod-header"><h3>7. Data</h3></div>
+  <div class="pod-meta">
+    <span><strong>Supports:</strong> All 10 goals</span>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Goal</th><th><span class="beta-tag">Beta</span> by June 30, 2026</th><th><span class="ga-tag">GA</span> within 60 days of launch</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Dashboard coverage</td><td>Validate that every goal in this document is measurable from a live dashboard — all metrics openable in ≤10 seconds with no login friction by Beta exit.</td><td>Same — maintained at GA scale.</td></tr>
+      <tr><td>Data freshness</td><td>Validate signal pipeline latency — all sources (Spanner, GA4, Langfuse, GrowthBook, New Relic, CleverTap) joined on user_id and session_id within 15 minutes, validated daily.</td><td>Joined within <strong>5 minutes</strong> — validated daily.</td></tr>
+      <tr><td>Instrumentation velocity</td><td>Prove instrumentation keeps pace with product — adding a new data point to any consumer takes ≤1 day, measured across ≥3 new data points added during Beta.</td><td>Same target at GA scale.</td></tr>
+      <tr><td>Self-serve analytics</td><td>Validate that teams can answer product questions without data engineer involvement — any team member creates a new dashboard in &lt;2 minutes or gets answers in natural language in &lt;1 minute.</td><td>Zero data engineer involvement for standard product questions — validated via monthly survey.</td></tr>
+      <tr><td>Infrastructure</td><td>Complete Databricks migration — Databricks instance migrated out of Jio infrastructure to Reliance by Beta exit; JBIQ owns the environment.</td><td>—</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 8. DevOps -->
+<div class="pod-section">
+  <div class="pod-header"><h3>8. DevOps</h3></div>
+  <div class="pod-meta">
+    <span><strong>Owns:</strong> Goal 6 (capacity)</span>
+    <span><strong>Supports:</strong> All goals</span>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Goal</th><th><span class="beta-tag">Beta</span> by June 30, 2026</th><th><span class="ga-tag">GA</span> within 60 days of launch</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Availability</td><td>Validate platform reliability at Beta scale — JBIQ available 99%+ of the time across Beta. Incidents detected ≤5 minutes, acknowledged ≤10 minutes.</td><td>JBIQ available <strong>99.5%+</strong>. Incidents detected <strong>≤3 minutes</strong>, acknowledged <strong>≤5 minutes</strong>.</td></tr>
+      <tr><td>Latency SLOs</td><td>Prove every service holds its SLO under Beta load — voice ≤2s p95, agentic ≤900ms p95, dashboard ≤10s — validated under 25K concurrent load.</td><td>Voice <strong>≤1.5s</strong> p95, agentic <strong>≤700ms</strong> p95 — validated under 100K concurrent load.</td></tr>
+      <tr><td>Scale headroom</td><td>Validate platform scales to 25K concurrent with headroom — stack load-tested at 25K+ with ≥30% headroom before Beta exit.</td><td><strong>100K+ concurrent conversations</strong> with ≥30% headroom — validated monthly.</td></tr>
+      <tr><td>Delivery velocity</td><td>Validate that pods can ship without DevOps bottleneck — any pod ships PR-to-production in &lt;1 day, gated only by automated evals.</td><td>PR-to-production in <strong>&lt;2 hours</strong> — gated only by automated evals.</td></tr>
+      <tr><td>Self-serve service setup</td><td>Prove new service setup requires no DevOps ticket — any pod stands up a new service with CI/CD, monitoring, and eval gating in &lt;2 days.</td><td>New service setup in <strong>&lt;1 day</strong> — zero DevOps ticket required.</td></tr>
+      <tr><td>Configuration hygiene</td><td>Validate that the TTS/voice class of misconfiguration cannot recur — automated network scan of SIT and Replica environments producing a weekly config health report.</td><td>Zero SLO breaches attributable to infrastructure configuration errors — validated by monthly DevOps review.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 9. Evals -->
+<div class="pod-section">
+  <div class="pod-header"><h3>9. Evals</h3></div>
+  <div class="pod-meta">
+    <span><strong>Owns:</strong> Goal 6 (quality)</span>
+    <span><strong>Supports:</strong> All goals</span>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Goal</th><th><span class="beta-tag">Beta</span> by June 30, 2026</th><th><span class="ga-tag">GA</span> within 60 days of launch</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Eval pass rate</td><td>Validate eval coverage and reliability at Beta scale — 95%+ quality eval pass rate, measured weekly across all active skills and tools.</td><td><strong>99%+</strong> quality eval pass rate — measured weekly.</td></tr>
+      <tr><td>Guardrails</td><td>Prove hard guardrails hold at Beta scale — 95%+ of violation attempts blocked, zero unsafe outputs in monthly red-team audit.</td><td><strong>99.5%+</strong> of violation attempts blocked — zero unsafe outputs in monthly red-team audit.</td></tr>
+      <tr><td>Drift detection</td><td>Validate that eval drift is caught before it reaches users — online production scores and offline golden-dataset scores stay within 10pp. Any drift beyond 10pp triggers a same-day alert.</td><td>Same — maintained at GA scale.</td></tr>
+      <tr><td>CI/CD gating</td><td>Prove that eval CI/CD reliably gates regressions before merge — every partner, skill, component, or vertical change passes Evals CI/CD before merge.</td><td>Same — all GA merges.</td></tr>
+      <tr><td>Grader velocity</td><td>Validate that any team can build and deploy a new grader — any team creates a new grader and plugs it into Evals in ≤1 week, measured across ≥5 new graders during Beta.</td><td>Any team creates a new grader in <strong>≤2 days</strong>.</td></tr>
+      <tr><td>Coverage gaps</td><td>Identify and close every eval miss from Beta — top 5 skill/feature combinations where evals missed a regression documented by Beta exit. Each miss diagnosed and closed as an ADO ticket.</td><td>Zero eval misses resulting in a user-facing quality regression — validated via monthly retrospective.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- CROSS-CUTTING -->
+<div class="floor-label">Cross-Cutting — Business / GTM</div>
+
+<div class="pod-section">
+  <div class="pod-header"><h3>Business / GTM</h3></div>
+  <div class="pod-meta">
+    <span><strong>Owns:</strong> Goal 1</span>
+    <span><strong>Supports:</strong> Goal 7, Goal 9</span>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Goal</th><th><span class="beta-tag">Beta</span> by June 30, 2026</th><th><span class="ga-tag">GA</span> within 60 days of launch</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Activation</td><td>Validate the internal activation model before external scaling — 10K+ employee activations per month during Beta, tracked by cohort via CleverTap.</td><td><strong>1M+ new users</strong> acquired per month within 90 days of GA launch.</td></tr>
+      <tr><td>CAC</td><td>Prove activation is achievable at zero paid spend — CAC ₹0 per Beta user (employee program, no paid acquisition), validated monthly.</td><td>CAC <strong>≤₹2</strong> per GA user — validated monthly across all acquisition channels.</td></tr>
+      <tr><td>Channel mix</td><td>Identify the highest-performing activation channel — ≥80% of Beta activations through internal channels (manager emailers, affinity groups, Chai Pe Charcha).</td><td><strong>≥30%</strong> of GA new users through Jio distribution channels — JioApp suite, MyJio, JioFiber, retail.</td></tr>
+      <tr><td>Referral signal</td><td>Validate early viral signal before GA — ≥5% of Beta activations through internal employee referrals, measured via CleverTap.</td><td><strong>≥10%</strong> of GA new users through in-app referrals.</td></tr>
+      <tr><td>GA channel plan</td><td>Produce a data-backed GA acquisition strategy — by Beta exit, publish which activation channel produced the highest D7 organic return per cohort, with CAC projections and channel mix recommendation.</td><td>GA acquisition strategy validated against Beta data — cost per activated user holds at ≤₹2 across ≥100K acquisitions.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- ORG WIDE -->
+<div class="floor-label">Org-Wide</div>
+
+<div class="pod-section">
+  <div class="pod-header"><h3>10. AI-Native Org</h3></div>
+  <div class="pod-meta"><span><strong>Applies to:</strong> All pods</span></div>
+  <table>
+    <thead>
+      <tr><th>Goal</th><th><span class="beta-tag">Beta</span> by June 30, 2026</th><th><span class="ga-tag">GA</span> within 60 days of launch</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>AI tool adoption</td><td>Identify and close adoption gaps before GA scaling — 70%+ of org uses AI tooling as primary workflow by Beta exit. Bottom 3 pods by adoption identified, gaps raised as ADO tickets.</td><td><strong>100%</strong> of org uses AI tooling as primary workflow — validated via tool usage telemetry within 30 days of GA.</td></tr>
+      <tr><td>Workstream pickup</td><td>Validate that context is self-serve — any team member picks up any active workstream in ≤30 minutes from repos, transcripts, and docs without speaking to another human.</td><td>Same in <strong>≤15 minutes</strong> — validated monthly.</td></tr>
+      <tr><td>Meeting efficiency</td><td>Prove that async-first is working — status meetings run ≤15 minutes because current state is readable from a dashboard or repo before the meeting starts.</td><td><strong>Zero recurring status meetings</strong> — current state always readable before any sync.</td></tr>
+      <tr><td>Artifact discoverability</td><td>Validate that work artifacts are agent-readable and findable — ≥80% of work artifacts indexed and findable in &lt;1 minute, validated via monthly spot-check of 20 random artifacts.</td><td><strong>100%</strong> of work artifacts indexed — findable in <strong>&lt;30 seconds</strong>.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- GLOSSARY -->
+<h2>Glossary</h2>
+<div class="glossary-grid">
+  <div class="glossary-item"><span class="glossary-term">L0–L3</span><span class="glossary-def">Vertical experience maturity ladder. L0 = basic; L1 = better (habit-forming); L2 = differentiated; L3 = signature (structurally unreplicable)</span></div>
+  <div class="glossary-item"><span class="glossary-term">Signature experience</span><span class="glossary-def">A vertical experience at L3 — only possible on JBIQ's platform, requiring our specific combination of assets</span></div>
+  <div class="glossary-item"><span class="glossary-term">ASR</span><span class="glossary-def">Automatic Speech Recognition — converts spoken audio to text</span></div>
+  <div class="glossary-item"><span class="glossary-term">WER</span><span class="glossary-def">Word Error Rate — ASR accuracy metric (lower = better)</span></div>
+  <div class="glossary-item"><span class="glossary-term">VAD</span><span class="glossary-def">Voice Activity Detection — distinguishes speech from silence/noise</span></div>
+  <div class="glossary-item"><span class="glossary-term">TTS</span><span class="glossary-def">Text-to-Speech — generates spoken audio from text</span></div>
+  <div class="glossary-item"><span class="glossary-term">MOS</span><span class="glossary-def">Mean Opinion Score — TTS naturalness on a 1–5 scale (4.0 = good, 4.5+ = excellent)</span></div>
+  <div class="glossary-item"><span class="glossary-term">TTFT</span><span class="glossary-def">Time to First Token — latency from query end to first response token</span></div>
+  <div class="glossary-item"><span class="glossary-term">p95</span><span class="glossary-def">95th percentile latency — 95% of requests complete within this time</span></div>
+  <div class="glossary-item"><span class="glossary-term">D7 retention</span><span class="glossary-def">% of users who return to a feature within 7 days of first use</span></div>
+  <div class="glossary-item"><span class="glossary-term">DAU / MAU</span><span class="glossary-def">Daily / Monthly Active Users; ratio measures stickiness</span></div>
+  <div class="glossary-item"><span class="glossary-term">NPS</span><span class="glossary-def">Net Promoter Score — user satisfaction signal</span></div>
+  <div class="glossary-item"><span class="glossary-term">CAC</span><span class="glossary-def">Cost of Acquisition per user</span></div>
+  <div class="glossary-item"><span class="glossary-term">CI/CD</span><span class="glossary-def">Continuous Integration / Continuous Deployment pipeline</span></div>
+  <div class="glossary-item"><span class="glossary-term">Session</span><span class="glossary-def">A single continuous usage period — starts when the user opens the app, ends after 30 minutes of inactivity</span></div>
+  <div class="glossary-item"><span class="glossary-term">Query</span><span class="glossary-def">A single user message or conversational turn within a session</span></div>
+  <div class="glossary-item"><span class="glossary-term">Task</span><span class="glossary-def">A user goal with a resolution state — resolved or unresolved — evaluated after the skill runs</span></div>
+  <div class="glossary-item"><span class="glossary-term">Intent</span><span class="glossary-def">The label the orchestrator puts on a query before routing — what the user wants to achieve, classified at input time</span></div>
+  <div class="glossary-item"><span class="glossary-term">Skill</span><span class="glossary-def">A discrete capability built on JBIQ's platform — prompt-based (1P) or partner-powered (2P/3P) — that handles one or more intents</span></div>
+  <div class="glossary-item"><span class="glossary-term">First-time user</span><span class="glossary-def">A user on their first day after registration (D0) — identified when a new user_id fires App_Launch for the first time</span></div>
+  <div class="glossary-item"><span class="glossary-term">Eval pass rate</span><span class="glossary-def">% of queries scored by the automated eval pipeline that meet the minimum quality threshold across all active dimensions</span></div>
+  <div class="glossary-item"><span class="glossary-term">Golden dataset</span><span class="glossary-def">A frozen, human-curated set of queries and expected outputs used to measure offline eval accuracy</span></div>
+  <div class="glossary-item"><span class="glossary-term">Red-team</span><span class="glossary-def">A structured adversarial test — attempts to elicit unsafe or policy-violating outputs; results feed guardrail calibration</span></div>
+  <div class="glossary-item"><span class="glossary-term">pp</span><span class="glossary-def">Percentage points — the arithmetic difference between two percentages (e.g. 95% → 85% is a 10pp drop)</span></div>
+</div>
+
+<div class="doc-footer">
+  Draft v0.4 &nbsp;·&nbsp; Awaiting Rushabh + Naroo review &nbsp;·&nbsp; May 8, 2026
+</div>
+
+</body>
+</html>

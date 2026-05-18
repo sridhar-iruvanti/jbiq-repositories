@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JBIQ FnF Personalisation Framework</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:24px;background:#fff;color:#1a1a1a}
+.w{max-width:1100px;margin:0 auto}
+.hdr{background:#E8F6EF;border:0.5px solid #1D9E75;border-radius:10px;padding:12px 16px;margin-bottom:14px}
+.hdr-title{font-size:15px;font-weight:500;color:#085041}
+.hdr-sub{font-size:11px;color:#0F6E56;margin-top:3px}
+.legend{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
+.leg{display:flex;align-items:center;gap:5px;font-size:11px;color:#1a1a1a}
+.sw{width:12px;height:12px;border-radius:2px;flex-shrink:0}
+table{width:100%;border-collapse:collapse}
+thead th{font-size:10px;font-weight:500;color:#5F5E5A;text-align:left;padding:5px 8px;border-bottom:1.5px solid #D3D1C7;background:#F7F6F2;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+tbody td{padding:5px 8px;border-bottom:0.5px solid #ECEAE3;vertical-align:top;font-size:11px;line-height:1.5;color:#1a1a1a}
+tbody tr:hover td{background:#F7F6F2}
+.sec td{background:#F1EFE8!important;font-size:9px;font-weight:600;color:#888780;text-transform:uppercase;letter-spacing:.07em;padding:4px 8px;border-bottom:0.5px solid #D3D1C7}
+.r-att td{border-left:3px solid #B4B2A9}
+.r-rem td{border-left:3px solid #85B7EB}
+.r-jio td{border-left:3px solid #5DCAA5}
+.uc{font-weight:500;color:#1a1a1a;display:block;font-size:11px}
+.sig{font-size:10px;color:#5F5E5A;margin-top:1px}
+.pill{font-size:9px;font-weight:500;padding:1px 6px;border-radius:10px;white-space:nowrap;display:inline-block}
+.no{background:#EAF3DE;color:#173404;border:0.5px solid #97C459}
+.enh{background:#FFF5D6;color:#7D4E00;border:0.5px solid #EF9F27}
+.req{background:#FFF0E8;color:#4A1B0C;border:0.5px solid #D85A30}
+.mod{font-size:10px;color:#888780;white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="w">
+<div class="hdr">
+  <div class="hdr-title">FnF · Friends &amp; Family · ~5K users</div>
+  <div class="hdr-sub">Know you · Sessions 1–5 · Attentiveness first · 25 experiences</div>
+</div>
+
+<div class="legend">
+  <div class="leg"><div class="sw" style="background:#F1EFE8;border:0.5px solid #B4B2A9"></div>Attentive — device + conversation · always on</div>
+  <div class="leg"><div class="sw" style="background:#EBF4FF;border:0.5px solid #85B7EB"></div>Remembers — memory store · no UCP</div>
+  <div class="leg"><div class="sw" style="background:#E1F5EE;border:0.5px solid #5DCAA5"></div>Jio-connected — JioID / UCP</div>
+  <div class="leg"><span class="pill no">No UCP</span></div>
+  <div class="leg"><span class="pill enh">Enhances</span> ships without · richer with Jio</div>
+  <div class="leg"><span class="pill req">Required</span> doesn't exist without Jio</div>
+</div>
+
+<table>
+<thead>
+<tr>
+  <th style="width:10%">User type</th>
+  <th style="width:9%">Arc</th>
+  <th style="width:9%">Moment</th>
+  <th style="width:9%">Surface</th>
+  <th style="width:25%">Use case</th>
+  <th style="width:8%">Modality</th>
+  <th style="width:22%">Data input</th>
+  <th style="width:8%">Jio?</th>
+</tr>
+</thead>
+<tbody>
+
+<tr class="sec"><td colspan="8">Onboarding — first open · sessions 1–3 · activation to trust</td></tr>
+
+<tr class="r-att">
+  <td>New user</td><td>Activation</td><td>First open</td><td>Home</td>
+  <td><span class="uc">Time-of-day greeting</span><span class="sig">Warm, language-aware. 7am ≠ 9pm. Never English.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Device: locale, clock, day_of_week</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-att">
+  <td>New user</td><td>Activation</td><td>First open</td><td>Home</td>
+  <td><span class="uc">Time-of-day starter prompts</span><span class="sig">7am weekday ≠ Saturday morning.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">Device: clock, day_of_week</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-jio">
+  <td>New Jio user</td><td>Activation</td><td>First open</td><td>Home</td>
+  <td><span class="uc">Name + language from JioID</span><span class="sig">"Subbalakshmi akka, vanakkam." Degrades to device locale.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">JioID: name, language</span></td>
+  <td><span class="pill enh">Enhances</span></td>
+</tr>
+
+<tr class="r-jio">
+  <td>New Jio user</td><td>Activation</td><td>First open</td><td>Home</td>
+  <td><span class="uc">Occupation-matched prompts</span><span class="sig">SMB→GST, homemaker→welfare. Degrades to time-of-day.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">UCP: occupational_status, night_city</span></td>
+  <td><span class="pill enh">Enhances</span></td>
+</tr>
+
+<tr class="r-att">
+  <td>New user</td><td>Activation</td><td>Sessions 1–3</td><td>Conversation</td>
+  <td><span class="uc">Capability revealed through use</span><span class="sig">1 per session, sessions 1–3. No tutorial modal.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Session: current query, tools used so far</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-rem">
+  <td>New user</td><td>Engagement</td><td>Session 3</td><td>Conversation</td>
+  <td><span class="uc">Memory consent</span><span class="sig">Always / This Session / Never. Pipeline-enforced.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Memory: consent ledger · Session: count = 3</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="sec"><td colspan="8">Home — adaptive surface · every return</td></tr>
+
+<tr class="r-rem">
+  <td>Returning</td><td>Retention</td><td>Return</td><td>Home</td>
+  <td><span class="uc">Session-state return greeting</span><span class="sig">"Pichhli baar…" specific. 24h cache. No memory store needed.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Session cache: last_topic, last_intent (24h)</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-rem">
+  <td>Returning</td><td>Retention</td><td>Return</td><td>Home</td>
+  <td><span class="uc">Cross-session return greeting</span><span class="sig">Name + last context. Never "Welcome back."</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Episodic: last_session_topic, name</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-rem">
+  <td>Returning</td><td>Retention</td><td>Return</td><td>Home</td>
+  <td><span class="uc">Incomplete task card</span><span class="sig">First card on home. Resume in one tap.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">Working memory: incomplete_task_state</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-rem">
+  <td>Returning</td><td>Retention</td><td>Return</td><td>Home</td>
+  <td><span class="uc">Gap-aware return tone</span><span class="sig">&gt;5 days → warmer. Same day → seamless.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Episodic: last_session_timestamp</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-rem">
+  <td>All users</td><td>Retention</td><td>Return</td><td>Home</td>
+  <td><span class="uc">Usage-weighted tiles</span><span class="sig">Last session tools move up. Beats global default.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">Working memory: tools_used_this_session</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-att">
+  <td>All users</td><td>Engagement</td><td>Any open</td><td>Home</td>
+  <td><span class="uc">Seasonal context card</span><span class="sig">Diwali / IPL / GST month. Calendar-based.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">Device: date, locale</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-jio">
+  <td>All users</td><td>Engagement</td><td>Any open</td><td>Home</td>
+  <td><span class="uc">Regional seasonal precision</span><span class="sig">Pongal for Tamil Nadu. Degrades to calendar-based.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">UCP: night_pincode, language</span></td>
+  <td><span class="pill enh">Enhances</span></td>
+</tr>
+
+<tr class="sec"><td colspan="8">Conversation — chat</td></tr>
+
+<tr class="r-att">
+  <td>All users</td><td>Engagement</td><td>Every turn</td><td>Conversation</td>
+  <td><span class="uc">Register mirroring</span><span class="sig">Casual in → casual out. Hinglish handled.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">Conv: vocabulary, sentence structure, code_mix</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-att">
+  <td>All users</td><td>Engagement</td><td>Every turn</td><td>Conversation</td>
+  <td><span class="uc">Literacy-adaptive length</span><span class="sig">Input complexity = output complexity ceiling.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Conv: vocabulary_complexity, query_length</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-att">
+  <td>All users</td><td>Engagement</td><td>Every turn</td><td>Conversation</td>
+  <td><span class="uc">Inline explainability</span><span class="sig">"Yeh isliye dikha — aapne kal poocha tha."</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">Session: prior_query, current_suggestion</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-rem">
+  <td>Returning</td><td>Retention</td><td>Turn 1</td><td>Conversation</td>
+  <td><span class="uc">Preference recalled silently</span><span class="sig">Language + format before Turn 1. No re-confirmation.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Episodic: language_pref, format_pref</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-rem">
+  <td>All users</td><td>Engagement</td><td>Any turn</td><td>Conversation</td>
+  <td><span class="uc">Memory connects past query</span><span class="sig">"Pichhli baar aapne yeh poocha tha" — only when relevant.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Episodic: past_query, relevance_score</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-rem">
+  <td>All users</td><td>Engagement</td><td>Any turn</td><td>Conversation</td>
+  <td><span class="uc">Temporal recall</span><span class="sig">"What did I ask last week?" → specific dated answer.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Episodic: time-indexed query store</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="sec"><td colspan="8">Conversation — voice</td></tr>
+
+<tr class="r-att">
+  <td>All users</td><td>Engagement</td><td>Every turn</td><td>Conversation</td>
+  <td><span class="uc">Voice brevity</span><span class="sig">Fast clipped query → ≤3 sentences. No preamble.</span></td>
+  <td class="mod">Voice</td>
+  <td><span class="sig">ASR: speech_rate, utterance_duration</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-att">
+  <td>All users</td><td>Engagement</td><td>Every turn</td><td>Conversation</td>
+  <td><span class="uc">Voice restraint</span><span class="sig">Heavy query → acknowledge first. "Suna. Kya chahiye?"</span></td>
+  <td class="mod">Voice</td>
+  <td><span class="sig">ASR: sentiment_score, topic_classifier</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-jio">
+  <td>Bharat · low literacy</td><td>Activation</td><td>First open</td><td>Conversation</td>
+  <td><span class="uc">TTS auto-play on low-end device</span><span class="sig">Sub-₹7K → voice-first. ≤3 sentences. Degrades to tap-to-hear.</span></td>
+  <td class="mod">Voice</td>
+  <td><span class="sig">UCP: device_price_range</span></td>
+  <td><span class="pill req">Required</span></td>
+</tr>
+
+<tr class="sec"><td colspan="8">Conversation — image · multimodal</td></tr>
+
+<tr class="r-att">
+  <td>All users</td><td>Engagement</td><td>Any turn</td><td>Conversation</td>
+  <td><span class="uc">Voice + image urgency reading</span><span class="sig">Anxious voice + photo → brevity + reassurance first.</span></td>
+  <td class="mod">Voice + Image</td>
+  <td><span class="sig">ASR: sentiment, speech_rate · Image: content_type</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-att">
+  <td>Bharat · low literacy</td><td>Engagement</td><td>Any turn</td><td>Conversation</td>
+  <td><span class="uc">Document reading aloud</span><span class="sig">Can't read govt notice → JBIQ reads aloud, gives one action.</span></td>
+  <td class="mod">Voice + Image</td>
+  <td><span class="sig">Conv: vocabulary_complexity · ASR: pace · Image: text</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-jio">
+  <td>All users</td><td>Engagement</td><td>Any turn</td><td>Conversation</td>
+  <td><span class="uc">Household context image framing</span><span class="sig">Medicine → caregiver vs patient. Based on household flags.</span></td>
+  <td class="mod">Image</td>
+  <td><span class="sig">UCP: senior_citizen_flag, household_composition</span></td>
+  <td><span class="pill enh">Enhances</span></td>
+</tr>
+
+<tr class="sec"><td colspan="8">Memory loop — store · confirm · correct · control</td></tr>
+
+<tr class="r-rem">
+  <td>All users</td><td>Engagement</td><td>In session</td><td>Conversation</td>
+  <td><span class="uc">Memory confirmation</span><span class="sig">"Got it, main yaad rakhungi." States what was stored.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Memory write: extracted_fact, confidence ≥0.7</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-rem">
+  <td>All users</td><td>Engagement</td><td>In session</td><td>Conversation</td>
+  <td><span class="uc">Correction handling</span><span class="sig">"Sirf is baar, ya hamesha?" Applies immediately.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Conv: correction_signal · Memory: conditional write</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-att">
+  <td>All users</td><td>Engagement</td><td>Post task</td><td>Conversation</td>
+  <td><span class="uc">Post-task contextual nudge</span><span class="sig">"Aapne summary banaya — kya reply bhi?" Max 1/session.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">Working memory: completed_task_type</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-rem">
+  <td>All users</td><td>Engagement</td><td>Any</td><td>Conversation</td>
+  <td><span class="uc">Nudge suppression</span><span class="sig">Dismissed twice → suppressed cross-session per feature.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Procedural: dismissal_count per nudge_type</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-rem">
+  <td>All users</td><td>Engagement</td><td>Any</td><td>Settings</td>
+  <td><span class="uc">My Preferences</span><span class="sig">View all, delete in 3 taps, pause without losing memory.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">Memory store: all facts, consent state</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="sec"><td colspan="8">Re-engagement — PN · WhatsApp</td></tr>
+
+<tr class="r-jio">
+  <td>Returning</td><td>Re-engagement</td><td>D+3 gap</td><td>PN</td>
+  <td><span class="uc">Re-engagement PN</span><span class="sig">Contextual hook to last session. Not generic.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">Session: last_topic · UCP: language</span></td>
+  <td><span class="pill enh">Enhances</span></td>
+</tr>
+
+<tr class="r-jio">
+  <td>Returning</td><td>Re-engagement</td><td>D+7 gap</td><td>WhatsApp</td>
+  <td><span class="uc">Re-engagement WA</span><span class="sig">If no PN opt-in. User's language. Conversational tone.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">CRM: pn_opt_in · UCP: language · Session: last_topic</span></td>
+  <td><span class="pill enh">Enhances</span></td>
+</tr>
+
+</tbody>
+</table>
+</div>
+</body>
+</html>

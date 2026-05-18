@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Personalized Experiences in JioBharatIQ</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --jb:#3900AD; --jbl:#EEE8FF;
+  --k:#3535F3; --kl:#EEEEFF;
+  --r:#D97706; --rl:#FEF3C7;
+  --g:#059669; --gl:#D1FAE5;
+  --ink:#0F0A1E; --ink2:#3D3552; --mute:#8B7FA8;
+  --ln:rgba(15,10,30,.07); --pg:#FAFAF8;
+  --serif:'Fraunces',Georgia,serif; --sans:'DM Sans',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:15px;}
+body{font-family:var(--sans);background:var(--pg);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.6;}
+.page{max-width:860px;margin:0 auto;padding:0 48px;}
+
+/* COVER */
+.cover{padding:88px 0 72px;border-bottom:1px solid var(--ln);}
+.kicker{font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--jb);margin-bottom:24px;}
+.cover-h{font-family:var(--serif);font-size:48px;font-weight:700;line-height:1.05;letter-spacing:-.03em;color:var(--ink);margin-bottom:20px;max-width:640px;}
+.cover-h em{font-style:italic;color:var(--jb);}
+.cover-p{font-size:15px;color:var(--ink2);line-height:1.8;max-width:540px;font-weight:300;margin-bottom:44px;}
+.toc{display:flex;flex-direction:column;gap:10px;padding-left:18px;border-left:2px solid var(--ln);}
+.toc-row{font-size:13px;color:var(--ink2);}
+.toc-row span{font-family:var(--serif);font-style:italic;color:var(--mute);margin-right:10px;font-size:12px;}
+
+/* SECTION */
+.section{padding:76px 0 60px;border-top:1px solid var(--ln);}
+.sec-k{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-bottom:14px;}
+.sec-h{font-family:var(--serif);font-size:34px;font-weight:700;letter-spacing:-.025em;line-height:1.15;color:var(--ink);margin-bottom:16px;}
+.sec-h em{font-style:italic;color:var(--jb);}
+.sec-p{font-size:14px;line-height:1.82;color:var(--ink2);max-width:600px;font-weight:300;margin-bottom:32px;}
+
+/* OPP GRID */
+.opp-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--ln);border-radius:14px;overflow:hidden;}
+.oc{background:white;padding:24px 22px;display:flex;flex-direction:column;gap:8px;}
+.oc.dk{background:var(--ink);}
+.oc-l{font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);}
+.oc.dk .oc-l{color:rgba(255,255,255,.3);}
+.oc-h{font-family:var(--serif);font-size:16px;font-weight:600;color:var(--ink);line-height:1.3;}
+.oc.dk .oc-h{color:white;}
+.oc-p{font-size:12px;color:var(--ink2);line-height:1.65;font-weight:300;}
+.oc.dk .oc-p{color:rgba(255,255,255,.5);}
+
+/* CANVAS SECTION */
+.canvas-intro{font-size:14px;line-height:1.82;color:var(--ink2);max-width:600px;font-weight:300;margin-bottom:36px;}
+.canvas-group{margin-bottom:40px;}
+.canvas-group-label{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--jb);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.canvas-group-label::after{content:'';flex:1;height:1px;background:var(--ln);}
+.canvas-note{font-size:11.5px;color:var(--mute);font-style:italic;margin-top:10px;}
+
+/* SIGNAL GRID */
+.sig-grid-ambient{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:10px;}
+.sig-grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.sig-card{background:white;border:1px solid var(--ln);border-radius:12px;padding:18px 16px;border-top:3px solid transparent;}
+.sig-card.s-amb{border-top-color:#94A3B8;}
+.sig-card.s-k{border-top-color:var(--k);}
+.sig-card.s-r{border-top-color:var(--r);}
+.sig-card.s-g{border-top-color:var(--g);}
+.sig-when{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px;}
+.sig-card.s-amb .sig-when{color:#94A3B8;}
+.sig-card.s-k .sig-when{color:var(--k);}
+.sig-card.s-r .sig-when{color:var(--r);}
+.sig-card.s-g .sig-when{color:var(--g);}
+.sig-name{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:7px;}
+.sig-eg{font-size:11px;color:var(--mute);line-height:1.55;}
+.sig-eg strong{color:var(--ink2);font-weight:500;}
+
+/* SURFACE GRID */
+.surf-macro-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px;}
+.surf-int-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.sc{background:white;border:1px solid var(--ln);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:5px;}
+.sc.pri{border-color:rgba(57,0,173,.2);background:var(--jbl);}
+.sc-icon{font-size:20px;margin-bottom:2px;}
+.sc-name{font-size:13px;font-weight:600;color:var(--ink);}
+.sc-desc{font-size:11px;color:var(--mute);line-height:1.5;}
+.stag{display:inline-flex;font-size:8px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:99px;margin-top:3px;width:fit-content;}
+.stag.now{background:#dcfce7;color:#166534;}
+.stag.nxt{background:var(--rl);color:#92400e;}
+
+/* DIMENSION ROWS */
+.dim-grid{display:flex;flex-direction:column;gap:1px;background:var(--ln);border-radius:14px;overflow:hidden;margin-bottom:10px;}
+.dim-row{display:grid;grid-template-columns:180px 1fr;background:white;}
+.dim-label{padding:16px 18px;background:#F7F5FC;border-right:1px solid var(--ln);display:flex;flex-direction:column;justify-content:center;gap:3px;}
+.dim-ln{font-size:12.5px;font-weight:600;color:var(--ink);}
+.dim-ls{font-size:10px;color:var(--mute);line-height:1.4;}
+.dim-content{padding:16px 20px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
+.dim-pill{font-size:11px;padding:4px 11px;border-radius:99px;background:var(--pg);border:1px solid var(--ln);color:var(--ink2);}
+.dim-pill.k{background:var(--kl);color:var(--k);border-color:rgba(53,53,243,.15);}
+.dim-pill.r{background:var(--rl);color:#92400e;border-color:rgba(217,119,6,.15);}
+.dim-pill.g{background:var(--gl);color:#065f46;border-color:rgba(5,150,105,.15);}
+
+/* SUNITA */
+.sunita{display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:start;background:white;border:1px solid var(--ln);border-radius:16px;padding:28px;margin-bottom:36px;}
+.sun-av{width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,#f7ab20,#ff7043);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;}
+.sun-name{font-family:var(--serif);font-size:22px;font-weight:600;letter-spacing:-.02em;color:var(--ink);margin-bottom:2px;}
+.sun-line{font-size:12px;color:var(--mute);margin-bottom:12px;}
+.sun-chips{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{font-size:11px;padding:4px 10px;border-radius:99px;background:var(--pg);border:1px solid var(--ln);color:var(--ink2);}
+.sun-note{margin-top:14px;padding-top:14px;border-top:1px solid var(--ln);grid-column:1/-1;font-size:12.5px;color:var(--mute);line-height:1.65;}
+
+/* CAPABILITY TRACKS */
+.ct-wrap{margin-top:8px;}
+.ct-grid{display:flex;flex-direction:column;border:1px solid var(--ln);border-radius:14px;overflow:hidden;}
+.ct-row{display:flex;border-bottom:1px solid var(--ln);min-height:64px;}
+.ct-row:last-child{border-bottom:none;}
+.ct-label{width:160px;flex-shrink:0;padding:12px 14px;background:#F7F5FC;border-right:1px solid var(--ln);display:flex;flex-direction:column;justify-content:center;gap:2px;}
+.ct-ln{font-size:12px;font-weight:600;color:var(--ink);}
+.ct-ls{font-size:9.5px;color:var(--mute);line-height:1.35;}
+.ct-area{flex:1;position:relative;display:flex;align-items:center;background:white;}
+.ct-base{position:absolute;left:14px;right:14px;top:50%;height:2px;background:var(--ln);border-radius:1px;transform:translateY(-50%);}
+.ct-cap{position:absolute;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;}
+.ct-dot{width:11px;height:11px;border-radius:50%;border:2px solid white;box-shadow:0 0 0 1.5px currentColor;z-index:2;}
+.ct-lbl{font-size:8px;font-weight:600;color:var(--ink2);white-space:nowrap;margin-top:3px;text-align:center;line-height:1.2;max-width:78px;}
+.ct-lbl.up{position:absolute;bottom:calc(100% + 4px);margin-top:0;}
+.c-slate{color:#94A3B8;} .c-slate .ct-dot{background:#94A3B8;}
+.c-blue{color:var(--k);} .c-blue .ct-dot{background:var(--k);}
+.c-amber{color:var(--r);} .c-amber .ct-dot{background:var(--r);}
+.c-green{color:var(--g);} .c-green .ct-dot{background:var(--g);}
+.c-jb{color:var(--jb);} .c-jb .ct-dot{background:var(--jb);}
+
+/* JOURNEY */
+.journey-context{background:white;border:1px solid var(--ln);border-radius:14px;padding:22px 24px;margin-bottom:36px;}
+.journey-context p{font-size:13.5px;color:var(--ink2);line-height:1.75;font-weight:300;}
+.journey-context p+p{margin-top:10px;}
+.jrow{display:grid;gap:28px;align-items:start;margin-bottom:52px;}
+.jrow.r2{grid-template-columns:1fr 250px;}
+.jrow.r2-wide{grid-template-columns:1fr 270px;}
+.jm-stag{display:inline-flex;align-items:center;gap:5px;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:99px;margin-bottom:10px;}
+.jm-stag.app{background:var(--jbl);color:var(--jb);}
+.jm-stag.wa{background:#dcfce7;color:#15803d;}
+.jm-stag.notif{background:var(--rl);color:#92400e;}
+.jm-stag.mart{background:var(--gl);color:#065f46;}
+.jm-title{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--ink);margin-bottom:6px;line-height:1.2;}
+.jm-sigs{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;}
+.sb{font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;}
+.sb.amb{background:#f0f9ff;color:#0369a1;}
+.sb.dev{background:var(--kl);color:var(--k);}
+.sb.ucp{background:#faf5ff;color:#7c3aed;}
+.sb.mem{background:var(--rl);color:#92400e;}
+.sb.beh{background:var(--gl);color:#065f46;}
+.sb.asr{background:#fdf4ff;color:#a21caf;}
+.jm-desc{font-size:12.5px;color:var(--ink2);line-height:1.75;font-weight:300;}
+.j-sep{height:1px;background:var(--ln);margin-bottom:52px;}
+
+/* PHONE */
+.ph{border-radius:22px;overflow:hidden;box-shadow:0 8px 28px rgba(0,0,0,.1),0 1px 4px rgba(0,0,0,.06);border:1.5px solid rgba(0,0,0,.11);background:white;font-family:var(--sans);}
+.ph-bar{background:white;padding:7px 13px 3px;display:flex;justify-content:space-between;align-items:center;}
+.ph-bar-t{font-size:10px;font-weight:500;color:#333;}
+.ph-bar-ic{font-size:9px;color:#888;}
+.ph-hdr{padding:9px 13px 8px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(0,0,0,.06);background:#f9f8fc;}
+.ph-logo{width:22px;height:22px;border-radius:6px;background:var(--jb);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:white;flex-shrink:0;}
+.ph-title{font-size:10px;font-weight:600;color:var(--ink);}
+.ph-sub{font-size:8.5px;color:var(--mute);}
+.ph-body{padding:10px 13px 12px;display:flex;flex-direction:column;gap:6px;}
+.ph-user{align-self:flex-end;background:#E5E7EB;border-radius:11px 11px 3px 11px;padding:6px 10px;font-size:10.5px;color:var(--ink);max-width:82%;line-height:1.4;}
+.ph-ai{display:flex;gap:5px;align-items:flex-start;}
+.ph-dot{width:18px;height:18px;border-radius:50%;background:var(--jb);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:white;flex-shrink:0;margin-top:1px;}
+.ph-bubble{background:white;border:1px solid rgba(0,0,0,.07);border-radius:3px 11px 11px 11px;padding:7px 10px;font-size:10.5px;line-height:1.5;color:var(--ink);flex:1;}
+.ph-tag{display:inline-block;font-size:7.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:1px 6px;border-radius:3px;background:var(--jbl);color:var(--jb);margin-bottom:4px;}
+.ph-pro{padding:7px 10px;border-radius:8px;font-size:10px;line-height:1.5;background:var(--gl);border:1px solid rgba(5,150,105,.13);color:#064e3b;}
+.ph-mem{display:inline-flex;align-items:center;gap:3px;background:var(--rl);border:1px solid rgba(217,119,6,.15);border-radius:99px;padding:2px 7px;font-size:8.5px;color:#92400E;font-weight:600;margin-top:3px;}
+.ph-inp{background:rgba(0,0,0,.04);border-radius:17px;padding:5px 10px;font-size:9.5px;color:#9CA3AF;display:flex;justify-content:space-between;align-items:center;margin-top:2px;}
+.ph-mic{width:20px;height:20px;border-radius:50%;background:var(--jb);display:flex;align-items:center;justify-content:center;font-size:8px;color:white;}
+.ph-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:3px;}
+.ph-chip{font-size:9px;padding:3px 8px;border-radius:99px;background:var(--jbl);color:var(--jb);border:1px solid rgba(57,0,173,.12);}
+.ph-tool{background:#f5f3ff;border:1px solid rgba(124,58,237,.15);border-radius:8px;padding:7px 10px;font-size:10px;color:#5b21b6;display:flex;align-items:center;gap:6px;margin-top:2px;}
+
+/* WA */
+.wa{border-radius:22px;overflow:hidden;box-shadow:0 8px 28px rgba(0,0,0,.1),0 1px 4px rgba(0,0,0,.06);border:1.5px solid rgba(0,0,0,.11);background:#ece5dd;font-family:var(--sans);}
+.wa-hdr{background:#075e54;padding:26px 13px 9px;display:flex;align-items:center;gap:9px;}
+.wa-av{width:28px;height:28px;border-radius:50%;background:var(--jb);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:white;flex-shrink:0;}
+.wa-nm{font-size:11.5px;font-weight:600;color:white;}
+.wa-st{font-size:9px;color:rgba(255,255,255,.65);}
+.wa-body{padding:10px;display:flex;flex-direction:column;gap:6px;}
+.wa-out{align-self:flex-end;background:#dcf8c6;border-radius:8px 8px 2px 8px;padding:6px 10px;font-size:10.5px;color:#111;max-width:82%;}
+.wa-in{align-self:flex-start;background:white;border-radius:2px 8px 8px 8px;padding:8px 10px;max-width:88%;box-shadow:0 1px 2px rgba(0,0,0,.07);}
+.wa-sndr{font-size:9px;font-weight:700;color:#128c7e;margin-bottom:3px;}
+.wa-txt{font-size:10.5px;color:#111;line-height:1.45;}
+.wa-cta{background:#128c7e;color:white;border-radius:6px;padding:5px 10px;font-size:10px;font-weight:700;text-align:center;margin-top:5px;}
+.wa-inp{background:#f0f0f0;padding:6px 10px;display:flex;align-items:center;gap:6px;}
+.wa-inp-bar{flex:1;background:white;border-radius:16px;padding:6px 10px;font-size:9.5px;color:#aaa;}
+
+/* NOTIF */
+.notif{border-radius:22px;overflow:hidden;box-shadow:0 8px 28px rgba(0,0,0,.1),0 1px 4px rgba(0,0,0,.06);border:1.5px solid rgba(0,0,0,.11);background:#1c1c1e;font-family:var(--sans);}
+.notif-bar{background:#1c1c1e;padding:22px 13px 5px;display:flex;justify-content:space-between;}
+.notif-bar-t{font-size:10px;font-weight:600;color:white;}
+.notif-bar-ic{font-size:9px;color:rgba(255,255,255,.6);}
+.notif-time{font-size:42px;font-weight:200;color:white;text-align:center;padding:4px 0 10px;letter-spacing:-.03em;}
+.notif-date{font-size:11px;color:rgba(255,255,255,.55);text-align:center;margin-bottom:14px;}
+.notif-card{background:rgba(255,255,255,.1);border-radius:12px;padding:11px 13px;margin:0 10px 10px;border:1px solid rgba(255,255,255,.08);}
+.notif-app{display:flex;align-items:center;gap:6px;margin-bottom:5px;}
+.notif-icon{width:16px;height:16px;border-radius:4px;background:var(--jb);display:flex;align-items:center;justify-content:center;font-size:7.5px;font-weight:700;color:white;}
+.notif-app-name{font-size:9.5px;color:rgba(255,255,255,.5);font-weight:500;}
+.notif-t-ago{font-size:9px;color:rgba(255,255,255,.3);margin-left:auto;}
+.notif-title{font-size:11.5px;font-weight:600;color:white;line-height:1.35;margin-bottom:3px;}
+.notif-body{font-size:10px;color:rgba(255,255,255,.6);line-height:1.45;}
+
+/* JIOMART */
+.mart{border-radius:22px;overflow:hidden;box-shadow:0 8px 28px rgba(0,0,0,.1),0 1px 4px rgba(0,0,0,.06);border:1.5px solid rgba(0,0,0,.11);background:white;font-family:var(--sans);}
+.mart-hdr{background:#1e7e34;padding:24px 13px 10px;}
+.mart-logo{font-size:12px;font-weight:700;color:white;}
+.mart-sub{font-size:8.5px;color:rgba(255,255,255,.65);}
+.mart-body{padding:10px;display:flex;flex-direction:column;gap:8px;}
+.mart-banner{background:#f0faf2;border:1px solid rgba(30,126,52,.15);border-radius:10px;padding:10px 12px;}
+.mart-bl{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#1e7e34;margin-bottom:3px;}
+.mart-bh{font-size:11px;font-weight:600;color:var(--ink);line-height:1.35;margin-bottom:5px;}
+.mart-bs{font-size:9.5px;color:var(--mute);line-height:1.4;}
+.mart-items{display:flex;gap:6px;}
+.mi{flex:1;background:#f9fafb;border:1px solid var(--ln);border-radius:8px;padding:8px;display:flex;flex-direction:column;gap:2px;}
+.mi-name{font-size:10px;font-weight:600;color:var(--ink);}
+.mi-qty{font-size:9px;color:var(--mute);}
+.mi-btn{font-size:9px;font-weight:700;color:#1e7e34;margin-top:3px;}
+
+/* EXECUTION */
+.exec-milestone{background:var(--ink);border-radius:14px;padding:28px 28px;margin-bottom:28px;}
+.exec-ms-label{font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:8px;}
+.exec-ms-h{font-family:var(--serif);font-size:24px;font-weight:600;color:white;margin-bottom:8px;line-height:1.2;}
+.exec-ms-p{font-size:12.5px;color:rgba(255,255,255,.55);line-height:1.65;}
+.exec-arc{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--ln);border-radius:14px;overflow:hidden;margin-bottom:28px;}
+.exec-arc-col{background:white;padding:20px 18px;display:flex;flex-direction:column;gap:6px;}
+.exec-arc-col.active{background:var(--kl);border:2px solid var(--k);}
+.exec-phase{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mute);}
+.exec-arc-col.active .exec-phase{color:var(--k);}
+.exec-arc-h{font-size:14px;font-weight:600;color:var(--ink);line-height:1.25;}
+.exec-arc-col.active .exec-arc-h{color:var(--k);}
+.exec-arc-p{font-size:11px;color:var(--mute);line-height:1.5;}
+.exec-deliverables{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.exec-del{background:white;border:1px solid var(--ln);border-radius:12px;padding:18px 18px;display:flex;flex-direction:column;gap:5px;}
+.exec-del-label{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);}
+.exec-del-h{font-size:13px;font-weight:600;color:var(--ink);line-height:1.3;}
+.exec-del-p{font-size:11.5px;color:var(--ink2);line-height:1.6;font-weight:300;}
+.exec-p-badge{display:inline-flex;font-size:8px;font-weight:700;padding:2px 7px;border-radius:99px;margin-top:3px;width:fit-content;}
+.exec-p-badge.p0{background:#fee2e2;color:#991b1b;}
+.exec-p-badge.p1{background:var(--rl);color:#92400e;}
+
+@media print{
+  body{background:white;}
+  .page{padding:0 32px;}
+  .cover{padding:48px 0 40px;}
+  .section{padding:52px 0 44px;}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ── COVER ── -->
+<div class="cover">
+  <div class="cover-h">Personalized experiences<br>in <em>JioBharatIQ</em></div>
+  <div class="cover-p">JioBharatIQ is India's daily AI companion, built for voice-first, multilingual, Bharat-scale use. Among its defining advantages is the ability to personalize to the individual — drawing on Jio's reach, distribution, and data signals to know each user with a depth and immediacy that compounds over time. This document covers the opportunity, the full canvas of personalization dimensions, how it plays out for a real user, and how we sequence execution.</div>
+  <div class="toc">
+    <div class="toc-row"><span>1</span>The opportunity</div>
+    <div class="toc-row"><span>2</span>The personalization canvas — signals, surfaces, and dimensions</div>
+    <div class="toc-row"><span>3</span>The capability framework — how each dimension matures</div>
+    <div class="toc-row"><span>4</span>The experience — a walkthrough across surfaces and time</div>
+    <div class="toc-row"><span>5</span>Execution — where we are and where we go next</div>
+  </div>
+</div>
+
+
+<!-- ── 1. OPPORTUNITY ── -->
+<div class="section">
+  <div class="sec-k">1 · The Opportunity</div>
+  <div class="sec-h">Personalization as a<br><em>differentiated advantage</em></div>
+  <div class="sec-p">Jio's subscriber base, unified customer profile, device and SIM data, and regional reach create a foundation for knowing users that most AI assistants do not have access to. JioBharatIQ's personalization stack is designed to use that foundation from the first session, and to deepen it with every interaction.</div>
+  <div class="opp-grid">
+    <div class="oc">
+      <div class="oc-l">What's available from the start</div>
+      <div class="oc-h">Meaningful signals before the first interaction</div>
+      <div class="oc-p">Language, device tier, household context, location, subscriber profile — available at first open. The assistant starts with context. No setup screen. No language picker. No blank slate.</div>
+    </div>
+    <div class="oc">
+      <div class="oc-l">What builds over time</div>
+      <div class="oc-h">Behaviour and memory turn a profile into an individual model</div>
+      <div class="oc-p">As the user interacts, JioBharatIQ learns how they phrase things, what they return to, when they use it, and what they skip. Over time the model stops serving a profile and starts serving a person.</div>
+    </div>
+    <div class="oc">
+      <div class="oc-l">The reach and distribution angle</div>
+      <div class="oc-h">500M subscribers, 12 languages, every device tier</div>
+      <div class="oc-p">Personalization at this scale means designing for diversity — across language, literacy, device, region, and household structure. The same precision that works for Sunita in Varanasi must work for a user in Kochi on a different device in a different language.</div>
+    </div>
+    <div class="oc dk">
+      <div class="oc-l">The destination</div>
+      <div class="oc-h">N=1: the experience is built for this person, not their segment</div>
+      <div class="oc-p">N=1 is a measure of precision. At the individual level, JioBharatIQ operates on what this user — only this user — has shown it. Not their demographic. Not their city. Them.</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── 2. CANVAS ── -->
+<div class="section">
+  <div class="sec-k">2 · The Personalization Canvas</div>
+  <div class="sec-h">Signals, surfaces,<br>and <em>dimensions</em></div>
+  <div class="canvas-intro">Personalization in JioBharatIQ operates across four categories: the signals that inform the model, the surfaces through which it is delivered, the interaction surfaces within the app experience, and the dimensions across which the experience is shaped. The items below are a strong, focused set — not an exhaustive inventory.</div>
+
+  <!-- SIGNALS -->
+  <div class="canvas-group">
+    <div class="canvas-group-label">Signals — what informs the model</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+
+      <div class="sig-card s-amb" style="grid-column:1/-1;">
+        <div class="sig-when">Active on first open · No input required</div>
+        <div class="sig-name">Ambient</div>
+        <div class="sig-eg" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:6px;">
+          <div><strong style="color:var(--ink2);font-weight:600;">Time of day</strong><br>Morning greeting differs from late-night. Tone, task suggestions, and TTS behavior all shift.</div>
+          <div><strong style="color:var(--ink2);font-weight:600;">Day and week</strong><br>Weekday school prep vs weekend household tasks. Monday vs Friday changes what's contextually relevant.</div>
+          <div><strong style="color:var(--ink2);font-weight:600;">Season</strong><br>Summer heat, monsoon, Diwali prep, harvest season — JioBharatIQ knows what time of year it is and responds accordingly.</div>
+          <div><strong style="color:var(--ink2);font-weight:600;">Location (pincode)</strong><br>Regional language preference, local content relevance, city vs rural context. Varanasi is different from Kochi.</div>
+          <div><strong style="color:var(--ink2);font-weight:600;">Regional calendar</strong><br>Local holidays, exam cycles (UP Board schedule differs from CBSE), harvest festivals, state-level events.</div>
+          <div><strong style="color:var(--ink2);font-weight:600;">Network and time zone</strong><br>2G vs 5G shapes response density. Time zone ensures greetings and scheduling are locally accurate.</div>
+        </div>
+      </div>
+
+      <div class="sig-card s-k">
+        <div class="sig-when">Active on first open</div>
+        <div class="sig-name">Device and SIM</div>
+        <div class="sig-eg">
+          <strong>SIM language</strong> — sets the default language without asking. Hindi SIM, Hindi JioBharatIQ.<br><br>
+          <strong>Device tier</strong> — price range drives voice-first vs text, TTS auto-play, response brevity, image quality thresholds.<br><br>
+          <strong>Device model</strong> — screen size, OS version, capability flags inform what the app can render and how.<br><br>
+          <strong>Network type</strong> — 2G vs 4G vs 5G adjusts output density and media choices silently.
+        </div>
+      </div>
+
+      <div class="sig-card s-r">
+        <div class="sig-when">Active on first open</div>
+        <div class="sig-name">Jio Profile (UCP)</div>
+        <div class="sig-eg">
+          <strong>Identity</strong> — name, preferred language, account type. JioID resolution at first open.<br><br>
+          <strong>Occupation</strong> — homemaker, farmer, student, small business owner. Drives starter prompt buckets.<br><br>
+          <strong>Household</strong> — composition signals (senior member, children, household size). Shapes context for health, education, and grocery queries.<br><br>
+          <strong>Location</strong> — night city, pincode. Regional precision for content and seasonal cards.<br><br>
+          <strong>Service mix</strong> — which Jio services the user is active on. Signals lifestyle and usage patterns.
+        </div>
+      </div>
+
+      <div class="sig-card s-g">
+        <div class="sig-when">Builds with every interaction</div>
+        <div class="sig-name">In-session behaviour</div>
+        <div class="sig-eg">
+          <strong>Vocabulary and query length</strong> — simple short queries vs detailed formal ones. Maps to literacy calibration.<br><br>
+          <strong>Speech rate and utterance length</strong> — fast, terse voice = brevity mode. Slow, detailed = elaboration mode.<br><br>
+          <strong>Code-mix pattern</strong> — which languages blend, in what ratio. Register mirroring fires from Turn 1.<br><br>
+          <strong>Sentiment</strong> — distress signals in voice or text trigger acknowledge-first response mode.<br><br>
+          <strong>Tools used so far</strong> — what the user has engaged with this session shapes follow-up suggestions.
+        </div>
+      </div>
+
+    </div>
+    <div class="canvas-note">Ambient, Device, and UCP are active on Day 1. In-session behaviour accumulates within a session. All signals have fallback paths for non-Jio users — no blank slate in either case.</div>
+  </div>
+
+  <!-- MEMORY -->
+  <div class="canvas-group" style="margin-top:28px;padding-top:28px;border-top:1px solid var(--ln);">
+    <div class="canvas-group-label">Memory — what persists and compounds</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+
+      <div class="sig-card s-k">
+        <div class="sig-when">Active within the session</div>
+        <div class="sig-name">In-session context</div>
+        <div class="sig-eg">
+          The active conversation buffer — what has been said in the current session. Held in working memory, not persisted when the session ends.<br><br>
+          <strong>last_topic</strong>, <strong>last_intent</strong>, <strong>incomplete_task_state</strong> — these are available to JioBharatIQ throughout the session to hold the thread and avoid repetition. Every assistant does this. It is the baseline.
+        </div>
+      </div>
+
+      <div class="sig-card s-g">
+        <div class="sig-when">Builds across sessions · Requires consent · More advanced</div>
+        <div class="sig-name">Episodic memory</div>
+        <div class="sig-eg">
+          A persistent store of facts, preferences, and context extracted from past sessions — written, stored, and retrieved. Significantly more complex to build well than in-session context.<br><br>
+          <strong>What gets stored:</strong> language and format preferences, named relationships ("Mummy has diabetes"), recurring topics, correction history, past queries with dates.<br><br>
+          <strong>How it fires:</strong> when a new query is relevant to a past memory, JioBharatIQ retrieves and applies it — without the user having to re-explain. The relevance gate matters: not every memory fires, only when confidence is high.<br><br>
+          <strong>User control:</strong> explicit consent at Session 3. User can view, edit, pause, or delete what is stored. Memory that cannot be controlled cannot be trusted.
+        </div>
+      </div>
+
+    </div>
+    <div class="canvas-note">Memory is distinct from signals — signals are read, memory is written and retrieved. In-session context requires no infrastructure beyond the active session. Episodic memory requires a persistent store, a write pipeline, a retrieval mechanism, and a consent layer.</div>
+  </div>
+
+  <!-- DELIVERY SURFACES -->
+  <div class="canvas-group">
+    <div class="canvas-group-label">Delivery surfaces — where JioBharatIQ reaches the user</div>
+    <div class="surf-macro-grid">
+      <div class="sc pri">
+        <div class="sc-icon">📱</div>
+        <div class="sc-name">JioBharatIQ App</div>
+        <div class="sc-desc">Primary surface. Full voice and text, full personalization stack active from first open.</div>
+        <span class="stag now">Now</span>
+      </div>
+      <div class="sc">
+        <div class="sc-icon">🔔</div>
+        <div class="sc-name">Notifications</div>
+        <div class="sc-desc">Proactive and reactive. Re-engagement, reminders, context-specific nudges. Earned, not pushed.</div>
+        <span class="stag nxt">Beta</span>
+      </div>
+      <div class="sc">
+        <div class="sc-icon">💬</div>
+        <div class="sc-name">WhatsApp</div>
+        <div class="sc-desc">Meets users where they already are. Same intelligence and memory, no install required.</div>
+        <span class="stag now">Now</span>
+      </div>
+    </div>
+    <div class="canvas-note">These are the delivery surfaces JioBharatIQ is being built on. Ecosystem apps (JioMart, JioHealth, JioCinema) are beneficiaries of the memory and signal loop — not delivery surfaces of JioBharatIQ itself.</div>
+  </div>
+
+  <!-- INTERACTION SURFACES -->
+  <div class="canvas-group">
+    <div class="canvas-group-label">Interaction surfaces — within the app experience</div>
+    <div class="surf-int-grid">
+      <div class="sc">
+        <div class="sc-icon">⚙️</div>
+        <div class="sc-name">Preferences and customization</div>
+        <div class="sc-desc">Language, theme, notification mode. Explicit — easiest to implement, user sets directly.</div>
+      </div>
+      <div class="sc">
+        <div class="sc-icon">🚀</div>
+        <div class="sc-name">Onboarding</div>
+        <div class="sc-desc">First experience. Pre-loaded with Jio profile. Near-zero friction. Sets the tone.</div>
+      </div>
+      <div class="sc">
+        <div class="sc-icon">🏠</div>
+        <div class="sc-name">Home and suggested prompts</div>
+        <div class="sc-desc">Homescreen surface. Tiles and prompts shift based on time, context, and usage history.</div>
+      </div>
+      <div class="sc">
+        <div class="sc-icon">🎙️</div>
+        <div class="sc-name">Voice</div>
+        <div class="sc-desc">Language lock, speech rate calibration, emotional listening. Bharat's primary input mode.</div>
+      </div>
+      <div class="sc">
+        <div class="sc-icon">🌐</div>
+        <div class="sc-name">Code-mixing</div>
+        <div class="sc-desc">Hinglish, Tanglish, and other natural blends. JioBharatIQ matches the user's actual register.</div>
+      </div>
+      <div class="sc">
+        <div class="sc-icon">🔍</div>
+        <div class="sc-name">Mid-query assist</div>
+        <div class="sc-desc">Completions and suggestions shaped by past queries and in-session context.</div>
+      </div>
+      <div class="sc">
+        <div class="sc-icon">↩️</div>
+        <div class="sc-name">Follow-up prompts</div>
+        <div class="sc-desc">Post-response suggestions drawn from the ongoing conversation thread.</div>
+      </div>
+      <div class="sc">
+        <div class="sc-icon">🧩</div>
+        <div class="sc-name">Tools and personas</div>
+        <div class="sc-desc">Which tools surface and which persona leads — tuned to this user's domain and history. Requires deeper learning to personalize well.</div>
+      </div>
+    </div>
+    <div class="canvas-note">Ordered from explicit and easier to implement (preferences, onboarding) through to learned and deeper (tools, personas). Not exhaustive.</div>
+  </div>
+
+  <!-- PERSONALIZATION DIMENSIONS -->
+  <div class="canvas-group">
+    <div class="canvas-group-label">Dimensions — what is being personalized</div>
+    <div class="dim-grid">
+      <div class="dim-row">
+        <div class="dim-label"><div class="dim-ln">Language and format</div><div class="dim-ls">How it communicates</div></div>
+        <div class="dim-content">
+          <span class="dim-pill k">Language of response</span>
+          <span class="dim-pill k">Code-mixing register</span>
+          <span class="dim-pill k">Response length</span>
+          <span class="dim-pill k">Voice vs text</span>
+          <span class="dim-pill k">TTS auto-play</span>
+          <span class="dim-pill k">Literacy calibration</span>
+        </div>
+      </div>
+      <div class="dim-row">
+        <div class="dim-label"><div class="dim-ln">Context awareness</div><div class="dim-ls">What it knows going in</div></div>
+        <div class="dim-content">
+          <span class="dim-pill r">Time and season</span>
+          <span class="dim-pill r">Location and region</span>
+          <span class="dim-pill r">Household composition</span>
+          <span class="dim-pill r">Occupation and lifestyle</span>
+          <span class="dim-pill r">Session continuity</span>
+          <span class="dim-pill r">Cross-session memory</span>
+        </div>
+      </div>
+      <div class="dim-row">
+        <div class="dim-label"><div class="dim-ln">Proactivity</div><div class="dim-ls">What it surfaces unprompted</div></div>
+        <div class="dim-content">
+          <span class="dim-pill">Suggested prompts on home</span>
+          <span class="dim-pill">Follow-up after a task</span>
+          <span class="dim-pill r">Timely nudges (notifications)</span>
+          <span class="dim-pill g">Pattern-based proactivity</span>
+          <span class="dim-pill g">Re-engagement (right channel, right context)</span>
+        </div>
+      </div>
+      <div class="dim-row">
+        <div class="dim-label"><div class="dim-ln">User lifecycle stage</div><div class="dim-ls">Where they are in the arc</div></div>
+        <div class="dim-content">
+          <span class="dim-pill k">First open — warm, not blank</span>
+          <span class="dim-pill k">First conversations — calibrating</span>
+          <span class="dim-pill r">Returning — memory active</span>
+          <span class="dim-pill r">Consent gate — trust moment</span>
+          <span class="dim-pill g">Memory deepens — home shifts</span>
+          <span class="dim-pill g">Re-engagement — right surface</span>
+        </div>
+      </div>
+      <div class="dim-row">
+        <div class="dim-label"><div class="dim-ln">Response quality</div><div class="dim-ls">How the answer is shaped</div></div>
+        <div class="dim-content">
+          <span class="dim-pill k">Household context in answers</span>
+          <span class="dim-pill k">Inline explainability</span>
+          <span class="dim-pill r">Preference recall — applied silently</span>
+          <span class="dim-pill r">Correction handling</span>
+          <span class="dim-pill g">Emotional calibration</span>
+          <span class="dim-pill g">Anticipatory framing</span>
+        </div>
+      </div>
+    </div>
+    <div class="canvas-note">Colored pills indicate approximate readiness: blue = Day 1, amber = early sessions, green = deeper relationship.</div>
+  </div>
+</div>
+
+
+<!-- ── 3. CAPABILITY TRACKS ── -->
+<div class="section">
+  <div class="sec-k">3 · The Capability Framework</div>
+  <div class="sec-h">How each dimension<br><em>matures over time</em></div>
+  <div class="sec-p">Each personalization dimension starts somewhere and deepens as the relationship grows. The axis below represents depth of relationship — not calendar time, not session counts, but the accumulation of signal and trust. Each dot marks where a capability naturally becomes active and meaningful.</div>
+
+  <div class="ct-wrap">
+    <div class="ct-grid">
+
+      <div class="ct-row">
+        <div class="ct-label"><div class="ct-ln">Signals</div><div class="ct-ls">What JioBharatIQ knows</div></div>
+        <div class="ct-area">
+          <div class="ct-base"></div>
+          <div class="ct-cap c-slate" style="left:6%"><div class="ct-dot"></div><div class="ct-lbl">Ambient</div></div>
+          <div class="ct-cap c-blue" style="left:18%"><div class="ct-dot"></div><div class="ct-lbl up">Device + SIM</div></div>
+          <div class="ct-cap c-amber" style="left:32%"><div class="ct-dot"></div><div class="ct-lbl">Jio Profile</div></div>
+          <div class="ct-cap c-green" style="left:58%"><div class="ct-dot"></div><div class="ct-lbl up">In-session behaviour</div></div>
+        </div>
+      </div>
+
+      <div class="ct-row">
+        <div class="ct-label"><div class="ct-ln">Memory</div><div class="ct-ls">What persists and compounds</div></div>
+        <div class="ct-area">
+          <div class="ct-base"></div>
+          <div class="ct-cap c-blue" style="left:20%"><div class="ct-dot"></div><div class="ct-lbl">In-session context</div></div>
+          <div class="ct-cap c-green" style="left:55%"><div class="ct-dot"></div><div class="ct-lbl up">Episodic memory</div></div>
+          <div class="ct-cap c-jb" style="left:80%"><div class="ct-dot"></div><div class="ct-lbl">Household model</div></div>
+        </div>
+      </div>
+
+      <div class="ct-row">
+        <div class="ct-label"><div class="ct-ln">Delivery surfaces</div><div class="ct-ls">Where JioBharatIQ reaches the user</div></div>
+        <div class="ct-area">
+          <div class="ct-base"></div>
+          <div class="ct-cap c-blue" style="left:10%"><div class="ct-dot"></div><div class="ct-lbl">App</div></div>
+          <div class="ct-cap c-blue" style="left:22%"><div class="ct-dot"></div><div class="ct-lbl up">WhatsApp</div></div>
+          <div class="ct-cap c-amber" style="left:52%"><div class="ct-dot"></div><div class="ct-lbl">Notifications</div></div>
+        </div>
+      </div>
+
+      <div class="ct-row">
+        <div class="ct-label"><div class="ct-ln">Interaction surfaces</div><div class="ct-ls">Within the app experience</div></div>
+        <div class="ct-area">
+          <div class="ct-base"></div>
+          <div class="ct-cap c-blue" style="left:8%"><div class="ct-dot"></div><div class="ct-lbl">Preferences</div></div>
+          <div class="ct-cap c-blue" style="left:18%"><div class="ct-dot"></div><div class="ct-lbl up">Onboarding</div></div>
+          <div class="ct-cap c-blue" style="left:28%"><div class="ct-dot"></div><div class="ct-lbl">Voice</div></div>
+          <div class="ct-cap c-amber" style="left:42%"><div class="ct-dot"></div><div class="ct-lbl up">Home + prompts</div></div>
+          <div class="ct-cap c-amber" style="left:56%"><div class="ct-dot"></div><div class="ct-lbl">Mid-query assist</div></div>
+          <div class="ct-cap c-green" style="left:70%"><div class="ct-dot"></div><div class="ct-lbl up">Follow-up prompts</div></div>
+          <div class="ct-cap c-jb" style="left:85%"><div class="ct-dot"></div><div class="ct-lbl">Tools + personas</div></div>
+        </div>
+      </div>
+
+      <div class="ct-row">
+        <div class="ct-label"><div class="ct-ln">Proactivity</div><div class="ct-ls">What surfaces unprompted</div></div>
+        <div class="ct-area">
+          <div class="ct-base"></div>
+          <div class="ct-cap c-blue" style="left:20%"><div class="ct-dot"></div><div class="ct-lbl">Suggested prompts</div></div>
+          <div class="ct-cap c-amber" style="left:44%"><div class="ct-dot"></div><div class="ct-lbl up">Follow-up nudges</div></div>
+          <div class="ct-cap c-green" style="left:64%"><div class="ct-dot"></div><div class="ct-lbl">Re-engagement PN/WA</div></div>
+          <div class="ct-cap c-jb" style="left:84%"><div class="ct-dot"></div><div class="ct-lbl up">Pattern-based proactivity</div></div>
+        </div>
+      </div>
+
+      <div class="ct-row">
+        <div class="ct-label"><div class="ct-ln">User lifecycle stage</div><div class="ct-ls">Arc of the relationship</div></div>
+        <div class="ct-area">
+          <div class="ct-base"></div>
+          <div class="ct-cap c-blue" style="left:8%"><div class="ct-dot"></div><div class="ct-lbl">First open</div></div>
+          <div class="ct-cap c-blue" style="left:22%"><div class="ct-dot"></div><div class="ct-lbl up">First conversations</div></div>
+          <div class="ct-cap c-amber" style="left:38%"><div class="ct-dot"></div><div class="ct-lbl">Returns</div></div>
+          <div class="ct-cap c-amber" style="left:52%"><div class="ct-dot"></div><div class="ct-lbl up">Consent gate</div></div>
+          <div class="ct-cap c-green" style="left:66%"><div class="ct-dot"></div><div class="ct-lbl">Memory active</div></div>
+          <div class="ct-cap c-green" style="left:80%"><div class="ct-dot"></div><div class="ct-lbl up">Home shifts</div></div>
+          <div class="ct-cap c-jb" style="left:92%"><div class="ct-dot"></div><div class="ct-lbl">Know You complete</div></div>
+        </div>
+      </div>
+
+      <div class="ct-row">
+        <div class="ct-label"><div class="ct-ln">Response quality</div><div class="ct-ls">How answers are shaped</div></div>
+        <div class="ct-area">
+          <div class="ct-base"></div>
+          <div class="ct-cap c-blue" style="left:12%"><div class="ct-dot"></div><div class="ct-lbl">Language + format</div></div>
+          <div class="ct-cap c-blue" style="left:26%"><div class="ct-dot"></div><div class="ct-lbl up">Code-mixing match</div></div>
+          <div class="ct-cap c-amber" style="left:44%"><div class="ct-dot"></div><div class="ct-lbl">Household context</div></div>
+          <div class="ct-cap c-amber" style="left:58%"><div class="ct-dot"></div><div class="ct-lbl up">Preference recall</div></div>
+          <div class="ct-cap c-green" style="left:74%"><div class="ct-dot"></div><div class="ct-lbl">Correction handling</div></div>
+          <div class="ct-cap c-jb" style="left:88%"><div class="ct-dot"></div><div class="ct-lbl up">Emotional calibration</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ── 4. EXPERIENCE WALKTHROUGH ── -->
+<div class="section">
+  <div class="sec-k">4 · The Experience</div>
+  <div class="sec-h">A walkthrough across<br><em>surfaces and time</em></div>
+
+  <div class="sunita">
+    <div class="sun-av">👩</div>
+    <div>
+      <div class="sun-name">Sunita</div>
+      <div class="sun-line">38 · Varanasi, UP · Homemaker · Hindi · First-time AI user</div>
+      <div class="sun-chips">
+        <span class="chip">Mummy has Type 2 diabetes. Sunita is her caregiver.</span>
+        <span class="chip">Daughter Priya · Class 5 · UP Board</span>
+        <span class="chip">Jio SIM · ~₹12K Android · Voice-first</span>
+        <span class="chip">Budget-conscious household</span>
+      </div>
+    </div>
+    <div class="sun-note">Sunita is the user JioBharatIQ is built for. The walkthrough below is a user experience sequence — not an implementation order. It shows the range of what personalization makes possible: across surfaces, signals, and stages of the relationship.</div>
+  </div>
+
+  <!-- M1 -->
+  <div class="jrow r2-wide">
+    <div>
+      <div class="jm-stag app">📱 App · First open</div>
+      <div class="jm-title">Day 1. Nothing configured. Already personal.</div>
+      <div class="jm-sigs"><span class="sb dev">Device</span><span class="sb amb">Ambient</span><span class="sb ucp">Jio Profile</span></div>
+      <div class="jm-desc">Sunita opens the app for the first time. JioBharatIQ reads her SIM (Hindi), device tier (voice-first), time of day (morning), and household signals from her Jio profile. The greeting is in Hindi. The mic is front and center. The suggested prompts reflect her life — Mummy's medication, Priya's studies, household tasks. She did nothing to make this happen.</div>
+    </div>
+    <div class="ph">
+      <div class="ph-bar"><span class="ph-bar-t">9:12</span><span class="ph-bar-ic">▲ ⊕ 🔋</span></div>
+      <div class="ph-hdr"><div class="ph-logo">J</div><div><div class="ph-title">JioBharatIQ</div><div class="ph-sub">नमस्ते, Sunita 🙏</div></div></div>
+      <div class="ph-body">
+        <div class="ph-ai"><div class="ph-dot">J</div><div class="ph-bubble"><div class="ph-tag">Day 1 · SIM + UCP</div>सुप्रभात! क्या आज घर के काम में कुछ मदद चाहिए?</div></div>
+        <div class="ph-chips"><span class="ph-chip">💊 Mummy की दवाई</span><span class="ph-chip">📚 Priya की पढ़ाई</span><span class="ph-chip">🛒 राशन</span></div>
+        <div class="ph-inp"><span>बोलें या टाइप करें…</span><div class="ph-mic">🎤</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="j-sep"></div>
+
+  <!-- M2 -->
+  <div class="jrow r2-wide">
+    <div>
+      <div class="jm-stag app">📱 App · First task</div>
+      <div class="jm-title">In-session context. The thread holds.</div>
+      <div class="jm-sigs"><span class="sb dev">Device</span><span class="sb ucp">Jio Profile</span></div>
+      <div class="jm-desc">Sunita asks about Priya's science chapter. JioBharatIQ pulls the UP Board Class 5 syllabus, confirms the chapter, and offers practice questions. Sunita follows up without re-stating who Priya is or what class she is in. The context is already held. The conversation feels like a conversation — not a sequence of fresh queries.</div>
+    </div>
+    <div class="ph">
+      <div class="ph-bar"><span class="ph-bar-t">9:34</span><span class="ph-bar-ic">▲ ⊕ 🔋</span></div>
+      <div class="ph-hdr"><div class="ph-logo">J</div><div><div class="ph-title">JioBharatIQ</div></div></div>
+      <div class="ph-body">
+        <div class="ph-user">Priya ka science chapter kya hai?</div>
+        <div class="ph-ai"><div class="ph-dot">J</div><div class="ph-bubble"><div class="ph-tag">UP Board · Class 5</div>Chapter 8 — "जल और वायु". Practice questions बनाऊँ?</div></div>
+        <div class="ph-user">Haan, easy wale pehle.</div>
+        <div class="ph-ai"><div class="ph-dot">J</div><div class="ph-bubble">Easy se start:<br><br>1. पानी किस रूप में पाया जाता है?</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="j-sep"></div>
+
+  <!-- M3 -->
+  <div class="jrow r2-wide">
+    <div>
+      <div class="jm-stag app">📱 App · Health query</div>
+      <div class="jm-title">A question with no context given. Answered with household context.</div>
+      <div class="jm-sigs"><span class="sb ucp">Jio Profile</span><span class="sb amb">Ambient</span></div>
+      <div class="jm-desc">Sunita asks about a blood pressure medication. She gives no context. JioBharatIQ draws on the Jio profile — household composition, age signals — and answers with relevant, specific information. It notes that Mummy's prescribed dose should be followed. No guessing. No generic lookup response.</div>
+    </div>
+    <div class="ph">
+      <div class="ph-bar"><span class="ph-bar-t">11:08</span><span class="ph-bar-ic">▲ ⊕ 🔋</span></div>
+      <div class="ph-hdr"><div class="ph-logo">J</div><div><div class="ph-title">JioBharatIQ</div></div></div>
+      <div class="ph-body">
+        <div class="ph-user">Amlodipine khaane ka sahi time kya hai?</div>
+        <div class="ph-ai"><div class="ph-dot">J</div><div class="ph-bubble"><div class="ph-tag">UCP · Household signals</div>Sahi rehta hai subah khane ke saath — stomach upset kam hota hai. Mummy ka prescribed dose wahi follow karein.<div class="ph-mem">👤 Senior household member, BP signals</div></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="j-sep"></div>
+
+  <!-- M4 -->
+  <div class="jrow r2-wide">
+    <div>
+      <div class="jm-stag app">📱 App · Voice and code-mixing</div>
+      <div class="jm-title">Sunita speaks in Hinglish. JioBharatIQ responds in kind.</div>
+      <div class="jm-sigs"><span class="sb asr">ASR</span><span class="sb beh">Behaviour</span></div>
+      <div class="jm-desc">Sunita asks about household budgeting in natural Hinglish — mixing Hindi and English mid-sentence, the way she actually speaks. JioBharatIQ matches her register exactly. No formal Hindi. No English-only response. The experience reflects her, not a language model's idea of how she should speak.</div>
+    </div>
+    <div class="ph">
+      <div class="ph-bar"><span class="ph-bar-t">2:19</span><span class="ph-bar-ic">▲ ⊕ 🔋</span></div>
+      <div class="ph-hdr"><div class="ph-logo">J</div><div><div class="ph-title">JioBharatIQ</div></div></div>
+      <div class="ph-body">
+        <div class="ph-user">Ghar ka monthly budget kaise manage karein, expenses bohot zyada ho rahe hain</div>
+        <div class="ph-ai"><div class="ph-dot">J</div><div class="ph-bubble"><div class="ph-tag">Hinglish · Register matched</div>Pehle fixed aur variable alag karein — ration, rent, dawa fixed hai. Vegetables, transport adjust ho sakta hai. Budget sheet banaun? 📊</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="j-sep"></div>
+
+  <!-- M5 -->
+  <div class="jrow r2-wide">
+    <div>
+      <div class="jm-stag app">📱 App · Cross-session memory</div>
+      <div class="jm-title">A short question from a previous session. Memory fills the gap.</div>
+      <div class="jm-sigs"><span class="sb mem">Memory</span><span class="sb ucp">Jio Profile</span></div>
+      <div class="jm-desc">Two sessions ago, Sunita mentioned Mummy has Type 2 diabetes. Today she asks a short question about food with no context. JioBharatIQ answers knowing who the question is about. She does not repeat herself. This is the first moment the relationship feels continuous across time.</div>
+    </div>
+    <div class="ph">
+      <div class="ph-bar"><span class="ph-bar-t">11:42</span><span class="ph-bar-ic">▲ ⊕ 🔋</span></div>
+      <div class="ph-hdr"><div class="ph-logo">J</div><div><div class="ph-title">JioBharatIQ</div></div></div>
+      <div class="ph-body">
+        <div class="ph-user">क्या मीठा खाना ठीक है?</div>
+        <div class="ph-ai"><div class="ph-dot">J</div><div class="ph-bubble"><div class="ph-tag">Cross-session memory</div>Mummy ke diabetes ko dekhte hue — gud plain sugar se behtar hai, par kam hi rakhein.<div class="ph-mem">💛 याद है: Mummy को Type 2 diabetes है</div></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="j-sep"></div>
+
+  <!-- M6 -->
+  <div class="jrow r2">
+    <div>
+      <div class="jm-stag wa">💬 WhatsApp</div>
+      <div class="jm-title">Same memory. Different surface. No re-introduction.</div>
+      <div class="jm-sigs"><span class="sb mem">Memory</span><span class="sb dev">Device</span></div>
+      <div class="jm-desc">Sunita messages JioBharatIQ on WhatsApp without opening the app. She asks about Priya's homework. JioBharatIQ picks up the thread from earlier sessions. Same context, different surface. She does not re-introduce herself. The experience is continuous across surfaces.</div>
+    </div>
+    <div class="wa">
+      <div class="wa-hdr"><div class="wa-av">J</div><div><div class="wa-nm">JioBharatIQ</div><div class="wa-st">online</div></div></div>
+      <div class="wa-body">
+        <div class="wa-out">Priya ka science chapter khatam hua? Test kab hai?</div>
+        <div class="wa-in"><div class="wa-sndr">JioBharatIQ</div><div class="wa-txt">Test kal hai. Chapter 8 cover hua hai. Quick revision set bheju? 5 questions, 10 min.</div><div class="wa-cta">Haan, bhejo →</div></div>
+      </div>
+      <div class="wa-inp"><div class="wa-inp-bar">Message</div><span style="font-size:16px;">🎤</span></div>
+    </div>
+  </div>
+  <div class="j-sep"></div>
+
+  <!-- M7 -->
+  <div class="jrow r2-wide">
+    <div>
+      <div class="jm-stag app">📱 App · Tools surface</div>
+      <div class="jm-title">The right tool appears before she navigates to it.</div>
+      <div class="jm-sigs"><span class="sb beh">Behaviour</span><span class="sb mem">Memory</span><span class="sb ucp">Jio Profile</span></div>
+      <div class="jm-desc">Sunita asks JioBharatIQ to help plan the month's household budget. The Budget tool surfaces automatically — she does not need to navigate to it. JioBharatIQ drafts a starting template using her household size, known spending categories, and dietary constraints she has mentioned before.</div>
+    </div>
+    <div class="ph">
+      <div class="ph-bar"><span class="ph-bar-t">4:05</span><span class="ph-bar-ic">▲ ⊕ 🔋</span></div>
+      <div class="ph-hdr"><div class="ph-logo">J</div><div><div class="ph-title">JioBharatIQ</div></div></div>
+      <div class="ph-body">
+        <div class="ph-user">Is mahine ka budget banana hai</div>
+        <div class="ph-ai"><div class="ph-dot">J</div><div class="ph-bubble"><div class="ph-tag">Tool · Budget Planner</div>4-member household ke basis par draft hai — adjust kar sakti hain.</div></div>
+        <div class="ph-tool"><span style="font-size:14px;">📊</span>Monthly Budget · March 2026 · ₹18,400 estimated</div>
+      </div>
+    </div>
+  </div>
+  <div class="j-sep"></div>
+
+  <!-- M8 -->
+  <div class="jrow r2">
+    <div>
+      <div class="jm-stag notif">🔔 Proactive Notification</div>
+      <div class="jm-title">JioBharatIQ reaches out. Anchored to what she was doing.</div>
+      <div class="jm-sigs"><span class="sb beh">Behaviour</span><span class="sb amb">Ambient</span><span class="sb mem">Memory</span></div>
+      <div class="jm-desc">JioBharatIQ has seen that the last two test weeks were last-minute for Sunita. This Sunday evening, before Priya's Monday test, it sends a proactive notification — one, specific, referencing the actual context. Not a generic reminder. This is the shift from reactive assistant to genuinely useful.</div>
+    </div>
+    <div class="notif">
+      <div class="notif-bar"><span class="notif-bar-t">9:41</span><span class="notif-bar-ic">▲ ⊕ 🔋</span></div>
+      <div class="notif-time">7:24</div>
+      <div class="notif-date">रविवार, 16 मार्च</div>
+      <div class="notif-card">
+        <div class="notif-app"><div class="notif-icon">J</div><span class="notif-app-name">JioBharatIQ</span><span class="notif-t-ago">अभी</span></div>
+        <div class="notif-title">Priya का Math test कल है</div>
+        <div class="notif-body">पिछली बार last minute हो गया था। Practice set अभी तैयार करूँ?</div>
+      </div>
+    </div>
+  </div>
+  <div class="j-sep"></div>
+
+  <!-- M9 -->
+  <div class="jrow r2">
+    <div>
+      <div class="jm-stag mart">🛒 JioMart · Ecosystem loop</div>
+      <div class="jm-title">The memory loop closes across the ecosystem.</div>
+      <div class="jm-sigs"><span class="sb beh">Behaviour</span><span class="sb ucp">Jio Profile</span><span class="sb mem">Memory</span></div>
+      <div class="jm-desc">Three days ago, Sunita mentioned running low on atta in a JioBharatIQ conversation. When she opens JioMart this morning, her regular items are already surfaced — pre-filtered to her household size and dietary signals, including a sugar-free option for Mummy. She did not search. The signal from JioBharatIQ flowed through.</div>
+    </div>
+    <div class="mart">
+      <div class="mart-hdr"><div class="mart-logo">JioMart</div><div class="mart-sub">Delivered in 10 mins</div></div>
+      <div class="mart-body">
+        <div class="mart-banner"><div class="mart-bl">From your JioBharatIQ conversations</div><div class="mart-bh">A few things are running low</div><div class="mart-bs">Flagged 3 days ago, pre-filtered for your household</div></div>
+        <div class="mart-items">
+          <div class="mi"><div class="mi-name">Atta 5kg</div><div class="mi-qty">Your usual</div><div class="mi-btn">+ Add</div></div>
+          <div class="mi"><div class="mi-name">Sugar-free drops</div><div class="mi-qty">For Mummy</div><div class="mi-btn">+ Add</div></div>
+          <div class="mi"><div class="mi-name">Toor dal 1kg</div><div class="mi-qty">18 days ago</div><div class="mi-btn">+ Add</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="j-sep"></div>
+
+  <!-- M10 -->
+  <div class="jrow r2-wide">
+    <div>
+      <div class="jm-stag app">📱 App · Full personalization active</div>
+      <div class="jm-title">Monday morning. Everything already prepared.</div>
+      <div class="jm-sigs"><span class="sb amb">Ambient</span><span class="sb beh">Behaviour</span><span class="sb mem">Memory</span><span class="sb ucp">Jio Profile</span></div>
+      <div class="jm-desc">All tracks have converged. JioBharatIQ knows Sunita's weekly rhythm. Monday mornings mean school prep, Mummy's medication, and household planning. Before she opens the app, it has prepared what she needs. Not a smarter search. Not a faster chatbot. An assistant operating on her specific life.</div>
+    </div>
+    <div class="ph">
+      <div class="ph-bar"><span class="ph-bar-t">7:48</span><span class="ph-bar-ic">▲ ⊕ 🔋</span></div>
+      <div class="ph-hdr"><div class="ph-logo">J</div><div><div class="ph-title">JioBharatIQ</div><div class="ph-sub">सोमवार · सुप्रभात, Sunita</div></div></div>
+      <div class="ph-body">
+        <div class="ph-ai"><div class="ph-dot">J</div><div class="ph-bubble"><div class="ph-tag">N=1 · All signals active</div>Priya ka Math test aaj hai — revision set ready hai. Mummy ki Amlodipine subah leni hai. JioMart order bhi bhej diya.</div></div>
+        <div class="ph-pro">📋 3 चीज़ें ready हैं — tap karke dekhein</div>
+        <div class="ph-inp"><span>बोलें या टाइप करें…</span><div class="ph-mic">🎤</div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ── 5. EXECUTION ── -->
+<div class="section">
+  <div class="sec-k">5 · Execution</div>
+  <div class="sec-h">Where we are,<br>and <em>what ships next</em></div>
+  <div class="sec-p">Personalization is being built in phases, anchored to the user arc. The first milestone — Friends and Family — covers the Know You stage: Day 0 to Day 30, approximately 5,000 users, 32 use cases across 9 experience moments. The goal is to validate the full personalization arc before scaling.</div>
+
+  <div style="background:white;border:1px solid var(--ln);border-radius:14px;padding:28px 28px;margin-bottom:32px;">
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0;border-bottom:1px solid var(--ln);padding-bottom:20px;margin-bottom:20px;">
+      <div style="padding-right:20px;border-right:1px solid var(--ln);display:flex;flex-direction:column;gap:0;">
+        <div style="padding-bottom:14px;border-bottom:1px solid var(--ln);margin-bottom:14px;">
+          <div style="font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--k);margin-bottom:5px;">Now · Alpha</div>
+          <div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:4px;">Know You</div>
+          <div style="font-size:11.5px;color:var(--mute);line-height:1.55;">~500 RCP employees. Full signal stack active. Core personalization validated internally.</div>
+        </div>
+        <div>
+          <div style="font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--jb);margin-bottom:5px;">Next · FnF</div>
+          <div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:4px;">Know You · expanded</div>
+          <div style="font-size:11.5px;color:var(--mute);line-height:1.55;">~5,000 users. Day 0 to 30. Memory with consent, home shifts, re-engagement via right channel. Full arc validated before scaling.</div>
+        </div>
+      </div>
+      <div style="padding:0 20px;border-right:1px solid var(--ln);">
+        <div style="font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);margin-bottom:5px;">Next</div>
+        <div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:4px;">Remember You</div>
+        <div style="font-size:11.5px;color:var(--mute);line-height:1.55;">Cross-session memory deepens. Preference model builds. Ecosystem loop opens.</div>
+      </div>
+      <div style="padding:0 20px;border-right:1px solid var(--ln);">
+        <div style="font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);margin-bottom:5px;">Later</div>
+        <div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:4px;">Anticipate You</div>
+        <div style="font-size:11.5px;color:var(--mute);line-height:1.55;">Pattern-based proactivity. Household model. Pre-emptive surfacing.</div>
+      </div>
+      <div style="padding-left:20px;">
+        <div style="font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);margin-bottom:5px;">Destination</div>
+        <div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:4px;">N=1</div>
+        <div style="font-size:11.5px;color:var(--mute);line-height:1.55;">All tracks converged. Individual model complete. Experience built for this person.</div>
+      </div>
+    </div>
+
+    <div style="font-size:9px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--mute);margin-bottom:14px;">What ships in FnF</div>
+
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div style="display:grid;grid-template-columns:160px 1fr;gap:16px;align-items:baseline;">
+        <div style="font-size:12px;font-weight:600;color:var(--ink);">Day 1 experience</div>
+        <div style="font-size:12.5px;color:var(--ink2);line-height:1.65;font-weight:300;">Language from SIM, time-aware greeting, occupation-matched prompts, TTS auto-play on low-cost devices, regional seasonal context card. Non-Jio users get a warm fallback — no language picker ever shown. <span style="font-size:10px;font-weight:600;background:#fee2e2;color:#991b1b;padding:1px 6px;border-radius:4px;margin-left:4px;">P0</span></div>
+      </div>
+      <div style="height:1px;background:var(--ln);"></div>
+      <div style="display:grid;grid-template-columns:160px 1fr;gap:16px;align-items:baseline;">
+        <div style="font-size:12px;font-weight:600;color:var(--ink);">First conversations</div>
+        <div style="font-size:12.5px;color:var(--ink2);line-height:1.65;font-weight:300;">Register mirroring (Hinglish in, Hinglish out), literacy-adaptive response length, voice brevity for hurried users, emotional listening, language lock that never drifts mid-session, image plus voice for contextual queries. <span style="font-size:10px;font-weight:600;background:#fee2e2;color:#991b1b;padding:1px 6px;border-radius:4px;margin-left:4px;">P0</span></div>
+      </div>
+      <div style="height:1px;background:var(--ln);"></div>
+      <div style="display:grid;grid-template-columns:160px 1fr;gap:16px;align-items:baseline;">
+        <div style="font-size:12px;font-weight:600;color:var(--ink);">Memory and consent</div>
+        <div style="font-size:12.5px;color:var(--ink2);line-height:1.65;font-weight:300;">Memory gate at Session 3 in plain Hindi — Always / Just today / Never. Pipeline-enforced. Post-consent: preference recall applied silently, correction handling with user in control, full memory visibility and edit access in My Preferences. <span style="font-size:10px;font-weight:600;background:#fee2e2;color:#991b1b;padding:1px 6px;border-radius:4px;margin-left:4px;">P0</span></div>
+      </div>
+      <div style="height:1px;background:var(--ln);"></div>
+      <div style="display:grid;grid-template-columns:160px 1fr;gap:16px;align-items:baseline;">
+        <div style="font-size:12px;font-weight:600;color:var(--ink);">Returns and re-engagement</div>
+        <div style="font-size:12.5px;color:var(--ink2);line-height:1.65;font-weight:300;">Returns greeted with last context, not a generic welcome. Incomplete tasks surface as a card. Re-engagement notification at Day 3 references the actual last session. WhatsApp fallback at Day 7 if no PN opt-in — single message, then done. <span style="font-size:10px;font-weight:600;background:var(--rl);color:#92400e;padding:1px 6px;border-radius:4px;margin-left:4px;">P1</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="font-size:12px;color:var(--mute);line-height:1.65;">By Day 30, Sunita's Know You arc is complete: language locked, register calibrated from Turn 1, memory active with consent given in plain Hindi, home re-ranked to her actual usage, preferences stored and editable, re-engagement via the right channel at the right moment. 32 use cases delivered. Ready for Remember You.</div>
+
+</div>
+
+</div>
+</body>
+</html>

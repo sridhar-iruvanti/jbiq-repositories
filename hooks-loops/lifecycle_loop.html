@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #ffffff; font-family: Arial, sans-serif; padding: 32px; width: 1400px; }
+  .title { font-size: 13px; font-weight: 600; color: #444; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .loop-wrap { display: flex; flex-direction: column; gap: 0; }
+  .forward-label { font-size: 11px; color: #888; text-align: center; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; padding: 0 4px; }
+  .forward-label .line { flex: 1; height: 1px; background: #ddd; }
+  .stages { display: flex; align-items: stretch; gap: 0; }
+  .stage-wrap { display: flex; flex-direction: column; align-items: center; flex: 1; }
+  .stage-box {
+    width: 100%;
+    padding: 10px 8px;
+    border-radius: 8px;
+    text-align: center;
+    cursor: default;
+    border: 1.5px solid transparent;
+  }
+  .stage-name { font-size: 12px; font-weight: 700; line-height: 1.3; }
+  .stage-sub  { font-size: 10px; margin-top: 3px; opacity: 0.75; line-height: 1.3; }
+  .arrow-fwd { display: flex; align-items: center; padding-top: 10px; }
+  .arrow-fwd svg { width: 24px; height: 20px; }
+  .channels { margin-top: 6px; display: flex; gap: 3px; justify-content: center; flex-wrap: wrap; }
+  .ch { font-size: 9.5px; font-weight: 600; padding: 2px 6px; border-radius: 3px; }
+  .ch-app { background: #E6F1FB; color: #0C447C; }
+  .ch-pn  { background: #EAF3DE; color: #27500A; }
+  .ch-wa  { background: #E1F5EE; color: #085041; }
+
+  .s1 { background: #E6F1FB; border-color: #185FA5; }
+  .s1 .stage-name { color: #0C447C; }
+  .s2 { background: #EAF3DE; border-color: #3B6D11; }
+  .s2 .stage-name { color: #27500A; }
+  .s3 { background: #EEEDFE; border-color: #534AB7; }
+  .s3 .stage-name { color: #3C3489; }
+  .s4 { background: #E1F5EE; border-color: #0F6E56; }
+  .s4 .stage-name { color: #085041; }
+  .s5 { background: #FAEEDA; border-color: #854F0B; }
+  .s5 .stage-name { color: #633806; }
+  .s6 { background: #FAECE7; border-color: #993C1D; }
+  .s6 .stage-name { color: #712B13; }
+  .s7 { background: #FBEAF0; border-color: #993556; }
+  .s7 .stage-name { color: #72243E; }
+
+  .return-paths { margin-top: 16px; display: flex; flex-direction: column; gap: 6px; padding: 0 4px; }
+  .return-row { display: flex; align-items: center; gap: 6px; }
+  .return-line { flex: 1; border-top: 1.5px dashed #aaa; position: relative; }
+  .return-line::after { content: '◀'; position: absolute; left: 0; top: -9px; font-size: 10px; color: #aaa; }
+  .return-label { font-size: 10px; color: #888; white-space: nowrap; background: #fff; padding: 0 6px; }
+  .return-anchor { font-size: 10px; color: #888; white-space: nowrap; }
+
+  .advocacy-row { margin-top: 16px; display: flex; justify-content: center; }
+  .advocacy-pill {
+    border: 1.5px dashed #888;
+    border-radius: 20px;
+    padding: 7px 28px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #444;
+    background: #F1EFE8;
+    text-align: center;
+  }
+  .advocacy-pill span { font-size: 10px; font-weight: 400; color: #888; display: block; margin-top: 2px; }
+  .footnote { margin-top: 20px; font-size: 10px; color: #aaa; border-top: 1px solid #eee; padding-top: 10px; }
+</style>
+</head>
+<body>
+<div class="title">JBIQ — User lifecycle loop</div>
+<div class="loop-wrap">
+  <div class="forward-label">
+    <div class="line"></div>
+    forward flow — left to right
+    <div class="line"></div>
+  </div>
+
+  <div class="stages">
+    <div class="stage-wrap">
+      <div class="stage-box s1">
+        <div class="stage-name">Onboarding</div>
+        <div class="stage-sub">First home page load</div>
+      </div>
+      <div class="channels">
+        <span class="ch ch-app">App</span>
+        <span class="ch ch-pn">PN</span>
+      </div>
+    </div>
+
+    <div class="arrow-fwd">
+      <svg viewBox="0 0 24 20"><line x1="2" y1="10" x2="20" y2="10" stroke="#bbb" stroke-width="1.5"/><polyline points="14,4 22,10 14,16" fill="none" stroke="#bbb" stroke-width="1.5" stroke-linejoin="round"/></svg>
+    </div>
+
+    <div class="stage-wrap">
+      <div class="stage-box s2">
+        <div class="stage-name">Activation</div>
+        <div class="stage-sub">First query returned</div>
+      </div>
+      <div class="channels">
+        <span class="ch ch-app">App</span>
+        <span class="ch ch-pn">PN</span>
+        <span class="ch ch-wa">WA</span>
+      </div>
+    </div>
+
+    <div class="arrow-fwd">
+      <svg viewBox="0 0 24 20"><line x1="2" y1="10" x2="20" y2="10" stroke="#bbb" stroke-width="1.5"/><polyline points="14,4 22,10 14,16" fill="none" stroke="#bbb" stroke-width="1.5" stroke-linejoin="round"/></svg>
+    </div>
+
+    <div class="stage-wrap">
+      <div class="stage-box s3">
+        <div class="stage-name">Engagement</div>
+        <div class="stage-sub">Y queries, 2+ sessions</div>
+      </div>
+      <div class="channels">
+        <span class="ch ch-app">App</span>
+        <span class="ch ch-pn">PN</span>
+        <span class="ch ch-wa">WA</span>
+      </div>
+    </div>
+
+    <div class="arrow-fwd">
+      <svg viewBox="0 0 24 20"><line x1="2" y1="10" x2="20" y2="10" stroke="#bbb" stroke-width="1.5"/><polyline points="14,4 22,10 14,16" fill="none" stroke="#bbb" stroke-width="1.5" stroke-linejoin="round"/></svg>
+    </div>
+
+    <div class="stage-wrap">
+      <div class="stage-box s4">
+        <div class="stage-name">Retention</div>
+        <div class="stage-sub">Habit formed</div>
+      </div>
+      <div class="channels">
+        <span class="ch ch-app">App</span>
+        <span class="ch ch-pn">PN</span>
+        <span class="ch ch-wa">WA</span>
+      </div>
+    </div>
+
+    <div class="arrow-fwd">
+      <svg viewBox="0 0 24 20"><line x1="2" y1="10" x2="20" y2="10" stroke="#bbb" stroke-width="1.5"/><polyline points="14,4 22,10 14,16" fill="none" stroke="#bbb" stroke-width="1.5" stroke-linejoin="round"/></svg>
+    </div>
+
+    <div class="stage-wrap">
+      <div class="stage-box s5">
+        <div class="stage-name">Re-engagement</div>
+        <div class="stage-sub">X days quiet</div>
+      </div>
+      <div class="channels">
+        <span class="ch ch-pn">PN</span>
+        <span class="ch ch-wa">WA</span>
+      </div>
+    </div>
+
+    <div class="arrow-fwd">
+      <svg viewBox="0 0 24 20"><line x1="2" y1="10" x2="20" y2="10" stroke="#bbb" stroke-width="1.5"/><polyline points="14,4 22,10 14,16" fill="none" stroke="#bbb" stroke-width="1.5" stroke-linejoin="round"/></svg>
+    </div>
+
+    <div class="stage-wrap">
+      <div class="stage-box s6">
+        <div class="stage-name">Uninstalled</div>
+        <div class="stage-sub">App removed</div>
+      </div>
+      <div class="channels">
+        <span class="ch ch-wa">WA only</span>
+      </div>
+    </div>
+
+    <div class="arrow-fwd">
+      <svg viewBox="0 0 24 20"><line x1="2" y1="10" x2="20" y2="10" stroke="#bbb" stroke-width="1.5"/><polyline points="14,4 22,10 14,16" fill="none" stroke="#bbb" stroke-width="1.5" stroke-linejoin="round"/></svg>
+    </div>
+
+    <div class="stage-wrap">
+      <div class="stage-box s7">
+        <div class="stage-name">Winback</div>
+        <div class="stage-sub">Re-install fired</div>
+      </div>
+      <div class="channels">
+        <span class="ch ch-app">App*</span>
+        <span class="ch ch-pn">PN*</span>
+        <span class="ch ch-wa">WA</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="return-paths">
+    <div class="return-row">
+      <div class="return-anchor">Winback</div>
+      <div class="return-line" style="flex:5;"></div>
+      <div class="return-label">returns to → Engagement</div>
+      <div class="return-line" style="flex:2;"></div>
+      <div class="return-anchor">Engagement</div>
+    </div>
+    <div class="return-row">
+      <div style="width:160px;"></div>
+      <div class="return-anchor">Re-engagement</div>
+      <div class="return-line" style="flex:2;"></div>
+      <div class="return-label">returns to → Retention</div>
+      <div class="return-line" style="flex:1;"></div>
+      <div class="return-anchor">Retention</div>
+      <div style="width:220px;"></div>
+    </div>
+  </div>
+
+  <div class="advocacy-row">
+    <div class="advocacy-pill">
+      Advocacy — outcome layer
+      <span>Referral · Rating · Share — observable from Engagement onwards</span>
+    </div>
+  </div>
+</div>
+<div class="footnote">* App and PN unlock for Winback only after re-install event fires &nbsp;·&nbsp; X and Y thresholds are provisional — calibrate from FnF cohort data</div>
+</body>
+</html>

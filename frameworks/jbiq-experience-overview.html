@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JBIQ — Experience Overview</title>
+<style>
+@font-face { font-family:'JioType'; font-weight:400; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeVarW05-Regular.woff2') format('woff2'); }
+@font-face { font-family:'JioType'; font-weight:500; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Medium.woff2') format('woff2'); }
+@font-face { font-family:'JioType'; font-weight:700; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Bold.woff2') format('woff2'); }
+@font-face { font-family:'JioType'; font-weight:900; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Black.woff2') format('woff2'); }
+
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+
+:root {
+  --primary:       #3535f3;
+  --primary-20:    #e8e8fc;
+  --primary-10:    #f2f2fe;
+  --secondary:     #f7ab20;
+  --secondary-20:  #fef7e9;
+  --sparkle:       #1eccb0;
+  --sparkle-20:    #e8faf7;
+  --indigo:        #3900ad;
+  --coral:         #ff6644;
+  --green:         #00a758;
+  --teal:          #4bbeab;
+  --error:         #fa2f40;
+  --surface:       #ffffff;
+  --surface-ghost: #eeeeef;
+  --surface-min:   #f5f5f5;
+  --surface-mod:   #e3e3e4;
+  --text-high:     #141414;
+  --text-low:      rgba(25,27,30,0.65);
+  --text-dis:      rgba(25,27,30,0.38);
+  --grey-40:       #e0e0e0;
+  --stroke:        rgba(36,38,43,0.12);
+
+  --d-news:    #3535f3;
+  --d-ent:     #ff6644;
+  --d-astro:   #f7ab20;
+  --d-dev:     #3900ad;
+  --d-jobs:    #00a758;
+  --d-com:     #1eccb0;
+  --d-health:  #4bbeab;
+}
+
+body { background:var(--surface); color:var(--text-high); font-family:'JioType',sans-serif; font-size:14px; line-height:1.5; -webkit-font-smoothing:antialiased; }
+
+/* ── NAV ── */
+.nav { position:sticky; top:0; z-index:100; background:var(--surface); border-bottom:1px solid var(--grey-40); height:52px; display:flex; align-items:center; padding:0 32px; gap:16px; }
+.nav-brand { font-size:13px; font-weight:900; color:var(--primary); letter-spacing:.06em; flex-shrink:0; }
+.nav-sep { color:var(--text-dis); }
+.nav-title { font-size:13px; font-weight:500; color:var(--text-low); }
+.nav-links { margin-left:auto; display:flex; gap:2px; overflow-x:auto; }
+.nav-links a { font-size:11px; font-weight:500; color:var(--text-low); text-decoration:none; padding:4px 10px; border-radius:6px; white-space:nowrap; }
+.nav-links a:hover { color:var(--primary); background:var(--primary-20); }
+
+/* ── HERO ── */
+.hero { background:var(--surface); border-bottom:1px solid var(--grey-40); padding:56px 32px 48px; max-width:1200px; margin:0 auto; }
+.hero-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.16em; color:var(--text-dis); margin-bottom:12px; }
+.hero-title { font-size:40px; font-weight:900; letter-spacing:-.04em; line-height:1.08; margin-bottom:16px; }
+.hero-title span { color:var(--primary); }
+.hero-desc { font-size:15px; font-weight:500; color:var(--text-low); max-width:680px; line-height:1.7; margin-bottom:32px; }
+.hero-scope { display:flex; gap:10px; flex-wrap:wrap; }
+.scope-pill { display:flex; align-items:center; gap:6px; padding:6px 14px; border-radius:999px; border:1px solid var(--grey-40); font-size:11px; font-weight:700; color:var(--text-high); background:var(--surface-min); }
+.scope-dot { width:7px; height:7px; border-radius:50%; }
+
+/* ── PAGE ── */
+.page { max-width:1200px; margin:0 auto; padding:0 32px 120px; }
+.sec { padding:64px 0; border-bottom:1px solid var(--grey-40); }
+.sec:last-child { border-bottom:none; }
+.sec-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.14em; color:var(--text-dis); margin-bottom:4px; }
+.sec-title { font-size:26px; font-weight:900; letter-spacing:-.025em; margin-bottom:8px; }
+.sec-desc { font-size:13px; font-weight:500; color:var(--text-low); max-width:640px; line-height:1.7; margin-bottom:32px; }
+
+/* ── SECTION 1: BHARAT ── */
+.bharat-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:20px; }
+.bharat-card { background:var(--surface-min); border:1px solid var(--grey-40); border-radius:12px; padding:20px; }
+.bharat-icon { font-size:26px; margin-bottom:12px; }
+.bharat-trait { font-size:13px; font-weight:900; letter-spacing:-.01em; margin-bottom:6px; }
+.bharat-desc { font-size:12px; font-weight:500; color:var(--text-low); line-height:1.6; }
+.bharat-tag { display:inline-block; margin-top:10px; padding:2px 8px; border-radius:999px; font-size:10px; font-weight:700; background:var(--primary-20); color:var(--primary); }
+
+.bharat-users { display:flex; gap:10px; margin-top:16px; }
+.user-card { flex:1; background:var(--surface); border:1px solid var(--grey-40); border-radius:10px; padding:14px; }
+.user-av { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:900; color:#fff; margin-bottom:8px; }
+.user-name { font-size:13px; font-weight:900; margin-bottom:2px; }
+.user-desc { font-size:11px; font-weight:500; color:var(--text-low); line-height:1.5; }
+.user-lang { display:inline-block; margin-top:6px; padding:2px 7px; border-radius:4px; font-size:9px; font-weight:700; background:var(--surface-min); color:var(--text-low); border:1px solid var(--grey-40); }
+
+/* ── SECTION 2: THE EXPERIENCE ── */
+.exp-layout { display:grid; grid-template-columns:280px 1fr; gap:32px; align-items:start; }
+.phone-frame { background:var(--surface); border:2px solid var(--text-high); border-radius:32px; padding:0; overflow:hidden; width:280px; }
+.phone-bar { height:28px; background:var(--text-high); display:flex; align-items:center; justify-content:center; gap:4px; }
+.phone-notch { width:60px; height:12px; background:#000; border-radius:999px; }
+.phone-body { padding:12px; background:var(--surface); }
+.phone-top { display:flex; align-items:center; gap:8px; margin-bottom:12px; }
+.phone-avatar { width:28px; height:28px; border-radius:50%; background:var(--primary); display:flex; align-items:center; justify-content:center; }
+.phone-avatar svg { width:14px; height:14px; fill:#fff; }
+.phone-greeting { font-size:11px; font-weight:700; color:var(--text-high); }
+.phone-sub { font-size:9px; font-weight:500; color:var(--text-low); }
+.phone-domains { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-bottom:12px; }
+.phone-domain-tile { border-radius:10px; padding:8px 6px; text-align:center; border:1px solid var(--grey-40); }
+.phone-domain-tile .d-icon { font-size:16px; }
+.phone-domain-tile .d-name { font-size:8px; font-weight:700; color:var(--text-low); margin-top:2px; }
+.phone-chat { background:var(--surface-min); border-radius:8px; padding:8px 10px; margin-bottom:8px; font-size:10px; font-weight:500; color:var(--text-low); }
+.phone-chat-q { display:flex; justify-content:flex-end; margin-bottom:6px; }
+.phone-chat-q span { background:var(--primary); color:#fff; border-radius:12px 12px 0 12px; padding:5px 10px; font-size:9px; font-weight:700; max-width:80%; }
+.phone-chat-a { display:flex; gap:5px; align-items:flex-start; }
+.phone-chat-a .av { width:18px; height:18px; border-radius:50%; background:var(--primary); flex-shrink:0; }
+.phone-chat-a span { background:var(--surface); border:1px solid var(--grey-40); border-radius:0 12px 12px 12px; padding:5px 10px; font-size:9px; font-weight:500; line-height:1.4; }
+.phone-input { display:flex; align-items:center; gap:6px; background:var(--surface-min); border:1px solid var(--grey-40); border-radius:999px; padding:5px 10px; }
+.phone-input span { font-size:9px; font-weight:500; color:var(--text-dis); flex:1; }
+.phone-mic { width:20px; height:20px; border-radius:50%; background:var(--primary); display:flex; align-items:center; justify-content:center; }
+.phone-mic svg { width:10px; height:10px; fill:#fff; }
+.phone-nav { display:flex; justify-content:space-around; padding:8px 4px 4px; border-top:1px solid var(--grey-40); margin-top:8px; }
+.phone-nav-item { display:flex; flex-direction:column; align-items:center; gap:2px; font-size:7px; font-weight:700; color:var(--text-dis); }
+.phone-nav-item.active { color:var(--primary); }
+.phone-nav-item svg { width:14px; height:14px; }
+
+.exp-right { display:flex; flex-direction:column; gap:20px; }
+.exp-block { }
+.exp-block-title { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--text-dis); margin-bottom:10px; }
+.entry-points { display:flex; flex-direction:column; gap:6px; }
+.ep-row { display:flex; align-items:center; gap:12px; background:var(--surface-min); border:1px solid var(--grey-40); border-radius:10px; padding:10px 14px; }
+.ep-icon { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+.ep-label { font-size:13px; font-weight:700; color:var(--text-high); }
+.ep-sub { font-size:11px; font-weight:500; color:var(--text-low); }
+.ep-badge { margin-left:auto; font-size:9px; font-weight:700; padding:2px 7px; border-radius:999px; background:var(--surface-mod); color:var(--text-low); }
+
+.domain-strip { display:flex; gap:6px; flex-wrap:wrap; }
+.d-chip { display:flex; align-items:center; gap:6px; padding:6px 12px; border-radius:999px; border:1.5px solid transparent; font-size:11px; font-weight:700; }
+.d-chip-dot { width:8px; height:8px; border-radius:50%; }
+
+/* ── SECTION 3: CONVERSATION & MULTIMODAL ── */
+.conv-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:24px; }
+.state-card { border-radius:12px; border:1px solid var(--grey-40); overflow:hidden; background:var(--surface-min); }
+.state-video { width:100%; aspect-ratio:1; background:#1a1a2e; display:flex; align-items:center; justify-content:center; }
+.state-video video { width:100%; height:100%; object-fit:cover; }
+.state-video-label { color:rgba(255,255,255,0.3); font-size:10px; font-weight:500; }
+.state-meta { padding:12px 14px; }
+.state-name { font-size:12px; font-weight:900; margin-bottom:3px; }
+.state-desc { font-size:11px; font-weight:500; color:var(--text-low); line-height:1.5; }
+
+.conv-rules { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+.rule-card { background:var(--surface); border:1px solid var(--grey-40); border-radius:10px; padding:14px; }
+.rule-no { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--text-dis); margin-bottom:6px; }
+.rule-text { font-size:12px; font-weight:700; color:var(--text-high); line-height:1.5; }
+.rule-sub { font-size:11px; font-weight:500; color:var(--text-low); margin-top:4px; line-height:1.4; }
+
+.primitives-row { display:flex; gap:8px; margin-top:20px; }
+.prim-chip { display:flex; align-items:center; gap:6px; padding:7px 12px; border-radius:8px; background:var(--surface-min); border:1px solid var(--grey-40); font-size:11px; font-weight:700; color:var(--text-high); }
+.prim-chip .pnum { width:18px; height:18px; border-radius:50%; background:var(--primary); color:#fff; font-size:9px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+
+/* ── SECTION 4: PERSONALISATION ── */
+.pers-layout { display:grid; grid-template-columns:1fr 340px; gap:32px; align-items:start; }
+.arc-diagram { background:var(--surface-min); border:1px solid var(--grey-40); border-radius:16px; padding:28px; }
+.arc-title { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--text-dis); margin-bottom:20px; }
+.arc-track { display:flex; flex-direction:column; gap:0; }
+.arc-node { display:flex; gap:16px; align-items:flex-start; position:relative; padding-bottom:24px; }
+.arc-node:last-child { padding-bottom:0; }
+.arc-node::before { content:''; position:absolute; left:17px; top:34px; width:2px; height:calc(100% - 24px); background:var(--grey-40); }
+.arc-node:last-child::before { display:none; }
+.arc-circle { width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:900; color:#fff; flex-shrink:0; border:3px solid var(--surface); box-shadow:0 0 0 2px var(--grey-40); }
+.arc-right { flex:1; }
+.arc-range { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--text-dis); margin-bottom:2px; }
+.arc-phase { font-size:14px; font-weight:900; margin-bottom:4px; }
+.arc-what { font-size:12px; font-weight:500; color:var(--text-low); line-height:1.55; }
+.arc-pill { display:inline-block; margin-top:6px; padding:2px 8px; border-radius:4px; font-size:9px; font-weight:700; background:var(--surface-mod); color:var(--text-low); }
+
+.adapt-states { display:flex; flex-direction:column; gap:8px; }
+.adapt-title { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--text-dis); margin-bottom:4px; }
+.adapt-card { background:var(--surface); border:1px solid var(--grey-40); border-radius:10px; padding:12px 14px; }
+.adapt-top { display:flex; align-items:center; gap:8px; margin-bottom:4px; }
+.adapt-badge { font-size:9px; font-weight:700; padding:2px 8px; border-radius:4px; background:var(--primary-20); color:var(--primary); }
+.adapt-name { font-size:13px; font-weight:900; }
+.adapt-desc { font-size:11px; font-weight:500; color:var(--text-low); line-height:1.5; }
+
+.memory-row { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:20px; }
+.mem-card { background:var(--surface); border:1px solid var(--grey-40); border-radius:10px; padding:14px; }
+.mem-icon { font-size:20px; margin-bottom:8px; }
+.mem-title { font-size:12px; font-weight:900; margin-bottom:4px; }
+.mem-desc { font-size:11px; font-weight:500; color:var(--text-low); line-height:1.55; }
+
+/* ── SECTION 5: HOOKS & LOOPS ── */
+.hl-layout { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+.loop-diagram { background:var(--surface-min); border:1px solid var(--grey-40); border-radius:16px; padding:28px; }
+.loop-title { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--text-dis); margin-bottom:20px; }
+.loop-track { display:flex; flex-direction:column; gap:0; }
+.loop-step { display:flex; gap:14px; align-items:flex-start; padding-bottom:20px; position:relative; }
+.loop-step:last-child { padding-bottom:0; }
+.loop-step::before { content:''; position:absolute; left:15px; top:32px; width:2px; height:calc(100% - 20px); background:var(--grey-40); }
+.loop-step:last-child::before { display:none; }
+.loop-num { width:30px; height:30px; border-radius:50%; background:var(--primary); color:#fff; font-size:10px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.loop-right { flex:1; }
+.loop-phase { font-size:13px; font-weight:900; margin-bottom:2px; }
+.loop-detail { font-size:11px; font-weight:500; color:var(--text-low); line-height:1.5; }
+.loop-surface { display:flex; gap:4px; flex-wrap:wrap; margin-top:6px; }
+.ls-chip { font-size:9px; font-weight:700; padding:2px 7px; border-radius:4px; background:var(--primary-20); color:var(--primary); }
+
+.hooks-list { display:flex; flex-direction:column; gap:8px; }
+.hook-card { background:var(--surface); border:1px solid var(--grey-40); border-radius:10px; padding:14px 16px; }
+.hook-top { display:flex; align-items:center; gap:10px; margin-bottom:6px; }
+.hook-icon { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+.hook-name { font-size:13px; font-weight:900; }
+.hook-type { font-size:9px; font-weight:700; padding:2px 7px; border-radius:4px; background:var(--secondary-20); color:var(--secondary); margin-left:auto; }
+.hook-desc { font-size:11px; font-weight:500; color:var(--text-low); line-height:1.55; }
+.hook-example { margin-top:8px; background:var(--surface-min); border-radius:6px; padding:7px 10px; font-size:11px; font-weight:500; color:var(--text-high); font-style:italic; line-height:1.4; }
+
+/* ── SECTION 6: PARTNERS ── */
+.partner-layout { display:grid; grid-template-columns:1fr; gap:16px; }
+.partner-tier { background:var(--surface); border:1px solid var(--grey-40); border-radius:12px; overflow:hidden; }
+.tier-header { display:flex; align-items:center; gap:12px; padding:14px 20px; border-bottom:1px solid var(--grey-40); }
+.tier-badge { padding:4px 10px; border-radius:4px; font-size:10px; font-weight:700; }
+.tier-badge.t1 { background:var(--primary-20); color:var(--primary); }
+.tier-badge.t2 { background:var(--sparkle-20); color:var(--sparkle); }
+.tier-badge.t3 { background:var(--surface-mod); color:var(--text-low); }
+.tier-label { font-size:13px; font-weight:700; color:var(--text-high); }
+.tier-desc { font-size:11px; font-weight:500; color:var(--text-low); margin-left:auto; }
+.tier-partners { display:flex; gap:8px; flex-wrap:wrap; padding:14px 20px; }
+.partner-pill { display:flex; align-items:center; gap:6px; padding:6px 12px; border-radius:8px; border:1px solid var(--grey-40); background:var(--surface-min); font-size:11px; font-weight:700; color:var(--text-high); }
+.partner-pill .pdomain { font-size:9px; font-weight:500; color:var(--text-low); }
+.partner-pill .psource { font-size:9px; font-weight:700; padding:1px 5px; border-radius:3px; background:var(--primary-20); color:var(--primary); }
+
+.partner-model { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:16px; }
+.pmodel-card { background:var(--surface-min); border:1px solid var(--grey-40); border-radius:10px; padding:16px; }
+.pmodel-title { font-size:12px; font-weight:900; margin-bottom:6px; }
+.pmodel-desc { font-size:11px; font-weight:500; color:var(--text-low); line-height:1.55; }
+
+/* ── SECTION 7: VERTICAL PLAYBOOK ── */
+.vp-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:10px; margin-bottom:24px; }
+.vp-card { border-radius:12px; border:1px solid var(--grey-40); overflow:hidden; }
+.vp-header { padding:14px 12px 10px; }
+.vp-emoji { font-size:22px; margin-bottom:8px; }
+.vp-domain { font-size:12px; font-weight:900; margin-bottom:3px; }
+.vp-persona { font-size:10px; font-weight:700; opacity:.75; }
+.vp-body { padding:10px 12px 12px; border-top:1px solid rgba(255,255,255,.15); }
+.vp-row { margin-bottom:8px; }
+.vp-row-label { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; opacity:.6; margin-bottom:3px; }
+.vp-row-val { font-size:10px; font-weight:500; line-height:1.4; opacity:.9; }
+.vp-sig { margin-top:8px; padding:6px 8px; border-radius:6px; background:rgba(255,255,255,.15); font-size:9px; font-weight:700; line-height:1.4; }
+
+.scope-summary { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:20px; }
+.ss-card { background:var(--surface-min); border:1px solid var(--grey-40); border-radius:10px; padding:14px; text-align:center; }
+.ss-num { font-size:28px; font-weight:900; color:var(--primary); letter-spacing:-.03em; }
+.ss-label { font-size:11px; font-weight:500; color:var(--text-low); margin-top:2px; line-height:1.4; }
+
+/* ── UTILITIES ── */
+.row { display:flex; gap:12px; }
+.mt-4 { margin-top:4px; }
+.mt-8 { margin-top:8px; }
+.mt-12 { margin-top:12px; }
+.mt-16 { margin-top:16px; }
+.mt-20 { margin-top:20px; }
+.mt-24 { margin-top:24px; }
+
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <span class="nav-brand">JBIQ</span>
+  <span class="nav-sep">·</span>
+  <span class="nav-title">Experience Overview</span>
+  <div class="nav-links">
+    <a href="#bharat">Bharat</a>
+    <a href="#experience">The Experience</a>
+    <a href="#conversation">Conversation</a>
+    <a href="#personalisation">Personalisation</a>
+    <a href="#hooks">Hooks &amp; Loops</a>
+    <a href="#partners">Partners</a>
+    <a href="#playbook">Vertical Playbook</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-label">Product Architecture · GA Scope</div>
+  <h1 class="hero-title">The <span>JBIQ</span><br>Experience</h1>
+  <p class="hero-desc">What the product is, how it works, and what makes each part of it hold together — from the Bharat user context through to partner integrations and the seven domain experiences at GA.</p>
+  <div class="hero-scope">
+    <div class="scope-pill"><div class="scope-dot" style="background:var(--d-news)"></div>News</div>
+    <div class="scope-pill"><div class="scope-dot" style="background:var(--d-ent)"></div>Entertainment</div>
+    <div class="scope-pill"><div class="scope-dot" style="background:var(--d-astro)"></div>Astro</div>
+    <div class="scope-pill"><div class="scope-dot" style="background:var(--d-dev)"></div>Devotion</div>
+    <div class="scope-pill"><div class="scope-dot" style="background:var(--d-jobs)"></div>Jobs &amp; Skilling</div>
+    <div class="scope-pill"><div class="scope-dot" style="background:var(--d-com)"></div>Commerce</div>
+    <div class="scope-pill"><div class="scope-dot" style="background:var(--d-health)"></div>Health &amp; Wellness</div>
+    <div class="scope-pill"><div class="scope-dot" style="background:var(--green)"></div>5 Entry Points</div>
+    <div class="scope-pill"><div class="scope-dot" style="background:var(--indigo)"></div>Full N=1</div>
+    <div class="scope-pill"><div class="scope-dot" style="background:var(--coral)"></div>Omni Voice</div>
+  </div>
+</div>
+
+<div class="page">
+
+<!-- ── SECTION 1: BHARAT ── -->
+<section class="sec" id="bharat">
+  <div class="sec-label">01 — Context</div>
+  <h2 class="sec-title">Who JBIQ is built for</h2>
+  <p class="sec-desc">The Bharat B/C/D user. Not the English-first, app-native metropolitan user — a different set of constraints, intentions, and digital behaviours that shape every product decision downstream.</p>
+
+  <div class="bharat-grid">
+    <div class="bharat-card">
+      <div class="bharat-icon">📱</div>
+      <div class="bharat-trait">Phone is the only screen</div>
+      <div class="bharat-desc">No laptop, no tablet. Everything — entertainment, commerce, health, finance, communication — happens on a single Android device, often shared with family.</div>
+      <span class="bharat-tag">Mobile-only</span>
+    </div>
+    <div class="bharat-card">
+      <div class="bharat-icon">🎙️</div>
+      <div class="bharat-trait">Voice over text</div>
+      <div class="bharat-desc">Text input is slow, error-prone, or uncomfortable in local languages. Voice is the natural interaction mode — WhatsApp voice notes, YouTube voice search, spoken queries.</div>
+      <span class="bharat-tag">Voice-first</span>
+    </div>
+    <div class="bharat-card">
+      <div class="bharat-icon">🗣️</div>
+      <div class="bharat-trait">Hindi + regional, not English</div>
+      <div class="bharat-desc">12 scheduled languages, multiple regional variants. Bhojpuri, Maithili, Marathi, Tamil, Bengali — the product must work in the user's actual mother tongue, not a Hindi translation.</div>
+      <span class="bharat-tag">Mother tongue</span>
+    </div>
+    <div class="bharat-card">
+      <div class="bharat-icon">🏘️</div>
+      <div class="bharat-trait">Tier 2, 3, and rural</div>
+      <div class="bharat-desc">Outside the top 8 metros. Variable connectivity. Jio network reach is the distribution edge — JBIQ runs where competitors don't have reliable users.</div>
+      <span class="bharat-tag">Tier 2–3, rural</span>
+    </div>
+    <div class="bharat-card">
+      <div class="bharat-icon">💡</div>
+      <div class="bharat-trait">Practical, not aspirational apps</div>
+      <div class="bharat-desc">The primary apps used: WhatsApp, YouTube, JioTV, JioCinema. App-first behaviour doesn't exist — the habit is content-first and communication-first. Low tolerance for friction.</div>
+      <span class="bharat-tag">Content-first</span>
+    </div>
+    <div class="bharat-card">
+      <div class="bharat-icon">🤝</div>
+      <div class="bharat-trait">Trust is earned, not given</div>
+      <div class="bharat-desc">No second chances easily. The first session either delivers immediate value or the user doesn't return. JBIQ must be useful before it asks anything of the user.</div>
+      <span class="bharat-tag">Value-first</span>
+    </div>
+  </div>
+
+  <!-- 5 Anchor Personas -->
+  <div style="margin-top:24px; margin-bottom:8px;">
+    <div class="sec-label" style="margin-bottom:4px;">5 Anchor Personas</div>
+  </div>
+  <div class="bharat-users">
+    <div class="user-card">
+      <div class="user-av" style="background:#3535f3">R</div>
+      <div class="user-name">Raju</div>
+      <div class="user-desc">Daily wage worker, UP/Bihar. Voice-first, low text literacy. Phone is only screen.</div>
+      <span class="user-lang">Bhojpuri / Hindi</span>
+    </div>
+    <div class="user-card">
+      <div class="user-av" style="background:#ff6644">P</div>
+      <div class="user-name">Priya</div>
+      <div class="user-desc">22–26, tier 2–3 town. Aspirational, looking for work, financial independence.</div>
+      <span class="user-lang">Hindi + some English</span>
+    </div>
+    <div class="user-card">
+      <div class="user-av" style="background:#00a758">A</div>
+      <div class="user-name">Arjun</div>
+      <div class="user-desc">24–28, tier 2 city. Cricket fan, digitally fluent, JioFiber user.</div>
+      <span class="user-lang">Hindi-English mix</span>
+    </div>
+    <div class="user-card">
+      <div class="user-av" style="background:#f7ab20">R</div>
+      <div class="user-name">Ramesh</div>
+      <div class="user-desc">38–48, farmer / kirana owner. Deeply practical, WhatsApp + calls only.</div>
+      <span class="user-lang">Regional (Marathi / Tamil)</span>
+    </div>
+    <div class="user-card">
+      <div class="user-av" style="background:#3900ad">S</div>
+      <div class="user-name">Sunita</div>
+      <div class="user-desc">Homemaker, 30–45, tier 2–3 town. Voice-preferred, follows familiar patterns.</div>
+      <span class="user-lang">Hindi / Regional</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── SECTION 2: THE EXPERIENCE ── -->
+<section class="sec" id="experience">
+  <div class="sec-label">02 — The Product</div>
+  <h2 class="sec-title">What the experience looks like</h2>
+  <p class="sec-desc">JBIQ is a single AI assistant that surfaces across five entry points, spans seven domain experiences, and presents a consistent conversation surface regardless of where the user starts.</p>
+
+  <div class="exp-layout">
+    <!-- Phone Mockup -->
+    <div>
+      <div class="phone-frame">
+        <div class="phone-bar"><div class="phone-notch"></div></div>
+        <div class="phone-body">
+          <div class="phone-top">
+            <div class="phone-avatar">
+              <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+            </div>
+            <div>
+              <div class="phone-greeting">Namaste, Arjun</div>
+              <div class="phone-sub">Kuch poochna hai?</div>
+            </div>
+          </div>
+          <!-- Domain tiles -->
+          <div class="phone-domains">
+            <div class="phone-domain-tile" style="background:#e8e8fc;border-color:#3535f3">
+              <div class="d-icon">📰</div>
+              <div class="d-name" style="color:#3535f3">News</div>
+            </div>
+            <div class="phone-domain-tile" style="background:#ffe8e2;border-color:#ff6644">
+              <div class="d-icon">🎬</div>
+              <div class="d-name" style="color:#ff6644">Entertain</div>
+            </div>
+            <div class="phone-domain-tile" style="background:#e8faf7;border-color:#1eccb0">
+              <div class="d-icon">🛒</div>
+              <div class="d-name" style="color:#1eccb0">Commerce</div>
+            </div>
+            <div class="phone-domain-tile" style="background:#fef7e9;border-color:#f7ab20">
+              <div class="d-icon">⭐</div>
+              <div class="d-name" style="color:#f7ab20">Astro</div>
+            </div>
+            <div class="phone-domain-tile" style="background:#e2f5ed;border-color:#00a758">
+              <div class="d-icon">💼</div>
+              <div class="d-name" style="color:#00a758">Jobs</div>
+            </div>
+            <div class="phone-domain-tile" style="background:#ede4f9;border-color:#3900ad">
+              <div class="d-icon">🙏</div>
+              <div class="d-name" style="color:#3900ad">Devotion</div>
+            </div>
+            <div class="phone-domain-tile" style="background:#e2f5f2;border-color:#4bbeab">
+              <div class="d-icon">❤️</div>
+              <div class="d-name" style="color:#4bbeab">Health</div>
+            </div>
+            <div class="phone-domain-tile" style="background:#f5f5f5;border-color:#e0e0e0">
+              <div class="d-icon">⋯</div>
+              <div class="d-name" style="color:#999">More</div>
+            </div>
+          </div>
+          <!-- Chat sample -->
+          <div class="phone-chat">
+            <div class="phone-chat-q"><span>Aaj ka IPL score kya hai?</span></div>
+            <div class="phone-chat-a">
+              <div class="av"></div>
+              <span>MI 186/4 (20ov) beat RR 182/8. Rohit ne 82* maari. Fantasy mein top scorer.</span>
+            </div>
+          </div>
+          <!-- Input bar -->
+          <div class="phone-input">
+            <span>Kuch bhi poochho…</span>
+            <div class="phone-mic">
+              <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM19 10v2a7 7 0 0 1-14 0v-2H3v2a9 9 0 0 0 8 8.94V23h2v-2.06A9 9 0 0 0 21 12v-2h-2z"/></svg>
+            </div>
+          </div>
+          <!-- Bottom Nav -->
+          <div class="phone-nav">
+            <div class="phone-nav-item active">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+              <span>Home</span>
+            </div>
+            <div class="phone-nav-item">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+              <span>Discover</span>
+            </div>
+            <div class="phone-nav-item">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+              <span>Chat</span>
+            </div>
+            <div class="phone-nav-item">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+              <span>Profile</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right side -->
+    <div class="exp-right">
+      <div class="exp-block">
+        <div class="exp-block-title">5 Entry Points</div>
+        <div class="entry-points">
+          <div class="ep-row">
+            <div class="ep-icon" style="background:#e8e8fc">🏠</div>
+            <div>
+              <div class="ep-label">Home Surface</div>
+              <div class="ep-sub">Personalised feed + domain access + conversation bar</div>
+            </div>
+            <div class="ep-badge">Primary</div>
+          </div>
+          <div class="ep-row">
+            <div class="ep-icon" style="background:#ffe8e2">🎬</div>
+            <div>
+              <div class="ep-label">JioCinema</div>
+              <div class="ep-sub">In-app JBIQ assistant within JioCinema context</div>
+            </div>
+            <div class="ep-badge">2P</div>
+          </div>
+          <div class="ep-row">
+            <div class="ep-icon" style="background:#fef7e9">🎵</div>
+            <div>
+              <div class="ep-label">JioSaavn</div>
+              <div class="ep-sub">Music context entry — artist, song, playlist assistant</div>
+            </div>
+            <div class="ep-badge">2P</div>
+          </div>
+          <div class="ep-row">
+            <div class="ep-icon" style="background:#e2f5ed">📲</div>
+            <div>
+              <div class="ep-label">MyJio App</div>
+              <div class="ep-sub">Account, plans, and service queries via MyJio</div>
+            </div>
+            <div class="ep-badge">2P</div>
+          </div>
+          <div class="ep-row">
+            <div class="ep-icon" style="background:#e2f5f2">🔗</div>
+            <div>
+              <div class="ep-label">Deep Link / API</div>
+              <div class="ep-sub">Partner-triggered JBIQ sessions from external surfaces</div>
+            </div>
+            <div class="ep-badge">API</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="exp-block mt-8">
+        <div class="exp-block-title">7 GA Domains</div>
+        <div class="domain-strip">
+          <div class="d-chip" style="background:#e8e8fc;border-color:#3535f3;color:#3535f3"><div class="d-chip-dot" style="background:#3535f3"></div>News</div>
+          <div class="d-chip" style="background:#ffe8e2;border-color:#ff6644;color:#ff6644"><div class="d-chip-dot" style="background:#ff6644"></div>Entertainment</div>
+          <div class="d-chip" style="background:#fef7e9;border-color:#f7ab20;color:#f7ab20"><div class="d-chip-dot" style="background:#f7ab20"></div>Astro</div>
+          <div class="d-chip" style="background:#ede4f9;border-color:#3900ad;color:#3900ad"><div class="d-chip-dot" style="background:#3900ad"></div>Devotion</div>
+          <div class="d-chip" style="background:#e2f5ed;border-color:#00a758;color:#00a758"><div class="d-chip-dot" style="background:#00a758"></div>Jobs &amp; Skilling</div>
+          <div class="d-chip" style="background:#e8faf7;border-color:#1eccb0;color:#1eccb0"><div class="d-chip-dot" style="background:#1eccb0"></div>Commerce</div>
+          <div class="d-chip" style="background:#e2f5f2;border-color:#4bbeab;color:#4bbeab"><div class="d-chip-dot" style="background:#4bbeab"></div>Health &amp; Wellness</div>
+        </div>
+      </div>
+
+      <div class="exp-block mt-8">
+        <div class="exp-block-title">What makes each domain distinct</div>
+        <div style="background:var(--surface-min);border:1px solid var(--grey-40);border-radius:10px;padding:14px 16px;">
+          <div style="font-size:12px;font-weight:500;color:var(--text-low);line-height:1.65;">
+            Each domain has a different AI persona, a different register, and at least one signature experience anchored to a named data or integration source. A domain is not a content category — it's a bounded experience space where the user's intent, emotional state, and interaction pattern are fundamentally different from any other domain.
+          </div>
+          <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
+            <div style="font-size:10px;font-weight:700;padding:3px 10px;border-radius:4px;background:var(--primary-20);color:var(--primary);">Distinct persona per domain</div>
+            <div style="font-size:10px;font-weight:700;padding:3px 10px;border-radius:4px;background:var(--primary-20);color:var(--primary);">Named data source</div>
+            <div style="font-size:10px;font-weight:700;padding:3px 10px;border-radius:4px;background:var(--primary-20);color:var(--primary);">Signature experience</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── SECTION 3: CONVERSATION & MULTIMODAL ── -->
+<section class="sec" id="conversation">
+  <div class="sec-label">03 — Interaction Layer</div>
+  <h2 class="sec-title">Conversation &amp; Multimodal</h2>
+  <p class="sec-desc">The AI interface across text, voice, image, and video. Six voice states define the full arc of a conversation — from idle presence through task completion. Input and output are both multimodal at GA.</p>
+
+  <!-- Voice States -->
+  <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-dis);margin-bottom:12px;">Voice States — Full Arc</div>
+  <div class="conv-grid">
+    <div class="state-card">
+      <div class="state-video">
+        <video autoplay loop muted playsinline>
+          <source src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/states/Light/Idle.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="state-meta">
+        <div class="state-name">Idle</div>
+        <div class="state-desc">Ambient presence. JBIQ is ready but not active. Appears on home surface and in conversation bar.</div>
+      </div>
+    </div>
+    <div class="state-card">
+      <div class="state-video">
+        <video autoplay loop muted playsinline>
+          <source src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/states/Light/Listening.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="state-meta">
+        <div class="state-name">Listening</div>
+        <div class="state-desc">Microphone open. JBIQ is receiving the user's voice input. Animates with audio waveform response.</div>
+      </div>
+    </div>
+    <div class="state-card">
+      <div class="state-video">
+        <video autoplay loop muted playsinline>
+          <source src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/states/Light/Thinking.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="state-meta">
+        <div class="state-name">Thinking</div>
+        <div class="state-desc">Processing state. Query received, generating response. Shown between listen and speak transitions.</div>
+      </div>
+    </div>
+    <div class="state-card">
+      <div class="state-video">
+        <video autoplay loop muted playsinline>
+          <source src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/states/Light/Speaking.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="state-meta">
+        <div class="state-name">Speaking</div>
+        <div class="state-desc">TTS playback. JBIQ is delivering its voice response. Screen response renders in parallel.</div>
+      </div>
+    </div>
+    <div class="state-card">
+      <div class="state-video">
+        <video autoplay loop muted playsinline>
+          <source src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/states/Light/User-speaking-to-bot.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="state-meta">
+        <div class="state-name">User Speaking</div>
+        <div class="state-desc">Conversational turn — user is mid-speech. Distinct from listening; indicates a two-way live exchange.</div>
+      </div>
+    </div>
+    <div class="state-card">
+      <div class="state-video">
+        <video autoplay loop muted playsinline>
+          <source src="https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/states/Light/Complete.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="state-meta">
+        <div class="state-name">Complete</div>
+        <div class="state-desc">Task done. Signals successful completion — answer given, action executed, or task resolved.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Conversation Rules -->
+  <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-dis);margin:24px 0 12px;">Conversation Principles</div>
+  <div class="conv-rules">
+    <div class="rule-card">
+      <div class="rule-no">Rule 01</div>
+      <div class="rule-text">Voice is always standalone-complete</div>
+      <div class="rule-sub">Every TTS response must be meaningful without the screen. Screen mirrors or extends — never required to understand the answer.</div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-no">Rule 02</div>
+      <div class="rule-text">One clarification at a time</div>
+      <div class="rule-sub">Never ask more than one follow-up question in a row. A second clarification without an answer in between breaks the conversational contract.</div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-no">Rule 03</div>
+      <div class="rule-text">Domain register holds across input modes</div>
+      <div class="rule-sub">Whether the user types, speaks, or sends an image — the AI stays in its domain character. Input modality doesn't change persona.</div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-no">Rule 04</div>
+      <div class="rule-text">Multimodal input: text + voice + image</div>
+      <div class="rule-sub">At GA: typed query, voice query, image input (product photo, medicine label, document scan). Output: voice + text + rich card + action.</div>
+    </div>
+  </div>
+
+  <!-- 7 Primitives -->
+  <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-dis);margin:24px 0 10px;">7 Output Primitives</div>
+  <div class="primitives-row">
+    <div class="prim-chip"><div class="pnum">1</div>Voice Output</div>
+    <div class="prim-chip"><div class="pnum">2</div>Text Response</div>
+    <div class="prim-chip"><div class="pnum">3</div>Rich Card</div>
+    <div class="prim-chip"><div class="pnum">4</div>Action</div>
+    <div class="prim-chip"><div class="pnum">5</div>Clarification</div>
+    <div class="prim-chip"><div class="pnum">6</div>Next Step</div>
+    <div class="prim-chip"><div class="pnum">7</div>Navigation</div>
+  </div>
+  <div style="margin-top:10px;background:var(--surface-min);border:1px solid var(--grey-40);border-radius:10px;padding:14px 16px;font-size:12px;font-weight:500;color:var(--text-low);line-height:1.65;">
+    A response is always a combination of primitives — never just one. Which primitives get used and in what proportion depends on the domain, query complexity, and user persona. Same query, different user → different primitive combination.
+  </div>
+</section>
+
+
+<!-- ── SECTION 4: PERSONALISATION ── -->
+<section class="sec" id="personalisation">
+  <div class="sec-label">04 — N=1 Engine</div>
+  <h2 class="sec-title">Personalisation</h2>
+  <p class="sec-desc">JBIQ adapts to the individual user across two axes simultaneously: domain character changes based on which domain you're in, and register adapts based on who you are. The N=1 layer sits above both and builds across sessions.</p>
+
+  <div class="pers-layout">
+    <!-- N=1 Arc Diagram -->
+    <div>
+      <div class="arc-diagram">
+        <div class="arc-title">N=1 Learning Arc</div>
+        <div class="arc-track">
+          <div class="arc-node">
+            <div class="arc-circle" style="background:var(--surface-mod);color:var(--text-low);">1</div>
+            <div class="arc-right">
+              <div class="arc-range">Sessions 1–5</div>
+              <div class="arc-phase">UCP Defaults</div>
+              <div class="arc-what">Language preference, rough interest signal from Jio profile, location. JBIQ responds with domain defaults + persona archetype register.</div>
+              <span class="arc-pill">Archetype-driven</span>
+            </div>
+          </div>
+          <div class="arc-node">
+            <div class="arc-circle" style="background:var(--primary);">6</div>
+            <div class="arc-right">
+              <div class="arc-range">Sessions 6–20</div>
+              <div class="arc-phase">Memory Builds</div>
+              <div class="arc-what">Specific topics, interaction cadence, domains used, queries asked. JBIQ starts diverging from archetype toward the actual user's pattern.</div>
+              <span class="arc-pill">Observation-driven</span>
+            </div>
+          </div>
+          <div class="arc-node">
+            <div class="arc-circle" style="background:var(--indigo);">20</div>
+            <div class="arc-right">
+              <div class="arc-range">Sessions 20+</div>
+              <div class="arc-phase">Predictive</div>
+              <div class="arc-what">JBIQ knows the pattern — proactive suggestions, anticipatory domain entry, register fully calibrated to the individual. Not using Raju's archetype; using Raju's actual learned profile.</div>
+              <span class="arc-pill">Prediction-driven</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Memory Schema -->
+      <div class="memory-row">
+        <div class="mem-card">
+          <div class="mem-icon">🏷️</div>
+          <div class="mem-title">UCP Layer</div>
+          <div class="mem-desc">User Context Profile — language, location, Jio service signals, onboarding data. Available from Session 1.</div>
+        </div>
+        <div class="mem-card">
+          <div class="mem-icon">💾</div>
+          <div class="mem-title">Session Memory</div>
+          <div class="mem-desc">Cross-session memory of topics, preferences, interactions. Feeds the learning arc from sessions 6+.</div>
+        </div>
+        <div class="mem-card">
+          <div class="mem-icon">🏥</div>
+          <div class="mem-title">Domain Memory</div>
+          <div class="mem-desc">Domain-specific longitudinal stores — health history, kundali birth data, purchase history, job preferences.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Adaptive States -->
+    <div>
+      <div class="adapt-title">6 Adaptive States</div>
+      <div class="adapt-states">
+        <div class="adapt-card">
+          <div class="adapt-top">
+            <div class="adapt-badge">D0</div>
+            <div class="adapt-name">First Session</div>
+          </div>
+          <div class="adapt-desc">Onboarding just completed. JBIQ uses UCP defaults + onboarding inputs to generate the first personalised home.</div>
+        </div>
+        <div class="adapt-card">
+          <div class="adapt-top">
+            <div class="adapt-badge">D7</div>
+            <div class="adapt-name">One Week In</div>
+          </div>
+          <div class="adapt-desc">Early signal from first week of use. Dominant domains surface. Register begins calibrating toward actual usage pattern.</div>
+        </div>
+        <div class="adapt-card">
+          <div class="adapt-top">
+            <div class="adapt-badge">D30</div>
+            <div class="adapt-name">Established User</div>
+          </div>
+          <div class="adapt-desc">Habit formed. Memory arc is in sessions 20+ territory — proactive suggestions, pre-loaded domain context.</div>
+        </div>
+        <div class="adapt-card">
+          <div class="adapt-top">
+            <div class="adapt-badge" style="background:var(--surface-mod);color:var(--text-low);">GAP</div>
+            <div class="adapt-name">Return After Lapse</div>
+          </div>
+          <div class="adapt-desc">User returns after a gap. JBIQ acknowledges return, recaps recent relevant events in key domains, soft re-entry.</div>
+        </div>
+        <div class="adapt-card">
+          <div class="adapt-top">
+            <div class="adapt-badge" style="background:var(--secondary-20);color:var(--secondary);">FEST</div>
+            <div class="adapt-name">Festival / Event Window</div>
+          </div>
+          <div class="adapt-desc">Festival or live event context is active (Diwali, IPL, election). Home surface and domain entries shift to reflect the moment.</div>
+        </div>
+        <div class="adapt-card">
+          <div class="adapt-top">
+            <div class="adapt-badge" style="background:var(--sparkle-20);color:var(--sparkle);">POW</div>
+            <div class="adapt-name">Power User</div>
+          </div>
+          <div class="adapt-desc">High-frequency, multi-domain user. JBIQ surfaces advanced features, proactive digest mode, reduced friction everywhere.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── SECTION 5: HOOKS & LOOPS ── -->
+<section class="sec" id="hooks">
+  <div class="sec-label">05 — Retention Architecture</div>
+  <h2 class="sec-title">Hooks &amp; Loops</h2>
+  <p class="sec-desc">The mechanisms that bring users back and deepen usage over time. Hooks are external triggers that re-enter the user. Loops are in-conversation patterns that extend a session and seed the next one.</p>
+
+  <div class="hl-layout">
+    <!-- Loop Diagram -->
+    <div class="loop-diagram">
+      <div class="loop-title">The Engagement Loop</div>
+      <div class="loop-track">
+        <div class="loop-step">
+          <div class="loop-num">1</div>
+          <div class="loop-right">
+            <div class="loop-phase">Entry</div>
+            <div class="loop-detail">User arrives from any surface — home, push notification, JioCinema, deep link. Intent is narrow: single query or check.</div>
+            <div class="loop-surface">
+              <span class="ls-chip">Home</span>
+              <span class="ls-chip">Push</span>
+              <span class="ls-chip">JioCinema</span>
+              <span class="ls-chip">Deep link</span>
+            </div>
+          </div>
+        </div>
+        <div class="loop-step">
+          <div class="loop-num">2</div>
+          <div class="loop-right">
+            <div class="loop-phase">Task Resolution</div>
+            <div class="loop-detail">Query answered via domain persona with correct primitive combination. Voice + screen. Task is complete — user has what they came for.</div>
+            <div class="loop-surface">
+              <span class="ls-chip">7 primitives</span>
+              <span class="ls-chip">Domain register</span>
+            </div>
+          </div>
+        </div>
+        <div class="loop-step">
+          <div class="loop-num">3</div>
+          <div class="loop-right">
+            <div class="loop-phase">Next Step</div>
+            <div class="loop-detail">Immediately post-task: a single relevant next action or suggestion. Not a prompt to stay — a genuinely useful extension of what the user just did.</div>
+            <div class="loop-surface">
+              <span class="ls-chip">Primitive #6</span>
+            </div>
+          </div>
+        </div>
+        <div class="loop-step">
+          <div class="loop-num">4</div>
+          <div class="loop-right">
+            <div class="loop-phase">Session Extension</div>
+            <div class="loop-detail">User takes the next step. Second turn. Could be same domain (follow-up query) or cross-domain jump (cricket score → JioCinema highlights).</div>
+            <div class="loop-surface">
+              <span class="ls-chip">Cross-domain</span>
+              <span class="ls-chip">Follow-up</span>
+            </div>
+          </div>
+        </div>
+        <div class="loop-step">
+          <div class="loop-num">5</div>
+          <div class="loop-right">
+            <div class="loop-phase">Memory Signal</div>
+            <div class="loop-detail">What happened in this session is recorded — topics, domains used, outcomes. Seeds tomorrow's home surface and informs alert/digest hooks.</div>
+            <div class="loop-surface">
+              <span class="ls-chip">N=1 layer</span>
+              <span class="ls-chip">UCP update</span>
+            </div>
+          </div>
+        </div>
+        <div class="loop-step">
+          <div class="loop-num">6</div>
+          <div class="loop-right">
+            <div class="loop-phase">Hook Re-entry</div>
+            <div class="loop-detail">External trigger fires — match alert, personalised digest, festival reminder — bringing the user back in a new session with context from the last.</div>
+            <div class="loop-surface">
+              <span class="ls-chip">Push</span>
+              <span class="ls-chip">Alert</span>
+              <span class="ls-chip">Digest</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hooks -->
+    <div>
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-dis);margin-bottom:10px;">Named Hooks</div>
+      <div class="hooks-list">
+        <div class="hook-card">
+          <div class="hook-top">
+            <div class="hook-icon" style="background:#ffe8e2">🏏</div>
+            <div class="hook-name">Match Alert</div>
+            <div class="hook-type">Event</div>
+          </div>
+          <div class="hook-desc">Score change, wicket, match start/end. Fires when user-followed team is in action. Entry to Entertainment domain with full context loaded.</div>
+          <div class="hook-example">"MI ko wicket gaya — Rohit 82* pe khel raha hai. Score dekhe?"</div>
+        </div>
+        <div class="hook-card">
+          <div class="hook-top">
+            <div class="hook-icon" style="background:#e8e8fc">📰</div>
+            <div class="hook-name">Personalised Digest</div>
+            <div class="hook-type">Scheduled</div>
+          </div>
+          <div class="hook-desc">Morning briefing based on user's interest graph and location. News + top cricket update + relevant job/health signal if applicable.</div>
+          <div class="hook-example">"Subah ka digest: Aapke liye 3 khabar, 1 match update, 1 naukri near you."</div>
+        </div>
+        <div class="hook-card">
+          <div class="hook-top">
+            <div class="hook-icon" style="background:#ede4f9">🙏</div>
+            <div class="hook-name">Festival Reminder</div>
+            <div class="hook-type">Calendar</div>
+          </div>
+          <div class="hook-desc">Upcoming festival in user's region or calendar. Entry to Devotion domain with festival-specific content loaded — puja vidhi, muhurat, regional context.</div>
+          <div class="hook-example">"Kal Ganesh Chaturthi hai. Puja samay aur vidhi dekhein?"</div>
+        </div>
+        <div class="hook-card">
+          <div class="hook-top">
+            <div class="hook-icon" style="background:#e2f5ed">💼</div>
+            <div class="hook-name">Job Match Alert</div>
+            <div class="hook-type">Push</div>
+          </div>
+          <div class="hook-desc">NCS / location-aware job match fires when a role close to the user's profile and location is posted. Entry to Jobs domain.</div>
+          <div class="hook-example">"Aapke liye ek naukri mili — 3 km door, aaj apply karo."</div>
+        </div>
+        <div class="hook-card">
+          <div class="hook-top">
+            <div class="hook-icon" style="background:#e2f5f2">❤️</div>
+            <div class="hook-name">Health Check-in</div>
+            <div class="hook-type">Recurring</div>
+          </div>
+          <div class="hook-desc">Recurring reminder for users with logged conditions — medicine reminder, appointment follow-up, condition check-in. Entry to Health domain with history loaded.</div>
+          <div class="hook-example">"BP medicine lena yaad hai? Kal ka reading kya tha?"</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── SECTION 6: PARTNERS ── -->
+<section class="sec" id="partners">
+  <div class="sec-label">06 — Ecosystem</div>
+  <h2 class="sec-title">Partners &amp; Ecosystem</h2>
+  <p class="sec-desc">JBIQ's signature experiences are only possible through specific integrations. The three-tier model distinguishes core Jio assets (1P), deep JioGroup integrations (2P), and third-party data and transaction partners (3P).</p>
+
+  <div class="partner-layout">
+    <div class="partner-tier">
+      <div class="tier-header">
+        <div class="tier-badge t1">1P — Core Jio</div>
+        <div class="tier-label">Jio Platform Infrastructure</div>
+        <div class="tier-desc">Data and signals owned by Jio</div>
+      </div>
+      <div class="tier-partners">
+        <div class="partner-pill">Jio Location Data <span class="pdomain">· News, Jobs</span></div>
+        <div class="partner-pill">UCP Interest Graph <span class="pdomain">· All domains</span></div>
+        <div class="partner-pill">Jio Network Signals <span class="pdomain">· Location + Jobs</span></div>
+        <div class="partner-pill">User Language Preference <span class="pdomain">· All domains</span></div>
+        <div class="partner-pill">Purchase History <span class="pdomain">· Commerce</span></div>
+        <div class="partner-pill">Jio Device Profile <span class="pdomain">· All domains</span></div>
+      </div>
+    </div>
+    <div class="partner-tier">
+      <div class="tier-header">
+        <div class="tier-badge t2">2P — JioGroup</div>
+        <div class="tier-label">JioGroup Platform Integrations</div>
+        <div class="tier-desc">Deep integrations with Jio-owned products</div>
+      </div>
+      <div class="tier-partners">
+        <div class="partner-pill">JioCinema API <span class="psource">Sig</span> <span class="pdomain">· Entertainment</span></div>
+        <div class="partner-pill">JioSaavn API <span class="psource">Sig</span> <span class="pdomain">· Entertainment</span></div>
+        <div class="partner-pill">JioMart Catalogue + Order API <span class="psource">Sig</span> <span class="pdomain">· Commerce</span></div>
+        <div class="partner-pill">JioHealth API <span class="psource">Sig</span> <span class="pdomain">· Health</span></div>
+        <div class="partner-pill">MyJio Account API <span class="pdomain">· Entry point</span></div>
+        <div class="partner-pill">JioFiber / JioSIM signals <span class="pdomain">· Connectivity context</span></div>
+      </div>
+    </div>
+    <div class="partner-tier">
+      <div class="tier-header">
+        <div class="tier-badge t3">3P — Third Party</div>
+        <div class="tier-label">External Data &amp; Transaction Partners</div>
+        <div class="tier-desc">Domain-specific partners that enable coverage or transactions</div>
+      </div>
+      <div class="tier-partners">
+        <div class="partner-pill">News Aggregators <span class="pdomain">· News</span></div>
+        <div class="partner-pill">OTT Partners <span class="pdomain">· Entertainment</span></div>
+        <div class="partner-pill">Astrology Providers <span class="pdomain">· Astro</span></div>
+        <div class="partner-pill">Religious Content Providers <span class="pdomain">· Devotion</span></div>
+        <div class="partner-pill">IRCTC / Pilgrimage Booking <span class="psource">Sig</span> <span class="pdomain">· Devotion</span></div>
+        <div class="partner-pill">NCS Portal <span class="psource">Sig</span> <span class="pdomain">· Jobs</span></div>
+        <div class="partner-pill">Skill India <span class="pdomain">· Jobs</span></div>
+        <div class="partner-pill">Naukri / Indeed <span class="pdomain">· Jobs</span></div>
+        <div class="partner-pill">Amazon / Flipkart <span class="pdomain">· Commerce</span></div>
+        <div class="partner-pill">Apollo / Practo <span class="psource">Sig</span> <span class="pdomain">· Health</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="partner-model">
+    <div class="pmodel-card">
+      <div class="pmodel-title">Signature experiences need named sources</div>
+      <div class="pmodel-desc">Every domain has at least one signature experience. A signature experience is only a moat if it has a named data or integration source. Without it, it's an everyday use case any LLM can do.</div>
+    </div>
+    <div class="pmodel-card">
+      <div class="pmodel-title">2P integrations are the strategic dependencies</div>
+      <div class="pmodel-desc">JioCinema, JioMart, JioHealth — these are what make JBIQ different from a generic assistant. Their APIs being live at GA is the critical path, not model quality.</div>
+    </div>
+    <div class="pmodel-card">
+      <div class="pmodel-title">3P partners enable transaction depth</div>
+      <div class="pmodel-desc">Pilgrimage booking, doctor consultation, job application, NCS matching — these transactions require 3P partnerships. Partner portal (Sushant's pod) is the onboarding path.</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── SECTION 7: VERTICAL PLAYBOOK ── -->
+<section class="sec" id="playbook">
+  <div class="sec-label">07 — Domain Architecture</div>
+  <h2 class="sec-title">Vertical Playbook — GA Domains</h2>
+  <p class="sec-desc">Seven domains at GA. Each card shows: the domain persona, everyday use cases, signature experience, named source, and primary anchor personas.</p>
+
+  <div class="vp-grid">
+    <!-- News -->
+    <div class="vp-card">
+      <div class="vp-header" style="background:#3535f3">
+        <div class="vp-emoji">📰</div>
+        <div class="vp-domain" style="color:#fff">News</div>
+        <div class="vp-persona" style="color:rgba(255,255,255,.7)">News Buddy</div>
+      </div>
+      <div class="vp-body" style="background:#3535f3;color:#fff">
+        <div class="vp-row">
+          <div class="vp-row-label">Everyday</div>
+          <div class="vp-row-val">Headlines · Topic search · Regional news in your language</div>
+        </div>
+        <div class="vp-sig" style="background:rgba(255,255,255,.15)">
+          Sig: Personalised briefing — location + language + UCP interest signals<br>
+          <span style="font-size:8px;opacity:.7">Source: Jio location + UCP interest graph</span>
+        </div>
+        <div class="vp-row" style="margin-top:8px;">
+          <div class="vp-row-label">Anchors</div>
+          <div class="vp-row-val">Raju · Ramesh · Arjun · Priya · Sunita</div>
+        </div>
+      </div>
+    </div>
+    <!-- Entertainment -->
+    <div class="vp-card">
+      <div class="vp-header" style="background:#ff6644">
+        <div class="vp-emoji">🎬</div>
+        <div class="vp-domain" style="color:#fff">Entertainment</div>
+        <div class="vp-persona" style="color:rgba(255,255,255,.7)">Entertain Buddy</div>
+      </div>
+      <div class="vp-body" style="background:#ff6644;color:#fff">
+        <div class="vp-row">
+          <div class="vp-row-label">Everyday</div>
+          <div class="vp-row-val">Trending · Movie recs · Song requests · Match highlights</div>
+        </div>
+        <div class="vp-sig" style="background:rgba(255,255,255,.15)">
+          Sig: Watch on JioCinema directly from conversation<br>
+          <span style="font-size:8px;opacity:.7">Source: JioCinema API + JioSaavn API + viewing history</span>
+        </div>
+        <div class="vp-row" style="margin-top:8px;">
+          <div class="vp-row-label">Anchors</div>
+          <div class="vp-row-val">Arjun · Sunita · Raju</div>
+        </div>
+      </div>
+    </div>
+    <!-- Astro -->
+    <div class="vp-card">
+      <div class="vp-header" style="background:#f7ab20">
+        <div class="vp-emoji">⭐</div>
+        <div class="vp-domain" style="color:#fff">Astro</div>
+        <div class="vp-persona" style="color:rgba(255,255,255,.7)">Astro Buddy</div>
+      </div>
+      <div class="vp-body" style="background:#f7ab20;color:#fff">
+        <div class="vp-row">
+          <div class="vp-row-label">Everyday</div>
+          <div class="vp-row-val">Daily horoscope · Weekly · Compatibility check</div>
+        </div>
+        <div class="vp-sig" style="background:rgba(255,255,255,.2)">
+          Sig: Personalised kundali — tied to actual birth data, not generic sun sign<br>
+          <span style="font-size:8px;opacity:.7">Source: User birth data in profile</span>
+        </div>
+        <div class="vp-row" style="margin-top:8px;">
+          <div class="vp-row-label">Anchors</div>
+          <div class="vp-row-val">Sunita · Ramesh · Raju</div>
+        </div>
+      </div>
+    </div>
+    <!-- Devotion -->
+    <div class="vp-card">
+      <div class="vp-header" style="background:#3900ad">
+        <div class="vp-emoji">🙏</div>
+        <div class="vp-domain" style="color:#fff">Devotion</div>
+        <div class="vp-persona" style="color:rgba(255,255,255,.7)">Devotion Buddy</div>
+      </div>
+      <div class="vp-body" style="background:#3900ad;color:#fff">
+        <div class="vp-row">
+          <div class="vp-row-label">Everyday</div>
+          <div class="vp-row-val">Panchang · Festival info · Mantra/prayer · Temple timings</div>
+        </div>
+        <div class="vp-sig" style="background:rgba(255,255,255,.15)">
+          Sig: Religious content in mother tongue — Bhojpuri, Maithili, regional<br>
+          <span style="font-size:8px;opacity:.7">Source: Regional lang library + pilgrimage APIs</span>
+        </div>
+        <div class="vp-row" style="margin-top:8px;">
+          <div class="vp-row-label">Anchors</div>
+          <div class="vp-row-val">Sunita · Raju · Ramesh</div>
+        </div>
+      </div>
+    </div>
+    <!-- Jobs -->
+    <div class="vp-card">
+      <div class="vp-header" style="background:#00a758">
+        <div class="vp-emoji">💼</div>
+        <div class="vp-domain" style="color:#fff">Jobs &amp; Skilling</div>
+        <div class="vp-persona" style="color:rgba(255,255,255,.7)">Jobs Buddy</div>
+      </div>
+      <div class="vp-body" style="background:#00a758;color:#fff">
+        <div class="vp-row">
+          <div class="vp-row-label">Everyday</div>
+          <div class="vp-row-val">Jobs near me · Resume tips · Interview prep</div>
+        </div>
+        <div class="vp-sig" style="background:rgba(255,255,255,.15)">
+          Sig: NCS + Skill India matching; location-aware via Jio network<br>
+          <span style="font-size:8px;opacity:.7">Source: NCS portal + Jio network location</span>
+        </div>
+        <div class="vp-row" style="margin-top:8px;">
+          <div class="vp-row-label">Anchors</div>
+          <div class="vp-row-val">Priya · Raju · Arjun</div>
+        </div>
+      </div>
+    </div>
+    <!-- Commerce -->
+    <div class="vp-card">
+      <div class="vp-header" style="background:#1eccb0">
+        <div class="vp-emoji">🛒</div>
+        <div class="vp-domain" style="color:#fff">Commerce</div>
+        <div class="vp-persona" style="color:rgba(255,255,255,.7)">Commerce Buddy</div>
+      </div>
+      <div class="vp-body" style="background:#1eccb0;color:#fff">
+        <div class="vp-row">
+          <div class="vp-row-label">Everyday</div>
+          <div class="vp-row-val">Find product · Compare prices · Track order</div>
+        </div>
+        <div class="vp-sig" style="background:rgba(255,255,255,.2)">
+          Sig: JioMart — add to cart, order, track from conversation<br>
+          <span style="font-size:8px;opacity:.7">Source: JioMart catalogue + order API + history</span>
+        </div>
+        <div class="vp-row" style="margin-top:8px;">
+          <div class="vp-row-label">Anchors</div>
+          <div class="vp-row-val">Sunita · Ramesh · Priya</div>
+        </div>
+      </div>
+    </div>
+    <!-- Health -->
+    <div class="vp-card">
+      <div class="vp-header" style="background:#4bbeab">
+        <div class="vp-emoji">❤️</div>
+        <div class="vp-domain" style="color:#fff">Health &amp; Wellness</div>
+        <div class="vp-persona" style="color:rgba(255,255,255,.7)">Health Buddy</div>
+      </div>
+      <div class="vp-body" style="background:#4bbeab;color:#fff">
+        <div class="vp-row">
+          <div class="vp-row-label">Everyday</div>
+          <div class="vp-row-val">Symptom lookup · Medicine info · Diet tips</div>
+        </div>
+        <div class="vp-sig" style="background:rgba(255,255,255,.2)">
+          Sig: Longitudinal health memory — conditions, medications, history across sessions<br>
+          <span style="font-size:8px;opacity:.7">Source: Health memory (UCP) + JioHealth + Practo</span>
+        </div>
+        <div class="vp-row" style="margin-top:8px;">
+          <div class="vp-row-label">Anchors</div>
+          <div class="vp-row-val">Sunita · Raju · Priya</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GA Scope Summary -->
+  <div class="scope-summary">
+    <div class="ss-card">
+      <div class="ss-num">7</div>
+      <div class="ss-label">Domains at GA</div>
+    </div>
+    <div class="ss-card">
+      <div class="ss-num">5</div>
+      <div class="ss-label">Entry Points</div>
+    </div>
+    <div class="ss-card">
+      <div class="ss-num">5</div>
+      <div class="ss-label">Anchor Personas</div>
+    </div>
+    <div class="ss-card">
+      <div class="ss-num">3</div>
+      <div class="ss-label">Partner Tiers<br><span style="font-size:9px;color:var(--text-dis);">1P · 2P · 3P</span></div>
+    </div>
+  </div>
+
+  <!-- Architecture Note -->
+  <div style="margin-top:20px;background:var(--primary-20);border:1px solid var(--primary);border-radius:12px;padding:20px 24px;">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--primary);margin-bottom:8px;">Architecture Note</div>
+    <div style="font-size:13px;font-weight:500;color:var(--text-high);line-height:1.7;">JBIQ is one engine — not seven products. A shared conversation engine, 7 domain knowledge configurations, a per-user register adaptation layer, and a primitive rendering layer. The complexity sits in the signature experience integrations and the N=1 memory architecture — not in building separate domain models.</div>
+  </div>
+</section>
+
+</div><!-- /page -->
+</body>
+</html>

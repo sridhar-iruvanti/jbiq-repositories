@@ -1,0 +1,361 @@
+
+<style>
+.w{padding:12px 0 24px;font-family:var(--font-sans)}
+.sec-title{font-size:15px;font-weight:500;color:var(--color-text-primary);margin:0 0 4px}
+.sec-sub{font-size:12.5px;color:var(--color-text-tertiary);margin:0 0 16px;line-height:1.5}
+.divider{border:none;border-top:0.5px solid var(--color-border-tertiary);margin:18px 0}
+.sub-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--color-text-tertiary);margin-bottom:10px}
+.tbl-wrap{overflow-x:auto;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);background:var(--color-background-primary);margin-bottom:18px}
+table{width:100%;border-collapse:collapse;table-layout:fixed}
+thead th{padding:9px 12px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--color-text-secondary);border-bottom:0.5px solid var(--color-border-tertiary);background:var(--color-background-secondary)}
+tbody tr{border-bottom:0.5px solid var(--color-border-tertiary)}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--color-background-secondary)}
+td{padding:9px 12px;vertical-align:top;font-size:12.5px;color:var(--color-text-secondary);line-height:1.55;word-wrap:break-word}
+td.sec{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--color-text-secondary);background:var(--color-background-secondary);white-space:nowrap}
+td.item{font-size:12.5px;font-weight:500;color:var(--color-text-primary)}
+.pill{display:inline-block;font-size:10px;font-weight:600;padding:2px 7px;border-radius:var(--border-radius-md);white-space:nowrap}
+.p-be{background:#E6F1FB;color:#0C447C}
+.p-fe{background:#F3E8FF;color:#5B21B6}
+.p-both{background:#E1F5EE;color:#085041}
+.p-yes{background:#E1F5EE;color:#085041}
+.p-no{background:#FCEBEB;color:#791F1F}
+.p-tbd{background:#FEF3C7;color:#78350F}
+.p-a{background:#E3F6EF;color:#065040}
+.p-b{background:#FDF0DC;color:#6B3C06}
+.p-ab{background:#EDE9FE;color:#4C1D95}
+</style>
+
+<div class="w">
+  <p class="sec-title">JBIQ Onboarding — Configurables Grid</p>
+  <p class="sec-sub">Everything should be configurable via BE/Akamai. FE renders dynamically. No hardcoding of content, order, or copy.</p>
+
+  <!-- GENERAL -->
+  <div class="sub-title">General — both flows</div>
+  <div class="tbl-wrap">
+    <table>
+      <colgroup><col style="width:5%"><col style="width:22%"><col style="width:28%"><col style="width:15%"><col style="width:15%"><col style="width:15%"></colgroup>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Configurable item</th>
+          <th>What changes</th>
+          <th>Source</th>
+          <th>Applies to</th>
+          <th>Dev question resolved</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="sec">G1</td>
+          <td class="item">Language list</td>
+          <td>Which languages appear, in what order, total count</td>
+          <td><span class="pill p-be">BE / Akamai</span></td>
+          <td><span class="pill p-ab">Both</span></td>
+          <td>G.Q2 — yes, comes from BE not hardcoded in FE</td>
+        </tr>
+        <tr>
+          <td class="sec">G2</td>
+          <td class="item">Language selection placement</td>
+          <td>Whether language picker appears before or after login</td>
+          <td><span class="pill p-be">BE config flag</span></td>
+          <td><span class="pill p-ab">Both</span></td>
+          <td>G.Q1 — language before login confirmed. Flag allows future change without code deploy.</td>
+        </tr>
+        <tr>
+          <td class="sec">G3</td>
+          <td class="item">Supported language count at FnF</td>
+          <td>3 now, expanding to 6 — controlled via same list config</td>
+          <td><span class="pill p-be">BE / Akamai</span></td>
+          <td><span class="pill p-ab">Both</span></td>
+          <td>G.Q4 — FE supports all, BE controls which are active at any release</td>
+        </tr>
+        <tr>
+          <td class="sec">G4</td>
+          <td class="item">Home page section order</td>
+          <td>Order of Assistants, Tools, Updates sections on home</td>
+          <td><span class="pill p-be">BE</span></td>
+          <td><span class="pill p-ab">Both</span></td>
+          <td>G.Q3 — FE must handle dynamic order. Guided tour overlay must follow BE-driven order, not assume fixed positions.</td>
+        </tr>
+        <tr>
+          <td class="sec">G5</td>
+          <td class="item">OTP verification + API call parallelism</td>
+          <td>Whether OTP verification and user profile API call happen in parallel or sequentially</td>
+          <td><span class="pill p-be">BE</span></td>
+          <td><span class="pill p-ab">Both</span></td>
+          <td>G — needs BE confirmation if JioID OTP and profile API can run in parallel to reduce wait time</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- OPTION A -->
+  <div class="sub-title">Option A — value prop / story screens</div>
+  <div class="tbl-wrap">
+    <table>
+      <colgroup><col style="width:5%"><col style="width:22%"><col style="width:28%"><col style="width:15%"><col style="width:15%"><col style="width:15%"></colgroup>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Configurable item</th>
+          <th>What changes</th>
+          <th>Source</th>
+          <th>Applies to</th>
+          <th>Dev question resolved</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="sec">A1</td>
+          <td class="item">Story / value prop content</td>
+          <td>Headline copy, sub-copy, CTA label per slide</td>
+          <td><span class="pill p-be">BE / Akamai</span></td>
+          <td><span class="pill p-a">Option A</span></td>
+          <td>A.Q1 — not static in FE. Copy changes without app update.</td>
+        </tr>
+        <tr>
+          <td class="sec">A2</td>
+          <td class="item">Story images</td>
+          <td>Image URL per slide — swappable without app update</td>
+          <td><span class="pill p-be">BE / Akamai CDN</span></td>
+          <td><span class="pill p-a">Option A</span></td>
+          <td>A.Q1 — images configurable, served from CDN</td>
+        </tr>
+        <tr>
+          <td class="sec">A3</td>
+          <td class="item">Number of story slides</td>
+          <td>Total count of value prop slides shown</td>
+          <td><span class="pill p-be">BE</span></td>
+          <td><span class="pill p-a">Option A</span></td>
+          <td>A.Q1 — FE renders n slides based on BE response, not hardcoded to 3</td>
+        </tr>
+        <tr>
+          <td class="sec">A4</td>
+          <td class="item">Story duration per slide</td>
+          <td>Auto-advance timer in seconds per slide</td>
+          <td><span class="pill p-be">BE</span></td>
+          <td><span class="pill p-a">Option A</span></td>
+          <td>A.Q2 — duration configurable per slide, not hardcoded</td>
+        </tr>
+        <tr>
+          <td class="sec">A5</td>
+          <td class="item">CTA label on value prop</td>
+          <td>Text on the continue / get started button</td>
+          <td><span class="pill p-be">BE / Akamai</span></td>
+          <td><span class="pill p-a">Option A</span></td>
+          <td>A.Q1 — part of story content config</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- OPTION B -->
+  <div class="sub-title">Option B — name + persona screens</div>
+  <div class="tbl-wrap">
+    <table>
+      <colgroup><col style="width:5%"><col style="width:22%"><col style="width:28%"><col style="width:15%"><col style="width:15%"><col style="width:15%"></colgroup>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Configurable item</th>
+          <th>What changes</th>
+          <th>Source</th>
+          <th>Applies to</th>
+          <th>Dev question resolved</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="sec">B1</td>
+          <td class="item">Intro / splash screen content</td>
+          <td>Headline, sub-copy, image, CTA on intro screen</td>
+          <td><span class="pill p-be">BE / Akamai</span></td>
+          <td><span class="pill p-b">Option B</span></td>
+          <td>B.Q1 — not static. Configurable without app update.</td>
+        </tr>
+        <tr>
+          <td class="sec">B2</td>
+          <td class="item">Name step — mandatory vs optional</td>
+          <td>Whether name entry is required or skippable</td>
+          <td><span class="pill p-be">BE config flag</span></td>
+          <td><span class="pill p-b">Option B</span></td>
+          <td>B.Q2 — optional at FnF. Flag controls mandatory state. Default: optional with skip.</td>
+        </tr>
+        <tr>
+          <td class="sec">B3</td>
+          <td class="item">Name step copy</td>
+          <td>Header, sub-label, placeholder text on name screen</td>
+          <td><span class="pill p-be">BE / Akamai</span></td>
+          <td><span class="pill p-b">Option B</span></td>
+          <td>B.Q3 — configurable, not hardcoded</td>
+        </tr>
+        <tr>
+          <td class="sec">B4</td>
+          <td class="item">Persona tile list</td>
+          <td>Which personas appear, label, image URL, order</td>
+          <td><span class="pill p-be">BE</span></td>
+          <td><span class="pill p-b">Option B</span></td>
+          <td>B.Q4 — comes from BE, same persona API as homepage. FE renders all returned tiles.</td>
+        </tr>
+        <tr>
+          <td class="sec">B5</td>
+          <td class="item">Persona tile count rendered</td>
+          <td>Total number of tiles shown on interest screen</td>
+          <td><span class="pill p-be">BE</span></td>
+          <td><span class="pill p-b">Option B</span></td>
+          <td>B.Q4 — FE renders all tiles returned by API. No hardcoded limit.</td>
+        </tr>
+        <tr>
+          <td class="sec">B6</td>
+          <td class="item">Min and max selection count</td>
+          <td>Minimum tiles to select before Continue unlocks. Maximum allowed.</td>
+          <td><span class="pill p-be">BE config</span></td>
+          <td><span class="pill p-b">Option B</span></td>
+          <td>B.Q4 — currently min 2, max 3. Configurable without code change.</td>
+        </tr>
+        <tr>
+          <td class="sec">B7</td>
+          <td class="item">Persona display order on home</td>
+          <td>Whether selected personas are pushed to top of assistants row</td>
+          <td><span class="pill p-be">BE</span></td>
+          <td><span class="pill p-b">Option B</span></td>
+          <td>B.Q4 — BE controls order. Selected personas returned first in API response. FE renders in received order.</td>
+        </tr>
+        <tr>
+          <td class="sec">B8</td>
+          <td class="item">Persona API — onboarding vs homepage</td>
+          <td>Whether onboarding reuses homepage persona API or has separate endpoint</td>
+          <td><span class="pill p-be">BE decision</span></td>
+          <td><span class="pill p-b">Option B</span></td>
+          <td>B.Q4 — recommendation: reuse homepage API with an onboarding context param. Avoids maintaining two lists.</td>
+        </tr>
+        <tr>
+          <td class="sec">B9</td>
+          <td class="item">Step labels and progress copy</td>
+          <td>"Step 1 of 2", "Step 2 of 2" — total steps and copy configurable</td>
+          <td><span class="pill p-be">BE / Akamai</span></td>
+          <td><span class="pill p-b">Option B</span></td>
+          <td>B.Q3 — configurable. If a third step is added later, FE handles dynamically.</td>
+        </tr>
+        <tr>
+          <td class="sec">B10</td>
+          <td class="item">User data API call timing</td>
+          <td>API called after persona selection is complete, not per step</td>
+          <td><span class="pill p-be">BE</span></td>
+          <td><span class="pill p-b">Option B</span></td>
+          <td>B — verdict confirmed: all user data collected and API called after persona preferences entered.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- GUIDED TOUR -->
+  <div class="sub-title">Guided tour — both flows</div>
+  <div class="tbl-wrap">
+    <table>
+      <colgroup><col style="width:5%"><col style="width:22%"><col style="width:28%"><col style="width:15%"><col style="width:15%"><col style="width:15%"></colgroup>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Configurable item</th>
+          <th>What changes</th>
+          <th>Source</th>
+          <th>Applies to</th>
+          <th>Note</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="sec">T1</td>
+          <td class="item">Tour step count</td>
+          <td>Number of overlay steps shown in guided tour</td>
+          <td><span class="pill p-be">BE</span></td>
+          <td><span class="pill p-ab">Both</span></td>
+          <td>FE renders n steps. Not hardcoded to 2.</td>
+        </tr>
+        <tr>
+          <td class="sec">T2</td>
+          <td class="item">Tour step copy</td>
+          <td>Headline and description per tour step</td>
+          <td><span class="pill p-be">BE / Akamai</span></td>
+          <td><span class="pill p-ab">Both</span></td>
+          <td>Same copy API as general content config</td>
+        </tr>
+        <tr>
+          <td class="sec">T3</td>
+          <td class="item">Tour target element</td>
+          <td>Which home section each tour step highlights — must follow BE-driven home section order</td>
+          <td><span class="pill p-be">BE</span></td>
+          <td><span class="pill p-ab">Both</span></td>
+          <td>G.Q3 — tour overlay must not assume fixed positions. Must derive position from rendered section order.</td>
+        </tr>
+        <tr>
+          <td class="sec">T4</td>
+          <td class="item">Prompt suggestion tiles</td>
+          <td>3 suggestion prompts shown below Speak button post-tour</td>
+          <td><span class="pill p-be">BE</span></td>
+          <td><span class="pill p-ab">Both</span></td>
+          <td>Configurable copy and count. Not hardcoded.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- DECISIONS NEEDED -->
+  <div class="sub-title">Open decisions needed from BE / product</div>
+  <div class="tbl-wrap">
+    <table>
+      <colgroup><col style="width:5%"><col style="width:30%"><col style="width:40%"><col style="width:25%"></colgroup>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Open item</th>
+          <th>Decision needed</th>
+          <th>Owner</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="sec">D1</td>
+          <td class="item">OTP + profile API parallelism</td>
+          <td>Can JioID OTP verification and user profile API call run in parallel to reduce wait time?</td>
+          <td>BE / JioID team</td>
+        </tr>
+        <tr>
+          <td class="sec">D2</td>
+          <td class="item">Persona API reuse</td>
+          <td>Reuse homepage persona API with onboarding context param, or create separate onboarding endpoint?</td>
+          <td>BE</td>
+        </tr>
+        <tr>
+          <td class="sec">D3</td>
+          <td class="item">Home section order source of truth</td>
+          <td>Confirm BE owns section order and FE renders dynamically. Tour overlay must follow rendered order.</td>
+          <td>BE + FE</td>
+        </tr>
+        <tr>
+          <td class="sec">D4</td>
+          <td class="item">Language expansion timeline</td>
+          <td>Which 6 languages are active at FnF? BE config controls active list — FE is already built for n languages.</td>
+          <td>Product + GTM</td>
+        </tr>
+        <tr>
+          <td class="sec">D5</td>
+          <td class="item">Option A vs Option B</td>
+          <td>Which option goes to FnF? Determines whether persona tile API and name step need to be built now or later.</td>
+          <td>Product + Eng</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>

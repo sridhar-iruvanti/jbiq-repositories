@@ -1,0 +1,200 @@
+
+<style>
+*{box-sizing:border-box}
+.canvas{padding:1.5rem 0}
+.band{margin-bottom:26px}
+.section-label{font-size:11px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--color-text-tertiary);margin:0 0 10px;padding-left:2px}
+.band-divider{height:1px;background:var(--color-border-secondary);margin:6px 0 22px}
+table{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
+thead th{font-size:11px;font-weight:500;color:var(--color-text-secondary);text-align:left;padding:7px 12px;border-bottom:1.5px solid var(--color-border-secondary);background:var(--color-background-secondary)}
+thead th:first-child{width:200px}
+thead th:nth-child(2){width:auto}
+thead th:last-child{width:100px}
+tbody tr{border-bottom:0.5px solid var(--color-border-tertiary)}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--color-background-secondary)}
+td{padding:10px 12px;vertical-align:top;color:var(--color-text-primary);line-height:1.5}
+td.project{font-weight:500;font-size:13px}
+td.obj{font-size:13px;color:var(--color-text-secondary)}
+td.sc{padding-top:11px}
+.pill{display:inline-block;font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px;white-space:nowrap}
+.p-active{background:#E1F5EE;color:#085041}
+.p-thinking{background:#EEEDFE;color:#3C3489}
+.p-blocked{background:#FCEBEB;color:#791F1F}
+.p-pending{background:#FAEEDA;color:#633806}
+.p-ga{background:#E6F1FB;color:#0C447C}
+
+/* Interdependency section */
+.dep-grid{display:flex;flex-direction:column;gap:10px}
+.dep-row{display:grid;grid-template-columns:180px 1fr;gap:0;border:0.5px solid var(--color-border-tertiary);border-radius:8px;overflow:hidden}
+.dep-from{padding:12px 14px;background:var(--color-background-secondary);font-size:12px;font-weight:500;color:var(--color-text-primary);display:flex;align-items:flex-start;line-height:1.4;border-right:0.5px solid var(--color-border-tertiary)}
+.dep-to{padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.dep-link{display:flex;align-items:baseline;gap:8px;font-size:12px;color:var(--color-text-secondary);line-height:1.5}
+.arrow{color:var(--color-text-tertiary);flex-shrink:0;font-size:11px}
+.dep-target{font-weight:500;color:var(--color-text-primary);white-space:nowrap}
+</style>
+
+<div class="canvas">
+
+<div class="band">
+<div class="section-label">Active development — FnF</div>
+<table>
+<thead>
+<tr><th>Project</th><th>Objective</th><th>Status</th></tr>
+</thead>
+<tbody>
+<tr>
+<td class="project">Onboarding</td>
+<td class="obj">Get users to first meaningful interaction in &lt;3 mins. Capture language + persona signal on Day 0.</td>
+<td class="sc"><span class="pill p-blocked">Blocked</span></td>
+</tr>
+<tr>
+<td class="project">Personalised experiences — Core &amp; Vertical unified</td>
+<td class="obj">Wire home and Vertical persona surfaces to Memory &amp; Personalisation services using UCP + session signals.</td>
+<td class="sc"><span class="pill p-active">In flight</span></td>
+</tr>
+<tr>
+<td class="project">Home page &amp; Persona landing pages</td>
+<td class="obj">Structured, signal-driven home and per-persona pages. Distinct experience for new vs returning users.</td>
+<td class="sc"><span class="pill p-active">In flight</span></td>
+</tr>
+<tr>
+<td class="project">New feature release cards</td>
+<td class="obj">Surface what's new in a way that drives re-engagement and feature discovery — not a changelog.</td>
+<td class="sc"><span class="pill p-blocked">Blocked</span></td>
+</tr>
+<tr>
+<td class="project">CleverTap push notifications</td>
+<td class="obj">Targeted, contextual PN sends across FnF cohorts — re-engagement, feature nudges, topic-referenced triggers.</td>
+<td class="sc"><span class="pill p-blocked">Blocked</span></td>
+</tr>
+<tr>
+<td class="project">WhatsApp integration</td>
+<td class="obj">WA as re-engagement and high-trust communication channel — lifecycle triggers, shareable content delivery.</td>
+<td class="sc"><span class="pill p-pending">Not started</span></td>
+</tr>
+<tr>
+<td class="project">Greeting cards</td>
+<td class="obj">High-shareable, culturally resonant content — organic distribution and DAU re-engagement via WA forwarding.</td>
+<td class="sc"><span class="pill p-pending">Confirm owner</span></td>
+</tr>
+<tr>
+<td class="project">News / daily briefing</td>
+<td class="obj">Give users a reason to open JBIQ every morning — brief, voice-ready, contextual news digest.</td>
+<td class="sc"><span class="pill p-pending">Needs scoping</span></td>
+</tr>
+<tr>
+<td class="project">FnF release infrastructure</td>
+<td class="obj">Allowlisting, app-side instrumentation, and in-app feedback — operational foundations before FnF Day 1.</td>
+<td class="sc"><span class="pill p-active">In flight</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div class="band-divider"></div>
+
+<div class="band">
+<div class="section-label">Thinking — parallel workstreams</div>
+<table>
+<thead>
+<tr><th>Project</th><th>Objective</th><th>Status</th></tr>
+</thead>
+<tbody>
+<tr>
+<td class="project">Personas — definition &amp; experience</td>
+<td class="obj">Define who each persona is and what their full landing page + interaction experience looks like end to end.</td>
+<td class="sc"><span class="pill p-thinking">Thinking</span></td>
+</tr>
+<tr>
+<td class="project">N=1 personalisation — GA strategy</td>
+<td class="obj">Roadmap from FnF signals to full N=1 at GA — memory, cross-thread context, habit signals.</td>
+<td class="sc"><span class="pill p-ga">GA roadmap</span></td>
+</tr>
+<tr>
+<td class="project">JBIQ experience brief</td>
+<td class="obj">Set the bar for what JBIQ should feel and behave like. A shared standard for the team to build against.</td>
+<td class="sc"><span class="pill p-thinking">Thinking</span></td>
+</tr>
+<tr>
+<td class="project">UXR — user research</td>
+<td class="obj">Define real user cohorts and validate foundational assumptions before Beta.</td>
+<td class="sc"><span class="pill p-thinking">Thinking</span></td>
+</tr>
+<tr>
+<td class="project">Customer lifecycle &amp; CLM</td>
+<td class="obj">Define how JBIQ communicates with users across their lifecycle and what moves them forward stage by stage.</td>
+<td class="sc"><span class="pill p-thinking">Thinking</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div class="band-divider"></div>
+
+<div class="band">
+<div class="section-label">How they support each other</div>
+<div class="dep-grid">
+
+  <div class="dep-row">
+    <div class="dep-from">Onboarding</div>
+    <div class="dep-to">
+      <div class="dep-link"><span class="arrow">→</span><span><span class="dep-target">Personalised experiences</span> — language, persona picks, and interests captured in onboarding seed the Day 0 UCP signals. Without onboarding signal, personalisation starts blind.</span></div>
+      <div class="dep-link"><span class="arrow">→</span><span><span class="dep-target">Home page</span> — persona selection in onboarding determines which landing page the user hits first and what content is surfaced on the For You section.</span></div>
+      <div class="dep-link"><span class="arrow">→</span><span><span class="dep-target">CLM</span> — onboarding completion is Stage 1 of the lifecycle. Without it firing cleanly, the D+1 and D+3 engagement triggers don't have a start event to reference.</span></div>
+    </div>
+  </div>
+
+  <div class="dep-row">
+    <div class="dep-from">FnF release infrastructure</div>
+    <div class="dep-to">
+      <div class="dep-link"><span class="arrow">→</span><span><span class="dep-target">Everything</span> — allowlisting controls who gets in. Instrumentation is how you know if any of the other projects are working. Feedback form is the qualitative layer on top of events. None of the other FnF projects can be evaluated without this in place first.</span></div>
+    </div>
+  </div>
+
+  <div class="dep-row">
+    <div class="dep-from">Personalised experiences</div>
+    <div class="dep-to">
+      <div class="dep-link"><span class="arrow">→</span><span><span class="dep-target">Home page &amp; Persona landing pages</span> — personalisation services are the data layer. Home page is the rendering layer. The home page framework is only as good as the signals feeding it — greeting, tile ranking, seasonal cards all depend on what personalisation returns.</span></div>
+      <div class="dep-link"><span class="arrow">→</span><span><span class="dep-target">N=1 GA strategy</span> — FnF personalisation (UCP + onboarding signals) is Cold Start. Every HM item being built now is laying the instrumentation and surface patterns that N=1 at GA will build on.</span></div>
+    </div>
+  </div>
+
+  <div class="dep-row">
+    <div class="dep-from">Home page &amp; Persona landing pages</div>
+    <div class="dep-to">
+      <div class="dep-link"><span class="arrow">→</span><span><span class="dep-target">Personas — definition &amp; experience</span> — the home framework defines the surface skeleton. Persona definitions determine what content, tone, and interaction patterns fill that skeleton per vertical. They need to be designed together, not handed off sequentially.</span></div>
+      <div class="dep-link"><span class="arrow">→</span><span><span class="dep-target">Feature release cards</span> — new feature cards live on the home Updates section. Home page framework defines where and how they appear — card design and placement is a home surface decision.</span></div>
+    </div>
+  </div>
+
+  <div class="dep-row">
+    <div class="dep-from">CleverTap PN + WhatsApp</div>
+    <div class="dep-to">
+      <div class="dep-link"><span class="arrow">→</span><span><span class="dep-target">CLM</span> — PN and WA are the delivery channels the CLM lifecycle runs on. Without both channels live, the lifecycle framework is a doc, not a working system. D+3 PN and D+7 WA re-engagement don't exist without the channel integrations.</span></div>
+      <div class="dep-link"><span class="arrow">→</span><span><span class="dep-target">Feature release cards</span> — feature discovery doesn't stop at the home screen. PN is how you reach users who haven't opened the app. The same release card needs a PN variant to be effective.</span></div>
+      <div class="dep-link"><span class="arrow">→</span><span><span class="dep-target">Greeting cards</span> — WA is the primary distribution channel for greeting cards. Without WA integration, greeting cards have no viral loop — they exist only inside the app.</span></div>
+    </div>
+  </div>
+
+  <div class="dep-row">
+    <div class="dep-from">JBIQ experience brief</div>
+    <div class="dep-to">
+      <div class="dep-link"><span class="arrow">→</span><span><span class="dep-target">Personas — definition &amp; experience</span> — the experience brief sets the tone, motion, and interaction standards. Persona experiences are the most visible expression of those standards. Brief needs to land before persona pages are designed.</span></div>
+      <div class="dep-link"><span class="arrow">→</span><span><span class="dep-target">Home page</span> — home page is the highest-traffic surface. If the brief isn't driving home page design decisions, it's not actually influencing anything.</span></div>
+    </div>
+  </div>
+
+  <div class="dep-row">
+    <div class="dep-from">UXR — user research</div>
+    <div class="dep-to">
+      <div class="dep-link"><span class="arrow">→</span><span><span class="dep-target">Personas — definition &amp; experience</span> — research findings will either validate or challenge the current persona definitions (Cricket Buddy, Astro Buddy etc.). Don't finalise persona experience design before Sprint 1 findings are back.</span></div>
+      <div class="dep-link"><span class="arrow">→</span><span><span class="dep-target">N=1 GA strategy</span> — research will surface what personalisation actually matters to Bharat users vs what's a product team assumption. This is the input that should shape the GA roadmap, not just the MDA deck.</span></div>
+      <div class="dep-link"><span class="arrow">→</span><span><span class="dep-target">CLM</span> — cohort definition from research directly informs how lifecycle stages are segmented and what triggers are relevant per cohort.</span></div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+</div>

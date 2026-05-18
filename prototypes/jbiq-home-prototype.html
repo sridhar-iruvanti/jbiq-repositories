@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JBIQ — Home Page · Personalisation Prototype</title>
+  <style>
+    @font-face {
+      font-family: 'JioType';
+      font-weight: 400;
+      src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeVarW05-Regular.woff2') format('woff2');
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'JioType';
+      font-weight: 700;
+      src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Bold.woff2') format('woff2');
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'JioType';
+      font-weight: 900;
+      src: url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Black.woff2') format('woff2');
+      font-display: swap;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { overscroll-behavior: none; }
+
+    :root {
+      --font: 'JioType', 'Outfit', system-ui, sans-serif;
+      --bg:      #f8f7f5;
+      --surface: #ffffff;
+      --border:  #e8e5e1;
+      --text:    #141414;
+      --text2:   #5c5651;
+      --text3:   #a09890;
+      --purple:  #3535f3;
+      --purple-l:#eeeeff;
+      --purple2: #6464ff;
+      --teal:    #1eccb0;
+      --gold:    #f7ab20;
+      --radius:  20px;
+    }
+
+    body {
+      font-family: var(--font);
+      background: #0e0e18;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 36px 24px 80px;
+    }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      width: 100%;
+      max-width: 960px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 36px;
+      animation: fadeUp 0.4s ease both;
+    }
+
+    .page-left { flex: 1; }
+
+    .page-brand {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 10px;
+    }
+
+    .dot-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3.5px;
+      width: 24px; height: 24px;
+    }
+    .dot { border-radius: 2.5px; }
+    .dot:nth-child(1) { background: var(--purple); }
+    .dot:nth-child(2) { background: var(--gold); }
+    .dot:nth-child(3) { background: var(--purple2); }
+    .dot:nth-child(4) { background: var(--teal); }
+
+    .brand-name {
+      font-size: 18px; font-weight: 900;
+      color: #fff; letter-spacing: -0.4px;
+    }
+
+    .page-title {
+      font-size: clamp(26px, 4vw, 42px);
+      font-weight: 900; color: #fff;
+      letter-spacing: -1.2px; line-height: 1.05;
+      margin-bottom: 8px;
+    }
+    .page-title span { color: var(--purple2); }
+
+    .page-sub {
+      font-size: 13px;
+      color: rgba(255,255,255,0.38);
+      line-height: 1.5; max-width: 380px;
+    }
+
+    /* ── STAGE SWITCHER ── */
+    .stage-switcher {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 16px;
+      padding: 16px 18px;
+      min-width: 210px;
+      flex-shrink: 0;
+    }
+
+    .stage-lbl {
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(255,255,255,0.28);
+      margin-bottom: 11px;
+    }
+
+    .stage-btns { display: flex; flex-direction: column; gap: 7px; }
+
+    .stage-btn {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 9px 12px;
+      color: rgba(255,255,255,0.4);
+      font-family: var(--font); font-size: 12px; font-weight: 600;
+      cursor: pointer; text-align: left;
+      transition: all 0.18s;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .stage-btn.active {
+      background: var(--purple); border-color: var(--purple);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(53,53,243,0.4);
+    }
+    .stage-btn:hover:not(.active) {
+      background: rgba(255,255,255,0.07);
+      color: rgba(255,255,255,0.75);
+    }
+    .stage-sessions { font-size: 10px; opacity: 0.6; }
+
+    /* ── PHONE FRAME ── */
+    .phone-wrap {
+      animation: fadeUp 0.4s ease 0.12s both;
+    }
+
+    .phone-frame {
+      width: 375px; height: 812px;
+      background: #080810;
+      border-radius: 52px;
+      padding: 14px;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.07),
+        0 48px 110px rgba(0,0,0,0.75),
+        inset 0 1px 0 rgba(255,255,255,0.05);
+      position: relative;
+    }
+
+    .phone-notch {
+      position: absolute; top: 14px; left: 50%; transform: translateX(-50%);
+      width: 118px; height: 34px;
+      background: #080810; border-radius: 0 0 20px 20px;
+      z-index: 20;
+    }
+
+    .phone-screen {
+      width: 100%; height: 100%;
+      background: var(--bg);
+      border-radius: 40px;
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      position: relative;
+    }
+
+    /* ── STATUS BAR ── */
+    .status-bar {
+      padding: 16px 22px 4px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--bg);
+      flex-shrink: 0; z-index: 5;
+    }
+    .status-time { font-size: 15px; font-weight: 800; color: var(--text); letter-spacing: -0.2px; }
+    .status-icons { display: flex; align-items: center; gap: 5px; }
+    .signal { display: flex; gap: 2px; align-items: flex-end; }
+    .sig { width: 3px; background: var(--text); border-radius: 1px; }
+    .sig:nth-child(1) { height: 4px; }
+    .sig:nth-child(2) { height: 7px; }
+    .sig:nth-child(3) { height: 10px; }
+    .sig:nth-child(4) { height: 13px; }
+    .battery {
+      width: 24px; height: 12px;
+      border: 1.5px solid var(--text); border-radius: 3px;
+      position: relative; display: flex; align-items: center; padding: 1.5px;
+    }
+    .battery::after {
+      content: ''; position: absolute; right: -4px; top: 50%; transform: translateY(-50%);
+      width: 2px; height: 6px; background: var(--text); border-radius: 0 1px 1px 0;
+    }
+    .batt-fill { height: 100%; width: 72%; background: var(--text); border-radius: 1px; }
+
+    /* ── APP HEADER ── */
+    .app-header {
+      padding: 4px 18px 6px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--bg); flex-shrink: 0;
+    }
+    .app-brand { display: flex; align-items: center; gap: 7px; }
+    .app-dots {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 3px; width: 20px; height: 20px;
+    }
+    .ad { border-radius: 2px; }
+    .ad:nth-child(1) { background: var(--purple); }
+    .ad:nth-child(2) { background: var(--gold); }
+    .ad:nth-child(3) { background: var(--purple2); }
+    .ad:nth-child(4) { background: var(--teal); }
+    .app-name { font-size: 19px; font-weight: 900; color: var(--text); letter-spacing: -0.4px; }
+    .hdr-right { display: flex; align-items: center; gap: 8px; }
+    .icon-btn {
+      width: 33px; height: 33px; border-radius: 50%;
+      background: var(--surface); border: 1.5px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; cursor: pointer; position: relative;
+    }
+    .notif-dot {
+      position: absolute; top: 4px; right: 4px;
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #f03; border: 2px solid var(--bg);
+      display: none;
+    }
+    .user-av {
+      width: 33px; height: 33px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--purple), var(--purple2));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 800; color: #fff; cursor: pointer;
+    }
+
+    /* ── GREETING ── */
+    .greeting { padding: 4px 18px 10px; flex-shrink: 0; }
+    .greet-line { font-size: 13px; color: var(--text2); }
+    .greet-name { font-size: 20px; font-weight: 900; color: var(--text); letter-spacing: -0.5px; margin-top: 1px; }
+
+    /* ── CHAT BAR ── */
+    .chat-wrap { padding: 0 15px 12px; flex-shrink: 0; }
+    .chat-bar {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 14px; padding: 9px 12px;
+      display: flex; align-items: center; gap: 8px;
+      cursor: text;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .chat-bar:hover {
+      border-color: var(--purple);
+      box-shadow: 0 0 0 3px var(--purple-l);
+    }
+    .chat-spark { font-size: 16px; flex-shrink: 0; }
+    .chat-ph { flex: 1; font-size: 13px; color: var(--text3); font-family: var(--font); }
+    .chat-btns { display: flex; gap: 6px; }
+    .cbtn {
+      width: 29px; height: 29px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; font-size: 13px;
+    }
+    .cbtn.img { background: var(--bg); }
+    .cbtn.mic { background: var(--purple); }
+
+    /* ── AVATAR STRIP ── */
+    .strip-section { padding: 0 0 10px; flex-shrink: 0; }
+    .strip-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase;
+      color: var(--text3); padding: 0 18px; margin-bottom: 9px;
+    }
+    .avatar-strip {
+      display: flex; gap: 11px; padding: 2px 18px 2px;
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .avatar-strip::-webkit-scrollbar { display: none; }
+    .dom-av { display: flex; flex-direction: column; align-items: center; gap: 5px; flex-shrink: 0; cursor: pointer; }
+    .av-circle {
+      width: 48px; height: 48px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; position: relative;
+      transition: transform 0.15s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .dom-av:hover .av-circle { transform: scale(1.1); }
+    .av-circle.loaded::after {
+      content: '';
+      position: absolute; bottom: 0; right: 0;
+      width: 11px; height: 11px; border-radius: 50%;
+      background: var(--teal); border: 2px solid var(--bg);
+    }
+    .av-label { font-size: 10px; font-weight: 600; color: var(--text2); text-align: center; }
+
+    /* ── FEED SCROLL ── */
+    .feed-scroll { flex: 1; overflow-y: auto; scrollbar-width: none; padding-bottom: 70px; }
+    .feed-scroll::-webkit-scrollbar { display: none; }
+
+    /* ── STAGE HINT ── */
+    .stage-hint {
+      margin: 0 14px 10px;
+      background: var(--purple-l); border-radius: 10px;
+      padding: 9px 12px;
+      font-size: 11px; color: var(--purple); font-weight: 500; line-height: 1.45;
+    }
+
+    /* ── UPDATES ── */
+    .updates-section { padding: 0 14px 12px; }
+    .sec-hd {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .sec-title {
+      font-size: 13px; font-weight: 700; color: var(--text);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .sec-badge {
+      background: var(--gold); color: #fff;
+      font-size: 10px; font-weight: 700;
+      padding: 1px 7px; border-radius: 999px;
+    }
+    .sec-see { font-size: 12px; color: var(--purple); font-weight: 600; cursor: pointer; }
+
+    .upd-card {
+      background: var(--surface); border-radius: 14px;
+      border: 1.5px solid var(--border);
+      padding: 11px 13px;
+      display: flex; align-items: center; gap: 10px;
+      cursor: pointer; transition: box-shadow 0.2s;
+      margin-bottom: 8px;
+    }
+    .upd-card:last-child { margin-bottom: 0; }
+    .upd-card:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.08); }
+    .upd-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    .upd-body { flex: 1; }
+    .upd-title { font-size: 12px; font-weight: 700; color: var(--text); letter-spacing: -0.2px; }
+    .upd-sub { font-size: 11px; color: var(--text2); margin-top: 1px; }
+    .upd-cta { font-size: 12px; font-weight: 700; color: var(--purple); flex-shrink: 0; }
+
+    /* ── FEED TABS ── */
+    .feed-tabs-wrap {
+      padding: 6px 14px 10px;
+      position: sticky; top: 0;
+      background: var(--bg); z-index: 5;
+    }
+    .feed-tabs { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+    .feed-tabs::-webkit-scrollbar { display: none; }
+    .ftab {
+      padding: 6px 13px; border-radius: 999px;
+      font-size: 12px; font-weight: 600; color: var(--text2);
+      background: var(--surface); border: 1.5px solid var(--border);
+      cursor: pointer; white-space: nowrap;
+      transition: all 0.18s; flex-shrink: 0;
+      font-family: var(--font);
+    }
+    .ftab.active { background: var(--purple); border-color: var(--purple); color: #fff; }
+    .ftab:disabled { opacity: 0.32; cursor: default; pointer-events: none; }
+
+    /* ── CARDS AREA ── */
+    .cards-area { padding: 0 14px; display: flex; flex-direction: column; gap: 10px; }
+
+    /* INTENT TILES */
+    .tiles-card {
+      background: var(--surface); border-radius: 14px;
+      border: 1.5px solid var(--border); padding: 12px;
+    }
+    .tiles-lbl {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase;
+      color: var(--text3); margin-bottom: 9px;
+    }
+    .tiles-grid { display: grid; gap: 7px; }
+    .tiles-g6 { grid-template-columns: repeat(3, 1fr); }
+    .tiles-g4 { grid-template-columns: repeat(4, 1fr); }
+    .tiles-g2 { grid-template-columns: repeat(2, 1fr); }
+    .i-tile {
+      background: var(--bg); border-radius: 10px; padding: 9px 6px;
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      cursor: pointer; border: 1px solid transparent;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .i-tile:hover { background: var(--purple-l); border-color: #d4d4ff; }
+    .tile-ic { font-size: 19px; }
+    .tile-lbl { font-size: 10px; font-weight: 600; color: var(--text2); text-align: center; }
+
+    /* CONTENT CARD */
+    .c-card {
+      background: var(--surface); border-radius: 14px;
+      border: 1.5px solid var(--border); overflow: hidden;
+      cursor: pointer; transition: box-shadow 0.2s, transform 0.15s;
+    }
+    .c-card:hover { box-shadow: 0 5px 18px rgba(0,0,0,0.1); transform: translateY(-2px); }
+    .c-bar { height: 3px; }
+    .c-body { padding: 12px 13px; }
+    .c-top {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px;
+    }
+    .c-domain {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
+    }
+    .d-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .c-ts { font-size: 10px; color: var(--text3); }
+    .c-title { font-size: 14px; font-weight: 800; color: var(--text); letter-spacing: -0.3px; line-height: 1.3; margin-bottom: 5px; }
+    .c-desc { font-size: 12px; color: var(--text2); line-height: 1.5; margin-bottom: 10px; }
+    .c-foot { display: flex; align-items: center; justify-content: space-between; }
+    .c-cta {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: var(--purple-l); color: var(--purple);
+      font-size: 11px; font-weight: 700; padding: 5px 11px; border-radius: 7px;
+      border: none; cursor: pointer; font-family: var(--font);
+    }
+    .c-dismiss { font-size: 11px; color: var(--text3); cursor: pointer; }
+
+    /* CONTINUE CARD */
+    .cont-card {
+      background: var(--surface); border-radius: 14px;
+      border: 1.5px solid var(--border); padding: 12px 13px;
+      cursor: pointer; transition: box-shadow 0.2s;
+    }
+    .cont-card:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.08); }
+    .cont-hd { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
+    .cont-icon {
+      width: 38px; height: 38px; border-radius: 11px;
+      background: var(--purple-l);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px; flex-shrink: 0;
+    }
+    .cont-info { flex: 1; }
+    .cont-title { font-size: 13px; font-weight: 700; color: var(--text); letter-spacing: -0.2px; }
+    .cont-sub { font-size: 11px; color: var(--text2); margin-top: 2px; }
+    .streak-pill {
+      display: flex; align-items: center; gap: 3px;
+      background: #fff9ed; color: #ac660c;
+      font-size: 10px; font-weight: 700;
+      padding: 3px 8px; border-radius: 999px; flex-shrink: 0;
+    }
+    .prog-bar { height: 4px; background: var(--bg); border-radius: 999px; overflow: hidden; margin-bottom: 7px; }
+    .prog-fill {
+      height: 100%; border-radius: 999px;
+      background: linear-gradient(90deg, var(--purple), var(--purple2));
+    }
+    .cont-foot { display: flex; align-items: center; justify-content: space-between; }
+    .prog-lbl { font-size: 11px; color: var(--text3); }
+    .resume-btn {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: var(--purple); color: #fff;
+      font-size: 11px; font-weight: 700; padding: 5px 11px; border-radius: 7px;
+      border: none; cursor: pointer; font-family: var(--font);
+    }
+
+    /* DISCOVER CARD */
+    .disc-card {
+      background: linear-gradient(135deg, var(--purple) 0%, #1800e0 100%);
+      border-radius: 14px; padding: 14px; cursor: pointer;
+      position: relative; overflow: hidden; transition: transform 0.15s;
+    }
+    .disc-card::before {
+      content: ''; position: absolute;
+      top: -25%; right: -8%; width: 130px; height: 130px;
+      background: rgba(255,255,255,0.07); border-radius: 50%;
+    }
+    .disc-card:hover { transform: translateY(-2px); }
+    .disc-chip {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: rgba(255,255,255,0.14); color: rgba(255,255,255,0.92);
+      font-size: 9px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase;
+      padding: 3px 9px; border-radius: 999px; margin-bottom: 9px;
+    }
+    .disc-dot { width: 5px; height: 5px; background: var(--teal); border-radius: 50%; animation: pulse 2s ease infinite; }
+    .disc-title { font-size: 15px; font-weight: 800; color: #fff; letter-spacing: -0.3px; margin-bottom: 5px; }
+    .disc-desc { font-size: 12px; color: rgba(255,255,255,0.7); line-height: 1.5; margin-bottom: 11px; }
+    .disc-btn {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: rgba(255,255,255,0.15); color: #fff;
+      font-size: 12px; font-weight: 700; padding: 6px 13px; border-radius: 999px;
+      cursor: pointer; font-family: var(--font); border: none;
+    }
+
+    /* MOMENTS CARD */
+    .mom-card {
+      background: var(--surface); border-radius: 14px;
+      border: 1.5px solid var(--border); padding: 12px 13px;
+      cursor: pointer; transition: box-shadow 0.2s;
+    }
+    .mom-card:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.08); }
+    .mom-hd { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+    .mom-ic { font-size: 22px; }
+    .mom-title { font-size: 13px; font-weight: 700; color: var(--text); letter-spacing: -0.2px; flex: 1; }
+    .mom-val { font-size: 20px; font-weight: 900; color: var(--teal); letter-spacing: -0.5px; margin-bottom: 3px; }
+    .mom-sub { font-size: 12px; color: var(--text2); margin-bottom: 10px; line-height: 1.4; }
+    .share-btn {
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      background: var(--bg); border: 1.5px solid var(--border); border-radius: 9px;
+      padding: 8px; font-size: 12px; font-weight: 700; color: var(--text);
+      cursor: pointer; width: 100%; font-family: var(--font);
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .share-btn:hover { border-color: var(--teal); color: var(--teal); }
+
+    /* EMPTY STATE */
+    .empty-state { text-align: center; padding: 28px 16px; }
+    .empty-ic { font-size: 30px; margin-bottom: 7px; }
+    .empty-ttl { font-size: 13px; font-weight: 700; color: var(--text2); margin-bottom: 4px; }
+    .empty-txt { font-size: 12px; color: var(--text3); line-height: 1.5; }
+
+    /* ── BOTTOM NAV ── */
+    .bottom-nav {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: rgba(255,255,255,0.94);
+      backdrop-filter: blur(14px);
+      border-top: 1px solid var(--border);
+      display: flex; padding: 8px 0 16px; z-index: 10;
+    }
+    .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; }
+    .nav-ic { font-size: 20px; line-height: 1; }
+    .nav-lbl { font-size: 10px; font-weight: 600; color: var(--text3); }
+    .nav-item.active .nav-lbl { color: var(--purple); }
+
+    /* ── PAGE FOOTER ── */
+    .page-footer {
+      margin-top: 36px;
+      display: flex; align-items: center; justify-content: space-between;
+      width: 100%; max-width: 960px;
+      padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.07);
+      animation: fadeUp 0.4s ease 0.2s both;
+    }
+    .footer-txt { font-size: 12px; color: rgba(255,255,255,0.2); }
+    .footer-txt strong { color: rgba(255,255,255,0.35); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.35; }
+    }
+
+    @media (max-width: 720px) {
+      .page-header { flex-direction: column; }
+      .stage-switcher { min-width: unset; width: 100%; }
+      .stage-btns { flex-direction: row; flex-wrap: wrap; }
+      .stage-btn { flex: 1; min-width: 120px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- PAGE HEADER -->
+<header class="page-header">
+  <div class="page-left">
+    <div class="page-brand">
+      <div class="dot-grid">
+        <div class="dot"></div><div class="dot"></div>
+        <div class="dot"></div><div class="dot"></div>
+      </div>
+      <span class="brand-name">JBIQ</span>
+    </div>
+    <h1 class="page-title">Home Page <span>Prototype</span></h1>
+    <p class="page-sub">Personalisation journey · Sessions 1–5 → 6–20 → 20+ · JDS v3.2.0 · 375×812</p>
+  </div>
+
+  <div class="stage-switcher">
+    <div class="stage-lbl">Personalisation Stage</div>
+    <div class="stage-btns">
+      <button class="stage-btn active" data-stage="new">
+        <span>New User</span>
+        <span class="stage-sessions">Sessions 1–5</span>
+      </button>
+      <button class="stage-btn" data-stage="growing">
+        <span>Growing</span>
+        <span class="stage-sessions">Sessions 6–20</span>
+      </button>
+      <button class="stage-btn" data-stage="n1">
+        <span>N=1</span>
+        <span class="stage-sessions">Sessions 20+</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- PHONE -->
+<div class="phone-wrap">
+  <div class="phone-frame">
+    <div class="phone-notch"></div>
+    <div class="phone-screen">
+
+      <!-- Status Bar -->
+      <div class="status-bar">
+        <span class="status-time">9:41</span>
+        <div class="status-icons">
+          <div class="signal">
+            <div class="sig"></div><div class="sig"></div>
+            <div class="sig"></div><div class="sig"></div>
+          </div>
+          <span style="font-size:10px;color:var(--text)">▲</span>
+          <div class="battery"><div class="batt-fill"></div></div>
+        </div>
+      </div>
+
+      <!-- App Header -->
+      <div class="app-header">
+        <div class="app-brand">
+          <div class="app-dots">
+            <div class="ad"></div><div class="ad"></div>
+            <div class="ad"></div><div class="ad"></div>
+          </div>
+          <span class="app-name">JBIQ</span>
+        </div>
+        <div class="hdr-right">
+          <div class="icon-btn">
+            🔔
+            <span class="notif-dot" id="notifDot"></span>
+          </div>
+          <div class="user-av">SR</div>
+        </div>
+      </div>
+
+      <!-- Greeting -->
+      <div class="greeting">
+        <div class="greet-line" id="greetLine">Good morning</div>
+        <div class="greet-name" id="greetName">Sridhar</div>
+      </div>
+
+      <!-- Chat Bar -->
+      <div class="chat-wrap">
+        <div class="chat-bar">
+          <span class="chat-spark">✦</span>
+          <span class="chat-ph" id="chatPh">Ask me anything…</span>
+          <div class="chat-btns">
+            <div class="cbtn img">📷</div>
+            <div class="cbtn mic">🎤</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Domain Avatar Strip -->
+      <div class="strip-section">
+        <div class="strip-label">Your Assistants</div>
+        <div class="avatar-strip" id="avatarStrip"></div>
+      </div>
+
+      <!-- Feed Scroll -->
+      <div class="feed-scroll">
+
+        <div class="stage-hint" id="stageHint"></div>
+
+        <!-- Updates -->
+        <div class="updates-section" id="updatesSection" style="display:none">
+          <div class="sec-hd">
+            <span class="sec-title">Updates <span class="sec-badge" id="updBadge">1</span></span>
+            <span class="sec-see">See all</span>
+          </div>
+          <div id="updCards"></div>
+        </div>
+
+        <!-- Feed Tabs -->
+        <div class="feed-tabs-wrap">
+          <div class="feed-tabs" id="feedTabs"></div>
+        </div>
+
+        <!-- Cards -->
+        <div class="cards-area" id="cardsArea"></div>
+
+      </div><!-- feed-scroll -->
+
+      <!-- Bottom Nav -->
+      <div class="bottom-nav">
+        <div class="nav-item active"><span class="nav-ic">🏠</span><span class="nav-lbl">Home</span></div>
+        <div class="nav-item"><span class="nav-ic">🔍</span><span class="nav-lbl">Search</span></div>
+        <div class="nav-item"><span class="nav-ic">💬</span><span class="nav-lbl">Chat</span></div>
+        <div class="nav-item"><span class="nav-ic">📊</span><span class="nav-lbl">Activity</span></div>
+        <div class="nav-item"><span class="nav-ic">👤</span><span class="nav-lbl">Profile</span></div>
+      </div>
+
+    </div><!-- phone-screen -->
+  </div><!-- phone-frame -->
+</div><!-- phone-wrap -->
+
+<!-- PAGE FOOTER -->
+<footer class="page-footer">
+  <span class="footer-txt">Mobile-first · best at <strong>375×812</strong></span>
+  <span class="footer-txt">Built at <strong>RCP</strong> · JDS v3.2.0 · Core Experience POD</span>
+</footer>
+
+<script>
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+
+function tilesCard(tiles, gridCls) {
+  const items = tiles.map(([ic, lbl]) =>
+    `<div class="i-tile"><span class="tile-ic">${ic}</span><span class="tile-lbl">${lbl}</span></div>`
+  ).join('');
+  return `<div class="tiles-card">
+    <div class="tiles-lbl">Quick Actions</div>
+    <div class="tiles-grid ${gridCls}">${items}</div>
+  </div>`;
+}
+
+function contentCard(variant, dotColor, domain, ts, title, desc, cta) {
+  const bars = {
+    sports:  'linear-gradient(90deg,#3535f3,#6464ff)',
+    finance: 'linear-gradient(90deg,#1eccb0,#0ab89a)',
+    health:  'linear-gradient(90deg,#ff6b6b,#ff9e9e)',
+    news:    'linear-gradient(90deg,#5c5651,#a09890)',
+    partner: 'linear-gradient(90deg,#f7ab20,#f7c520)',
+    discover:'linear-gradient(90deg,#6464ff,#1eccb0)',
+  };
+  return `<div class="c-card">
+    <div class="c-bar" style="background:${bars[variant] || bars.discover}"></div>
+    <div class="c-body">
+      <div class="c-top">
+        <div class="c-domain">
+          <div class="d-dot" style="background:${dotColor}"></div>${domain}
+        </div>
+        <span class="c-ts">${ts}</span>
+      </div>
+      <div class="c-title">${title}</div>
+      <div class="c-desc">${desc}</div>
+      <div class="c-foot">
+        <button class="c-cta">${cta} →</button>
+        <span class="c-dismiss">Dismiss</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+function discoverCard(title, desc) {
+  return `<div class="disc-card">
+    <div class="disc-chip"><span class="disc-dot"></span>Discover</div>
+    <div class="disc-title">${title}</div>
+    <div class="disc-desc">${desc}</div>
+    <button class="disc-btn">Try it →</button>
+  </div>`;
+}
+
+function continueCard(icon, title, sub, pct, streak, footLbl) {
+  const streakHTML = streak
+    ? `<div class="streak-pill">🔥 ${streak}</div>`
+    : '';
+  return `<div class="cont-card">
+    <div class="cont-hd">
+      <div class="cont-icon">${icon}</div>
+      <div class="cont-info">
+        <div class="cont-title">${title}</div>
+        <div class="cont-sub">${sub}</div>
+      </div>
+      ${streakHTML}
+    </div>
+    <div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div>
+    <div class="cont-foot">
+      <span class="prog-lbl">${footLbl}</span>
+      <button class="resume-btn">Resume →</button>
+    </div>
+  </div>`;
+}
+
+function momentsCard(icon, title, val, sub, cta) {
+  const btn = cta
+    ? `<button class="share-btn">↗ ${cta}</button>`
+    : `<button class="share-btn">↗ Share</button>`;
+  return `<div class="mom-card">
+    <div class="mom-hd"><span class="mom-ic">${icon}</span><span class="mom-title">${title}</span></div>
+    <div class="mom-val">${val}</div>
+    <div class="mom-sub">${sub}</div>
+    ${btn}
+  </div>`;
+}
+
+// ── DOMAIN DATA ───────────────────────────────────────────────────────────────
+
+const DOMAINS = [
+  { icon: '💳', label: 'Finance',   bg: '#f0f0ff' },
+  { icon: '🏥', label: 'Health',    bg: '#e8fdf5' },
+  { icon: '🎬', label: 'Cinema',    bg: '#fff0f0' },
+  { icon: '🎵', label: 'Music',     bg: '#fff8e8' },
+  { icon: '📰', label: 'News',      bg: '#f4f4f4' },
+  { icon: '🛒', label: 'Shopping',  bg: '#e8f4ff' },
+  { icon: '📚', label: 'Learn',     bg: '#fff0fa' },
+  { icon: '🏏', label: 'Sports',    bg: '#f0f8ff' },
+  { icon: '✈️', label: 'Travel',   bg: '#f8f0ff' },
+  { icon: '🍛', label: 'Food',      bg: '#fff8f0' },
+  { icon: '🏛️', label: 'Govt',     bg: '#f0f8f0' },
+  { icon: '👥', label: 'Community', bg: '#fffff0' },
+];
+
+// ── STAGE CONTENT ─────────────────────────────────────────────────────────────
+
+const STAGES = {
+
+  new: {
+    hint:    '⬡  Sessions 1–5 · UCP defaults only · For You + Discover carry the page · Continue and Moments are empty',
+    greet:   ['Good morning', 'Sridhar'],
+    chatPh:  'Ask me anything…',
+    updates: null,
+    loaded:  0,
+    tabs: { forYou: true, cont: false, disc: true, moments: false },
+    forYou: () => [
+      tilesCard([
+        ['💰','Balance'],['⛅','Weather'],['🔮','Rashifal'],
+        ['🏏','Cricket'],['🌐','Translate'],['📰','News']
+      ], 'tiles-g6'),
+      contentCard('sports','#3535f3','Sports','Tonight',
+        'IPL 2026 is here 🏏',
+        'RCB vs MI — Opening match tonight at 7:30 PM. Live scores, predictions & highlights.',
+        'Watch Live'),
+      contentCard('partner','#f7ab20','JioMart','Today',
+        'Summer Sale — up to 40% off',
+        'Fresh produce, electronics & home essentials. Jio subscribers get an extra 10% off.',
+        'Shop Now'),
+      contentCard('news','#5c5651','News','This morning',
+        '6 stories for your morning brief',
+        'Budget impact · IPL opener · Markets up 1.2% · Monsoon forecast — ready in 3 min.',
+        'Read Brief'),
+    ].join(''),
+    cont: `<div class="empty-state">
+      <div class="empty-ic">📭</div>
+      <div class="empty-ttl">Nothing here yet</div>
+      <div class="empty-txt">Complete a few tasks and JBIQ will remember where you left off.</div>
+    </div>`,
+    disc: () => [
+      discoverCard('Meet Your Health AI',
+        'JioHealth AI is your personal doctor, dietitian and appointment manager — all in one.'),
+      contentCard('discover','#6464ff','Discover','New',
+        'Try Video Answers ▶',
+        'See any JBIQ answer as a 60-second short. Tap ▶ on your next response to try it.',
+        'Try it'),
+    ].join(''),
+    moments: `<div class="empty-state">
+      <div class="empty-ic">✨</div>
+      <div class="empty-ttl">Your moments will appear here</div>
+      <div class="empty-txt">Complete tasks, build habits, and JBIQ will surface things worth sharing.</div>
+    </div>`,
+  },
+
+  growing: {
+    hint:    '⬡  Sessions 6–20 · All 4 groups active · Continue grows with memory · Updates appears when actionable',
+    greet:   ['Welcome back,', 'Sridhar'],
+    chatPh:  'What do you need today?',
+    loaded:  4,
+    updates: [
+      { icon: '💳', bg: '#f0f0ff', title: 'SIP due in 2 days', sub: '₹5,000 · HDFC Flexi Cap Fund', cta: 'Pay Now' },
+    ],
+    tabs: { forYou: true, cont: true, disc: true, moments: true },
+    forYou: () => [
+      tilesCard([
+        ['💳','Balance'],['🏏','Cricket'],['📰','Brief'],['🔮','Rashifal']
+      ], 'tiles-g4'),
+      contentCard('finance','#1eccb0','Finance','Today',
+        'SIP reminder: ₹5,000 due',
+        'HDFC Flexi Cap · Due in 2 days. Auto-pay on if funds are available — confirm or reschedule.',
+        'Review'),
+      contentCard('sports','#3535f3','Sports','Tonight 7:30 PM',
+        'RCB vs MI — Match Prediction',
+        'Win probability: RCB 58% based on pitch, team form, and weather. Set a reminder?',
+        'Set Reminder'),
+      contentCard('news','#5c5651','News','7 min ago',
+        'Morning Brief is ready',
+        '6 stories · 3 min read · Markets, IPL opener, Budget impact, Local news.',
+        'Open Brief'),
+    ].join(''),
+    cont: () => [
+      continueCard('📚','Python Basics — Lesson 7 of 12',
+        'Picked up yesterday · 4-day streak', 58, '4 days', '58% done'),
+      continueCard('📈','Mutual Funds — new info added',
+        'You asked about SIP options 2 days ago — updated comparison available.', 100, '', 'Review'),
+    ].join(''),
+    disc: () => [
+      discoverCard('Short Video Answers ▶',
+        'Watch any JBIQ answer as a 60-second short. Works across all 12 domains.'),
+      contentCard('discover','#6464ff','JioFinance','New',
+        'MF Portfolio Tracker is live',
+        'Track all your mutual funds in one place. Link your PAN to import existing funds automatically.',
+        'Connect PAN'),
+    ].join(''),
+    moments: () => [
+      momentsCard('📊','Your Investment Summary','₹1.24L invested',
+        'Returns up 11.3% this quarter — your best month yet. Ready to share?'),
+      momentsCard('🎁','Refer JBIQ','Get 1 month free',
+        'Your friend gets 1 month Premium, you get ₹200 Jio credit.',
+        'Share Invite'),
+    ].join(''),
+  },
+
+  n1: {
+    hint:    '⬡  N=1 · Sessions 20+ · For You is predictive · Updates is the daily anchor · Feed reads your mind',
+    greet:   ['Your day is ready,', 'Sridhar'],
+    chatPh:  'Continue from yesterday…',
+    loaded:  9,
+    updates: [
+      { icon: '💳', bg: '#f0f0ff', title: 'SIP due today — ₹5,000', sub: 'HDFC Flexi Cap · Auto-pay confirmed ✓', cta: 'Done ✓' },
+      { icon: '🏥', bg: '#e8fdf5', title: 'Dr. Mehta appointment tomorrow', sub: '11:00 AM · Koramangala · Confirm?', cta: 'Confirm' },
+    ],
+    tabs: { forYou: true, cont: true, disc: true, moments: true },
+    forYou: () => [
+      tilesCard([['🏏','Cricket'],['💳','Balance']], 'tiles-g2'),
+      contentCard('news','#5c5651','News','7:03 AM',
+        'Rashifal ready for Mesh rashi ♈',
+        'Aaj ka din: Career mein naya avsar · Lucky colour: Blue · Finance: Saavdhan rehna zaroori.',
+        'Read Now'),
+      contentCard('sports','#3535f3','Sports','Predicted',
+        'RCB win probability: 62% tonight',
+        'Based on your last 14 match views, pitch stats, and live weather. Dream11 team also ready.',
+        'View Team'),
+      contentCard('finance','#1eccb0','Finance','Alert',
+        'Portfolio milestone: ₹5L invested 🎉',
+        'Your 18-month SIP journey hits ₹5L today. Returns: 14.2% XIRR. Tap to see full report.',
+        'See Report'),
+      contentCard('health','#ff6b6b','JioHealth','Tomorrow',
+        'Dr. Mehta appointment at 11 AM',
+        'Koramangala · Previous reports auto-attached · Travel time: 24 min from your location.',
+        'Get Directions'),
+    ].join(''),
+    cont: () => [
+      continueCard('📚','Python Basics — Lesson 11 of 12',
+        '1 lesson left · 18-day streak', 91, '18 days', '91% done — finish today?'),
+      continueCard('📈','MF Review — weekly summary',
+        'Your portfolio gained ₹3,200 this week. 3 new fund suggestions ready.', 100, '', 'Review'),
+      continueCard('🏥','Health check-up follow-up',
+        'Dr. Mehta shared your results. 2 items need attention — JBIQ has summarised them.', 100, '', 'Read Summary'),
+    ].join(''),
+    disc: () => [
+      discoverCard('Book your CA via JBIQ',
+        'New skill: File ITR, manage TDS, book a CA consultation — all without leaving JBIQ.'),
+      contentCard('discover','#6464ff','JioHealth','For you',
+        'Full-body diagnostics near you',
+        'Thyrocare package ₹799. Based on your last checkup, 3 tests flagged for follow-up.',
+        'Book Now'),
+    ].join(''),
+    moments: () => [
+      momentsCard('📊','Portfolio milestone','₹5L · 14.2% XIRR',
+        '18 months of discipline. Your investment story is worth sharing.'),
+      momentsCard('🏏','RCB won! Your prediction was right','3 correct calls this week',
+        'Predicted RCB — 3rd correct call this week. Share your streak.',
+        'Share Streak'),
+      momentsCard('🎁','Refer & earn','₹200 Jio credit',
+        '2 friends joined via your link. 1 still pending — send a reminder.',
+        'Send Reminder'),
+    ].join(''),
+  },
+};
+
+// ── APP STATE ─────────────────────────────────────────────────────────────────
+
+let stage = 'new';
+let tab   = 'forYou';
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+
+function renderAvatarStrip() {
+  const { loaded } = STAGES[stage];
+  document.getElementById('avatarStrip').innerHTML = DOMAINS.map((d, i) =>
+    `<div class="dom-av">
+      <div class="av-circle ${i < loaded ? 'loaded' : ''}" style="background:${d.bg}">${d.icon}</div>
+      <span class="av-label">${d.label}</span>
+    </div>`
+  ).join('');
+}
+
+function renderGreeting() {
+  const [line, name] = STAGES[stage].greet;
+  document.getElementById('greetLine').textContent  = line;
+  document.getElementById('greetName').textContent  = name;
+  document.getElementById('chatPh').textContent     = STAGES[stage].chatPh;
+}
+
+function renderUpdates() {
+  const { updates } = STAGES[stage];
+  const section  = document.getElementById('updatesSection');
+  const notifDot = document.getElementById('notifDot');
+  const badge    = document.getElementById('updBadge');
+  const cards    = document.getElementById('updCards');
+
+  if (updates && updates.length) {
+    section.style.display  = 'block';
+    notifDot.style.display = 'block';
+    badge.textContent = updates.length;
+    cards.innerHTML = updates.map(u => `
+      <div class="upd-card">
+        <div class="upd-icon" style="background:${u.bg}">${u.icon}</div>
+        <div class="upd-body">
+          <div class="upd-title">${u.title}</div>
+          <div class="upd-sub">${u.sub}</div>
+        </div>
+        <div class="upd-cta">${u.cta}</div>
+      </div>`
+    ).join('');
+  } else {
+    section.style.display  = 'none';
+    notifDot.style.display = 'none';
+  }
+}
+
+function renderTabs() {
+  const { tabs } = STAGES[stage];
+  const defs = [
+    { key: 'forYou',  label: 'For You'  },
+    { key: 'cont',    label: 'Continue' },
+    { key: 'disc',    label: 'Discover' },
+    { key: 'moments', label: 'Moments'  },
+  ];
+  const container = document.getElementById('feedTabs');
+  container.innerHTML = defs.map(d => {
+    const active   = tab === d.key ? 'active' : '';
+    const disabled = !tabs[d.key] ? 'disabled' : '';
+    return `<button class="ftab ${active}" ${disabled} data-tab="${d.key}">${d.label}</button>`;
+  }).join('');
+
+  container.querySelectorAll('.ftab:not([disabled])').forEach(btn => {
+    btn.addEventListener('click', () => setTab(btn.dataset.tab));
+  });
+}
+
+function renderCards() {
+  const data = STAGES[stage][tab];
+  document.getElementById('cardsArea').innerHTML =
+    typeof data === 'function' ? data() : (data || '');
+}
+
+function renderHint() {
+  document.getElementById('stageHint').textContent = STAGES[stage].hint;
+}
+
+function render() {
+  renderAvatarStrip();
+  renderGreeting();
+  renderUpdates();
+  renderTabs();
+  renderCards();
+  renderHint();
+  // Scroll feed to top on stage change
+  document.querySelector('.feed-scroll').scrollTop = 0;
+}
+
+// ── CONTROLS ──────────────────────────────────────────────────────────────────
+
+function setStage(s) {
+  stage = s;
+  tab   = 'forYou';
+  document.querySelectorAll('.stage-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.stage === s)
+  );
+  render();
+}
+
+function setTab(t) {
+  tab = t;
+  renderTabs();
+  renderCards();
+}
+
+// Wire up stage buttons
+document.querySelectorAll('.stage-btn').forEach(btn => {
+  btn.addEventListener('click', () => setStage(btn.dataset.stage));
+});
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>

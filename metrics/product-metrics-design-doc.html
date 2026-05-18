@@ -1,0 +1,1459 @@
+<!DOCTYPE html><html><head><meta charset=utf-8><style>body{font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;line-height:1.55;color:#0a0a14;max-width:920px;margin:2em auto;padding:1em}h1{color:#0A2885;border-bottom:2px solid #E63946;padding-bottom:6px;font-size:32px}h2{color:#0A2885;border-bottom:1px solid #E0E0EA;padding-bottom:4px;margin-top:2em;font-size:22px}h3{color:#0A2885;margin-top:1.5em;font-size:18px}h4{color:#E63946;margin-top:1.2em;font-size:15px}h5{font-size:14px;color:#444}table{border-collapse:collapse;margin:1em 0;width:100%;font-size:.95em}th,td{border:1px solid #E0E0EA;padding:8px 12px;text-align:left;vertical-align:top}th{background:#F5F5FA;color:#0A2885}code{background:#F5F5FA;padding:2px 5px;border-radius:3px;font-family:SF Mono,Monaco,monospace;font-size:.9em}pre{background:#F5F5FA;padding:12px;border-radius:4px;overflow-x:auto}em{color:#666677}strong{color:#0A0A14}hr{border:none;border-top:1px solid #E0E0EA;margin:2em 0}a{color:#0A2885;text-decoration:none;border-bottom:1px dotted #0A2885}a:hover{border-bottom-style:solid}</style></head><body><h1 id="jiobharatiq-product-metrics-design">JioBharatIQ — Product Metrics Design</h1>
+<p><strong>Document version:</strong> v1.0
+<strong>Last updated:</strong> 2026-05-11
+<strong>Author:</strong> Sridhar
+<strong>Status:</strong> Working draft · Internal · Reliance Intelligence</p>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#1-purpose-and-audience">Purpose and Audience</a></li>
+<li><a href="#2-method--output-backward-tree">Method — Output-Backward Tree</a></li>
+<li><a href="#3-activity-units">Activity Units</a></li>
+<li><a href="#4-the-paired-product-l0--north-star">The Paired Product L0 — North Star</a></li>
+<li><a href="#5-l1-decomposition--causal-vs-mathematical">L1 Decomposition — Causal vs Mathematical</a></li>
+<li><a href="#6-the-7-layers">The 7 Layers</a>
+   - 6.1 <a href="#61-layer-1--the-user-loop">Layer 1 — The User Loop</a>
+   - 6.2 <a href="#62-layer-2--the-personalization">Layer 2 — The Personalization</a>
+   - 6.3 <a href="#63-layer-3--the-conversation">Layer 3 — The Conversation</a>
+   - 6.4 <a href="#64-layer-4--the-task-delivery">Layer 4 — The Task Delivery</a>
+   - 6.5 <a href="#65-layer-5--the-quality">Layer 5 — The Quality</a>
+   - 6.6 <a href="#66-layer-6--the-platform">Layer 6 — The Platform</a>
+   - 6.7 <a href="#67-layer-7--the-partners">Layer 7 — The Partners</a></li>
+<li><a href="#7-cross-cutting-attributes">Cross-Cutting Attributes</a></li>
+<li><a href="#8-bharat--parallel-strategic-frame">Bharat — Parallel Strategic Frame</a></li>
+<li><a href="#9-out-of-the-product-tree">Out of the Product Tree</a></li>
+<li><a href="#10-change-management-and-governance">Change Management and Governance</a></li>
+<li><a href="#11-instrumentation-and-data-interaction">Instrumentation and Data Interaction</a></li>
+<li><a href="#12-metrics-design-audit">Metrics-Design Audit</a></li>
+<li><a href="#13-design-choices-defended">Design Choices Defended</a></li>
+<li><a href="#14-future-scope">Future Scope</a></li>
+<li><a href="#15-glossary">Glossary</a></li>
+<li><a href="#16-references-and-companion-files">References and Companion Files</a></li>
+</ol>
+<hr />
+<h2 id="1-purpose-and-audience">1. Purpose and Audience</h2>
+<h3 id="11-purpose">1.1 Purpose</h3>
+<p>This document defines the <strong>Product Metrics framework</strong> for JioBharatIQ (JBIQ). It establishes:</p>
+<ul>
+<li>What the product is measured by (the L0 north star and its decomposition)</li>
+<li>How layers of the product map to user-experienced outcomes</li>
+<li>The cross-cutting attributes by which every metric must be sliceable</li>
+<li>Where qualitative or strategic resonance metrics live (Bharat framework, parallel)</li>
+<li>Where non-product metrics belong (parallel tracks, not in this tree)</li>
+<li>The change-management and governance discipline that keeps the framework alive</li>
+</ul>
+<h3 id="12-audience">1.2 Audience</h3>
+<table>
+<thead>
+<tr>
+<th>Audience</th>
+<th>What to read</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Leadership</strong> (Naroo, Rushabh)</td>
+<td>§1–4, §6 layer L0s, §8 (Bharat), §13 (design choices)</td>
+</tr>
+<tr>
+<td><strong>Pod owners</strong> (Sridhar, Anmol, Karan, Bharat, Vinay, Sushant)</td>
+<td>Full document, especially §6 for owned layer</td>
+</tr>
+<tr>
+<td><strong>Engineering</strong></td>
+<td>§11 (instrumentation), §10 (change management), §6 layer L1/L2</td>
+</tr>
+<tr>
+<td><strong>Analytics / Data</strong></td>
+<td>§7 (attributes), §11, §10</td>
+</tr>
+<tr>
+<td><strong>GTM / Comms</strong></td>
+<td>§9 (parallel tracks, especially Customer Lifecycle), §7 (cohorts)</td>
+</tr>
+<tr>
+<td><strong>Cross-pod reviewers</strong></td>
+<td>§2 (method), §12 (audit), §13 (design choices)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="13-what-this-document-defines-vs-does-not">1.3 What This Document Defines vs Does Not</h3>
+<table>
+<thead>
+<tr>
+<th>Does define</th>
+<th>Does not define</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The canonical metric tree (what metrics exist)</td>
+<td>Specific numeric targets at FnF / Beta / GA — see <code>product-context.md</code></td>
+</tr>
+<tr>
+<td>The relationship between metrics (L0 → L1 → L2)</td>
+<td>Instrumentation implementation details — see engineering specs</td>
+</tr>
+<tr>
+<td>Cross-cutting attributes (the slicing dimensions)</td>
+<td>Dashboard layouts — owned by Data pod</td>
+</tr>
+<tr>
+<td>Governance for changing metrics</td>
+<td>Specific pod execution plans</td>
+</tr>
+<tr>
+<td>Out-of-tree parallel tracks (overview)</td>
+<td>Detailed GTM / Operations metrics — see <code>non-product-metrics.md</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-method-output-backward-tree">2. Method — Output-Backward Tree</h2>
+<h3 id="21-the-principle">2.1 The Principle</h3>
+<p>The metrics tree is <strong>output-backward</strong>. It starts from outcomes (what the product is meant to deliver) and decomposes toward inputs (what teams can move). Every metric in the tree must trace backward to a Product L0 — if it can't, it doesn't belong.</p>
+<p>This is in contrast to <strong>input-forward</strong> thinking, which starts from activities (what teams ship) and hopes outcomes follow. Input-forward is the right framing for operations and engineering management — <em>not</em> for product metrics. Operations metrics live in the parallel non-product-metrics tracks (§9).</p>
+<h3 id="22-the-three-levels">2.2 The Three Levels</h3>
+<p>Every layer of the tree has three levels:</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>What it is</th>
+<th>Direction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>L0</strong></td>
+<td>The single primary metric — the outcome that defines whether the layer is doing its job</td>
+<td>Outcome</td>
+</tr>
+<tr>
+<td><strong>L1</strong></td>
+<td>Primary drivers — sub-outcomes or components that compose / cause L0</td>
+<td>Causal step backward</td>
+</tr>
+<tr>
+<td><strong>L2</strong></td>
+<td>Leading indicators · inputs · diagnostics — the signals and levers used to understand L1 movements</td>
+<td>Input layer</td>
+</tr>
+</tbody>
+</table>
+<p>The discipline: every metric must answer <strong>one of three questions</strong> working backward from outcome:
+1. <em>Did the product work?</em> (L0)
+2. <em>What sub-outcome or driver moved?</em> (L1)
+3. <em>What input or signal explains the L1 movement?</em> (L2)</p>
+<h3 id="23-layer-organisation-user-experience-first">2.3 Layer Organisation — User-Experience-First</h3>
+<p>The 7 layers are organised around <strong>questions a user would actually ask of the product</strong>, not internal pod taxonomy. Each layer is named for the user-experience question it addresses:</p>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>User question</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 — The User Loop</td>
+<td>Did the user come back?</td>
+</tr>
+<tr>
+<td>2 — The Personalization</td>
+<td>Did it feel made for me?</td>
+</tr>
+<tr>
+<td>3 — The Conversation</td>
+<td>Did talking to it feel natural?</td>
+</tr>
+<tr>
+<td>4 — The Task Delivery</td>
+<td>Did the AI do what I asked?</td>
+</tr>
+<tr>
+<td>5 — The Quality</td>
+<td>Was the answer right?</td>
+</tr>
+<tr>
+<td>6 — The Platform</td>
+<td>Did it work when I needed it?</td>
+</tr>
+<tr>
+<td>7 — The Partners</td>
+<td>Scale path — supplier of Layers 4–5</td>
+</tr>
+</tbody>
+</table>
+<p>Internal taxonomy (Core / Vertical / Signature Experience) is not a layer — it lives as cross-cuts (§7) and as Group G qualification within Layer 1.</p>
+<h3 id="24-what-the-product-promises-the-three-claims">2.4 What the Product Promises (the Three Claims)</h3>
+<p>Every metric in the tree must trace back to one of three claims the product makes:</p>
+<ol>
+<li><strong>Knows you</strong> — language, context, history</li>
+<li><strong>Knows what you need right now</strong> — proactive, situational</li>
+<li><strong>Does the work</strong> — completes tasks, doesn't suggest</li>
+</ol>
+<p>Operationally:</p>
+<blockquote>
+<p><em>The product is working when a user opens JBIQ, gets something done, comes back tomorrow without being pushed, and the next session starts smarter than the last. Repeat across 1.4B Indians, 12 languages, 12 domains.</em></p>
+</blockquote>
+<hr />
+<h2 id="3-activity-units">3. Activity Units</h2>
+<p>All units anchored at the <strong>monthly level</strong> for consistency. Daily snapshots (DAU, DQU) are derived from these monthly bases when needed for the L0 stickiness ratio — they are not primary units.</p>
+<table>
+<thead>
+<tr>
+<th>Unit</th>
+<th>Definition</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>MAU</strong></td>
+<td>Users who opened the app in last 30 days (rolling)</td>
+<td>Funnel diagnostic only — opened ≠ engaged</td>
+</tr>
+<tr>
+<td><strong>MQU</strong></td>
+<td>Users who sent ≥1 query in last 30 days (rolling)</td>
+<td><strong>The activity unit · L0 denominator.</strong> Anchors engagement and retention metrics.</td>
+</tr>
+<tr>
+<td><strong>MTU</strong></td>
+<td>Users who completed ≥1 useful task in last 30 days (rolling)</td>
+<td><strong>Monthly value-delivered unit</strong> — captures value, not just engagement</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note on daily snapshots:</strong> Active Habit Rate (L0) = <code>Organic DQU ÷ MQU</code> is a daily-stickiness ratio computed from these monthly bases — daily querying user counts are derived from MQU on a per-day basis.</p>
+<p><strong>Per-query views</strong> are used for outcome-quality measurement:</p>
+<pre><code>Query → Resolved (Task Resolution Rate)
+Resolved → Satisfied (User Satisfaction Rate)
+Useful Task Rate = Resolved × Satisfied  (per-query)
+</code></pre>
+<hr />
+<h2 id="4-the-paired-product-l0-north-star">4. The Paired Product L0 — North Star</h2>
+<p>A single number is too lossy for a product whose promise is "loop AND work." The Product L0 is a <strong>paired north star</strong> — both metrics must move together for the product to be working.</p>
+<h3 id="41-the-pair">4.1 The Pair</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Metric</th>
+<th>Definition</th>
+<th>What it tests</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Loop</strong></td>
+<td><strong>Active Habit Rate</strong></td>
+<td>Organic DQU ÷ MQU — daily-stickiness ratio anchored on querying users, push-attributed returns <em>excluded</em></td>
+<td>Did the product earn the user, or did push pay for the visit? <em>(P7 — Build for the loop, not the visit.)</em></td>
+</tr>
+<tr>
+<td><strong>Work</strong></td>
+<td><strong>Useful Task Rate</strong></td>
+<td>% of queries that resolved AND user signaled value</td>
+<td>Did the AI actually deliver something useful?</td>
+</tr>
+</tbody>
+</table>
+<h3 id="42-composite-rollup">4.2 Composite Rollup</h3>
+<p>For one-number reporting (never a substitute for the pair):</p>
+<pre><code>Compounding Habit Index = Active Habit Rate × Useful Task Rate
+</code></pre>
+<p>A 40% Active Habit × 80% Useful Task = 32% Compounding Habit Index.</p>
+<h3 id="43-why-paired">4.3 Why Paired</h3>
+<p>A single L0 is gameable:
+- <em>Active Habit Rate alone</em> — push spam can drive returns at the cost of meaningful value
+- <em>Useful Task Rate alone</em> — could be high among a tiny loyal base, while the product fails at scale</p>
+<p>The pair forces alignment on both: <em>did users come back</em> AND <em>did they get value when they did</em>. No movement on one without movement on the other.</p>
+<h3 id="44-why-not-maudau">4.4 Why Not MAU/DAU</h3>
+<p>MAU/DAU are reach metrics, gameable by paid acquisition and notification spam. They go at Layer 1 L2 (funnel diagnostic) and in the parallel Growth track — not at L0. The Product L0 must be hostile to vanity.</p>
+<hr />
+<h2 id="5-l1-decomposition-causal-vs-mathematical">5. L1 Decomposition — Causal vs Mathematical</h2>
+<p>L0 → L1 relationships are of two types. The tree honestly distinguishes which case is which:</p>
+<h3 id="51-mathematical-decomposition">5.1 Mathematical Decomposition</h3>
+<p>L1 metrics compose to L0 via a strict identity (multiplication or AND). Examples:</p>
+<ul>
+<li><strong>Useful Task Rate</strong> = <code>Intent × Routing × Execution × Production Quality Floor × User Satisfaction</code> (multiplicative)</li>
+<li><strong>Production Quality Floor</strong> = <code>% passing all critical eval dimensions</code> (AND)</li>
+<li><strong>Reliability-Adjusted Availability</strong> = <code>% seconds up AND within latency SLO AND below crash threshold</code> (AND)</li>
+</ul>
+<p>For mathematically composed L0s: you can attribute <em>exactly</em> how much each L1 moved L0. Sum of L1 contributions = L0 movement.</p>
+<h3 id="52-causal-decomposition">5.2 Causal Decomposition</h3>
+<p>L1 metrics are drivers that influence L0 but don't compose to it numerically (different denominators or time scales). Examples:</p>
+<ul>
+<li><strong>Active Habit Rate</strong> drivers: Activation × Retention × Loop Self-Sufficiency × Engagement Depth × Personalization Lift × Virality (causal, not multiplicative — drivers sit at different denominators)</li>
+<li><strong>Task Resolution Rate</strong> sub-causals: Per-skill accuracy, Per-domain completion (drivers, not strict components)</li>
+</ul>
+<p>For causally decomposed L0s: you can identify which L1 <em>correlates</em> with L0 movement, but precise attribution requires controlled experiments (A/B). Without experiments, attribution is correlational.</p>
+<h3 id="53-implications">5.3 Implications</h3>
+<table>
+<thead>
+<tr>
+<th>If L0 → L1 is mathematical</th>
+<th>If L0 → L1 is causal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Attribute exactly how each L1 moved L0</td>
+<td>Identify which L1 likely drove L0 movement</td>
+</tr>
+<tr>
+<td>Forecast L0 = forecast each L1 and compose</td>
+<td>Need experiments to attribute precisely</td>
+</tr>
+<tr>
+<td>Set L1 targets that mathematically guarantee L0 target</td>
+<td>Set L1 targets as necessary-but-not-sufficient</td>
+</tr>
+</tbody>
+</table>
+<p>The framework documents which type each L0 belongs to (see audit, §12).</p>
+<hr />
+<h2 id="6-the-7-layers">6. The 7 Layers</h2>
+<h3 id="61-layer-1-the-user-loop">6.1 Layer 1 — The User Loop</h3>
+<p><strong>Question:</strong> <em>Did the user come back?</em></p>
+<p><strong>L0:</strong> <strong>Active Habit Rate</strong> = <code>Organic DQU ÷ MQU</code> <em>(this IS the product L0)</em></p>
+<p><strong>L1 — 8 groups:</strong></p>
+<h4 id="group-a-activation-entry-to-the-loop-with-window">Group A — Activation (entry to the loop, with window)</h4>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Activation Rate</td>
+<td>% of installs that fire ≥1 query within D7 window. Quality of the query lives in Useful Task Rate, not here.</td>
+</tr>
+<tr>
+<td>First-session activation rate</td>
+<td>First query on Day 0</td>
+</tr>
+<tr>
+<td>Delayed activation rate</td>
+<td>First query post-session-1, within D7 window</td>
+</tr>
+<tr>
+<td>Time-to-Activation</td>
+<td>Median, p90 hours from install to first query</td>
+</tr>
+<tr>
+<td>Activation rate by session-number-when-activated</td>
+<td>Activation curve diagnostic</td>
+</tr>
+</tbody>
+</table>
+<h4 id="group-b-engagement-depth-frequency-time">Group B — Engagement (depth + frequency + time)</h4>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Queries per DQU per day</td>
+<td>Per-user depth</td>
+</tr>
+<tr>
+<td>Sessions per DQU per day</td>
+<td>Per-user frequency</td>
+</tr>
+<tr>
+<td>Avg session duration (median, p95)</td>
+<td>Time spent — paired with completion to interpret</td>
+</tr>
+<tr>
+<td>Total time spent per DQU per day</td>
+<td>Aggregate engagement time</td>
+</tr>
+<tr>
+<td>Multi-query session rate</td>
+<td>% sessions with ≥2 queries</td>
+</tr>
+<tr>
+<td>Multi-session day rate</td>
+<td>% DQU with ≥2 sessions in a day</td>
+</tr>
+<tr>
+<td>Active days per week</td>
+<td>Avg days/week with ≥1 query (per MQU)</td>
+</tr>
+<tr>
+<td>Power-user rate</td>
+<td>% of DAU with ≥X queries</td>
+</tr>
+<tr>
+<td>Queries per MQU per month</td>
+<td>Monthly-level engagement intensity</td>
+</tr>
+<tr>
+<td>Total query / session volume per day</td>
+<td>Operational scale (non-unique)</td>
+</tr>
+</tbody>
+</table>
+<h4 id="group-c-retention-curve">Group C — Retention curve</h4>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D1 organic return rate</td>
+<td>Activation-depth signal — did the first session land?</td>
+</tr>
+<tr>
+<td>D7 organic return rate</td>
+<td>Week-1 habit signal</td>
+</tr>
+<tr>
+<td>D30 organic return rate</td>
+<td>Month-1 habit signal</td>
+</tr>
+<tr>
+<td>D90 organic return rate</td>
+<td>Long-term loyalty signal</td>
+</tr>
+</tbody>
+</table>
+<h4 id="group-d-loop-quality-organic-vs-inorganic">Group D — Loop quality (Organic vs Inorganic)</h4>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Organic Returning Users</td>
+<td>Returns without push attribution — the loop working</td>
+</tr>
+<tr>
+<td>Inorganic Returning Users (push-attributed)</td>
+<td>Returns triggered by PN / WA tap — comms working</td>
+</tr>
+<tr>
+<td>Loop Self-Sufficiency = Organic ÷ Total returns</td>
+<td>What share of returns are unprompted</td>
+</tr>
+<tr>
+<td>Push-attributed Return Rate</td>
+<td>1 − Loop Self-Sufficiency</td>
+</tr>
+<tr>
+<td>Habit Formation Rate</td>
+<td>% of Inorganic → Organic within 60d</td>
+</tr>
+</tbody>
+</table>
+<h4 id="group-e-sentiment-value">Group E — Sentiment + value</h4>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NPS</td>
+<td>Will the user recommend?</td>
+</tr>
+<tr>
+<td>User Satisfaction Rate</td>
+<td>Per-query behavioural + explicit signals</td>
+</tr>
+<tr>
+<td>Surface time-to-meaningful (p95)</td>
+<td>Did the entry surface earn the next tap?</td>
+</tr>
+</tbody>
+</table>
+<h4 id="group-f-loop-expansion">Group F — Loop expansion</h4>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Experience discovery rate</td>
+<td>% of users who used ≥2 named experiences in week 1</td>
+</tr>
+<tr>
+<td>Vertical breadth</td>
+<td>Avg distinct domains used per active user (D7)</td>
+</tr>
+<tr>
+<td>Cross-domain engagement rate</td>
+<td>% users using ≥2 domains in a session</td>
+</tr>
+</tbody>
+</table>
+<h4 id="group-g-experience-metrics-filter-generic-vs-signature">Group G — Experience metrics (filter: Generic vs Signature)</h4>
+<p>Three sub-groups: <strong>G.1</strong> Per-experience metrics applies to all experiences. <strong>G.2</strong> Signature qualification benchmarks define what counts as Signature. <strong>G.3</strong> Signature vs Non-Signature deltas validate the designation. <strong>G.4</strong> Catalog velocity tracks how fast new experiences ship.</p>
+<table>
+<thead>
+<tr>
+<th>Sub-group</th>
+<th>Key metrics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>G.1 Per-experience</td>
+<td>Attempt Rate · Completion Rate · 24-hour Return · D7/D30 Stickiness · Avg Turns · Cohort Penetration · In-context NPS</td>
+</tr>
+<tr>
+<td>G.2 Qualification</td>
+<td>Proprietary data binding (binary) · Loop-forming threshold · Cultural irreplaceability · Composite Qualification Score (0–3, only 3/3 qualifies)</td>
+</tr>
+<tr>
+<td>G.3 Delta validators</td>
+<td>D7 Retention Delta · Completion Delta · Stickiness Delta · Per-Cohort Pull Delta · NPS Delta · Per-Domain Coverage Delta · Time-to-Resolution Delta</td>
+</tr>
+<tr>
+<td>G.4 Catalog velocity</td>
+<td>New experiences live/month · New Signature Experiences live/month · Time idea → live · % new experiences clearing D7 within 30 days</td>
+</tr>
+</tbody>
+</table>
+<h4 id="group-h-outcome-value-delivered-to-user-aspirational-at-ga-per-mesh">Group H — Outcome value delivered to user (aspirational at GA, per Mesh)</h4>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Time saved per user per day (estimated)</td>
+<td>Per Mesh GA aspirational: 30–60 min/user/day. Estimated per task type.</td>
+</tr>
+<tr>
+<td>Money saved per user per month (estimated)</td>
+<td>Per Mesh GA aspirational: ₹500–2,000/user/month. Driven by deal-finding, mandi timing, GST/scheme advice.</td>
+</tr>
+<tr>
+<td>Money earned per user per month (estimated)</td>
+<td>Income-driven use cases — jobs, commerce, financial timing</td>
+</tr>
+<tr>
+<td>User-reported value (survey)</td>
+<td>Weekly self-reported quantification</td>
+</tr>
+<tr>
+<td>Substitution rate</td>
+<td>% of tasks where JBIQ replaced another app/service/call — "completes things vs points elsewhere"</td>
+</tr>
+<tr>
+<td>Value Ribbon surface engagement</td>
+<td>% of users viewing the cumulative ₹-saved / time-saved widget</td>
+</tr>
+<tr>
+<td>Per-domain value attribution</td>
+<td>Time/money saved per domain — different value profiles</td>
+</tr>
+</tbody>
+</table>
+<p><strong>L2 — Diagnostics:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pre-activation funnel</td>
+<td>Install → DAU → DQU → Activation rates</td>
+</tr>
+<tr>
+<td>Onboarding completion, time-to-first-query, drop-off step</td>
+<td>Where the funnel leaks</td>
+</tr>
+<tr>
+<td>Curve diagnostics (D1→D7, D7→D30, D30→D90 drop-offs)</td>
+<td>Where retention leaks</td>
+</tr>
+<tr>
+<td>Behavioural satisfaction signals</td>
+<td>Rephrase, Re-ask, Response dwell time</td>
+</tr>
+<tr>
+<td>At-risk % (no query for X+ days in Retention)</td>
+<td>Pre-churn warning</td>
+</tr>
+<tr>
+<td>Cohort Variance (max − min Active Habit across A–E)</td>
+<td>Bharat-resonance diagnostic</td>
+</tr>
+<tr>
+<td>Per-cohort Layer 1 metrics</td>
+<td>All Layer 1 metrics sliced by Cohort A–E</td>
+</tr>
+<tr>
+<td>Comms-layer effectiveness</td>
+<td>PN / WA open rate, post-click action rate</td>
+</tr>
+<tr>
+<td>NPS verbatim themes, free-text sentiment</td>
+<td>Where is the love and the hate</td>
+</tr>
+<tr>
+<td>FGD / diary findings</td>
+<td>Qualitative feed-in</td>
+</tr>
+<tr>
+<td>Trust signal events</td>
+<td>Shared output, advocacy actions</td>
+</tr>
+</tbody>
+</table>
+<h3 id="62-layer-2-the-personalization">6.2 Layer 2 — The Personalization</h3>
+<p><strong>Question:</strong> <em>Did it feel made for me?</em></p>
+<p><strong>L0:</strong> <strong>Personalization Resonance Rate</strong> = <code>% of returning sessions where (a) personalization fired, (b) was correct, AND (c) the user signaled value</code></p>
+<p>This is one of the 5 Key Bets per the Mesh ("N=1 personalisation"). The L0 is a three-clause AND — captures user-perceived "knows me," not just memory accuracy.</p>
+<p><strong>L1 — Drivers:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Driver</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Memory-driven (Context-Driven Value Rate)</td>
+<td>Memory retrieved + applied + user did not re-explain</td>
+</tr>
+<tr>
+<td>Surface-driven (Widget / tile tap rate)</td>
+<td>Taps ÷ impressions on home widgets, tiles, suggestions, recommendations</td>
+</tr>
+<tr>
+<td>Language-driven</td>
+<td>Correct-language session rate (no manual selection)</td>
+</tr>
+<tr>
+<td>Identity-driven</td>
+<td>JioID pre-load rate</td>
+</tr>
+<tr>
+<td>Adaptive engagement</td>
+<td>Next-prompt suggestion match rate · time-of-day relevance</td>
+</tr>
+<tr>
+<td>N=1 Retention Lift (validation)</td>
+<td>D30(memory active) − D30(no-memory cohort) — periodic causal validation</td>
+</tr>
+</tbody>
+</table>
+<p><strong>L2 — Diagnostics:</strong></p>
+<p>Memory capture / retrieval precision and recall · Re-explanation rate (direct test of "knows you") · Hallucinated facts per audit · Cross-language recall rate · Memory-trust signal events (Saved Kundali, etc.) · Per-widget-position tap rate.</p>
+<h3 id="63-layer-3-the-conversation">6.3 Layer 3 — The Conversation</h3>
+<p><strong>Question:</strong> <em>Did talking to it feel natural?</em></p>
+<p><strong>L0:</strong> <strong>Multi-turn Coherence Rate</strong> = <code>% of multi-turn sessions where context held across all turns AND modality switches succeeded</code></p>
+<p>The conversation surface is unified voice + text + image. Voice gets the most detailed sub-tree because it's one of the 5 Key Bets per the Mesh, but text and image are first-class.</p>
+<p><strong>L1 — by modality and cross-modal:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Sub-area</th>
+<th>Key metrics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Voice path (Key Bet)</td>
+<td>Voice Primary User Share · Initiation · Stickiness · Fallback Rate · ASR WER · Code-mix Completion · Voice Intent Accuracy · E2E Voice Latency p95 · Barge-in · VAD F1 · TTS Naturalness (MOS) · TTS Playback Completion · Voice Carry-Through · Misunderstanding Recovery</td>
+</tr>
+<tr>
+<td>Text path</td>
+<td>Text Query Latency · Text Completion · Multi-turn rate · Suggested-prompt usage</td>
+</tr>
+<tr>
+<td>Image path</td>
+<td>Image Upload Success · Vision Accuracy · Image-to-Task Completion</td>
+</tr>
+<tr>
+<td>Cross-modal</td>
+<td>Multi-turn Coherence · Modality Switch Success · Turn-Taking Quality</td>
+</tr>
+</tbody>
+</table>
+<p><strong>L2:</strong> Noise-ASR retention (kitchen, market, traffic) · Per-network-type voice latency · Per-device-tier voice metrics · Audio Replay Rate · Mic Permission Grant Rate.</p>
+<h3 id="64-layer-4-the-task-delivery">6.4 Layer 4 — The Task Delivery</h3>
+<p><strong>Question:</strong> <em>Did the AI do what I asked?</em></p>
+<p><strong>L0:</strong> <strong>Task Resolution Rate</strong> (system-side: task reached a resolved state)</p>
+<p>This is the system-side contribution to Useful Task Rate. The user-satisfaction half lives in Layer 1.</p>
+<p><strong>L1 — Accuracy + Speed:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Metrics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Accuracy</td>
+<td>Intent Classification Accuracy · Routing Accuracy (right skill, first try) · Execution Success Rate · Multi-step Task Success Rate</td>
+</tr>
+<tr>
+<td>Speed</td>
+<td>TTFT p95 · E2E Latency p95</td>
+</tr>
+</tbody>
+</table>
+<p><strong>L2:</strong> Per-skill accuracy · Per-domain task completion · Confirmation-bypass rate (must = 0 for irreversible actions) · Per-network and per-device-tier latency.</p>
+<h3 id="65-layer-5-the-quality">6.5 Layer 5 — The Quality</h3>
+<p><strong>Question:</strong> <em>Was the answer right?</em></p>
+<p><strong>L0:</strong> <strong>Production Quality Floor</strong> = <code>% of production responses passing all critical eval dimensions (relevance, accuracy, safety, language)</code></p>
+<p>Critical: this measures quality in <strong>production</strong>, not just in offline eval sets (avoiding the eval-tautology trap).</p>
+<p><strong>L1 — Quality dimensions:</strong></p>
+<p>Eval pass rate (offline golden) · Hallucination rate · Guardrail block rate (adversarial) · Drift (online vs offline golden, ≤10pp) · CI/CD eval gating coverage · Brand-voice adherence · Language authenticity.</p>
+<p><strong>L2:</strong> Per-language eval score · Red-team violation count · New grader velocity · Eval misses that reached users.</p>
+<h3 id="66-layer-6-the-platform">6.6 Layer 6 — The Platform</h3>
+<p><strong>Question:</strong> <em>Did it work when I needed it?</em></p>
+<p><strong>L0:</strong> <strong>Reliability-Adjusted Availability</strong> = <code>% of seconds platform is up AND within latency SLO AND below crash threshold</code></p>
+<p>Uptime alone doesn't capture usability. The L0 combines availability + latency + stability.</p>
+<p><strong>L1 — Components:</strong></p>
+<p>Service uptime % · Latency SLO compliance (voice / agentic / dashboard) · Crash rate per 100 sessions · Scale headroom under load · PR-to-production velocity.</p>
+<p><strong>L2:</strong> Per-service availability · Per-region latency · Self-serve service setup time · Incident detect → ack time.</p>
+<h3 id="67-layer-7-the-partners">6.7 Layer 7 — The Partners</h3>
+<p><strong>Question:</strong> <em>Scale path — supplier of capacity to Layers 4–5</em></p>
+<p><strong>L0:</strong> <strong>% of skills served by partners</strong> (everyday intent or Signature Experience — both count)</p>
+<p>Partners ship skills that core engineering can't ship at cadence — irrespective of skill class.</p>
+<p><strong>L1:</strong></p>
+<p>Partner-built skills live in production · Self-serve onboarding compliance gate time · New skills shipped/month autonomously · External partners live in production.</p>
+<p><strong>L2:</strong> Per-partner skill share · Per-partner-skill task completion rate · Manual intervention steps per onboarding.</p>
+<hr />
+<h2 id="7-cross-cutting-attributes">7. Cross-Cutting Attributes</h2>
+<p>Every L0 / L1 in the tree must be sliceable by these. Every metric reported should carry the dimensions it was sliced by.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Attribute</th>
+<th>Values</th>
+<th>Especially relevant for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>Cohort A–E</strong></td>
+<td>5 user cohorts per <code>jbiq_user_cohort_gtm__v1.docx</code> (encapsulates language, device, geography, segment)</td>
+<td>Bharat (BPC), Active Habit, NPS, Useful Task</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Loop type</strong></td>
+<td>Daily · Task · Life</td>
+<td>Active Habit per loop type, per-experience retention</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Domain</strong></td>
+<td>12 daily-life domains</td>
+<td>Useful Task Rate per domain, per-domain quality</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Experience type</strong></td>
+<td>Vertical · Signature · Generic chat</td>
+<td>Group G filter</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>Modality</strong></td>
+<td>Voice · Text · Image</td>
+<td>Voice Primary User Share, modality switch success</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>Language</strong></td>
+<td>12 Indian languages</td>
+<td>ASR WER, Production Quality, NPS, brand-voice</td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>Device tier</strong></td>
+<td>Low-end · Mid-end · Flagship</td>
+<td>Latency, crash rate, voice abandonment</td>
+</tr>
+<tr>
+<td>8</td>
+<td><strong>Network type</strong></td>
+<td>4G · 3G · 2G</td>
+<td>Voice latency, task completion</td>
+</tr>
+<tr>
+<td>9</td>
+<td><strong>Surface</strong></td>
+<td>Home · Persona page · Suggestion tile · Widget · Deep link · Notification</td>
+<td>Surface time-to-meaningful, widget tap rate</td>
+</tr>
+<tr>
+<td>10</td>
+<td><strong>Time horizon</strong></td>
+<td>D1 · D7 · D30 · D90</td>
+<td>Retention curve, cohort analysis</td>
+</tr>
+<tr>
+<td>11</td>
+<td><strong>Acquisition channel</strong></td>
+<td>Jio retail · MyJio · JioFiber · Organic · Paid · Referral</td>
+<td>Per-channel D7 organic return</td>
+</tr>
+<tr>
+<td>12</td>
+<td><strong>Session depth</strong></td>
+<td>Single-turn · Multi-turn (≥3) · Extended (≥5)</td>
+<td>Multi-turn Coherence, Engagement</td>
+</tr>
+<tr>
+<td>13</td>
+<td><strong>Time of day</strong></td>
+<td>Morning · Day · Evening · Night</td>
+<td>Adaptive engagement, Personalization</td>
+</tr>
+<tr>
+<td>14</td>
+<td><strong>Day of week</strong></td>
+<td>Weekday · Weekend</td>
+<td>Engagement frequency, weekend-specific use cases</td>
+</tr>
+<tr>
+<td>15</td>
+<td><strong>Region</strong></td>
+<td>Urban · Tier-2 · Tier-3 · Rural</td>
+<td>Per-region latency, Bharat composite</td>
+</tr>
+<tr>
+<td>16</td>
+<td><strong>Skill class</strong></td>
+<td>1P · 2P · 3P · Generic chat</td>
+<td>Partner skill share, per-partner task completion</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="8-bharat-parallel-strategic-frame">8. Bharat — Parallel Strategic Frame</h2>
+<p>Bharat is <strong>not a layer of the product tree</strong> — it's a parallel strategic frame, reviewed alongside it. Inherits product metrics sliced by Cohort A–E and adds qualitative resonance signals.</p>
+<h3 id="81-why-parallel-not-a-layer">8.1 Why Parallel, Not a Layer</h3>
+<p>The cohort cuts on Active Habit Rate ARE the behavioural resonance test — <em>if Cohort D users return organically, the product is resonating</em>. A separate "Bharat layer" would double-count what the cohort cut already shows.</p>
+<p>But some resonance signals are inherently qualitative and Bharat-specific — <em>"feels native vs translated,"</em> persona-fit, cultural relevance — and can't sit in always-on product instrumentation. These live in the Bharat framework, reviewed quarterly.</p>
+<h3 id="82-structure">8.2 Structure</h3>
+<table>
+<thead>
+<tr>
+<th>Section</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Section 1 — Per-Cohort Product Health</td>
+<td>Inherits Product Tree metrics sliced by Cohort A–E. Cohort Score per cohort. <strong>Cohort Variance</strong> (max − min) as the diagnostic.</td>
+</tr>
+<tr>
+<td>Section 2 — Bharat-Specific Resonance</td>
+<td>New metrics not in Product Tree: "Feels native vs translated" surveys · Persona-fit · Cultural relevance · Bharat user-pattern signals (shared-device, family-as-unit, micro-loops) · Brand-voice cross-language audit</td>
+</tr>
+</tbody>
+</table>
+<h3 id="83-bpc-bharat-persona-composite">8.3 BPC — Bharat Persona Composite</h3>
+<pre><code>BPC = weighted average of Cohort Score across Cohorts A–E
+Cohort Variance = max(Cohort Score) − min(Cohort Score)
+</code></pre>
+<p>If BPC is healthy on average but Cohort D is failing, the strategic bet is broken for the deepest users. Cohort Variance is itself the diagnostic.</p>
+<h3 id="84-detailed-framework">8.4 Detailed Framework</h3>
+<p>See <code>bharat-metrics.md</code> for full Section 1 and Section 2 with all metrics and methodology.</p>
+<hr />
+<h2 id="9-out-of-the-product-tree">9. Out of the Product Tree</h2>
+<p>Real, measurable, important — but they're <strong>infrastructure, GTM, or operations</strong>, not product-quality measures of whether the AI works for users.</p>
+<h3 id="91-the-parallel-tracks">9.1 The Parallel Tracks</h3>
+<table>
+<thead>
+<tr>
+<th>Track</th>
+<th>Owner</th>
+<th>What it covers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Growth</strong></td>
+<td>GTM/Marketing</td>
+<td>Acquisition · CAC · Channel mix</td>
+</tr>
+<tr>
+<td><strong>Distribution</strong></td>
+<td>GTM</td>
+<td>Channels · Partnerships · Distribution-derived cohorts</td>
+</tr>
+<tr>
+<td><strong>Business / Monetization</strong></td>
+<td>Biz + GTM</td>
+<td>ARPU · LTV · Subscription (post-GA)</td>
+</tr>
+<tr>
+<td><strong>Customer Lifecycle</strong></td>
+<td>Sridhar + Comms</td>
+<td>8 user-journey stages · Habit Formation Rate · per-campaign attribution</td>
+</tr>
+<tr>
+<td><strong>Data</strong></td>
+<td>Vinay</td>
+<td>Insight Velocity · Dashboards · Instrumentation · Self-serve analytics</td>
+</tr>
+<tr>
+<td><strong>A/B Experimentation</strong></td>
+<td>Vinay</td>
+<td>Causal validation · Experiment velocity</td>
+</tr>
+<tr>
+<td><strong>Unit Economics</strong></td>
+<td>Engineering + Finance</td>
+<td>Tokens/user · Cost/query · Cost/MAU</td>
+</tr>
+</tbody>
+</table>
+<h3 id="92-interfaces-to-the-product-tree">9.2 Interfaces to the Product Tree</h3>
+<table>
+<thead>
+<tr>
+<th>Track</th>
+<th>Interface</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Growth</td>
+<td>GTM produces installs → consumed by Activation Rate (Layer 1 L1). Product earns advocacy → flows back via Virality.</td>
+</tr>
+<tr>
+<td>Customer Lifecycle</td>
+<td>Push-attributed Return Rate (Layer 1 L1) — the product-tree side. Lifecycle-stage transitions live in the parallel track.</td>
+</tr>
+<tr>
+<td>Data</td>
+<td>Every L0/L1 in product tree depends on Data being live.</td>
+</tr>
+<tr>
+<td>A/B</td>
+<td>Validates that L0 / L1 movements were caused by specific changes (vs correlation).</td>
+</tr>
+<tr>
+<td>Unit Economics</td>
+<td>Every product metric has a unit-economics shadow — paired with cost-per-user/query.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="93-detailed-tracks">9.3 Detailed Tracks</h3>
+<p>See <code>non-product-metrics.md</code> for full metric lists per track.</p>
+<hr />
+<h2 id="10-change-management-and-governance">10. Change Management and Governance</h2>
+<h3 id="101-change-types">10.1 Change Types</h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Risk</th>
+<th>Process</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>New metric (additive)</strong></td>
+<td>Low</td>
+<td>PR to metrics-tree + dbt model. Pod owner + Sridhar approve. Live in 1–2 days.</td>
+</tr>
+<tr>
+<td><strong>New event (additive)</strong></td>
+<td>Low</td>
+<td>Pod adds to typed event schema. Vinay reviews data-layer impact.</td>
+</tr>
+<tr>
+<td><strong>Definition change to existing metric</strong></td>
+<td><strong>High</strong></td>
+<td><strong>Versioning + deprecation</strong> required. Metric Council review.</td>
+</tr>
+<tr>
+<td><strong>Event schema change (rename / remove)</strong></td>
+<td>Medium</td>
+<td>Migration window: both names emit ≥30 days. Schema registry tracks.</td>
+</tr>
+<tr>
+<td><strong>Cohort definition changes</strong></td>
+<td><strong>High</strong></td>
+<td>Re-baseline 30 days back. All cohort cuts re-computed. Change date flagged.</td>
+</tr>
+<tr>
+<td><strong>Threshold change (e.g., Signature qualification)</strong></td>
+<td>Medium</td>
+<td>Re-compute SE catalog. Some experiences may demote. Quarterly review confirms.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="102-versioning-pattern-for-definition-changes">10.2 Versioning Pattern (for definition changes)</h3>
+<pre><code>v1 of metric (deprecated 2026-08-01, removed 2026-11-01)
+v2 of metric (current, since 2026-08-01)
+
+Both compute in parallel during transition.
+Dashboards explicitly label which version they show.
+Historical reports include the cutover date.
+</code></pre>
+<h3 id="103-the-metric-council">10.3 The Metric Council</h3>
+<p>4-person review for material changes (definition, cohort, threshold). Meets monthly or on-demand:</p>
+<table>
+<thead>
+<tr>
+<th>Member</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sridhar</td>
+<td>Owns metrics-tree.md as canon</td>
+</tr>
+<tr>
+<td>Vinay (Data)</td>
+<td>Owns data layer feasibility</td>
+</tr>
+<tr>
+<td>Karan (Evals)</td>
+<td>Quality lens</td>
+</tr>
+<tr>
+<td>Leadership rep</td>
+<td>Strategic alignment</td>
+</tr>
+</tbody>
+</table>
+<h3 id="104-change-request-workflow">10.4 Change Request Workflow</h3>
+<ol>
+<li><strong>Proposal</strong> — PR to metrics-tree.md with what's changing, why, who's impacted, migration plan</li>
+<li><strong>Pod-owner review</strong> — Layer owner sign-off</li>
+<li><strong>Data-layer review</strong> — Vinay confirms instrumentation feasibility</li>
+<li><strong>Council review</strong> — Only for material changes</li>
+<li><strong>Implementation</strong> — PR ships metrics-tree update + dbt model + event schema + dashboard wiring + changelog entry</li>
+<li><strong>Validation</strong> — Within 48h: events firing? numbers populating?</li>
+</ol>
+<h3 id="105-observability-for-instrumentation-itself">10.5 Observability for Instrumentation Itself</h3>
+<p>Alert when:
+- A defined event stops firing for &gt;1 hour
+- A new event fires that doesn't have a schema
+- A required property is missing (&gt;0.5% rate)
+- Cross-source join fails (&gt;0.5% rate on user_id / session_id)
+- dbt model fails to refresh on schedule
+- A dashboard metric changes definition without council approval</p>
+<hr />
+<h2 id="11-instrumentation-and-data-interaction">11. Instrumentation and Data Interaction</h2>
+<h3 id="111-the-5-layer-instrumentation-chain">11.1 The 5-Layer Instrumentation Chain</h3>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Owner</th>
+<th>What lives here</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Definition</td>
+<td>Sridhar (metrics-tree.md as canon)</td>
+<td>Every metric has ONE definition</td>
+</tr>
+<tr>
+<td>2. Event taxonomy</td>
+<td>Each pod for their layer</td>
+<td>Events as typed schemas (TypeScript / protobuf), CI-enforced</td>
+</tr>
+<tr>
+<td>3. Pipelines</td>
+<td>Vinay (Data pod)</td>
+<td>Spanner · GA4 · Langfuse · CleverTap · New Relic · GrowthBook — joined in Databricks</td>
+</tr>
+<tr>
+<td>4. Computation</td>
+<td>Vinay + each layer owner</td>
+<td>dbt models — metric computation as code, versioned with metrics-tree.md</td>
+</tr>
+<tr>
+<td>5. Surfaces</td>
+<td>Vinay</td>
+<td>Dashboards · Self-serve query · NL interface</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Principle:</strong> metric-as-code. PRs that change a metric require updates in both <code>metrics-tree.md</code> and the dbt repo.</p>
+<h3 id="112-three-surfaces-for-data-interaction">11.2 Three Surfaces for Data Interaction</h3>
+<table>
+<thead>
+<tr>
+<th>Surface</th>
+<th>Tool</th>
+<th>Audience</th>
+<th>SLO</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pre-built dashboards</td>
+<td>Mode / Tableau / native</td>
+<td>Leadership, daily standup</td>
+<td>Open in ≤10 sec</td>
+</tr>
+<tr>
+<td>Self-serve query</td>
+<td>Hex / Mode Visual Explorer / Databricks SQL</td>
+<td>PMs, analysts, designers</td>
+<td>New view in ≤2 min</td>
+</tr>
+<tr>
+<td>Natural language layer</td>
+<td>Internal MetricsBot</td>
+<td>Anyone</td>
+<td>Answer in ≤1 min</td>
+</tr>
+</tbody>
+</table>
+<h3 id="113-metricsbot-internal-nl-data-interaction">11.3 MetricsBot — Internal NL Data Interaction</h3>
+<p>An internal AI copilot for analytics, built using JBIQ's own AI stack:</p>
+<ul>
+<li>Understands metric definitions (grounded in metrics-tree.md)</li>
+<li>Generates SQL against Databricks</li>
+<li>Suggests the right cut (cohort, language, time horizon)</li>
+<li>Handles drill-downs and anomaly detection</li>
+<li>Distinguishes correlational from causal attribution</li>
+</ul>
+<p>When metric definitions change, MetricsBot re-grounds; old definitions remain queryable with a "deprecated since X" warning.</p>
+<hr />
+<h2 id="12-metrics-design-audit">12. Metrics-Design Audit</h2>
+<table>
+<thead>
+<tr>
+<th>Principle</th>
+<th>Pass?</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Layers organised by user experience, not internal pods</td>
+<td>✓</td>
+<td>Each layer answers a user-question</td>
+</tr>
+<tr>
+<td>L1 decomposes L0</td>
+<td>Partial ✓</td>
+<td>Useful Task Rate is clean math. Active Habit Rate is causal — explicit in §5.</td>
+</tr>
+<tr>
+<td>Each metric Actionable</td>
+<td>Mostly ✓</td>
+<td>Some observational (NPS, virality, FGD) — flagged in their layer</td>
+</tr>
+<tr>
+<td>Each metric Measurable today</td>
+<td>⚠</td>
+<td>16 P0 instrumentation gaps tracked in FnF metrics workbook</td>
+</tr>
+<tr>
+<td>Leading vs lagging distinct</td>
+<td>✓</td>
+<td>L2 mostly leading, L1 mostly lagging</td>
+</tr>
+<tr>
+<td>No vanity metrics at the top</td>
+<td>✓</td>
+<td>DAU at Layer 1 L2 (funnel diagnostic). Growth, Data, A/B, Unit Economics all out of tree.</td>
+</tr>
+<tr>
+<td>Each metric has causal link to L0</td>
+<td>✓</td>
+<td>Output-backward enforces this</td>
+</tr>
+<tr>
+<td>Not double-counted across layers</td>
+<td>✓</td>
+<td>Task Resolution lives once (Layer 4); appears elsewhere only as a factor</td>
+</tr>
+<tr>
+<td>Activity unit appropriate</td>
+<td>✓</td>
+<td>DQU not DAU; monthly units (MAU/MQU/MTU) primary</td>
+</tr>
+<tr>
+<td>Bharat resonance has a home</td>
+<td>✓</td>
+<td>Cohort A–E cross-cut + Cohort Variance at Layer 1 L2 + parallel <code>bharat-metrics.md</code></td>
+</tr>
+<tr>
+<td>Personalization elevated</td>
+<td>✓</td>
+<td>Layer 2 with own L0 — not buried in Memory</td>
+</tr>
+<tr>
+<td>Conversation unified</td>
+<td>✓</td>
+<td>Layer 3 covers voice + text + image</td>
+</tr>
+<tr>
+<td>Memory L0 operationally viable</td>
+<td>✓</td>
+<td>Context-Driven Value Rate (always-on); N=1 lift at L1 for periodic causal validation</td>
+</tr>
+<tr>
+<td>Per-experience metrics consistently leveled</td>
+<td>✓</td>
+<td>Group G has clear per-experience + qualification + delta + velocity structure</td>
+</tr>
+<tr>
+<td>Causal validation has a home</td>
+<td>⚠</td>
+<td>A/B in capability track; currently blocked at FnF</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="13-design-choices-defended">13. Design Choices Defended</h2>
+<h3 id="131-paired-l0-not-single">13.1 Paired L0, Not Single</h3>
+<p>Choosing one of {Active Habit, Useful Task} would compromise the product. A high single-metric org can hit it by failing the other half. The pair forces both.</p>
+<h3 id="132-dqu-as-the-activity-unit-not-dau">13.2 DQU as the Activity Unit, Not DAU</h3>
+<p>For an AI assistant, "opened the app" is a vanity floor. DQU (sent ≥1 query) anchors L0 in real engagement. DAU is kept at Layer 1 L2 as a funnel diagnostic — the DAU→DQU rate surfaces friction. (Now reframed at month level: MAU/MQU/MTU as primary units, daily derived for L0 ratio.)</p>
+<h3 id="133-memory-l0-context-driven-value-rate-not-d30-retention-lift">13.3 Memory L0 = Context-Driven Value Rate, Not D30 Retention Lift</h3>
+<p>The retention-lift formulation requires a holdout cohort with memory disabled — deliberately giving some users a worse product. Context-Driven Value Rate measures memory delivering value directly (three-clause AND on retrieval, application, no re-explanation). Loses the causal A/B claim, gains operational viability and direct measurement. N=1 Retention Lift retained at L1 as periodic validation.</p>
+<h3 id="134-cohort-ae-as-cross-cut-bharat-as-parallel-framework-not-a-separate-layer">13.4 Cohort A–E as Cross-Cut, Bharat as Parallel Framework — Not a Separate Layer</h3>
+<p>The cohort cuts on Active Habit Rate ARE the behavioural resonance test. A "Bharat composite" layer was double-counting. Soft, qualitative resonance metrics live in <code>bharat-metrics.md</code> as a parallel periodic framework. Cohort Variance (max − min Active Habit across A–E) is kept at Layer 1 L2.</p>
+<h3 id="135-layers-organised-by-user-experience-not-internal-pod-taxonomy">13.5 Layers Organised by User Experience, Not Internal Pod Taxonomy</h3>
+<p>The user doesn't experience "Vertical Experience" or "Signature Experience" — they experience "did it work, did it know me, did it talk well." Organising layers around user-experienced concepts forces metrics to test what users actually feel, not what teams ship. Internal taxonomy lives as cross-cuts.</p>
+<h3 id="136-personalization-elevated-to-its-own-layer">13.6 Personalization Elevated to Its Own Layer</h3>
+<p>N=1 personalization is one of the 5 Key Bets. Burying it inside Memory + scattering it across User obscured a strategic bet. Layer 2 with <strong>Personalization Resonance Rate</strong> as L0 makes the bet visible and movable.</p>
+<h3 id="137-output-backward-not-input-forward">13.7 Output-Backward, Not Input-Forward</h3>
+<p>The tree starts from outcomes and decomposes toward inputs (§2.1). Input-forward (vanity metrics: queries shipped, PNs sent, dashboards built) lives in operations, not the product tree.</p>
+<hr />
+<h2 id="14-future-scope">14. Future Scope</h2>
+<p>Things that would belong in the tree but are out of scope at the current product stage:</p>
+<ul>
+<li><strong>Revenue / monetisation metrics</strong> — explicitly out per Product Mesh ("no advertising, transactions, subscriptions at GA"). Becomes a layer post-monetization.</li>
+<li><strong>Family / multi-user account metrics</strong> — Personalisation says "family profiles" is a post-launch direction.</li>
+<li><strong>Offline / on-device intelligence</strong> — same, post-launch.</li>
+<li><strong>Cost per session as a product L1</strong> — currently in Unit Economics (out of tree); may need a paired surface once monetization activates.</li>
+</ul>
+<hr />
+<h2 id="15-glossary">15. Glossary</h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>L0</strong></td>
+<td>The single primary metric for a layer; the north-star test</td>
+</tr>
+<tr>
+<td><strong>L1</strong></td>
+<td>Primary drivers / components that decompose the L0</td>
+</tr>
+<tr>
+<td><strong>L2</strong></td>
+<td>Leading indicators and diagnostics</td>
+</tr>
+<tr>
+<td><strong>DAU / DQU</strong></td>
+<td>Daily Active / Daily Querying Users — daily snapshots derived from MAU / MQU</td>
+</tr>
+<tr>
+<td><strong>MAU / MQU / MTU</strong></td>
+<td>Monthly Active / Querying / Task Users — the primary monthly units</td>
+</tr>
+<tr>
+<td><strong>NPS</strong></td>
+<td>Net Promoter Score</td>
+</tr>
+<tr>
+<td><strong>D1 / D7 / D30 / D90</strong></td>
+<td>Day 1 / 7 / 30 / 90 organic return rate</td>
+</tr>
+<tr>
+<td><strong>SE</strong></td>
+<td>Signature Experience — Vertical Experience that passes 3 quality checks</td>
+</tr>
+<tr>
+<td><strong>L0–L3 (SE)</strong></td>
+<td>Maturity ladder for vertical experiences: L0 basic, L1 better, L2 differentiated, L3 signature</td>
+</tr>
+<tr>
+<td><strong>BPC</strong></td>
+<td>Bharat Persona Composite — weighted average across Cohorts A–E</td>
+</tr>
+<tr>
+<td><strong>Cohort A–E</strong></td>
+<td>5 user cohorts per <code>jbiq_user_cohort_gtm__v1.docx</code></td>
+</tr>
+<tr>
+<td><strong>P7</strong></td>
+<td>Principle 7: "Build for the loop, not the visit"</td>
+</tr>
+<tr>
+<td><strong>ASR / TTS</strong></td>
+<td>Automatic Speech Recognition / Text-to-Speech</td>
+</tr>
+<tr>
+<td><strong>WER</strong></td>
+<td>Word Error Rate — ASR accuracy (lower better)</td>
+</tr>
+<tr>
+<td><strong>VAD</strong></td>
+<td>Voice Activity Detection</td>
+</tr>
+<tr>
+<td><strong>MOS</strong></td>
+<td>Mean Opinion Score — TTS naturalness 1–5</td>
+</tr>
+<tr>
+<td><strong>TTFT</strong></td>
+<td>Time to First Token</td>
+</tr>
+<tr>
+<td><strong>E2E</strong></td>
+<td>End-to-End latency</td>
+</tr>
+<tr>
+<td><strong>p50 / p95</strong></td>
+<td>50th / 95th percentile latency</td>
+</tr>
+<tr>
+<td><strong>SLO</strong></td>
+<td>Service Level Objective</td>
+</tr>
+<tr>
+<td><strong>CI/CD</strong></td>
+<td>Continuous Integration / Continuous Deployment</td>
+</tr>
+<tr>
+<td><strong>PN / WA</strong></td>
+<td>Push Notification / WhatsApp</td>
+</tr>
+<tr>
+<td><strong>CAC / LTV / ARPU</strong></td>
+<td>Cost of Acquisition / Lifetime Value / Average Revenue Per User</td>
+</tr>
+<tr>
+<td><strong>1P / 2P / 3P</strong></td>
+<td>First / Second / Third party</td>
+</tr>
+<tr>
+<td><strong>LLM / SLM</strong></td>
+<td>Large / Small Language Model</td>
+</tr>
+<tr>
+<td><strong>MCP</strong></td>
+<td>Model Context Protocol — partner integration standard</td>
+</tr>
+<tr>
+<td><strong>FnF</strong></td>
+<td>Friends and Family — pre-Beta program</td>
+</tr>
+<tr>
+<td><strong>GA</strong></td>
+<td>General Availability — public launch</td>
+</tr>
+<tr>
+<td><strong>OCP</strong></td>
+<td>Omni Central Profile — intelligence layer</td>
+</tr>
+<tr>
+<td><strong>UCP</strong></td>
+<td>User Central Profile — one input into OCP</td>
+</tr>
+<tr>
+<td><strong>FGD</strong></td>
+<td>Focus Group Discussion</td>
+</tr>
+<tr>
+<td><strong>pp</strong></td>
+<td>Percentage points (95% → 85% = 10pp)</td>
+</tr>
+<tr>
+<td><strong>JioID</strong></td>
+<td>Reliance Jio user identity</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="16-references-and-companion-files">16. References and Companion Files</h2>
+<h3 id="161-source-documents-salonis-onedrive-01-product">16.1 Source Documents (saloni's OneDrive — <code>01 Product/</code>)</h3>
+<ul>
+<li><code>JBIQ Product Mesh.docx</code> (March 2026) — North Star, Success definition, 7 GA metrics with targets, 3 Loops (Daily/Task/Life), 10 Signature Experiences, 5 Key Bets, scope boundaries</li>
+<li><code>Product Layers/JBIQ Product Layers.pptx</code> (March 2026) — Layer stack (Experience / Intelligence / Systems), FnF pod ownership</li>
+<li><code>Product Milestones/JBIQ Goals — GA Pod Cascade.md</code> (May 2026) — 10 org goals × 10 pods × Beta + GA targets</li>
+<li><code>JBIQ_FnF_Metrics_Working.xlsx</code> — FnF dashboard with ~150 metrics across 8 sections, plus 16 instrumentation gaps</li>
+<li><code>User Lifecycle/JBIQ_User_Lifecycle_Framework_v1.0.docx</code> — 8-stage lifecycle, Habit Formation Rate</li>
+<li><code>User Lifecycle/JBIQ_CT_WA_Instrumentation_Spec_v1.0_1.docx</code> — 14 CleverTap events, 9 user properties, campaign config map</li>
+<li><code>jbiq_user_cohort_gtm__v1.docx</code> — canonical cohort definitions A through E</li>
+<li><code>Bharat Concept Note.docx</code> — Soul, 6 Character traits, 4 Indian Pillars</li>
+</ul>
+<h3 id="162-companion-files-same-folder">16.2 Companion Files (same folder)</h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>metrics-tree.md</code></td>
+<td>The canonical Product Metrics tree (working canon, terse and scannable)</td>
+</tr>
+<tr>
+<td><code>product-context.md</code></td>
+<td>Context wrapper — ties Mesh + Goals + FnF + ownership and operational state</td>
+</tr>
+<tr>
+<td><code>bharat-metrics.md</code></td>
+<td>Bharat resonance framework (per-cohort product health + qualitative resonance)</td>
+</tr>
+<tr>
+<td><code>non-product-metrics.md</code></td>
+<td>Parallel tracks outside the product tree</td>
+</tr>
+<tr>
+<td><code>product-metrics-overview.html</code></td>
+<td>Interactive overview with sidebar navigation and collapsible sections</td>
+</tr>
+<tr>
+<td><code>product-metrics-design-doc.md</code></td>
+<td><strong>This document</strong> — the formal write-up</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><em>End of document · v1.0 · 2026-05-11 · Sridhar</em></p></body></html>

@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JBIQ FnF App Experience Framework</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:24px;background:#fff;color:#1a1a1a}
+.w{max-width:1280px;margin:0 auto}
+
+.hdr{background:#0E2841;border-radius:10px;padding:14px 18px;margin-bottom:14px}
+.hdr-title{font-size:15px;font-weight:600;color:#7EC8E3}
+.hdr-sub{font-size:11px;color:#AACCEE;margin-top:4px}
+.hdr-meta{font-size:10px;color:#555;margin-top:8px;display:flex;gap:16px;flex-wrap:wrap}
+.hdr-chip{background:#1a3a5c;color:#AACCEE;padding:2px 8px;border-radius:4px;font-size:10px}
+
+.legend{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
+.leg{display:flex;align-items:center;gap:5px;font-size:11px;color:#1a1a1a}
+.sw{width:12px;height:12px;border-radius:2px;flex-shrink:0}
+.div-sep{width:1px;height:16px;background:#D3D1C7;margin:0 4px}
+
+table{width:100%;border-collapse:collapse}
+thead th{font-size:10px;font-weight:500;color:#5F5E5A;text-align:left;padding:5px 8px;border-bottom:1.5px solid #D3D1C7;background:#F7F6F2;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+tbody td{padding:6px 8px;border-bottom:0.5px solid #ECEAE3;vertical-align:top;font-size:11px;line-height:1.5;color:#1a1a1a}
+tbody tr:hover td{background:#FAFAF8}
+
+/* Dimension section headers — coloured by dimension */
+.dim-hdr td{font-size:10px;font-weight:700;padding:7px 8px;border-bottom:1px solid;letter-spacing:.04em;text-transform:uppercase}
+.dim-01 td{background:#EAF1FA;color:#0C447C;border-color:#B5D4F4;border-left:4px solid #378ADD}
+.dim-02v td{background:#E1F5EE;color:#085041;border-color:#9FE1CB;border-left:4px solid #1D9E75}
+.dim-02c td{background:#EAF3DE;color:#173404;border-color:#C0DD97;border-left:4px solid #639922}
+.dim-02m td{background:#FAEEDA;color:#412402;border-color:#FAC775;border-left:4px solid #EF9F27}
+.dim-03 td{background:#F3EEFB;color:#26215C;border-color:#AFA9EC;border-left:4px solid #7F77DD}
+.dim-04 td{background:#FEF9E7;color:#412402;border-color:#FAC775;border-left:4px solid #BA7517}
+.dim-05 td{background:#FAECE7;color:#4A1B0C;border-color:#F5C4B3;border-left:4px solid #D85A30}
+.dim-06 td{background:#E1F5EE;color:#04342C;border-color:#9FE1CB;border-left:4px solid #0F6E56}
+.dim-rest td{background:#F1EFE8;color:#444441;border-color:#D3D1C7;border-left:4px solid #888780}
+
+/* Sub-section rows */
+.sec td{background:#F7F6F2!important;font-size:9px;font-weight:600;color:#888780;text-transform:uppercase;letter-spacing:.07em;padding:3px 8px;border-bottom:0.5px solid #E8E6DF;border-left:none!important}
+
+/* Row type left bars */
+.r-att td{border-left:3px solid #B4B2A9}
+.r-rem td{border-left:3px solid #85B7EB}
+.r-jio td{border-left:3px solid #5DCAA5}
+.r-fw  td{border-left:3px solid #D85A30}
+
+.uc{font-weight:500;color:#1a1a1a;display:block;font-size:11px}
+.sig{font-size:10px;color:#5F5E5A;margin-top:2px;display:block}
+.pill{font-size:9px;font-weight:500;padding:1px 6px;border-radius:10px;white-space:nowrap;display:inline-block;margin-right:2px}
+.p0{background:#FCEBEB;color:#501313;border:0.5px solid #E24B4A}
+.p1{background:#FFF5D6;color:#7D4E00;border:0.5px solid #EF9F27}
+.p2{background:#F1EFE8;color:#444441;border:0.5px solid #B4B2A9}
+.no{background:#EAF3DE;color:#173404;border:0.5px solid #97C459}
+.enh{background:#E6F1FB;color:#042C53;border:0.5px solid #85B7EB}
+.req{background:#FFF0E8;color:#4A1B0C;border:0.5px solid #D85A30}
+.fw{background:#FAECE7;color:#4A1B0C;border:0.5px solid #D85A30}
+.nail{background:#0E2841;color:#7EC8E3;border:0.5px solid #185FA5;font-size:8px;padding:1px 5px}
+.suf{background:#F1EFE8;color:#444441;border:0.5px solid #B4B2A9;font-size:8px;padding:1px 5px}
+.mod{font-size:10px;color:#888780;white-space:nowrap}
+.id{font-size:9px;color:#B4B2A9;white-space:nowrap}
+.dim-tag{font-size:9px;color:#888780;white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="w">
+
+<div class="hdr">
+  <div class="hdr-title">FnF · Friends &amp; Family · App Experience Scope</div>
+  <div class="hdr-sub">~5K users · Know You · Sessions 1–20 · Look-alike · "This was made for me"</div>
+  <div class="hdr-meta">
+    <span class="hdr-chip">Dim 01 Onboarding &amp; Home — nail it</span>
+    <span class="hdr-chip">Dim 02 Multimodal Input — nail it</span>
+    <span class="hdr-chip">Dim 03 Conversation Surface — nail it</span>
+    <span class="hdr-chip">Dim 04 Conversation Feel — nail it</span>
+    <span class="hdr-chip">Dim 05 Personas — framework + content by vertical teams</span>
+    <span class="hdr-chip">Dim 06 Discovery — framework + 2P baseline</span>
+    <span class="hdr-chip">Dim 07–14 — sufficient baseline</span>
+  </div>
+</div>
+
+<div class="legend">
+  <div class="leg"><div class="sw" style="background:#F1EFE8;border:0.5px solid #B4B2A9"></div>Attentive — device + conversation · no UCP · always on</div>
+  <div class="leg"><div class="sw" style="background:#EBF4FF;border:0.5px solid #85B7EB"></div>Remembers — memory store</div>
+  <div class="leg"><div class="sw" style="background:#E1F5EE;border:0.5px solid #5DCAA5"></div>Jio-connected — JioID / UCP</div>
+  <div class="leg"><div class="sw" style="background:#FAECE7;border:0.5px solid #D85A30"></div>Framework — CXP sets standard · content by vertical teams</div>
+  <div class="div-sep"></div>
+  <div class="leg"><span class="pill p0">P0</span>must ship</div>
+  <div class="leg"><span class="pill p1">P1</span>should ship</div>
+  <div class="leg"><span class="pill p2">P2</span>nice to have</div>
+  <div class="div-sep"></div>
+  <div class="leg"><span class="pill no">No UCP</span>ships always</div>
+  <div class="leg"><span class="pill enh">Enhances</span>richer with Jio</div>
+  <div class="leg"><span class="pill req">Required</span>needs Jio</div>
+  <div class="leg"><span class="pill nail">Nail it</span><span class="pill suf">Sufficient</span></div>
+</div>
+
+<table>
+<thead>
+<tr>
+  <th style="width:4%">ID</th>
+  <th style="width:4%">Pri</th>
+  <th style="width:10%">User type</th>
+  <th style="width:8%">Surface</th>
+  <th style="width:8%">Moment</th>
+  <th style="width:27%">Use case</th>
+  <th style="width:7%">Modality</th>
+  <th style="width:22%">What fires / How it works</th>
+  <th style="width:6%">Jio?</th>
+</tr>
+</thead>
+<tbody>
+
+<!-- ═══════════════════════ DIM 01 — ONBOARDING & HOME ═══════════════════════ -->
+<tr class="dim-hdr dim-01"><td colspan="9">01 · Onboarding &amp; Home <span class="pill nail">Nail it</span> — first open · home surface · quick actions · updates · return experience</td></tr>
+
+<tr class="sec"><td colspan="9">First open — language, activation, task</td></tr>
+
+<tr class="r-att">
+  <td class="id">H-01</td><td><span class="pill p0">P0</span></td>
+  <td>New user</td><td>Home</td><td>First open</td>
+  <td><span class="uc">Language from device — no selector</span><span class="sig">Opens in user's language automatically. Never shows a language selection screen.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Device: locale. Language applied before first render. English only if locale = EN.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-att">
+  <td class="id">H-02</td><td><span class="pill p0">P0</span></td>
+  <td>New user</td><td>Home</td><td>First open</td>
+  <td><span class="uc">Time-of-day greeting</span><span class="sig">Warm, contextual. 7am ≠ 9pm. Sets register for session.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Device: clock, day_of_week. Greeting copy in user's language.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-jio">
+  <td class="id">H-03</td><td><span class="pill p0">P0</span></td>
+  <td>Jio user</td><td>Home</td><td>First open</td>
+  <td><span class="uc">Name + language from JioID</span><span class="sig">"Subbalakshmi akka, vanakkam." Zero setup. Degrades to device locale if JioID unavailable.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">JioID: name, preferred_language. Silent pull. Graceful degradation defined.</span></td>
+  <td><span class="pill enh">Enhances</span></td>
+</tr>
+
+<tr class="r-att">
+  <td class="id">H-04</td><td><span class="pill p0">P0</span></td>
+  <td>New user</td><td>Home</td><td>First open</td>
+  <td><span class="uc">Task-led activation in &lt;60s</span><span class="sig">User completes a real task in session 1. No feature tour. No "ask me anything" blank state.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Session: first_query routed to task. Welfare for Subbalakshmi, GST for Ranjit.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-jio">
+  <td class="id">H-05</td><td><span class="pill p1">P1</span></td>
+  <td>Jio user</td><td>Home</td><td>First open</td>
+  <td><span class="uc">Occupation-matched starter prompts</span><span class="sig">SMB → GST tools. Homemaker → welfare schemes. Degrades to time-of-day cohort.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">UCP: occupational_status, night_city. Time-of-day cohort as fallback.</span></td>
+  <td><span class="pill enh">Enhances</span></td>
+</tr>
+
+<tr class="sec"><td colspan="9">Home surface — quick actions · updates · CMS</td></tr>
+
+<tr class="r-att">
+  <td class="id">H-06</td><td><span class="pill p0">P0</span></td>
+  <td>All users</td><td>Home</td><td>Every open</td>
+  <td><span class="uc">Quick Actions — persona-aware defaults</span><span class="sig">Quick Actions on home reflect user's persona context. Not 3 generic ones. Each QA is a one-tap entry to a real capability.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Persona: persona_context, time_of_day. CMS-configurable. PM updates without release.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-att">
+  <td class="id">H-07</td><td><span class="pill p0">P0</span></td>
+  <td>All users</td><td>Home</td><td>Every open</td>
+  <td><span class="uc">Updates section — What's New in user's language</span><span class="sig">New capabilities, seasonal content, product updates. In user's language. CMS-managed.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">CMS: content_feed, language_locale. PM publishes without release.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-att">
+  <td class="id">H-08</td><td><span class="pill p1">P1</span></td>
+  <td>All users</td><td>Home</td><td>Any open</td>
+  <td><span class="uc">Seasonal context card</span><span class="sig">Diwali / IPL / GST month / Exam Season. Calendar-based. No user data needed. CMS-managed.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">Device: date, locale. CMS seasonal calendar. Appears in updates or home card slot.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-jio">
+  <td class="id">H-09</td><td><span class="pill p2">P2</span></td>
+  <td>Jio user</td><td>Home</td><td>Any open</td>
+  <td><span class="uc">Regional seasonal precision</span><span class="sig">Pongal for Tamil Nadu, not Diwali. Navratri for Gujarat. Degrades to calendar-based.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">UCP: night_pincode, language. Degrades to date-based seasonal card.</span></td>
+  <td><span class="pill enh">Enhances</span></td>
+</tr>
+
+<tr class="sec"><td colspan="9">Return experience — session state · task continuity</td></tr>
+
+<tr class="r-rem">
+  <td class="id">H-10</td><td><span class="pill p0">P0</span></td>
+  <td>Returning user</td><td>Home</td><td>Return &lt;24h</td>
+  <td><span class="uc">Session-state return greeting</span><span class="sig">"Pichhli baar…" specific to last topic. 24h cache. No memory store needed.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Session cache: last_topic, last_intent (24h TTL). Lightweight — no cross-session memory.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-rem">
+  <td class="id">H-11</td><td><span class="pill p0">P0</span></td>
+  <td>Returning user</td><td>Home</td><td>Return &gt;24h</td>
+  <td><span class="uc">Cross-session return greeting</span><span class="sig">Name + last context. Never "Welcome back." Memory store required.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Episodic: last_session_topic, name. Memory store must be live (F&F hard gate).</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-rem">
+  <td class="id">H-12</td><td><span class="pill p0">P0</span></td>
+  <td>Returning user</td><td>Home</td><td>Return</td>
+  <td><span class="uc">Incomplete task card</span><span class="sig">Unfinished task as first home card. Resume in one tap. Restores exact conversation state. Disappears on complete or dismiss.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">Working memory: incomplete_task_state. One-tap resume to exact turn.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-rem">
+  <td class="id">H-13</td><td><span class="pill p1">P1</span></td>
+  <td>Returning user</td><td>Home</td><td>Return</td>
+  <td><span class="uc">Gap-aware return tone</span><span class="sig">&gt;5 days → warmer. 1–5 days → light acknowledgement. Same day → seamless continuation.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Episodic: last_session_timestamp. Gap length drives tone rule in persona layer.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-rem">
+  <td class="id">H-14</td><td><span class="pill p1">P1</span></td>
+  <td>All users</td><td>Home</td><td>Return</td>
+  <td><span class="uc">Usage-weighted Quick Actions</span><span class="sig">Last session tools move up. Session-end re-rank. Always beats global default.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">Working memory: tools_used_this_session. Re-rank at session end.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<!-- ═══════════════════════ DIM 02 — VOICE ═══════════════════════ -->
+<tr class="dim-hdr dim-02v"><td colspan="9">02 · Multimodal Input — Voice <span class="pill nail">Nail it</span> — primary interface for most Bharat users · every interaction depends on this</td></tr>
+
+<tr class="r-att">
+  <td class="id">V-01</td><td><span class="pill p0">P0</span></td>
+  <td>All users</td><td>Conversation</td><td>Every turn</td>
+  <td><span class="uc">Voice brevity</span><span class="sig">Fast clipped query → ≤3 sentences. Answer first. No preamble. No "shall I elaborate?"</span></td>
+  <td class="mod">Voice</td>
+  <td><span class="sig">ASR: speech_rate, utterance_duration. Brevity mode auto-activates on short fast query.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-att">
+  <td class="id">V-02</td><td><span class="pill p0">P0</span></td>
+  <td>All users</td><td>Conversation</td><td>Every turn</td>
+  <td><span class="uc">Voice restraint</span><span class="sig">Heavy / emotional query → acknowledge first. "Suna. Kya chahiye?" Knowing when not to answer is intelligence.</span></td>
+  <td class="mod">Voice</td>
+  <td><span class="sig">ASR: sentiment_score, topic_classifier (health, distress, worry). Acknowledge before answering.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-att">
+  <td class="id">V-03</td><td><span class="pill p0">P0</span></td>
+  <td>All users</td><td>Conversation</td><td>Every turn</td>
+  <td><span class="uc">Barge-in — JBIQ stops immediately</span><span class="sig">User interrupts → JBIQ stops mid-sentence. Acknowledges: "Haan?" or "Bolo". Not a dead silence.</span></td>
+  <td class="mod">Voice</td>
+  <td><span class="sig">VAD: barge_in_detection. Interrupt acknowledged naturally in user's language.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-att">
+  <td class="id">V-04</td><td><span class="pill p0">P0</span></td>
+  <td>All users</td><td>Conversation</td><td>Every turn</td>
+  <td><span class="uc">Natural turn-taking — 1.5s silence = end of turn</span><span class="sig">JBIQ waits for natural end of speech. Does not cut off mid-sentence. Does not wait forever.</span></td>
+  <td class="mod">Voice</td>
+  <td><span class="sig">VAD: silence_threshold 1.5s. Natural pause ≠ end of turn — prosody-aware.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-att">
+  <td class="id">V-05</td><td><span class="pill p0">P0</span></td>
+  <td>All users</td><td>Conversation</td><td>Every turn</td>
+  <td><span class="uc">Code-mix without correction</span><span class="sig">Hinglish, Tamil-English, Punjabi-Hindi handled naturally. JBIQ never corrects or announces mode-switch.</span></td>
+  <td class="mod">Voice</td>
+  <td><span class="sig">ASR: code_mix_detection. 4 pairs at F&F: HI-EN, TA-EN, PA-HI, BN-EN.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-att">
+  <td class="id">V-06</td><td><span class="pill p0">P0</span></td>
+  <td>All users</td><td>Conversation</td><td>Session start</td>
+  <td><span class="uc">Language consistency through session</span><span class="sig">Language set at session start holds. Does not drift to English mid-session.</span></td>
+  <td class="mod">Voice</td>
+  <td><span class="sig">Session: language_lock at Turn 1. Override only if user explicitly switches.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-jio">
+  <td class="id">V-07</td><td><span class="pill p1">P1</span></td>
+  <td>Bharat · low-end device</td><td>Conversation</td><td>Every turn</td>
+  <td><span class="uc">TTS auto-play on sub-₹7K device</span><span class="sig">Responses read aloud automatically. ≤3 sentences. Zero tap needed. Degrades to tap-to-hear if TTS unavailable.</span></td>
+  <td class="mod">Voice</td>
+  <td><span class="sig">UCP: device_price_range. Auto-play ON below threshold. Tap-to-hear graceful fallback.</span></td>
+  <td><span class="pill req">Required</span></td>
+</tr>
+
+<!-- ═══════════════════════ DIM 02 — CHAT ═══════════════════════ -->
+<tr class="dim-hdr dim-02c"><td colspan="9">02 · Multimodal Input — Chat <span class="pill nail">Nail it</span> — human-like not robotic · every text interaction</td></tr>
+
+<tr class="r-att">
+  <td class="id">C-01</td><td><span class="pill p0">P0</span></td>
+  <td>All users</td><td>Conversation</td><td>Every turn</td>
+  <td><span class="uc">Register mirroring</span><span class="sig">Casual in → casual out. Formal in → formal out. Hinglish handled. Holds full session. Never announces.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">Conv: vocabulary, sentence structure, code_mix. Register locked at Turn 1, adapts within session.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-att">
+  <td class="id">C-02</td><td><span class="pill p0">P0</span></td>
+  <td>All users</td><td>Conversation</td><td>Every turn</td>
+  <td><span class="uc">Literacy-adaptive response length</span><span class="sig">Input complexity = output complexity ceiling. Simple query → simple answer. Never talks down.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Conv: vocabulary_complexity, query_length, sentence_structure.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-att">
+  <td class="id">C-03</td><td><span class="pill p0">P0</span></td>
+  <td>All users</td><td>Conversation</td><td>Every turn</td>
+  <td><span class="uc">Progressive disclosure — answer first</span><span class="sig">Lead with the answer. Offer depth. Never front-load 7 considerations. "GST 18% hai. Chahiye toh aur bata sakta hoon."</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">Response structure: answer → optional extension. No lists of considerations as opening move.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-att">
+  <td class="id">C-04</td><td><span class="pill p0">P0</span></td>
+  <td>All users</td><td>Conversation</td><td>Every turn</td>
+  <td><span class="uc">No bullets on emotional / personal queries</span><span class="sig">Health worry, relationship, financial stress → conversational paragraph. Not a structured list.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">Topic classifier: emotional_query_flag. Format rule: conversational when flag is true.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-att">
+  <td class="id">C-05</td><td><span class="pill p1">P1</span></td>
+  <td>All users</td><td>Conversation</td><td>Any turn</td>
+  <td><span class="uc">Single clarifying question</span><span class="sig">When clarification needed: one question. Never three. "Yeh ghar ke liye hai ya business ke liye?"</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Response rule: max 1 clarifying question per turn. Never stacked.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-att">
+  <td class="id">C-06</td><td><span class="pill p1">P1</span></td>
+  <td>All users</td><td>Conversation</td><td>Every turn</td>
+  <td><span class="uc">Natural acknowledgements — not hollow</span><span class="sig">"Achha" before continuing. "Haan, bilkul" when agreeing. Brief, genuine, register-appropriate. Not "Great question!"</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Persona layer: acknowledgement_style per language. Never hollow filler phrases.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<!-- ═══════════════════════ DIM 02 — CAMERA ═══════════════════════ -->
+<tr class="dim-hdr dim-02m"><td colspan="9">02 · Multimodal Input — Camera <span class="pill nail">Nail it</span> — inline, no app switch, one clear action</td></tr>
+
+<tr class="r-att">
+  <td class="id">M-01</td><td><span class="pill p0">P0</span></td>
+  <td>All users</td><td>Conversation</td><td>Any turn</td>
+  <td><span class="uc">Fact Check — image → verdict inline</span><span class="sig">Forwarded image or screenshot → verdict inline in conversation. No app switch. Shareable card output.</span></td>
+  <td class="mod">Image</td>
+  <td><span class="sig">Image: content_type = claim/news. Verdict + source inline. Card formatted for WA share.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-att">
+  <td class="id">M-02</td><td><span class="pill p0">P0</span></td>
+  <td>Bharat · low literacy</td><td>Conversation</td><td>Any turn</td>
+  <td><span class="uc">Document reading aloud</span><span class="sig">Government notice, form, letter → JBIQ reads aloud, explains in plain language, gives one action. No literacy required.</span></td>
+  <td class="mod">Voice + Image</td>
+  <td><span class="sig">Image: text_extraction · ASR: pace · Conv: vocabulary_complexity. Single clear action output.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-att">
+  <td class="id">M-03</td><td><span class="pill p0">P0</span></td>
+  <td>All users</td><td>Conversation</td><td>Any turn</td>
+  <td><span class="uc">Voice + image urgency reading</span><span class="sig">Anxious voice + photo → brevity + reassurance first, not a list. Emotion from audio, not just words.</span></td>
+  <td class="mod">Voice + Image</td>
+  <td><span class="sig">ASR: sentiment, speech_rate · Image: content_type. Combined signal drives response shape.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-jio">
+  <td class="id">M-04</td><td><span class="pill p1">P1</span></td>
+  <td>Jio user</td><td>Conversation</td><td>Any turn</td>
+  <td><span class="uc">Household context image framing</span><span class="sig">Medicine photo → caregiver vs patient framing based on household composition.</span></td>
+  <td class="mod">Image</td>
+  <td><span class="sig">UCP: senior_citizen_flag, household_composition. Degrades to generic medicine response.</span></td>
+  <td><span class="pill enh">Enhances</span></td>
+</tr>
+
+<!-- ═══════════════════════ DIM 03 — CONVERSATION SURFACE ═══════════════════════ -->
+<tr class="dim-hdr dim-03"><td colspan="9">03 · Conversation Surface <span class="pill nail">Nail it</span> — one context at F&amp;F · inline depth only · session history</td></tr>
+
+<tr class="sec"><td colspan="9">Single context — General chat · three contexts is Beta</td></tr>
+
+<tr class="r-att">
+  <td class="id">CS-01</td><td><span class="pill p0">P0</span></td>
+  <td>All users</td><td>Conversation</td><td>Every turn</td>
+  <td><span class="uc">Within-session context held</span><span class="sig">Follow-up queries understood without re-stating topic. "What about tomorrow?" after weather = understood.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Session: active_context, entity_thread. Survives app background up to 5 min.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-att">
+  <td class="id">CS-02</td><td><span class="pill p0">P0</span></td>
+  <td>All users</td><td>Conversation</td><td>Every turn</td>
+  <td><span class="uc">Inline depth — task done in one turn</span><span class="sig">Answer delivered, task complete, user moves on. No prompt to go deeper when the answer is sufficient.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Response: complete_in_one_turn flag. Depth offered only when topic warrants it.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-att">
+  <td class="id">CS-03</td><td><span class="pill p0">P0</span></td>
+  <td>All users</td><td>Conversation</td><td>Every turn</td>
+  <td><span class="uc">Error states — plain language + next action</span><span class="sig">Every error has a plain language explanation in user's language and a next action. Never "something went wrong."</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Error: type (network/model/partner) → distinct message. Always: explanation + action.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-att">
+  <td class="id">CS-04</td><td><span class="pill p0">P0</span></td>
+  <td>All users</td><td>Conversation</td><td>Every turn</td>
+  <td><span class="uc">Session persists through backgrounding</span><span class="sig">App backgrounded and returned within 5 minutes → conversation thread intact. User not re-greeted.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Session: state_preserved on background. 5-min TTL before context reset.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-rem">
+  <td class="id">CS-05</td><td><span class="pill p1">P1</span></td>
+  <td>All users</td><td>Conversation</td><td>Any turn</td>
+  <td><span class="uc">Inline explainability on every suggestion</span><span class="sig">"Yeh isliye dikha — aapne kal poocha tha." One line, user's language. Every surfaced suggestion.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">Session: prior_query, current_suggestion. Reason from session context only.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<!-- ═══════════════════════ DIM 04 — CONVERSATION FEEL ═══════════════════════ -->
+<tr class="dim-hdr dim-04"><td colspan="9">04 · Conversation Feel <span class="pill nail">Nail it</span> — the standard every interaction is held to from Turn 1 · not features, principles</td></tr>
+
+<tr class="r-att">
+  <td class="id">CF-01</td><td><span class="pill p0">P0</span></td>
+  <td>All users</td><td>Conversation</td><td>Every turn</td>
+  <td><span class="uc">Register persistence across turns</span><span class="sig">Language and familiarity set by user holds across all turns. JBIQ never reverts to formal unexpectedly.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Session: register_lock. Override only if user explicitly changes. Cross-context switch: register changes, not reverts.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-rem">
+  <td class="id">CF-02</td><td><span class="pill p0">P0</span></td>
+  <td>Returning user</td><td>Conversation</td><td>Turn 1</td>
+  <td><span class="uc">Preference recalled silently</span><span class="sig">Language + format preference applied before Turn 1. No re-confirmation. Ever.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Episodic: language_pref, format_pref. Applied at session start.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-rem">
+  <td class="id">CF-03</td><td><span class="pill p1">P1</span></td>
+  <td>All users</td><td>Conversation</td><td>Any turn</td>
+  <td><span class="uc">Memory-aware phrasing</span><span class="sig">"Pichhli baar aapne yeh bola tha" — not "According to our previous conversation." A friend remembering, not a system retrieving.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Episodic: past_context. Phrasing rule: natural recall, never system-speak.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-att">
+  <td class="id">CF-04</td><td><span class="pill p1">P1</span></td>
+  <td>All users</td><td>Conversation</td><td>Any turn</td>
+  <td><span class="uc">Response length matches input length</span><span class="sig">5-word query → start short, expand if needed. 3 paragraphs from user → one-line response feels dismissive.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Conv: input_length, query_complexity. Social mirroring rule in response assembly.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<!-- ═══════════════════════ DIM 05 — PERSONAS & AVATARS ═══════════════════════ -->
+<tr class="dim-hdr dim-05"><td colspan="9">05 · Personas &amp; Avatars <span class="pill fw">Framework</span> — CXP sets the standard · persona content added by vertical teams</td></tr>
+
+<tr class="r-fw">
+  <td class="id">P-01</td><td><span class="pill p0">P0</span></td>
+  <td>All users</td><td>Home · Conversation</td><td>Any open</td>
+  <td><span class="uc">Persona entry — one tap from home</span><span class="sig">Every persona on home is a one-tap entry. No friction. Persona context activates immediately on entry.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Home: persona_tiles. Entry: context_switch to persona_mode immediately.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-fw">
+  <td class="id">P-02</td><td><span class="pill p0">P0</span></td>
+  <td>All users</td><td>Conversation</td><td>In persona</td>
+  <td><span class="uc">Persona personality — consistent every turn</span><span class="sig">The personality brief for this persona holds across every turn in the session. No drift. No reverting to generic JBIQ.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Persona: personality_brief injected. Consistency scoring active. Drift = quality failure.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-fw">
+  <td class="id">P-03</td><td><span class="pill p0">P0</span></td>
+  <td>All users</td><td>Home</td><td>In persona</td>
+  <td><span class="uc">Quick Actions adapt to active persona</span><span class="sig">When user is in or has last used a persona, Quick Actions on home reflect that persona's capabilities.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">Persona: last_active_persona → QA_set. CMS-configurable per persona.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-fw">
+  <td class="id">P-04</td><td><span class="pill p1">P1</span></td>
+  <td>All users</td><td>Conversation</td><td>In persona</td>
+  <td><span class="uc">Out-of-domain — switch prompt, not broken</span><span class="sig">Query outside persona's domain → "Want to continue this in JBIQ directly?" One tap. Never a dead end or wrong-domain answer.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Intent classifier: out_of_domain flag. Switch prompt offered — never forced.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-fw">
+  <td class="id">P-05</td><td><span class="pill p1">P1</span></td>
+  <td>All users</td><td>Conversation</td><td>Any turn</td>
+  <td><span class="uc">Mid-conversation persona switch</span><span class="sig">Switch avatar mid-conversation — thread intact, context carries, new personality activates immediately.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Session: thread_preserved on switch. New persona_brief loaded. No re-introduction needed.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<!-- ═══════════════════════ DIM 06 — DISCOVERY ═══════════════════════ -->
+<tr class="dim-hdr dim-06"><td colspan="9">06 · Discovery <span class="pill nail">Nail it</span> — loops + 2P baseline · vertical framework ready for content teams</td></tr>
+
+<tr class="sec"><td colspan="9">General discovery — Daily / Task / Life loops · 7-day series · post-task nudge</td></tr>
+
+<tr class="r-att">
+  <td class="id">D-01</td><td><span class="pill p0">P0</span></td>
+  <td>All users</td><td>Home · Conversation</td><td>Any open</td>
+  <td><span class="uc">Discovery by loop type — Daily / Task / Life</span><span class="sig">Daily Loop (Morning Briefing, Devotion, Rashifal). Task Loop (Cricket, Fact Check, Muhurat). Life Loop (Interview Prep, Festival, Health). Browsable, not searchable.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">CMS: loop_type, capability_list per loop. Language-localised. PM-managed.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-att">
+  <td class="id">D-02</td><td><span class="pill p1">P1</span></td>
+  <td>New user</td><td>Home</td><td>Sessions 1–7</td>
+  <td><span class="uc">7-day tip series</span><span class="sig">One unused capability surfaced per day for first 7 sessions. Dismissable. Ends after day 7 or 5 capabilities tried.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">Session: capabilities_tried. Tip card on home. Disappears after 7 sessions or threshold.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-att">
+  <td class="id">D-03</td><td><span class="pill p1">P1</span></td>
+  <td>All users</td><td>Conversation</td><td>Post task</td>
+  <td><span class="uc">Post-task contextual nudge</span><span class="sig">"Aapne summary banaya — kya reply bhi chahiye?" Max 1 per session. Suppressed after 2 dismissals permanently.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">Working memory: completed_task_type. Adjacent tool surfaced inline. Dismissal count cross-session.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="sec"><td colspan="9">2P discovery — Jio ecosystem · basic entry · consent first</td></tr>
+
+<tr class="r-jio">
+  <td class="id">D-04</td><td><span class="pill p0">P0</span></td>
+  <td>Jio user</td><td>Conversation</td><td>Contextual</td>
+  <td><span class="uc">2P service entry — one tap, consent first</span><span class="sig">Jio service surfaces in conversation when contextually relevant. Consent UI before any Jio data access. One-tap entry.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">Intent: jio_service_signal. Consent gate before data flow. JioMart, JioHealth at F&F.</span></td>
+  <td><span class="pill req">Required</span></td>
+</tr>
+
+<tr class="r-jio">
+  <td class="id">D-05</td><td><span class="pill p0">P0</span></td>
+  <td>Jio user</td><td>Conversation</td><td>Contextual</td>
+  <td><span class="uc">Partner failure attributed to partner</span><span class="sig">When a Jio service fails, JBIQ communicates the failure clearly. Never covers for a partner. "Galti ho gayi, sahi jaankari ye hai."</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Partner: error_signal → distinct user message. JBIQ never says "I don't know" for partner errors.</span></td>
+  <td><span class="pill req">Required</span></td>
+</tr>
+
+<tr class="sec"><td colspan="9">Vertical experiences — framework live · content by vertical teams</td></tr>
+
+<tr class="r-fw">
+  <td class="id">D-06</td><td><span class="pill p0">P0</span></td>
+  <td>All users</td><td>Home · Conversation</td><td>Contextual</td>
+  <td><span class="uc">Vertical entry framework — Quick Actions + conversation trigger</span><span class="sig">CXP owns how verticals surface (via Quick Actions and conversation signals) and how users enter. Vertical teams own the experience within. Each vertical that ships must have a defined entry point.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">CMS: vertical_entry_config. Signal: conversation_trigger per vertical. QA tap as primary entry.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-fw">
+  <td class="id">D-07</td><td><span class="pill p0">P0</span></td>
+  <td>All users</td><td>Conversation</td><td>In vertical</td>
+  <td><span class="uc">Vertical return to main conversation — thread intact</span><span class="sig">Exiting a vertical returns user to their main conversation thread with full context. No re-introduction needed.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Session: thread_state preserved on vertical entry/exit. Context resumable.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<!-- ═══════════════════════ REST — SUFFICIENT BASELINE ═══════════════════════ -->
+<tr class="dim-hdr dim-rest"><td colspan="9">07–14 · Sufficient Baseline <span class="pill suf">Sufficient</span> — everything needed to operate safely and learn · not the primary F&amp;F bet</td></tr>
+
+<tr class="sec"><td colspan="9">Bharat — device &amp; network non-negotiables</td></tr>
+
+<tr class="r-att">
+  <td class="id">B-01</td><td><span class="pill p0">P0</span></td>
+  <td>All users</td><td>Home</td><td>Every open</td>
+  <td><span class="uc">Home loads ≤2s on 3G · sub-₹7K device</span><span class="sig">Home renders from cache if network is slow. No spinner on cached content. Graceful error with retry if full load fails.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Cache: home_tiles, quick_actions. Network: graceful degradation. P95 load time gate before F&F.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-att">
+  <td class="id">B-02</td><td><span class="pill p0">P0</span></td>
+  <td>All users</td><td>Conversation</td><td>Every turn</td>
+  <td><span class="uc">No step requires reading</span><span class="sig">All core flows completable by voice. Error states, confirmations, onboarding — all work without reading a single word.</span></td>
+  <td class="mod">Voice</td>
+  <td><span class="sig">UX rule: every interaction path has a voice-only completion path. Low-literacy eval before F&F.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="sec"><td colspan="9">Memory loop — store · confirm · correct · control</td></tr>
+
+<tr class="r-rem">
+  <td class="id">ML-01</td><td><span class="pill p0">P0</span></td>
+  <td>All users</td><td>Conversation</td><td>In session</td>
+  <td><span class="uc">Memory confirmation</span><span class="sig">"Got it, main yaad rakhungi." Same turn. States what was stored in plain language.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Memory write: extracted_fact, confidence ≥0.7. Fires on every successful store.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-rem">
+  <td class="id">ML-02</td><td><span class="pill p0">P0</span></td>
+  <td>All users</td><td>Conversation</td><td>In session</td>
+  <td><span class="uc">Correction handling</span><span class="sig">"Sirf is baar, ya hamesha?" Applies immediately. Confirmation before permanent overwrite.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Conv: correction_signal · Memory: conditional write. Frustration ≠ preference.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-rem">
+  <td class="id">ML-03</td><td><span class="pill p0">P0</span></td>
+  <td>All users</td><td>Settings</td><td>Any</td>
+  <td><span class="uc">My Preferences — view, edit, delete, pause</span><span class="sig">Everything stored visible in plain language. Delete in ≤3 taps. Pause without losing memory. Accessible from home in ≤3 taps.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">Memory store: all_facts, consent_state. CRUD API. CXP owns the surface.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="sec"><td colspan="9">Engagement &amp; lifecycle — states · re-engagement · opt-in</td></tr>
+
+<tr class="r-att">
+  <td class="id">E-01</td><td><span class="pill p0">P0</span></td>
+  <td>All users</td><td>—</td><td>Background</td>
+  <td><span class="uc">Engagement states instrumented</span><span class="sig">Engaged / Passive / Slipping / Churned defined and tracked from day 1. Visible in analytics. State drives comms and home surface.</span></td>
+  <td class="mod">—</td>
+  <td><span class="sig">Analytics: state_definitions agreed pre-F&F. Transition events logged.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-jio">
+  <td class="id">E-02</td><td><span class="pill p1">P1</span></td>
+  <td>Returning user</td><td>PN</td><td>D+3 gap</td>
+  <td><span class="uc">Re-engagement PN — contextual, not generic</span><span class="sig">D+3. Hooks to last session topic specifically. Language-aware. Stops immediately when user returns.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">Session: last_topic · UCP: language. CleverTap infra. CXP owns copy + trigger logic.</span></td>
+  <td><span class="pill enh">Enhances</span></td>
+</tr>
+
+<tr class="r-jio">
+  <td class="id">E-03</td><td><span class="pill p2">P2</span></td>
+  <td>Returning user</td><td>WhatsApp</td><td>D+7 gap</td>
+  <td><span class="uc">Re-engagement WA — if no PN opt-in</span><span class="sig">D+7 if no PN. User's language. Conversational tone. Single message — no sequence. No follow-up.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">CRM: pn_opt_in · UCP: language · Session: last_topic. One message, no follow-up.</span></td>
+  <td><span class="pill enh">Enhances</span></td>
+</tr>
+
+<tr class="sec"><td colspan="9">Experimentation &amp; flags — safety net before anything ships</td></tr>
+
+<tr class="r-att">
+  <td class="id">X-01</td><td><span class="pill p0">P0</span></td>
+  <td>All users</td><td>—</td><td>Pre-F&F</td>
+  <td><span class="uc">100% flag coverage + kill switch</span><span class="sig">Every feature flag-gated. Kill switch kills any feature in &lt;5 minutes. Validated before first user receives a build.</span></td>
+  <td class="mod">—</td>
+  <td><span class="sig">Flag registry: owner, default_state, expiry per feature. Kill switch test mandatory pre-F&F.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-att">
+  <td class="id">X-02</td><td><span class="pill p1">P1</span></td>
+  <td>—</td><td>—</td><td>F&F</td>
+  <td><span class="uc">First A/B test live</span><span class="sig">Segment targeting by UCP cohort, language, device class. Comms-flag connection: feature off = no comms about it.</span></td>
+  <td class="mod">—</td>
+  <td><span class="sig">Experiment: segment_targeting. Comms-flag: feature_state checked at send time, not template creation.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="sec"><td colspan="9">Settings &amp; account — reachable in 3 taps</td></tr>
+
+<tr class="r-att">
+  <td class="id">S-01</td><td><span class="pill p0">P0</span></td>
+  <td>All users</td><td>Settings</td><td>Any</td>
+  <td><span class="uc">Language preference · notification controls · My Preferences</span><span class="sig">Language changeable in ≤2 taps. PN/WA controls all default OFF. My Preferences accessible in ≤3 taps. All changes apply immediately.</span></td>
+  <td class="mod">Chat</td>
+  <td><span class="sig">Settings surface: language_pref, notification_state, memory_prefs. All defaults: OFF.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="sec"><td colspan="9">Trust &amp; safety — embedded · not a separate workstream</td></tr>
+
+<tr class="r-att">
+  <td class="id">T-01</td><td><span class="pill p0">P0</span></td>
+  <td>All users</td><td>Conversation · Settings</td><td>Any</td>
+  <td><span class="uc">Consent before any data access · PII never in responses</span><span class="sig">No 2P/3P data access without explicit consent. PII never surfaced in responses. Pipeline-enforced — not UI-only.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Trust: consent_gate pipeline · PII: redaction at extraction. Trust pod sign-off pre-F&F.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+<tr class="r-att">
+  <td class="id">T-02</td><td><span class="pill p0">P0</span></td>
+  <td>All users</td><td>Conversation</td><td>Any</td>
+  <td><span class="uc">Health &amp; financial responses carry disclaimers</span><span class="sig">Health, financial, legal responses include mandatory plain-language disclaimer. Auto-injected — not a prompt instruction.</span></td>
+  <td class="mod">Chat · Voice</td>
+  <td><span class="sig">Topic classifier: domain = health/finance/legal → disclaimer auto-inject. Bolded where required.</span></td>
+  <td><span class="pill no">No UCP</span></td>
+</tr>
+
+</tbody>
+</table>
+</div>
+</body>
+</html>

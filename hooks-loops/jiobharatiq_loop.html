@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JioBharatIQ — Personalisation Loop</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0E2841;
+    --brand: #1A3A5C;
+    --mid: #156082;
+    --teal: #0F9ED5;
+    --green: #196B24;
+    --amber: #B07000;
+    --red: #7B1A1A;
+    --purple: #3C3489;
+    --light: #F0F4F8;
+    --muted: #E8F0F8;
+    --faint: #F7F9FC;
+    --white: #FFFFFF;
+    --text: #111827;
+    --text2: #4B5563;
+    --text3: #9CA3AF;
+    --border: #D1DCE8;
+    --shadow: 0 2px 12px rgba(14,40,65,0.08);
+    --shadow-lg: 0 8px 32px rgba(14,40,65,0.14);
+    --r: 10px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #F0F4F8;
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: var(--navy);
+    padding: 24px 40px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+  }
+  .header h1 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: -0.02em;
+  }
+  .header-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.45);
+    font-weight: 400;
+  }
+  .header-pill {
+    margin-left: auto;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--teal);
+    background: rgba(15,158,213,0.12);
+    border: 1px solid rgba(15,158,213,0.25);
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.04em;
+  }
+
+  /* ── Layout ── */
+  .main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 36px 40px 80px;
+    display: grid;
+    grid-template-columns: 420px 1fr;
+    gap: 28px;
+    align-items: start;
+  }
+
+  /* ── Loop diagram panel ── */
+  .loop-panel {
+    background: var(--white);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    padding: 28px 24px;
+    position: sticky;
+    top: 80px;
+  }
+  .loop-panel h2 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--brand);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 20px;
+  }
+
+  /* ── SVG loop ── */
+  .loop-svg { width: 100%; }
+
+  /* Node hover */
+  .loop-node {
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .loop-node:hover { opacity: 0.82; }
+  .loop-node.active rect, .loop-node.active ellipse {
+    filter: brightness(0.92);
+  }
+
+  /* ── Detail panel ── */
+  .detail-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* ── Intro card ── */
+  .intro-card {
+    background: var(--navy);
+    border-radius: 14px;
+    padding: 28px 32px;
+    color: #fff;
+  }
+  .intro-card h2 {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+  .intro-card p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.7;
+    max-width: 500px;
+  }
+  .intro-card .flywheel-line {
+    margin-top: 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--teal);
+    font-family: 'DM Mono', monospace;
+    border-left: 2px solid var(--teal);
+    padding-left: 12px;
+  }
+
+  /* ── Step detail card ── */
+  .step-card {
+    background: var(--white);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    display: none;
+  }
+  .step-card.visible { display: block; }
+  .step-card-header {
+    padding: 18px 24px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .step-tag {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    display: inline-block;
+  }
+  .step-card-header h3 {
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    line-height: 1.3;
+  }
+  .step-card-header p {
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.6;
+  }
+  .step-card-body { padding: 20px 24px; }
+
+  /* ── Signal rows ── */
+  .signals { display: flex; flex-direction: column; gap: 10px; }
+  .signal-row {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 12px;
+    align-items: start;
+    padding: 12px 14px;
+    background: var(--faint);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  .signal-label {
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+    color: var(--brand);
+    line-height: 1.5;
+    padding-top: 1px;
+  }
+  .signal-value {
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.6;
+  }
+  .signal-value strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* ── User example ── */
+  .user-example {
+    margin-top: 16px;
+    padding: 16px 18px;
+    background: var(--muted);
+    border-radius: 8px;
+    border-left: 3px solid var(--mid);
+  }
+  .user-example-name {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 8px;
+  }
+  .user-example .quote {
+    font-size: 14px;
+    font-style: italic;
+    color: var(--brand);
+    font-weight: 500;
+    line-height: 1.5;
+    margin-bottom: 6px;
+  }
+  .user-example .quote-en {
+    font-size: 12px;
+    color: var(--text3);
+    font-style: italic;
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+  .user-example .context {
+    font-size: 12px;
+    color: var(--text2);
+    line-height: 1.6;
+  }
+
+  /* ── Memory types ── */
+  .memory-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .memory-card {
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  .memory-card-title {
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .memory-card-latency {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    margin-bottom: 6px;
+  }
+  .memory-card-desc {
+    font-size: 12px;
+    color: var(--text2);
+    line-height: 1.5;
+  }
+
+  /* ── Ecosystem table ── */
+  .eco-table { width: 100%; border-collapse: collapse; margin-top: 4px; }
+  .eco-table th {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text3);
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .eco-table td {
+    font-size: 13px;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text2);
+    line-height: 1.5;
+    vertical-align: top;
+  }
+  .eco-table td:first-child {
+    font-weight: 600;
+    color: var(--brand);
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  .eco-table tr:last-child td { border-bottom: none; }
+
+  /* ── Competitor note ── */
+  .vs-bar {
+    margin-top: 16px;
+    display: flex;
+    gap: 10px;
+  }
+  .vs-chip {
+    flex: 1;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .vs-chip-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+  }
+
+  /* ── Hint bar ── */
+  .hint {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text3);
+    margin-top: 16px;
+    font-style: italic;
+  }
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .step-card.visible { animation: fadeUp 0.2s ease-out; }
+
+  /* ── Pulse on active node ── */
+  @keyframes pulse {
+    0%,100% { opacity: 1; }
+    50%      { opacity: 0.7; }
+  }
+  .loop-node.active { animation: pulse 1.8s ease-in-out infinite; }
+
+  @media (max-width: 800px) {
+    .main { grid-template-columns: 1fr; }
+    .loop-panel { position: static; }
+    .header { padding: 16px 20px; }
+    .main { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <h1>JioBharatIQ</h1>
+    <span class="header-sub">Personalisation loop — systems &amp; ecosystem view</span>
+    <span class="header-pill">INTERACTIVE</span>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- ── Left: Loop diagram ── -->
+  <div class="loop-panel">
+    <h2>The loop</h2>
+    <svg class="loop-svg" viewBox="0 0 370 580" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round"/>
+        </marker>
+        <marker id="arr-teal" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="#0F9ED5" stroke-width="1.5" stroke-linecap="round"/>
+        </marker>
+      </defs>
+
+      <!-- Spine -->
+      <line x1="185" y1="58" x2="185" y2="522" stroke="#D1DCE8" stroke-width="1" stroke-dasharray="4 4"/>
+
+      <!-- STEP 1: User speaks -->
+      <g class="loop-node" id="node-user" onclick="showStep('user')">
+        <rect x="95" y="20" width="180" height="48" rx="8" fill="#0E2841" stroke="#1A3A5C" stroke-width="1"/>
+        <text x="185" y="40" text-anchor="middle" fill="white" font-family="DM Sans,sans-serif" font-size="13" font-weight="600" dominant-baseline="central">User speaks</text>
+        <text x="185" y="56" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-family="DM Sans,sans-serif" font-size="11" dominant-baseline="central">Voice · text · any language</text>
+      </g>
+
+      <line x1="185" y1="68" x2="185" y2="90" stroke="#9CA3AF" stroke-width="1" marker-end="url(#arr)"/>
+
+      <!-- STEP 2: RETRIEVE -->
+      <g class="loop-node" id="node-retrieve" onclick="showStep('retrieve')">
+        <rect x="75" y="92" width="220" height="56" rx="8" fill="#3C3489" stroke="#534AB7" stroke-width="0.5"/>
+        <text x="185" y="114" text-anchor="middle" fill="white" font-family="DM Sans,sans-serif" font-size="13" font-weight="600" dominant-baseline="central">Memory Agent — RETRIEVE</text>
+        <text x="185" y="132" text-anchor="middle" fill="rgba(255,255,255,0.55)" font-family="DM Sans,sans-serif" font-size="11" dominant-baseline="central">UCP · Jio network · episodic  ·  P95 &lt;200ms</text>
+      </g>
+
+      <line x1="185" y1="148" x2="185" y2="170" stroke="#9CA3AF" stroke-width="1" marker-end="url(#arr)"/>
+
+      <!-- STEP 3: Response -->
+      <g class="loop-node" id="node-response" onclick="showStep('response')">
+        <rect x="75" y="172" width="220" height="56" rx="8" fill="#0F6E56" stroke="#1D9E75" stroke-width="0.5"/>
+        <text x="185" y="193" text-anchor="middle" fill="white" font-family="DM Sans,sans-serif" font-size="13" font-weight="600" dominant-baseline="central">Response generated</text>
+        <text x="185" y="210" text-anchor="middle" fill="rgba(255,255,255,0.55)" font-family="DM Sans,sans-serif" font-size="11" dominant-baseline="central">Right language · tone · length · tools</text>
+      </g>
+
+      <line x1="185" y1="228" x2="185" y2="250" stroke="#9CA3AF" stroke-width="1" marker-end="url(#arr)"/>
+
+      <!-- STEP 4: PUBLISH -->
+      <g class="loop-node" id="node-publish" onclick="showStep('publish')">
+        <rect x="75" y="252" width="220" height="56" rx="8" fill="#854F0B" stroke="#BA7517" stroke-width="0.5"/>
+        <text x="185" y="274" text-anchor="middle" fill="white" font-family="DM Sans,sans-serif" font-size="13" font-weight="600" dominant-baseline="central">Memory Agent — PUBLISH</text>
+        <text x="185" y="291" text-anchor="middle" fill="rgba(255,255,255,0.55)" font-family="DM Sans,sans-serif" font-size="11" dominant-baseline="central">Extract · classify · consent check</text>
+      </g>
+
+      <!-- Branch arrows -->
+      <line x1="145" y1="308" x2="80" y2="340" stroke="#9CA3AF" stroke-width="1" marker-end="url(#arr)"/>
+      <line x1="225" y1="308" x2="290" y2="340" stroke="#9CA3AF" stroke-width="1" marker-end="url(#arr)"/>
+
+      <!-- Mem0 -->
+      <g class="loop-node" id="node-mem0" onclick="showStep('mem0')">
+        <rect x="20" y="340" width="120" height="48" rx="8" fill="#3C3489" stroke="#534AB7" stroke-width="0.5"/>
+        <text x="80" y="360" text-anchor="middle" fill="white" font-family="DM Sans,sans-serif" font-size="12" font-weight="600" dominant-baseline="central">Mem0</text>
+        <text x="80" y="376" text-anchor="middle" fill="rgba(255,255,255,0.55)" font-family="DM Sans,sans-serif" font-size="10" dominant-baseline="central">Near real-time</text>
+      </g>
+
+      <!-- UCP writeback -->
+      <g class="loop-node" id="node-ucp" onclick="showStep('ucp')">
+        <rect x="230" y="340" width="120" height="48" rx="8" fill="#185FA5" stroke="#378ADD" stroke-width="0.5"/>
+        <text x="290" y="360" text-anchor="middle" fill="white" font-family="DM Sans,sans-serif" font-size="12" font-weight="600" dominant-baseline="central">UCP writeback</text>
+        <text x="290" y="376" text-anchor="middle" fill="rgba(255,255,255,0.55)" font-family="DM Sans,sans-serif" font-size="10" dominant-baseline="central">Async enrichment</text>
+      </g>
+
+      <!-- Converge to API -->
+      <line x1="80" y1="388" x2="130" y2="420" stroke="#9CA3AF" stroke-width="1" marker-end="url(#arr)"/>
+      <line x1="290" y1="388" x2="240" y2="420" stroke="#9CA3AF" stroke-width="1" marker-end="url(#arr)"/>
+
+      <!-- Memory Read API -->
+      <g class="loop-node" id="node-api" onclick="showStep('api')">
+        <rect x="95" y="420" width="180" height="44" rx="8" fill="#1A3A5C" stroke="#156082" stroke-width="0.5"/>
+        <text x="185" y="438" text-anchor="middle" fill="white" font-family="DM Sans,sans-serif" font-size="12" font-weight="600" dominant-baseline="central">Memory Read API</text>
+        <text x="185" y="453" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-family="DM Sans,sans-serif" font-size="10" dominant-baseline="central">Signals flow to every Jio surface</text>
+      </g>
+
+      <line x1="185" y1="464" x2="185" y2="486" stroke="#9CA3AF" stroke-width="1" marker-end="url(#arr)"/>
+
+      <!-- Ecosystem -->
+      <g class="loop-node" id="node-eco" onclick="showStep('eco')">
+        <rect x="55" y="488" width="260" height="44" rx="8" fill="#196B24" stroke="#639922" stroke-width="0.5"/>
+        <text x="185" y="506" text-anchor="middle" fill="white" font-family="DM Sans,sans-serif" font-size="12" font-weight="600" dominant-baseline="central">JioMart · JioHealth · JioCinema · JioSaavn</text>
+        <text x="185" y="521" text-anchor="middle" fill="rgba(255,255,255,0.55)" font-family="DM Sans,sans-serif" font-size="10" dominant-baseline="central">Surfaces get smarter before user opens any app</text>
+      </g>
+
+      <!-- Flywheel return (right side, dashed teal) -->
+      <path d="M315 510 Q355 510 355 300 Q355 20 280 20" fill="none" stroke="#0F9ED5" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arr-teal)"/>
+      <text x="364" y="300" text-anchor="middle" fill="#0F9ED5" font-family="DM Sans,sans-serif" font-size="10" transform="rotate(90,364,300)">more signals → better personalisation</text>
+
+    </svg>
+    <p class="hint">Tap any node to explore</p>
+  </div>
+
+  <!-- ── Right: Detail panel ── -->
+  <div class="detail-panel">
+
+    <!-- Intro (default state) -->
+    <div class="intro-card" id="intro-card">
+      <h2>Every conversation makes every Jio surface smarter</h2>
+      <p>When Subbalakshmi speaks to JioBharatIQ, a precise engine runs underneath — retrieving what's known, shaping the response, and publishing what was learned back into the Reliance ecosystem. Tap any node on the left to see how each step works.</p>
+      <div class="flywheel-line">ChatGPT makes ChatGPT smarter. JioBharatIQ makes Reliance smarter.</div>
+    </div>
+
+    <!-- Step cards -->
+
+    <!-- User speaks -->
+    <div class="step-card" id="card-user">
+      <div class="step-card-header">
+        <span class="step-tag" style="background:#E8EAF6;color:#3C3489;">INPUT</span>
+        <h3>User speaks — what JioBharatIQ already knows</h3>
+        <p>Before a single word is processed, three signal layers have already loaded a personalised picture of this user.</p>
+      </div>
+      <div class="step-card-body">
+        <div class="signals">
+          <div class="signal-row">
+            <div class="signal-label">Layer 1 — UCP<br><span style="font-size:10px;color:#9CA3AF;font-weight:400;">Before Turn 1</span></div>
+            <div class="signal-value"><strong>Device class, location, age bracket, occupation, linked numbers, interest scores.</strong> All verified from Reliance's 500M+ subscriber network. Available before the first message.</div>
+          </div>
+          <div class="signal-row">
+            <div class="signal-label">Layer 2 — Jio network<br><span style="font-size:10px;color:#9CA3AF;font-weight:400;">Passive, always-on</span></div>
+            <div class="signal-value"><strong>Real network quality per tower, tower-derived location (no GPS), SIM context, time-of-day connectivity.</strong> Carrier-level — no other AI assistant can access this layer.</div>
+          </div>
+          <div class="signal-row">
+            <div class="signal-label">Layer 3 — in-app<br><span style="font-size:10px;color:#9CA3AF;font-weight:400;">Builds from session 1</span></div>
+            <div class="signal-value"><strong>Query patterns, feature affinity, hesitation and dwell time, corrections, incomplete tasks.</strong> Compounds with every session into an N=1 individual model from session 20+.</div>
+          </div>
+        </div>
+        <div class="user-example">
+          <div class="user-example-name">Subbalakshmi · 44 · Coimbatore · homemaker</div>
+          <div class="quote">"Subbalakshmi akka, vanakkam. Inru Coimbatore-la konjam kulir irukku — 22 degree. Enna venum?"</div>
+          <div class="quote-en">"Subbalakshmi akka, good morning. It's a little cold in Coimbatore today — 22 degrees. What do you need?"</div>
+          <div class="context">She hasn't configured anything. UCP: Coimbatore, 36–45, welfare interest, &lt;₹7K device. Jio network: 2G, 7am, congested tower. Opens in Tamil, voice-first, before she speaks.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RETRIEVE -->
+    <div class="step-card" id="card-retrieve">
+      <div class="step-card-header">
+        <span class="step-tag" style="background:#EEEDFE;color:#3C3489;">RETRIEVE</span>
+        <h3>Memory Agent — what gets pulled before the response</h3>
+        <p>A parallel fan-out across four stores. Target P95 &lt;200ms so the user never notices the retrieval.</p>
+      </div>
+      <div class="step-card-body">
+        <div class="memory-grid">
+          <div class="memory-card" style="background:#F7F7FE;border-color:#AFA9EC;">
+            <div class="memory-card-title" style="color:#3C3489;">Working memory</div>
+            <div class="memory-card-latency" style="color:#534AB7;">&lt; 10ms</div>
+            <div class="memory-card-desc">Current session — entities, intent, slots, turn history. Subbalakshmi's follow-up understood without re-asking.</div>
+          </div>
+          <div class="memory-card" style="background:#F7F7FE;border-color:#AFA9EC;">
+            <div class="memory-card-title" style="color:#3C3489;">Episodic memory</div>
+            <div class="memory-card-latency" style="color:#534AB7;">50–150ms</div>
+            <div class="memory-card-desc">Preferences, life events, behavioural patterns. Ranjit's GST format remembered across sessions.</div>
+          </div>
+          <div class="memory-card" style="background:#F7F7FE;border-color:#AFA9EC;">
+            <div class="memory-card-title" style="color:#3C3489;">Semantic memory</div>
+            <div class="memory-card-latency" style="color:#534AB7;">100–300ms</div>
+            <div class="memory-card-desc">JioMart catalog, govt schemes, telecom plans, JioHealth. Ranjit shown Diwali offers without searching.</div>
+          </div>
+          <div class="memory-card" style="background:#F7F7FE;border-color:#AFA9EC;">
+            <div class="memory-card-title" style="color:#3C3489;">Procedural memory</div>
+            <div class="memory-card-latency" style="color:#534AB7;">&lt; 30ms</div>
+            <div class="memory-card-desc">"When X → do Y" habits, feedback-validated. Priya's Monday rhythm anticipated before she asks.</div>
+          </div>
+        </div>
+        <div class="user-example" style="border-left-color:#3C3489;">
+          <div class="user-example-name" style="color:#3C3489;">Context assembled for Subbalakshmi</div>
+          <div class="context">UCP: Coimbatore, 36–45, welfare interest, &lt;₹7K device. Jio network: 2G, 7am, congested tower. Episodic: checks welfare schemes every Tuesday morning. → Response: Tamil, ≤3 sentences, voice-first, welfare tools surfaced.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Response -->
+    <div class="step-card" id="card-response">
+      <div class="step-card-header">
+        <span class="step-tag" style="background:#E1F5EE;color:#085041;">RESPONSE</span>
+        <h3>Response generated — shaped to this specific user</h3>
+        <p>All three signal layers converge into a single assembled prompt. The response is calibrated before generation begins.</p>
+      </div>
+      <div class="step-card-body">
+        <div class="signals">
+          <div class="signal-row">
+            <div class="signal-label">Language</div>
+            <div class="signal-value">Detected from UCP night_circle + ASR Turn 1 confirmation. Locked from first interaction. Cross-language memory works — preference set in Hindi recalled in Tamil session.</div>
+          </div>
+          <div class="signal-row">
+            <div class="signal-label">Tone &amp; register</div>
+            <div class="signal-value">Casual in → casual out. Formal in → formal out. Hinglish / code-mix handled naturally. "Akka" register in Tamil, "bhai/yaar" in Punjabi — calibrated to language and age.</div>
+          </div>
+          <div class="signal-row">
+            <div class="signal-label">Length &amp; format</div>
+            <div class="signal-value">Literacy-adaptive: UCP age bracket + first query complexity. ≤3 sentences for Bharat users on voice-first devices. TTS auto-plays on &lt;₹7K devices — no extra tap.</div>
+          </div>
+          <div class="signal-row">
+            <div class="signal-label">Tools surfaced</div>
+            <div class="signal-value">UCP occupational_status drives Day 1 defaults. Homemaker → welfare and health. SMB owner → GST and invoice. Working professional → write and summarise.</div>
+          </div>
+        </div>
+        <div class="vs-bar">
+          <div class="vs-chip" style="background:#FFF0F0;border:1px solid #FCA5A5;">
+            <div class="vs-chip-label" style="color:#7B1A1A;">ChatGPT / Gemini</div>
+            <div style="font-size:12px;color:#7B1A1A;line-height:1.5;">Blank slate. Language defaults to English. Tone is generic. No ecosystem context. Subbalakshmi gets bullet points in formal Hindi.</div>
+          </div>
+          <div class="vs-chip" style="background:#E1F5EE;border:1px solid #9FE1CB;">
+            <div class="vs-chip-label" style="color:#085041;">JioBharatIQ</div>
+            <div style="font-size:12px;color:#085041;line-height:1.5;">Tamil. Voice-first. Warm. Welfare tools visible. Subbalakshmi's context already loaded. Before she says a word.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PUBLISH -->
+    <div class="step-card" id="card-publish">
+      <div class="step-card-header">
+        <span class="step-tag" style="background:#FAEEDA;color:#633806;">PUBLISH</span>
+        <h3>Memory Agent — what gets written back after the response</h3>
+        <p>Every conversation is a learning event. What's worth remembering is extracted, classified, and written to two stores.</p>
+      </div>
+      <div class="step-card-body">
+        <div class="signals">
+          <div class="signal-row">
+            <div class="signal-label">Extract</div>
+            <div class="signal-value">Facts, preferences, life events, intent threads worth preserving. Confidence gating — noise filtered out. Contradiction detection — old preference overwritten when corrected.</div>
+          </div>
+          <div class="signal-row">
+            <div class="signal-label">Consent check</div>
+            <div class="signal-value">Session 3 prompt: Always / This Session Only / Never. "This Session Only" means session only — no silent overrides. PII blocked at pipeline level before any write.</div>
+          </div>
+          <div class="signal-row">
+            <div class="signal-label">Dual-write</div>
+            <div class="signal-value"><strong>Mem0</strong> — near real-time, ready for next session. <strong>UCP writeback</strong> — async enrichment, flows to JioMart, JioHealth, JioCinema via Memory Read API.</div>
+          </div>
+        </div>
+        <div class="user-example" style="border-left-color:#BA7517;">
+          <div class="user-example-name" style="color:#BA7517;">What gets published from Subbalakshmi's session</div>
+          <div class="context">Mother's diabetes management interest → episodic memory + JioHealth enrichment. Daughter's school form deadline → procedural memory (fires Tuesday reminder). Welfare scheme Tuesday pattern → procedural habit confirmed. Language = Tamil, voice-first = confirmed.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mem0 -->
+    <div class="step-card" id="card-mem0">
+      <div class="step-card-header">
+        <span class="step-tag" style="background:#EEEDFE;color:#3C3489;">MEM0</span>
+        <h3>Mem0 — the in-product memory store</h3>
+        <p>Near real-time. Powers the next session's RETRIEVE step. Gets smarter with every conversation.</p>
+      </div>
+      <div class="step-card-body">
+        <div class="signals">
+          <div class="signal-row">
+            <div class="signal-label">What it stores</div>
+            <div class="signal-value">Episodic memories (preferences, life events), procedural habits ("When X → do Y"), working memory from current session, semantic links to JioMart/JioHealth catalog.</div>
+          </div>
+          <div class="signal-row">
+            <div class="signal-label">Consolidation</div>
+            <div class="signal-value">Daily batch: similar memories clustered, LLM generates summary, originals archived. Target &lt;50KB per user steady state. Quality maintained at 1M+ users.</div>
+          </div>
+          <div class="signal-row">
+            <div class="signal-label">User controls</div>
+            <div class="signal-value">My Preferences: see everything stored in plain language. Edit or delete in ≤3 taps. Pause mode — stops new additions without deleting existing. Deletion purge within 24 hours.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- UCP writeback -->
+    <div class="step-card" id="card-ucp">
+      <div class="step-card-header">
+        <span class="step-tag" style="background:#E6F1FB;color:#0C447C;">UCP WRITEBACK</span>
+        <h3>UCP writeback — enriching the Reliance user profile</h3>
+        <p>Every JBIQ conversation enriches the Unified Customer Profile that feeds every Jio surface. This is the flywheel.</p>
+      </div>
+      <div class="step-card-body">
+        <div class="signals">
+          <div class="signal-row">
+            <div class="signal-label">What gets enriched</div>
+            <div class="signal-value">Interest signals, affinity scores, content preferences, inferred life-stage context. Updates feed JioMart category surfacing, JioHealth recommendations, JioCinema content signals.</div>
+          </div>
+          <div class="signal-row">
+            <div class="signal-label">Direction of flow</div>
+            <div class="signal-value">UCP → JBIQ (before Turn 1). JBIQ → UCP (async after each session). Two-way enrichment. No other AI product writes back to the user's ecosystem profile.</div>
+          </div>
+          <div class="signal-row">
+            <div class="signal-label">Consent boundary</div>
+            <div class="signal-value">Only declared and consented signals flow to partner surfaces. Health and personal disclosures are never surfaced proactively. Scoped by consent tier.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Memory Read API -->
+    <div class="step-card" id="card-api">
+      <div class="step-card-header">
+        <span class="step-tag" style="background:#F0F4F8;color:#1A3A5C;">API</span>
+        <h3>Memory Read API — signals flowing to every Jio surface</h3>
+        <p>The layer that makes JioBharatIQ's memory compound across Reliance rather than staying inside the product.</p>
+      </div>
+      <div class="step-card-body">
+        <div class="signals">
+          <div class="signal-row">
+            <div class="signal-label">What flows</div>
+            <div class="signal-value">Enriched interest signals, inferred category affinity, behavioural patterns. Not raw conversations — processed, consented signals only.</div>
+          </div>
+          <div class="signal-row">
+            <div class="signal-label">Who reads it</div>
+            <div class="signal-value">JioMart (commerce personalisation), JioHealth (relevant content and services), JioCinema (content discovery), JioSaavn (music and devotional curation).</div>
+          </div>
+          <div class="signal-row">
+            <div class="signal-label">The structural advantage</div>
+            <div class="signal-value">ChatGPT's memory stays inside ChatGPT. JioBharatIQ's memory compounds across Reliance. A user at session 30 has built something no other assistant can replicate without those 30 sessions.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ecosystem -->
+    <div class="step-card" id="card-eco">
+      <div class="step-card-header">
+        <span class="step-tag" style="background:#EAF3DE;color:#27500A;">ECOSYSTEM</span>
+        <h3>Jio ecosystem — surfaces that get smarter before the user opens them</h3>
+        <p>The conversation loop closes here. Every JBIQ session enriches four Jio surfaces before the user opens any of them.</p>
+      </div>
+      <div class="step-card-body">
+        <table class="eco-table">
+          <thead>
+            <tr>
+              <th>Surface</th>
+              <th>What JBIQ learns in conversation</th>
+              <th>What the surface does with it</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>JioMart</td>
+              <td>Ranjit asks about Diwali wholesale prices</td>
+              <td>Bulk inventory offers filtered and waiting before he opens JioMart</td>
+            </tr>
+            <tr>
+              <td>JioHealth</td>
+              <td>Subbalakshmi asks about her mother's diabetes diet</td>
+              <td>Nearby diagnostic centres, health plans, relevant content — no search needed</td>
+            </tr>
+            <tr>
+              <td>JioCinema</td>
+              <td>Priya asks JBIQ to summarise a business book</td>
+              <td>Leadership documentaries surfaced from what she read — not just what she watched</td>
+            </tr>
+            <tr>
+              <td>JioSaavn</td>
+              <td>Ranjit's query pattern includes devotional content every Tuesday</td>
+              <td>New devotional playlists surfaced without a search query</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="vs-bar" style="margin-top:16px;">
+          <div class="vs-chip" style="background:#FFF0F0;border:1px solid #FCA5A5;flex:1;">
+            <div class="vs-chip-label" style="color:#7B1A1A;">Any standalone AI</div>
+            <div style="font-size:12px;color:#7B1A1A;line-height:1.5;">Memory stays inside the product. Conversation with ChatGPT makes ChatGPT slightly smarter. Nothing else changes.</div>
+          </div>
+          <div class="vs-chip" style="background:#EAF3DE;border:1px solid #C0DD97;flex:1;">
+            <div class="vs-chip-label" style="color:#27500A;">JioBharatIQ</div>
+            <div style="font-size:12px;color:#27500A;line-height:1.5;">Every conversation enriches JioMart, JioHealth, JioCinema, JioSaavn. No competitor can build this without the ecosystem.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end detail-panel -->
+</div><!-- end main -->
+
+<script>
+  const nodes = ['user','retrieve','response','publish','mem0','ucp','api','eco'];
+  let activeNode = null;
+
+  function showStep(id) {
+    // Hide intro
+    document.getElementById('intro-card').style.display = 'none';
+
+    // Hide all step cards
+    nodes.forEach(n => {
+      document.getElementById('card-'+n).classList.remove('visible');
+      document.getElementById('node-'+n).classList.remove('active');
+    });
+
+    // Show selected
+    document.getElementById('card-'+id).classList.add('visible');
+    document.getElementById('node-'+id).classList.add('active');
+    activeNode = id;
+
+    // Scroll detail panel to top on mobile
+    if (window.innerWidth < 800) {
+      document.querySelector('.detail-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+</script>
+</body>
+</html>

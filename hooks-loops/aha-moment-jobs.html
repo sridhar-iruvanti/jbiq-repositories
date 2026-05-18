@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=390, initial-scale=1.0">
+<title>JBIQ — Aha Moment · Career</title>
+<style>
+@font-face{font-family:'JioType';font-weight:400;src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeVarW05-Regular.woff2') format('woff2')}
+@font-face{font-family:'JioType';font-weight:500;src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Medium.woff2') format('woff2')}
+@font-face{font-family:'JioType';font-weight:700;src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Bold.woff2') format('woff2')}
+@font-face{font-family:'JioType';font-weight:900;src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Black.woff2') format('woff2')}
+
+/* ── JDS Tokens (from homepage-blueprint-6states) ── */
+:root {
+  --lp:       #6D17CE;   /* Jio brand purple — ring colour, icon fills */
+  --p:        #3535f3;   /* primary blue-purple — CTAs, active labels */
+  --sparkle:  #1eccb0;
+  --success:  #25ab21;
+  --err:      #fa2f40;
+  --g1:       #141414;
+  --g6:       rgba(25,27,30,0.55);
+  --dis:      rgba(25,27,30,0.38);
+  --bd:       rgba(36,38,43,0.10);
+  --surf:     #eeeeef;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased;}
+
+html,body{
+  font-family:'JioType',sans-serif;
+  background:#dbd8d2;
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;
+  padding:32px 0 48px;
+}
+
+.page-label{
+  font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(20,20,20,0.4);margin-bottom:16px;text-align:center;
+}
+
+/* ── Phone shell ── */
+.phone{
+  width:390px;height:844px;
+  background:#f5f5f7;
+  border-radius:48px;
+  display:flex;flex-direction:column;
+  overflow:hidden;
+  box-shadow:
+    0 48px 120px rgba(0,0,0,.26),
+    0 16px 40px rgba(0,0,0,.12),
+    0 0 0 1px rgba(0,0,0,.08),
+    inset 0 0 0 1px rgba(255,255,255,.14);
+  flex-shrink:0;position:relative;
+}
+
+/* ── Dynamic island ── */
+.island{height:52px;background:#f5f5f7;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.island-pill{width:126px;height:36px;background:#000;border-radius:999px;}
+
+/* ── Status bar ── */
+.statusbar{
+  height:20px;background:#f5f5f7;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;flex-shrink:0;
+}
+.s-time{font-size:12px;font-weight:700;color:var(--g1);letter-spacing:-.01em;}
+.s-icons{display:flex;align-items:center;gap:6px;}
+
+/* ── Top nav ── */
+.topnav{
+  height:52px;background:#fff;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;flex-shrink:0;
+  border-bottom:1px solid var(--bd);
+}
+.nav-ham{width:24px;height:18px;display:flex;flex-direction:column;gap:5px;background:none;border:none;padding:0;cursor:pointer;}
+.nav-ham span{display:block;height:2px;background:var(--g1);border-radius:2px;}
+.nav-ham span:last-child{width:16px;}
+/* Jio logo mark (ic_jio_dot — actual brand circle) */
+.nav-logo{width:42px;height:42px;cursor:pointer;flex-shrink:0;}
+.nav-avatar{
+  width:36px;height:36px;border-radius:50%;
+  overflow:hidden;border:2px solid #ddd;position:relative;
+  flex-shrink:0;
+}
+.nav-avatar img{width:100%;height:100%;object-fit:cover;}
+.nav-badge{
+  position:absolute;top:-3px;right:-3px;
+  width:16px;height:16px;background:var(--err);border-radius:50%;
+  border:2px solid #fff;
+  font-size:8px;font-weight:700;color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'JioType',sans-serif;z-index:2;
+}
+.nav-avatar-wrap{position:relative;flex-shrink:0;}
+
+/* ── Scroll area ── */
+.scroll{flex:1;overflow-y:auto;overflow-x:hidden;padding-bottom:84px;background:#fff;}
+.scroll::-webkit-scrollbar{display:none;}
+
+/* ── Section header ── */
+.sec-hdr{
+  padding:20px 18px 12px;
+  font-size:20px;font-weight:900;color:var(--g1);
+  letter-spacing:-.02em;
+}
+
+/* ────────────────────────────────────────
+   ASSISTANTS — persona image story rings
+   (matches homepage-blueprint-6states CSS)
+   ──────────────────────────────────────── */
+.asst-row{
+  display:flex;gap:18px;
+  padding:0 18px 18px;
+  overflow-x:auto;
+}
+.asst-row::-webkit-scrollbar{display:none;}
+
+.asst-item{
+  display:flex;flex-direction:column;align-items:center;
+  width:68px;flex-shrink:0;cursor:pointer;
+}
+
+/* Ring: solid #6D17CE band → white inner gap → persona image */
+.asst-ring{
+  width:68px;height:68px;border-radius:50%;
+  padding:2.5px;
+  background:var(--lp);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.30), 0 3px 8px rgba(109,23,206,0.22);
+}
+.asst-inner{
+  width:100%;height:100%;border-radius:50%;
+  background:#fff;
+  border:2px solid #fff;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.asst-inner img{width:100%;height:100%;object-fit:cover;display:block;}
+
+.asst-label{
+  font-size:11px;font-weight:500;
+  color:var(--g6);text-align:center;margin-top:7px;
+  max-width:68px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.asst-label.active{color:var(--lp);font-weight:700;}
+
+/* ────────────────────────────────────────
+   TOOLS — single scroll row, emoji chips
+   ──────────────────────────────────────── */
+.tools-row{
+  display:flex;gap:8px;
+  padding:0 18px 4px;
+  overflow-x:auto;
+  flex-wrap:nowrap;
+}
+.tools-row::-webkit-scrollbar{display:none;}
+
+.chip{
+  display:flex;align-items:center;gap:6px;
+  background:#fff;
+  border:1px solid var(--bd);
+  border-radius:999px;
+  padding:8px 14px;
+  font-size:13px;font-weight:500;color:var(--g1);
+  font-family:'JioType',sans-serif;
+  cursor:pointer;flex-shrink:0;white-space:nowrap;
+}
+.chip-icon{font-size:14px;line-height:1;}
+
+/* ────────────────────────────────────────
+   UPDATES
+   ──────────────────────────────────────── */
+.updates-wrap{padding:4px 18px 4px;}
+
+/* ── LIST CARD (matches .list-card from blueprint) ──
+   Used for the Jobs card — exact copy of "What's New" pattern */
+.list-card{
+  position:relative;overflow:hidden;
+  background:#fff;border:1px solid var(--bd);
+  border-radius:20px;padding:20px;
+  cursor:pointer;margin-bottom:12px;
+}
+
+/* Sparkle ✦ top-right */
+.list-card-sparkle{
+  position:absolute;top:14px;right:16px;
+  font-size:18px;color:var(--lp);opacity:.9;
+}
+
+/* Tag: JOBS FOR YOU */
+.list-card-tag{
+  font-size:11px;font-weight:700;color:var(--lp);
+  text-transform:uppercase;letter-spacing:.10em;margin-bottom:8px;
+}
+
+/* Headline */
+.list-card-title{
+  font-size:22px;font-weight:800;line-height:1.15;
+  letter-spacing:-.015em;color:var(--g1);margin-bottom:6px;
+}
+
+/* Subtitle */
+.list-card-sub{
+  font-size:12px;color:var(--g6);line-height:1.45;margin-bottom:14px;
+}
+
+/* Divider */
+.list-card-divider{height:1px;background:var(--bd);margin-bottom:14px;}
+
+/* Items */
+.list-card-items{display:flex;flex-direction:column;gap:14px;}
+.list-card-item{display:flex;align-items:center;gap:12px;}
+.list-card-item-icon{
+  width:38px;height:38px;border-radius:50%;flex-shrink:0;
+  background:rgba(109,23,206,0.10);
+  display:flex;align-items:center;justify-content:center;
+}
+.list-card-item-icon svg{width:18px;height:18px;fill:var(--lp);}
+/* Success variant for applied row */
+.list-card-item-icon.success{background:rgba(37,171,33,0.10);}
+.list-card-item-icon.success svg{fill:var(--success);}
+
+.list-card-item-text{
+  font-size:14px;font-weight:600;line-height:1.35;
+  color:var(--g1);flex:1;min-width:0;
+}
+.list-card-item-text small{
+  display:block;font-size:12px;font-weight:500;
+  color:var(--g6);margin-top:1px;
+}
+
+/* Match badge */
+.match-tag{
+  background:rgba(37,171,33,0.10);color:var(--success);
+  font-size:10px;font-weight:700;border-radius:6px;
+  padding:3px 8px;flex-shrink:0;letter-spacing:.02em;
+}
+
+/* CTA */
+.list-card-cta{
+  display:inline-flex;align-items:center;gap:4px;
+  margin-top:16px;
+  font-size:14px;font-weight:700;color:var(--lp);
+  background:none;border:none;cursor:pointer;
+  font-family:'JioType',sans-serif;padding:0;
+}
+.list-card-cta svg{width:14px;height:14px;fill:currentColor;}
+
+/* ── STANDARD UPDATE CARD (Wishes, News) ── */
+.upd-card{
+  background:#fff;border:1px solid var(--bd);
+  border-radius:20px;overflow:hidden;
+  margin-bottom:12px;
+}
+.upd-label{
+  font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--dis);padding:16px 16px 0;
+}
+.upd-title{font-size:18px;font-weight:900;color:var(--g1);padding:4px 16px 0;line-height:1.25;}
+.upd-sub{font-size:13px;color:var(--g6);padding:4px 16px 0;line-height:1.4;}
+
+/* Wishes banner */
+.wish-banner{
+  margin:12px 16px;border-radius:14px;overflow:hidden;height:100px;
+  background:linear-gradient(135deg,#b8d4f0 0%,#cde0f5 50%,#d8e8f8 100%);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;
+}
+.wish-script{
+  font-size:22px;font-weight:700;color:#2a5080;
+  font-style:italic;letter-spacing:-.01em;
+}
+.wish-quote{font-size:11px;color:#4a7aaa;text-align:center;padding:0 12px;}
+
+/* News audio player */
+.audio-player{
+  margin:12px 16px 16px;background:var(--surf);border-radius:14px;
+  padding:12px 14px;display:flex;align-items:center;gap:10px;
+}
+.audio-play{
+  width:32px;height:32px;background:var(--p);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.audio-wave{flex:1;height:28px;display:flex;align-items:center;gap:2.5px;}
+.wb{width:3px;border-radius:2px;background:var(--p);opacity:.35;}
+.wb.hi{opacity:1;}
+.audio-dur{font-size:11px;font-weight:700;color:var(--dis);}
+
+.upd-cta{
+  padding:2px 16px 14px;
+  font-size:13px;font-weight:700;color:var(--lp);
+  font-family:'JioType',sans-serif;background:none;border:none;
+  cursor:pointer;text-align:left;display:block;
+}
+
+/* ── Bottom bar ── */
+.bottom-bar{
+  position:absolute;bottom:0;left:0;right:0;
+  height:84px;background:#fff;
+  border-top:1px solid var(--bd);
+  display:flex;align-items:center;padding:0 14px 22px;gap:10px;
+}
+.plus-btn{
+  width:38px;height:38px;border-radius:50%;background:var(--surf);
+  display:flex;align-items:center;justify-content:center;
+  border:none;cursor:pointer;flex-shrink:0;color:var(--g1);
+}
+.ask-field{
+  flex:1;background:var(--surf);border-radius:22px;
+  padding:10px 16px;font-size:13px;font-weight:500;
+  color:var(--dis);font-family:'JioType',sans-serif;border:none;outline:none;
+}
+.speak-btn{
+  background:var(--p);color:#fff;border:none;border-radius:22px;
+  padding:10px 16px;font-size:13px;font-weight:700;
+  font-family:'JioType',sans-serif;
+  display:flex;align-items:center;gap:6px;cursor:pointer;flex-shrink:0;
+}
+</style>
+</head>
+<body>
+
+<div class="page-label">DECK 06 · AHA MOMENT — CAREER</div>
+
+<div class="phone">
+
+  <!-- Dynamic island -->
+  <div class="island"><div class="island-pill"></div></div>
+
+  <!-- Status bar -->
+  <div class="statusbar">
+    <span class="s-time" id="clk">9:30</span>
+    <div class="s-icons">
+      <svg width="17" height="12" viewBox="0 0 17 12" fill="none">
+        <rect x="0" y="3" width="3" height="9" rx="1" fill="#141414"/>
+        <rect x="4.5" y="2" width="3" height="10" rx="1" fill="#141414"/>
+        <rect x="9" y="0.5" width="3" height="11.5" rx="1" fill="#141414"/>
+        <rect x="13.5" y="0" width="3" height="12" rx="1" fill="rgba(20,20,20,.22)"/>
+      </svg>
+      <svg width="25" height="12" viewBox="0 0 25 12" fill="none">
+        <rect x=".5" y="1.5" width="21" height="9" rx="2.5" stroke="#141414" stroke-width="1" fill="none"/>
+        <rect x="2" y="3" width="16" height="6" rx="1.5" fill="#141414"/>
+        <rect x="22.5" y="4" width="2" height="4" rx="1" fill="rgba(20,20,20,.35)"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Top nav -->
+  <div class="topnav">
+    <!-- Left: hamburger + Jio logo grouped together (matches app layout) -->
+    <div style="display:flex;align-items:center;gap:12px;">
+    <button class="nav-ham" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+
+    <!-- ic_jio_dot — actual Jio brand mark -->
+    <svg class="nav-logo" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g clip-path="url(#jc)">
+        <rect width="24" height="24" rx="12" fill="#3535F3"/>
+        <path d="M8.47789 7.23736H8.07789C7.31878 7.23736 6.90411 7.66536 6.90411 8.52159V12.6509C6.90411 13.714 6.545 14.0871 5.70255 14.0871C5.03989 14.0871 4.50144 13.7969 4.07322 13.2723C4.03167 13.2171 3.16211 13.6311 3.16211 14.6534C3.16211 15.758 4.19722 16.4349 6.11767 16.4349C8.451 16.4349 9.68078 15.2609 9.68078 12.6925V8.52159C9.67944 7.66647 9.26522 7.23736 8.47789 7.23736ZM17.7779 9.25359C15.5128 9.25359 14.0077 10.6898 14.0077 12.8314C14.0077 15.0274 15.4572 16.4363 17.7361 16.4363C20.0006 16.4363 21.4917 15.0274 21.4917 12.8456C21.493 10.6898 20.015 9.25359 17.7779 9.25359ZM17.7501 14.4045C16.8659 14.4045 16.2586 13.7556 16.2586 12.8303C16.2586 11.9191 16.8808 11.2698 17.7501 11.2698C18.6194 11.2698 19.2414 11.9191 19.2414 12.8443C19.2417 13.7416 18.6066 14.4045 17.7503 14.4045H17.7501ZM12.0939 9.32247H11.8172C11.141 9.32247 10.6301 9.63981 10.6301 10.6069V15.026C10.6301 16.0067 11.1274 16.3107 11.8452 16.3107H12.1217C12.7983 16.3107 13.2814 15.9789 13.2814 15.026V10.6069C13.2814 9.6127 12.8123 9.32247 12.0939 9.32247ZM11.9421 6.11914C11.0857 6.11914 10.5472 6.6027 10.5472 7.36225C10.5472 8.13514 11.0999 8.61847 11.9834 8.61847C12.8397 8.61847 13.3783 8.13514 13.3783 7.36225C13.3783 6.58936 12.8259 6.11914 11.9421 6.11914Z" fill="white"/>
+      </g>
+      <defs><clipPath id="jc"><rect width="24" height="24" fill="white"/></clipPath></defs>
+    </svg>
+    </div><!-- /left group -->
+
+    <!-- User avatar (photo) -->
+    <div class="nav-avatar-wrap">
+      <div class="nav-avatar">
+        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face" alt="Rahul"/>
+      </div>
+      <div class="nav-badge">3</div>
+    </div>
+  </div>
+
+  <!-- Scroll content -->
+  <div class="scroll">
+
+    <!-- ── YOUR ASSISTANTS ── -->
+    <div class="sec-hdr">Your Assistants</div>
+    <div class="asst-row">
+
+      <!-- Career — active ring -->
+      <div class="asst-item">
+        <div class="asst-ring">
+          <div class="asst-inner">
+            <img src="https://sunit1986.github.io/design-prototypes/Assets/persona-career.png" alt="Career"/>
+          </div>
+        </div>
+        <div class="asst-label active">Career</div>
+      </div>
+
+      <!-- Astrology -->
+      <div class="asst-item">
+        <div class="asst-ring">
+          <div class="asst-inner">
+            <img src="https://sunit1986.github.io/design-prototypes/Assets/persona-astrology.png" alt="Astrology"/>
+          </div>
+        </div>
+        <div class="asst-label">Astrology</div>
+      </div>
+
+      <!-- Bollywood -->
+      <div class="asst-item">
+        <div class="asst-ring">
+          <div class="asst-inner">
+            <img src="https://sunit1986.github.io/design-prototypes/Assets/persona-bollywood.png" alt="Bollywood"/>
+          </div>
+        </div>
+        <div class="asst-label">Bollywood</div>
+      </div>
+
+      <!-- Cricket -->
+      <div class="asst-item">
+        <div class="asst-ring">
+          <div class="asst-inner">
+            <img src="https://sunit1986.github.io/design-prototypes/Assets/persona-cricket.png" alt="Cricket"/>
+          </div>
+        </div>
+        <div class="asst-label">Cricket</div>
+      </div>
+
+      <!-- Devotion -->
+      <div class="asst-item">
+        <div class="asst-ring">
+          <div class="asst-inner">
+            <img src="https://sunit1986.github.io/design-prototypes/Assets/persona-devotion.png" alt="Devotion"/>
+          </div>
+        </div>
+        <div class="asst-label">Devotion</div>
+      </div>
+
+      <!-- Health -->
+      <div class="asst-item">
+        <div class="asst-ring">
+          <div class="asst-inner">
+            <img src="https://sunit1986.github.io/design-prototypes/Assets/persona-health.png" alt="Health"/>
+          </div>
+        </div>
+        <div class="asst-label">Health</div>
+      </div>
+
+    </div>
+
+    <!-- ── TOOLS ── single horizontal scroll, emoji icons -->
+    <div class="sec-hdr" style="padding-top:4px;">Tools</div>
+    <div class="tools-row" style="padding-bottom:20px;">
+      <button class="chip"><span class="chip-icon">💬</span> Write</button>
+      <button class="chip"><span class="chip-icon">🎨</span> Create an image</button>
+      <button class="chip"><span class="chip-icon">📋</span> Analyse docs</button>
+      <button class="chip"><span class="chip-icon">🖼️</span> Edit images</button>
+      <button class="chip"><span class="chip-icon">🌐</span> Translate</button>
+    </div>
+
+    <!-- ── UPDATES ── -->
+    <div class="sec-hdr" style="padding-top:0;">Updates</div>
+    <div class="updates-wrap">
+
+      <!-- ════════════════════════════════════════ -->
+      <!--  CARD 1 — JOBS FOR YOU                   -->
+      <!--  Matches list-card / "What's New" design  -->
+      <!-- ════════════════════════════════════════ -->
+      <div class="list-card">
+
+        <!-- Sparkle accent -->
+        <div class="list-card-sparkle">✦</div>
+
+        <!-- Tag -->
+        <div class="list-card-tag">Jobs for you</div>
+
+        <!-- Headline -->
+        <div class="list-card-title">JBIQ found jobs for you, right here in Borivali.</div>
+
+        <!-- Subtitle -->
+        <div class="list-card-sub">Tata Projects is hiring near you — and your profile matches well.</div>
+
+        <!-- Divider -->
+        <div class="list-card-divider"></div>
+
+        <!-- Items -->
+        <div class="list-card-items">
+
+          <!-- Job title + match -->
+          <div class="list-card-item">
+            <div class="list-card-item-icon">
+              <!-- briefcase/work icon -->
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M19 7H17V6C17 5.20435 16.6839 4.44129 16.1213 3.87868C15.5587 3.31607 14.7956 3 14 3H10C9.20435 3 8.44129 3.31607 7.87868 3.87868C7.31607 4.44129 7 5.20435 7 6V7H5C4.20435 7 3.44129 7.31607 2.87868 7.87868C2.31607 8.44129 2 9.20435 2 10V18C2 18.7956 2.31607 19.5587 2.87868 20.1213C3.44129 20.6839 4.20435 21 5 21H19C19.7956 21 20.5587 20.6839 21.1213 20.1213C21.6839 19.5587 22 18.7956 22 18V10C22 9.20435 21.6839 8.44129 21.1213 7.87868C20.5587 7.31607 19.7956 7 19 7ZM9 6C9 5.73478 9.10536 5.48043 9.29289 5.29289C9.48043 5.10536 9.73478 5 10 5H14C14.2652 5 14.5196 5.10536 14.7071 5.29289C14.8946 5.48043 15 5.73478 15 6V7H9V6Z" fill="currentColor"/>
+              </svg>
+            </div>
+            <div class="list-card-item-text">
+              Electrician – Industrial
+              <small>Tata Projects Ltd · Borivali West</small>
+            </div>
+            <span class="match-tag">97% match</span>
+          </div>
+
+          <!-- Pills row -->
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-left:50px;">
+            <span style="background:#eeeeef;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;color:rgba(25,27,30,0.65);">₹25k/mo</span>
+            <span style="background:#eeeeef;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;color:rgba(25,27,30,0.65);">ITI required</span>
+            <span style="background:#eeeeef;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;color:rgba(25,27,30,0.65);">Full-time</span>
+            <span style="background:#eeeeef;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;color:rgba(25,27,30,0.65);">2 km from you</span>
+          </div>
+
+        </div>
+
+        <!-- CTA -->
+        <button class="list-card-cta">
+          See all matches
+          <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+
+      </div>
+
+      <!-- ════════════════════════════════════════ -->
+      <!--  CARD 2 — WISHES                         -->
+      <!-- ════════════════════════════════════════ -->
+      <div class="upd-card">
+        <div class="upd-label">Wishes</div>
+        <div class="upd-title">Good morning! Aaj ka din shubh ho ☀️</div>
+        <div class="upd-sub">Apno ko bhejo ya apna design banao</div>
+        <div class="wish-banner">
+          <div class="wish-script">Good Morning!</div>
+          <div class="wish-quote">"Embrace the day with a smile, for each sunrise brings new possibilities."</div>
+        </div>
+        <button class="upd-cta">Make your own design →</button>
+      </div>
+
+      <!-- ════════════════════════════════════════ -->
+      <!--  CARD 3 — NEWS ASSISTANT                 -->
+      <!-- ════════════════════════════════════════ -->
+      <div class="upd-card">
+        <div class="upd-label">News assistant</div>
+        <div class="upd-title">Aaj ki badi khabrein suniye</div>
+        <div class="upd-sub">Trump ki speech, IDFC Bank, IPL news</div>
+        <div class="audio-player">
+          <div class="audio-play">
+            <svg viewBox="0 0 24 24" fill="none" width="13" height="13"><path d="M8 5v14l11-7z" fill="#fff"/></svg>
+          </div>
+          <div class="audio-wave">
+            <div class="wb" style="height:5px"></div>
+            <div class="wb" style="height:10px"></div>
+            <div class="wb hi" style="height:18px"></div>
+            <div class="wb hi" style="height:24px"></div>
+            <div class="wb hi" style="height:26px"></div>
+            <div class="wb hi" style="height:22px"></div>
+            <div class="wb" style="height:14px"></div>
+            <div class="wb hi" style="height:20px"></div>
+            <div class="wb hi" style="height:26px"></div>
+            <div class="wb hi" style="height:24px"></div>
+            <div class="wb" style="height:12px"></div>
+            <div class="wb" style="height:8px"></div>
+            <div class="wb" style="height:14px"></div>
+            <div class="wb hi" style="height:22px"></div>
+            <div class="wb hi" style="height:26px"></div>
+            <div class="wb" style="height:16px"></div>
+            <div class="wb" style="height:9px"></div>
+            <div class="wb" style="height:5px"></div>
+          </div>
+          <div class="audio-dur">0:18</div>
+        </div>
+        <button class="upd-cta">Show more news →</button>
+      </div>
+
+    </div><!-- /updates-wrap -->
+
+  </div><!-- /scroll -->
+
+  <!-- Bottom bar -->
+  <div class="bottom-bar">
+    <button class="plus-btn">
+      <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+        <path d="M12 5a1 1 0 011 1v5h5a1 1 0 010 2h-5v5a1 1 0 01-2 0v-5H6a1 1 0 010-2h5V6a1 1 0 011-1z" fill="currentColor"/>
+      </svg>
+    </button>
+    <input class="ask-field" type="text" placeholder="Hey Rahul, what's on your mind?" readonly>
+    <button class="speak-btn">
+      <svg viewBox="0 0 24 24" fill="none" width="14" height="14">
+        <path d="M12 15a3 3 0 003-3V5a3 3 0 00-6 0v7a3 3 0 003 3zm5-3a1 1 0 00-2 0v1a5 5 0 01-10 0v-1a1 1 0 00-2 0v1a7 7 0 0014 0v-1zM9 21h6a1 1 0 000-2H9a1 1 0 000 2z" fill="#fff"/>
+      </svg>
+      Speak
+    </button>
+  </div>
+
+</div><!-- /phone -->
+
+<script>
+function tick(){
+  const d=new Date(),h=d.getHours(),m=d.getMinutes();
+  document.getElementById('clk').textContent=(h<10?'0':'')+h+':'+(m<10?'0':'')+m;
+}
+tick();setInterval(tick,30000);
+</script>
+</body>
+</html>

@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=390, initial-scale=1.0">
+<title>JBIQ — Cross-Domain Loop · Health × Commerce × Jobs</title>
+<style>
+@font-face{font-family:'JioType';font-weight:400;src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeVarW05-Regular.woff2') format('woff2')}
+@font-face{font-family:'JioType';font-weight:500;src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Medium.woff2') format('woff2')}
+@font-face{font-family:'JioType';font-weight:700;src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Bold.woff2') format('woff2')}
+@font-face{font-family:'JioType';font-weight:900;src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Black.woff2') format('woff2')}
+
+/* ── JDS Tokens ── */
+:root {
+  --lp:      #6D17CE;
+  --p:       #3535f3;
+  --sparkle: #1eccb0;
+  --success: #25ab21;
+  --err:     #fa2f40;
+  --g1:      #141414;
+  --g6:      rgba(25,27,30,0.55);
+  --dis:     rgba(25,27,30,0.38);
+  --bd:      rgba(36,38,43,0.10);
+  --surf:    #eeeeef;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased;}
+
+html,body{
+  font-family:'JioType',sans-serif;
+  background:#dbd8d2;
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;
+  padding:32px 0 48px;
+}
+
+.page-label{
+  font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(20,20,20,0.4);margin-bottom:16px;text-align:center;
+}
+
+/* ── Phone shell ── */
+.phone{
+  width:390px;height:844px;
+  background:#f5f5f7;
+  border-radius:48px;
+  display:flex;flex-direction:column;
+  overflow:hidden;
+  box-shadow:
+    0 48px 120px rgba(0,0,0,.26),
+    0 16px 40px rgba(0,0,0,.12),
+    0 0 0 1px rgba(0,0,0,.08),
+    inset 0 0 0 1px rgba(255,255,255,.14);
+  flex-shrink:0;position:relative;
+}
+
+/* ── Dynamic island ── */
+.island{height:52px;background:#f5f5f7;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.island-pill{width:126px;height:36px;background:#000;border-radius:999px;}
+
+/* ── Status bar ── */
+.statusbar{
+  height:20px;background:#f5f5f7;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;flex-shrink:0;
+}
+.s-time{font-size:12px;font-weight:700;color:var(--g1);letter-spacing:-.01em;}
+.s-icons{display:flex;align-items:center;gap:6px;}
+
+/* ── Top nav ── */
+.topnav{
+  height:52px;background:#fff;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;flex-shrink:0;
+  border-bottom:1px solid var(--bd);
+}
+.nav-ham{width:24px;height:18px;display:flex;flex-direction:column;gap:5px;background:none;border:none;padding:0;cursor:pointer;}
+.nav-ham span{display:block;height:2px;background:var(--g1);border-radius:2px;}
+.nav-ham span:last-child{width:16px;}
+.nav-logo{width:42px;height:42px;cursor:pointer;flex-shrink:0;}
+.nav-avatar{
+  width:36px;height:36px;border-radius:50%;
+  overflow:hidden;border:2px solid #ddd;position:relative;
+  flex-shrink:0;
+}
+.nav-avatar img{width:100%;height:100%;object-fit:cover;}
+.nav-badge{
+  position:absolute;top:-3px;right:-3px;
+  width:16px;height:16px;background:var(--err);border-radius:50%;
+  border:2px solid #fff;
+  font-size:8px;font-weight:700;color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'JioType',sans-serif;z-index:2;
+}
+.nav-avatar-wrap{position:relative;flex-shrink:0;}
+
+/* ── Scroll area ── */
+.scroll{flex:1;overflow-y:auto;overflow-x:hidden;padding-bottom:84px;background:#fff;}
+.scroll::-webkit-scrollbar{display:none;}
+
+/* ── Section header ── */
+.sec-hdr{
+  padding:20px 18px 12px;
+  font-size:20px;font-weight:900;color:var(--g1);
+  letter-spacing:-.02em;
+}
+
+/* ── Assistants — persona rings ── */
+.asst-row{
+  display:flex;gap:18px;
+  padding:0 18px 18px;
+  overflow-x:auto;
+}
+.asst-row::-webkit-scrollbar{display:none;}
+.asst-item{
+  display:flex;flex-direction:column;align-items:center;
+  width:68px;flex-shrink:0;cursor:pointer;
+}
+.asst-ring{
+  width:68px;height:68px;border-radius:50%;
+  padding:2.5px;
+  background:var(--lp);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.30), 0 3px 8px rgba(109,23,206,0.22);
+}
+.asst-inner{
+  width:100%;height:100%;border-radius:50%;
+  background:#fff;
+  border:2px solid #fff;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.asst-inner img{width:100%;height:100%;object-fit:cover;display:block;}
+.asst-label{
+  font-size:11px;font-weight:500;
+  color:var(--g6);text-align:center;margin-top:7px;
+  max-width:68px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.asst-label.active{color:var(--lp);font-weight:700;}
+
+/* ── Tools ── */
+.tools-row{
+  display:flex;gap:8px;
+  padding:0 18px 4px;
+  overflow-x:auto;
+  flex-wrap:nowrap;
+}
+.tools-row::-webkit-scrollbar{display:none;}
+.chip{
+  display:flex;align-items:center;gap:6px;
+  background:#fff;
+  border:1px solid var(--bd);
+  border-radius:999px;
+  padding:8px 14px;
+  font-size:13px;font-weight:500;color:var(--g1);
+  font-family:'JioType',sans-serif;
+  cursor:pointer;flex-shrink:0;white-space:nowrap;
+}
+.chip-icon{font-size:14px;line-height:1;}
+
+/* ── Updates ── */
+.updates-wrap{padding:4px 18px 4px;}
+
+/* ── Goal context pill ── */
+.goal-pill{
+  display:inline-flex;align-items:center;gap:7px;
+  background:rgba(109,23,206,0.07);
+  border:1px solid rgba(109,23,206,0.18);
+  border-radius:999px;
+  padding:6px 12px;
+  margin-bottom:14px;
+  font-size:11px;font-weight:600;color:var(--lp);
+  letter-spacing:.01em;
+}
+.goal-pill-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--lp);flex-shrink:0;
+  animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse{
+  0%,100%{opacity:1;transform:scale(1);}
+  50%{opacity:.55;transform:scale(0.85);}
+}
+
+/* ── LIST CARD (list-card pattern from blueprint) ── */
+.list-card{
+  position:relative;overflow:hidden;
+  background:#fff;border:1px solid var(--bd);
+  border-radius:20px;padding:20px;
+  cursor:pointer;margin-bottom:0;
+}
+
+/* Sparkle ✦ top-right */
+.list-card-sparkle{
+  position:absolute;top:14px;right:16px;
+  font-size:18px;color:var(--lp);opacity:.9;
+}
+
+.list-card-tag{
+  font-size:11px;font-weight:700;color:var(--lp);
+  text-transform:uppercase;letter-spacing:.10em;margin-bottom:8px;
+}
+.list-card-title{
+  font-size:22px;font-weight:800;line-height:1.15;
+  letter-spacing:-.015em;color:var(--g1);margin-bottom:6px;
+}
+.list-card-sub{
+  font-size:12px;color:var(--g6);line-height:1.45;margin-bottom:14px;
+}
+.list-card-divider{height:1px;background:var(--bd);margin-bottom:14px;}
+.list-card-items{display:flex;flex-direction:column;gap:14px;}
+.list-card-item{display:flex;align-items:center;gap:12px;}
+.list-card-item-icon{
+  width:38px;height:38px;border-radius:50%;flex-shrink:0;
+  background:rgba(109,23,206,0.10);
+  display:flex;align-items:center;justify-content:center;
+}
+.list-card-item-icon svg{width:18px;height:18px;fill:var(--lp);}
+.list-card-item-icon.commerce{background:rgba(30,204,176,0.12);}
+.list-card-item-icon.commerce svg{fill:#0fa88e;}
+.list-card-item-text{
+  font-size:14px;font-weight:600;line-height:1.35;
+  color:var(--g1);flex:1;min-width:0;
+}
+.list-card-item-text small{
+  display:block;font-size:12px;font-weight:500;
+  color:var(--g6);margin-top:1px;
+}
+.match-tag{
+  background:rgba(37,171,33,0.10);color:var(--success);
+  font-size:10px;font-weight:700;border-radius:6px;
+  padding:3px 8px;flex-shrink:0;letter-spacing:.02em;
+}
+.best-tag{
+  background:rgba(30,204,176,0.12);color:#0fa88e;
+  font-size:10px;font-weight:700;border-radius:6px;
+  padding:3px 8px;flex-shrink:0;letter-spacing:.02em;
+}
+.list-card-cta{
+  display:inline-flex;align-items:center;gap:4px;
+  margin-top:16px;
+  font-size:14px;font-weight:700;color:var(--lp);
+  background:none;border:none;cursor:pointer;
+  font-family:'JioType',sans-serif;padding:0;
+}
+.list-card-cta svg{width:14px;height:14px;fill:currentColor;}
+
+/* ── Domain bridge connector ── */
+.domain-bridge{
+  display:flex;align-items:center;gap:10px;
+  margin:12px 0;padding:0 2px;
+}
+.domain-bridge-line{flex:1;height:1px;background:rgba(109,23,206,0.15);}
+.domain-bridge-label{
+  font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(109,23,206,0.45);white-space:nowrap;
+  display:flex;align-items:center;gap:5px;
+}
+.domain-bridge-label::before,
+.domain-bridge-label::after{
+  content:'✦';font-size:8px;
+}
+
+/* ── Bottom bar ── */
+.bottom-bar{
+  position:absolute;bottom:0;left:0;right:0;
+  height:84px;background:#fff;
+  border-top:1px solid var(--bd);
+  display:flex;align-items:center;padding:0 14px 22px;gap:10px;
+}
+.plus-btn{
+  width:38px;height:38px;border-radius:50%;background:var(--surf);
+  display:flex;align-items:center;justify-content:center;
+  border:none;cursor:pointer;flex-shrink:0;color:var(--g1);
+}
+.ask-field{
+  flex:1;background:var(--surf);border-radius:22px;
+  padding:10px 16px;font-size:13px;font-weight:500;
+  color:var(--dis);font-family:'JioType',sans-serif;border:none;outline:none;
+}
+.speak-btn{
+  background:var(--p);color:#fff;border:none;border-radius:22px;
+  padding:10px 16px;font-size:13px;font-weight:700;
+  font-family:'JioType',sans-serif;
+  display:flex;align-items:center;gap:6px;cursor:pointer;flex-shrink:0;
+}
+</style>
+</head>
+<body>
+
+<div class="page-label">DECK 06 · CROSS-DOMAIN LOOP — HEALTH × COMMERCE × JOBS</div>
+
+<div class="phone">
+
+  <!-- Dynamic island -->
+  <div class="island"><div class="island-pill"></div></div>
+
+  <!-- Status bar -->
+  <div class="statusbar">
+    <span class="s-time" id="clk">9:30</span>
+    <div class="s-icons">
+      <svg width="17" height="12" viewBox="0 0 17 12" fill="none">
+        <rect x="0" y="3" width="3" height="9" rx="1" fill="#141414"/>
+        <rect x="4.5" y="2" width="3" height="10" rx="1" fill="#141414"/>
+        <rect x="9" y="0.5" width="3" height="11.5" rx="1" fill="#141414"/>
+        <rect x="13.5" y="0" width="3" height="12" rx="1" fill="rgba(20,20,20,.22)"/>
+      </svg>
+      <svg width="25" height="12" viewBox="0 0 25 12" fill="none">
+        <rect x=".5" y="1.5" width="21" height="9" rx="2.5" stroke="#141414" stroke-width="1" fill="none"/>
+        <rect x="2" y="3" width="16" height="6" rx="1.5" fill="#141414"/>
+        <rect x="22.5" y="4" width="2" height="4" rx="1" fill="rgba(20,20,20,.35)"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Top nav -->
+  <div class="topnav">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <button class="nav-ham" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <!-- ic_jio_dot — actual Jio brand mark -->
+      <svg class="nav-logo" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clip-path="url(#jc)">
+          <rect width="24" height="24" rx="12" fill="#3535F3"/>
+          <path d="M8.47789 7.23736H8.07789C7.31878 7.23736 6.90411 7.66536 6.90411 8.52159V12.6509C6.90411 13.714 6.545 14.0871 5.70255 14.0871C5.03989 14.0871 4.50144 13.7969 4.07322 13.2723C4.03167 13.2171 3.16211 13.6311 3.16211 14.6534C3.16211 15.758 4.19722 16.4349 6.11767 16.4349C8.451 16.4349 9.68078 15.2609 9.68078 12.6925V8.52159C9.67944 7.66647 9.26522 7.23736 8.47789 7.23736ZM17.7779 9.25359C15.5128 9.25359 14.0077 10.6898 14.0077 12.8314C14.0077 15.0274 15.4572 16.4363 17.7361 16.4363C20.0006 16.4363 21.4917 15.0274 21.4917 12.8456C21.493 10.6898 20.015 9.25359 17.7779 9.25359ZM17.7501 14.4045C16.8659 14.4045 16.2586 13.7556 16.2586 12.8303C16.2586 11.9191 16.8808 11.2698 17.7501 11.2698C18.6194 11.2698 19.2414 11.9191 19.2414 12.8443C19.2417 13.7416 18.6066 14.4045 17.7503 14.4045H17.7501ZM12.0939 9.32247H11.8172C11.141 9.32247 10.6301 9.63981 10.6301 10.6069V15.026C10.6301 16.0067 11.1274 16.3107 11.8452 16.3107H12.1217C12.7983 16.3107 13.2814 15.9789 13.2814 15.026V10.6069C13.2814 9.6127 12.8123 9.32247 12.0939 9.32247ZM11.9421 6.11914C11.0857 6.11914 10.5472 6.6027 10.5472 7.36225C10.5472 8.13514 11.0999 8.61847 11.9834 8.61847C12.8397 8.61847 13.3783 8.13514 13.3783 7.36225C13.3783 6.58936 12.8259 6.11914 11.9421 6.11914Z" fill="white"/>
+        </g>
+        <defs><clipPath id="jc"><rect width="24" height="24" fill="white"/></clipPath></defs>
+      </svg>
+    </div>
+
+    <!-- Priya's avatar -->
+    <div class="nav-avatar-wrap">
+      <div class="nav-avatar">
+        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&crop=face" alt="Priya"/>
+      </div>
+      <div class="nav-badge">2</div>
+    </div>
+  </div>
+
+  <!-- Scroll content -->
+  <div class="scroll">
+
+    <!-- ── YOUR ASSISTANTS ── -->
+    <div class="sec-hdr">Your Assistants</div>
+    <div class="asst-row">
+
+      <div class="asst-item">
+        <div class="asst-ring">
+          <div class="asst-inner">
+            <img src="https://sunit1986.github.io/design-prototypes/Assets/persona-health.png" alt="Health"/>
+          </div>
+        </div>
+        <div class="asst-label active">Health</div>
+      </div>
+
+      <div class="asst-item">
+        <div class="asst-ring">
+          <div class="asst-inner">
+            <img src="https://sunit1986.github.io/design-prototypes/Assets/persona-career.png" alt="Career"/>
+          </div>
+        </div>
+        <div class="asst-label">Career</div>
+      </div>
+
+      <div class="asst-item">
+        <div class="asst-ring">
+          <div class="asst-inner">
+            <img src="https://sunit1986.github.io/design-prototypes/Assets/persona-astrology.png" alt="Astrology"/>
+          </div>
+        </div>
+        <div class="asst-label">Astrology</div>
+      </div>
+
+      <div class="asst-item">
+        <div class="asst-ring">
+          <div class="asst-inner">
+            <img src="https://sunit1986.github.io/design-prototypes/Assets/persona-bollywood.png" alt="Bollywood"/>
+          </div>
+        </div>
+        <div class="asst-label">Bollywood</div>
+      </div>
+
+      <div class="asst-item">
+        <div class="asst-ring">
+          <div class="asst-inner">
+            <img src="https://sunit1986.github.io/design-prototypes/Assets/persona-cricket.png" alt="Cricket"/>
+          </div>
+        </div>
+        <div class="asst-label">Cricket</div>
+      </div>
+
+      <div class="asst-item">
+        <div class="asst-ring">
+          <div class="asst-inner">
+            <img src="https://sunit1986.github.io/design-prototypes/Assets/persona-devotion.png" alt="Devotion"/>
+          </div>
+        </div>
+        <div class="asst-label">Devotion</div>
+      </div>
+
+    </div>
+
+    <!-- ── TOOLS ── -->
+    <div class="sec-hdr" style="padding-top:4px;">Tools</div>
+    <div class="tools-row" style="padding-bottom:20px;">
+
+      <button class="chip">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" stroke="var(--g1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" stroke="var(--g1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Write
+      </button>
+
+      <button class="chip">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" stroke="var(--g1)" stroke-width="2"/><circle cx="8.5" cy="8.5" r="1.5" fill="var(--g1)"/><path d="M21 15l-5-5L5 21" stroke="var(--g1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Create an image
+      </button>
+
+      <button class="chip">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke="var(--g1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="14,2 14,8 20,8" stroke="var(--g1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="16" y1="13" x2="8" y2="13" stroke="var(--g1)" stroke-width="2" stroke-linecap="round"/><line x1="16" y1="17" x2="8" y2="17" stroke="var(--g1)" stroke-width="2" stroke-linecap="round"/></svg>
+        Analyse docs
+      </button>
+
+      <button class="chip">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="8" stroke="var(--g1)" stroke-width="2"/><path d="M21 21l-4.35-4.35" stroke="var(--g1)" stroke-width="2" stroke-linecap="round"/></svg>
+        Edit images
+      </button>
+
+      <button class="chip">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="var(--g1)" stroke-width="2"/><line x1="2" y1="12" x2="22" y2="12" stroke="var(--g1)" stroke-width="2"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" stroke="var(--g1)" stroke-width="2"/></svg>
+        Translate
+      </button>
+
+    </div>
+
+    <!-- ── UPDATES ── -->
+    <div class="sec-hdr" style="padding-top:0;">Updates</div>
+    <div class="updates-wrap">
+
+      <!-- Active goal context pill -->
+      <div class="goal-pill">
+        <div class="goal-pill-dot"></div>
+        Active goal: Lose 10 kg by August · Day 12
+      </div>
+
+      <!-- ════════════════════════════════════════ -->
+      <!--  CARD 1 — COMMERCE (Health → JioMart)   -->
+      <!-- ════════════════════════════════════════ -->
+      <div class="list-card">
+
+        <div class="list-card-sparkle">✦</div>
+
+        <div class="list-card-tag">JioMart · For your goal</div>
+
+        <div class="list-card-title">Your fitness fuel, sorted. Under ₹800, delivered tomorrow.</div>
+
+        <div class="list-card-sub">Based on your 10 kg goal — JBIQ picked what actually works.</div>
+
+        <div class="list-card-divider"></div>
+
+        <div class="list-card-items">
+          <div class="list-card-item">
+            <div class="list-card-item-icon commerce">
+              <!-- shopping bag icon -->
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4H6zm0 0M3 6h18M16 10a4 4 0 01-8 0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" style="fill:none;stroke:#0fa88e;stroke-width:2;"/>
+              </svg>
+            </div>
+            <div class="list-card-item-text">
+              MuscleBlaze Whey Protein 1kg
+              <small>JioMart · ₹749 · ★ 4.6 · 1,200+ reviews</small>
+            </div>
+            <span class="best-tag">Best pick</span>
+          </div>
+
+          <!-- Pills -->
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-left:50px;">
+            <span style="background:#eeeeef;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;color:rgba(25,27,30,0.65);">₹749</span>
+            <span style="background:#eeeeef;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;color:rgba(25,27,30,0.65);">25g protein/serve</span>
+            <span style="background:#eeeeef;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;color:rgba(25,27,30,0.65);">Free delivery</span>
+          </div>
+        </div>
+
+        <button class="list-card-cta">
+          See all picks
+          <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        </button>
+
+      </div>
+
+      <!-- ── Domain bridge ── -->
+      <div class="domain-bridge">
+        <div class="domain-bridge-line"></div>
+        <div class="domain-bridge-label">JBIQ connected · 2 domains · 1 goal</div>
+        <div class="domain-bridge-line"></div>
+      </div>
+
+      <!-- ════════════════════════════════════════ -->
+      <!--  CARD 2 — JOBS (Health goal → Career)   -->
+      <!-- ════════════════════════════════════════ -->
+      <div class="list-card" style="margin-top:0;">
+
+        <div class="list-card-sparkle">✦</div>
+
+        <div class="list-card-tag">Career · Matched to your goal</div>
+
+        <div class="list-card-title">Your fitness focus is a job. Roles hiring near Andheri.</div>
+
+        <div class="list-card-sub">JBIQ noticed your health focus — these roles align with it.</div>
+
+        <div class="list-card-divider"></div>
+
+        <div class="list-card-items">
+          <div class="list-card-item">
+            <div class="list-card-item-icon">
+              <!-- briefcase icon -->
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M19 7H17V6C17 5.20435 16.6839 4.44129 16.1213 3.87868C15.5587 3.31607 14.7956 3 14 3H10C9.20435 3 8.44129 3.31607 7.87868 3.87868C7.31607 4.44129 7 5.20435 7 6V7H5C4.20435 7 3.44129 7.31607 2.87868 7.87868C2.31607 8.44129 2 9.20435 2 10V18C2 18.7956 2.31607 19.5587 2.87868 20.1213C3.44129 20.6839 4.20435 21 5 21H19C19.7956 21 20.5587 20.6839 21.1213 20.1213C21.6839 19.5587 22 18.7956 22 18V10C22 9.20435 21.6839 8.44129 21.1213 7.87868C20.5587 7.31607 19.7956 7 19 7ZM9 6C9 5.73478 9.10536 5.48043 9.29289 5.29289C9.48043 5.10536 9.73478 5 10 5H14C14.2652 5 14.5196 5.10536 14.7071 5.29289C14.8946 5.48043 15 5.73478 15 6V7H9V6Z" fill="currentColor"/>
+              </svg>
+            </div>
+            <div class="list-card-item-text">
+              Fitness Trainer – Cult.fit
+              <small>Andheri West · ₹32–40k/mo</small>
+            </div>
+            <span class="match-tag">89% match</span>
+          </div>
+
+          <!-- Pills -->
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-left:50px;">
+            <span style="background:#eeeeef;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;color:rgba(25,27,30,0.65);">₹35k avg</span>
+            <span style="background:#eeeeef;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;color:rgba(25,27,30,0.65);">Cert. preferred</span>
+            <span style="background:#eeeeef;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;color:rgba(25,27,30,0.65);">Full-time</span>
+            <span style="background:#eeeeef;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;color:rgba(25,27,30,0.65);">1.2 km away</span>
+          </div>
+        </div>
+
+        <button class="list-card-cta">
+          See all matches
+          <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        </button>
+
+      </div>
+
+    </div><!-- /updates-wrap -->
+
+  </div><!-- /scroll -->
+
+  <!-- Bottom bar -->
+  <div class="bottom-bar">
+    <button class="plus-btn">
+      <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+        <path d="M12 5a1 1 0 011 1v5h5a1 1 0 010 2h-5v5a1 1 0 01-2 0v-5H6a1 1 0 010-2h5V6a1 1 0 011-1z" fill="currentColor"/>
+      </svg>
+    </button>
+    <input class="ask-field" type="text" placeholder="Hey Priya, what's on your mind?" readonly>
+    <button class="speak-btn">
+      <svg viewBox="0 0 24 24" fill="none" width="14" height="14">
+        <path d="M12 15a3 3 0 003-3V5a3 3 0 00-6 0v7a3 3 0 003 3zm5-3a1 1 0 00-2 0v1a5 5 0 01-10 0v-1a1 1 0 00-2 0v1a7 7 0 0014 0v-1zM9 21h6a1 1 0 000-2H9a1 1 0 000 2z" fill="#fff"/>
+      </svg>
+      Speak
+    </button>
+  </div>
+
+</div><!-- /phone -->
+
+<script>
+function tick(){
+  const d=new Date(),h=d.getHours(),m=d.getMinutes();
+  document.getElementById('clk').textContent=(h<10?'0':'')+h+':'+(m<10?'0':'')+m;
+}
+tick();setInterval(tick,30000);
+</script>
+</body>
+</html>

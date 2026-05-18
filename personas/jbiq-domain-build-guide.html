@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JBIQ — How to Build a Persona × Domain</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --text: #1a1a1a;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --accent: #1d4ed8;
+    --code-bg: #f3f4f6;
+    --sidebar-w: 260px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; font-size: 15px; }
+  #sidebar {
+    position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100vh;
+    overflow-y: auto; background: #f9fafb; border-right: 1px solid var(--border);
+    padding: 24px 16px; font-size: 13px;
+  }
+  #sidebar h3 { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 12px; }
+  #sidebar .toc ul { list-style: none; padding-left: 0; }
+  #sidebar .toc li { margin: 2px 0; }
+  #sidebar .toc a { color: var(--muted); text-decoration: none; display: block; padding: 2px 4px; border-radius: 4px; }
+  #sidebar .toc a:hover { color: var(--accent); background: #e0e7ff; }
+  #sidebar .toc ul ul { padding-left: 12px; }
+  #content { margin-left: var(--sidebar-w); max-width: 900px; padding: 48px 48px 80px; }
+  h1 { font-size: 26px; font-weight: 700; margin-bottom: 8px; }
+  h2 { font-size: 20px; font-weight: 700; margin: 48px 0 16px; padding-bottom: 8px; border-bottom: 2px solid var(--border); }
+  h3 { font-size: 17px; font-weight: 600; margin: 32px 0 12px; }
+  h4 { font-size: 15px; font-weight: 600; margin: 24px 0 8px; color: #374151; }
+  p { margin-bottom: 16px; }
+  ul, ol { margin: 0 0 16px 20px; }
+  li { margin-bottom: 4px; }
+  table { border-collapse: collapse; width: 100%; margin: 16px 0 24px; font-size: 14px; }
+  th { background: #f3f4f6; font-weight: 600; text-align: left; padding: 10px 14px; border: 1px solid var(--border); }
+  td { padding: 9px 14px; border: 1px solid var(--border); vertical-align: top; }
+  tr:nth-child(even) td { background: #fafafa; }
+  code { background: var(--code-bg); padding: 2px 5px; border-radius: 3px; font-size: 13px; font-family: "SF Mono", Monaco, monospace; }
+  pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px; padding: 16px 20px; overflow-x: auto; margin: 16px 0 24px; }
+  pre code { background: none; padding: 0; font-size: 13px; line-height: 1.6; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+  strong { font-weight: 600; }
+  em { font-style: italic; color: #374151; }
+  blockquote { border-left: 3px solid var(--accent); padding-left: 16px; margin: 16px 0; color: var(--muted); }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<nav id="sidebar">
+  <h3>Contents</h3>
+  <div class="toc"><div class="toc">
+<ul>
+<li><a href="#how-to-build-a-persona-domain-in-jbiq">How to Build a Persona × Domain in JBIQ</a><ul>
+<li><a href="#what-youre-building">What You're Building</a></li>
+<li><a href="#step-1-define-the-personality">Step 1 — Define the Personality</a></li>
+<li><a href="#step-1b-map-use-cases-to-personas">Step 1b — Map Use Cases to Personas</a></li>
+<li><a href="#step-2-build-the-skill">Step 2 — Build the Skill</a><ul>
+<li><a href="#the-pipeline-how-every-query-flows">The Pipeline — How Every Query Flows</a></li>
+<li><a href="#2a-execution-mode">2a. Execution Mode</a></li>
+<li><a href="#2b-skill-manifest-what-to-declare">2b. Skill Manifest — What to Declare</a></li>
+<li><a href="#2c-mcp-tool-list">2c. MCP Tool List</a></li>
+<li><a href="#2d-cross-domain-invocation">2d. Cross-Domain Invocation</a></li>
+<li><a href="#2e-primitive-templates">2e. Primitive Templates</a></li>
+</ul>
+</li>
+<li><a href="#step-3-set-the-rules">Step 3 — Set the Rules</a><ul>
+<li><a href="#safety-rules-domain-specific">Safety Rules (domain-specific)</a></li>
+<li><a href="#memory-schema-ocp">Memory Schema (OCP)</a></li>
+<li><a href="#domain-boundary-rules">Domain Boundary Rules</a></li>
+</ul>
+</li>
+<li><a href="#step-4-evals">Step 4 — Evals</a><ul>
+<li><a href="#type-1-functional-evals-did-it-work">Type 1 — Functional Evals (Did it work?)</a></li>
+<li><a href="#type-2-experience-evals-did-it-feel-right">Type 2 — Experience Evals (Did it feel right?)</a><ul>
+<li><a href="#character-consistency">Character Consistency</a></li>
+<li><a href="#use-case-persona-cell-evals">Use Case × Persona Cell Evals</a></li>
+<li><a href="#register-adaptation">Register Adaptation</a></li>
+<li><a href="#magic-moment-test">Magic Moment Test</a></li>
+<li><a href="#cross-domain-context-carry">Cross-Domain Context Carry</a></li>
+<li><a href="#n1-arc-progression">N=1 Arc Progression</a></li>
+</ul>
+</li>
+<li><a href="#eval-ownership">Eval Ownership</a></li>
+</ul>
+</li>
+<li><a href="#the-build-checklist">The Build Checklist</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<main id="content">
+<h1 id="how-to-build-a-persona-domain-in-jbiq">How to Build a Persona × Domain in JBIQ</h1>
+<hr />
+<h2 id="what-youre-building">What You're Building</h2>
+<p>Every domain in JBIQ is three things composed together:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>What it is</th>
+<th>Who defines it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Personality</strong></td>
+<td>The AI assistant's character — who it is, how it speaks, what it never does</td>
+<td>Product + Design</td>
+</tr>
+<tr>
+<td><strong>Skill</strong></td>
+<td>The structured definition the orchestrator loads — execution mode, tool list, primitives</td>
+<td>Product + Engineering</td>
+</tr>
+<tr>
+<td><strong>Rules</strong></td>
+<td>Safety guardrails, memory schema, domain boundary conditions</td>
+<td>Product + Engineering</td>
+</tr>
+</tbody>
+</table>
+<p>All three must be defined before a domain can be built. A domain with personality but no skill spec is a character with no capability. A domain with tools but no personality is a capable assistant with no identity.</p>
+<hr />
+<h2 id="step-1-define-the-personality">Step 1 — Define the Personality</h2>
+<p>The personality is loaded into the system prompt when the domain skill is retrieved. It must answer five questions:</p>
+<table>
+<thead>
+<tr>
+<th>Question</th>
+<th>What to define</th>
+<th>Example — Paisa Buddy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Who is this assistant?</strong></td>
+<td>One sentence — role, relationship to user, what it is NOT</td>
+<td>Precise, trusted advisor who gives the math — not opinions, not product recommendations</td>
+</tr>
+<tr>
+<td><strong>What is the tone?</strong></td>
+<td>2–3 words · how it speaks across all users</td>
+<td>Calculated · precise · numbers-first</td>
+</tr>
+<tr>
+<td><strong>How does it interact?</strong></td>
+<td>Default behaviour — reactive or proactive, depth or brevity, format</td>
+<td>Decision-ready output — <em>"Net benefit ₹62K"</em> not <em>"you'll save money"</em></td>
+</tr>
+<tr>
+<td><strong>What does it never do?</strong></td>
+<td>Hard stops — behaviour that breaks trust or safety in this domain</td>
+<td>Never speculates · never gives investment advice · never recommends specific financial products</td>
+</tr>
+<tr>
+<td><strong>How does user register adapt it?</strong></td>
+<td>What OCP signals shift the output — language, format, depth</td>
+<td>Ramesh → Hindi voice-confirm flow · Priya → Hinglish precision · Raju → Bhojpuri one-sentence price + action</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The never-does list is non-negotiable.</strong> It becomes the eval rubric. If it isn't written, it cannot be tested.</p>
+<hr />
+<h2 id="step-1b-map-use-cases-to-personas">Step 1b — Map Use Cases to Personas</h2>
+<p>Once the personality is defined, map every use case in the domain to the personas it serves. This is not optional — it drives what gets built, which MCPs are required, and which eval cells must pass before the domain ships.</p>
+<p><strong>Format: one row per use case</strong></p>
+<table>
+<thead>
+<tr>
+<th>Use Case</th>
+<th>Arjun</th>
+<th>Priya</th>
+<th>Ramesh</th>
+<th>Sunita</th>
+<th>Raju</th>
+<th>Execution mode</th>
+<th>MCP required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Daily mandi price check</td>
+<td>—</td>
+<td>—</td>
+<td>●</td>
+<td>●</td>
+<td>●</td>
+<td><code>mcp_tools</code></td>
+<td>Mandi price MCP</td>
+</tr>
+<tr>
+<td>Buy / wait decision</td>
+<td>—</td>
+<td>—</td>
+<td>●</td>
+<td>—</td>
+<td>●</td>
+<td><code>mcp_tools</code></td>
+<td>Mandi price trend MCP + OCP purchase history</td>
+</tr>
+<tr>
+<td>GST filing</td>
+<td>—</td>
+<td>—</td>
+<td>●</td>
+<td>—</td>
+<td>—</td>
+<td><code>agent_as_tool</code></td>
+<td>GST portal MCP</td>
+</tr>
+<tr>
+<td>Home loan analysis</td>
+<td>—</td>
+<td>●</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><code>mcp_tools</code></td>
+<td>OCP financial profile MCP</td>
+</tr>
+<tr>
+<td>Harvest timing</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>●</td>
+<td><code>mcp_tools</code></td>
+<td>Mandi price + projection MCP</td>
+</tr>
+<tr>
+<td>Savings scheme eligibility</td>
+<td>—</td>
+<td>◑</td>
+<td>◑</td>
+<td>●</td>
+<td>●</td>
+<td><code>persona_prompt</code> → <code>mcp_tools</code></td>
+<td>Scheme DB MCP</td>
+</tr>
+</tbody>
+</table>
+<p><em>(Example from Finance domain — Paisa Buddy)</em></p>
+<p><code>●</code> Primary use case for this persona · <code>◑</code> Secondary · <code>—</code> Not relevant</p>
+<hr />
+<p><strong>What this mapping drives:</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>What it determines</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Which MCPs to build</strong></td>
+<td>If a use case is <code>●</code> for a persona and needs live data — the MCP is a build dependency, not optional</td>
+</tr>
+<tr>
+<td><strong>Which primitives fire</strong></td>
+<td>Raju <code>●</code> mandi price → voice-first, one sentence · Ramesh <code>●</code> mandi price → Hindi voice-confirm · Priya <code>●</code> home loan → numbers card</td>
+</tr>
+<tr>
+<td><strong>Register per cell</strong></td>
+<td>Same use case, different persona = different output format. Both must be specced.</td>
+</tr>
+<tr>
+<td><strong>Eval coverage</strong></td>
+<td>Every <code>●</code> cell is a required eval. Every <code>◑</code> cell is a recommended eval. <code>—</code> cells are not tested for this domain.</td>
+</tr>
+<tr>
+<td><strong>Build priority</strong></td>
+<td><code>●</code> cells ship first. <code>◑</code> cells are phased. A domain is not live until all <code>●</code> cells pass experience evals.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>A domain is not complete until every <code>●</code> cell has:</strong>
+- A defined register adaptation (what does this use case sound like for this persona)
+- A magic moment written (the specific experience that would make this persona share it)
+- A passing eval (functional + experience)</p>
+<hr />
+<h2 id="step-2-build-the-skill">Step 2 — Build the Skill</h2>
+<p>The skill is the structured object the Coordinator retrieves per query via RAG. Understanding the pipeline is required before speccing a skill — what you declare in the skill manifest directly determines latency, token cost, and execution path.</p>
+<hr />
+<h3 id="the-pipeline-how-every-query-flows">The Pipeline — How Every Query Flows</h3>
+<pre><code>PRE-FLIGHT       guardrails · PII redaction · language detection · memory load
+                 ~30ms · 0 LLM calls
+
+ROUTING          Model ID — picks model for the conversation
+                 Gemini 3.0 Flash today · conversation-scoped · no mid-turn switches
+
+RETRIEVAL        Skill Discovery — RAG search over skills DB
+                 O(log n) ANN · ~30ms · 0 LLM calls
+                 High confidence → skill's tools passed to Coordinator (~2K–4K tokens)
+                 Low confidence  → full DB index passed · LLM searches via tool_search
+
+REASONING        Coordinator — ReAct loop · parallel tool dispatch
+                 1+ LLM/turn · max 8 reasoning turns · typical 2–8 seconds
+
+OUTPUT           Response Formatter — synthesise · redact · store
+                 0–1 LLM · async memory write
+</code></pre>
+<p><strong>Key design principle:</strong> Skills are retrieved per query, never preloaded. The Coordinator's tool surface is composed per query — keeping the prompt token-stable (~2K base + 2–6K per skill) whether the catalog has 85 or 1,000+ skills.</p>
+<hr />
+<h3 id="2a-execution-mode">2a. Execution Mode</h3>
+<p>Every skill declares one of three execution modes in its manifest. This is the single most important decision in the skill spec — it determines latency, LLM cost, and what the user experiences.</p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>What it means</th>
+<th>Latency</th>
+<th>LLMs</th>
+<th>Use when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>persona_prompt</code></td>
+<td>Character body added to system prompt — 0 tools, 0 extra hops</td>
+<td>~3s</td>
+<td>1</td>
+<td>No live data needed · voice/style/persona overlay</td>
+</tr>
+<tr>
+<td><code>mcp_tools</code></td>
+<td>MCP schemas appended to Coordinator's tool list · fired concurrently</td>
+<td>4–9s</td>
+<td>1–3</td>
+<td>Live data · transactions · proprietary integrations</td>
+</tr>
+<tr>
+<td><code>agent_as_tool</code></td>
+<td>Sandboxed specialist subagent · Coordinator sees it as a single tool call</td>
+<td>~8s</td>
+<td>2+</td>
+<td>Complex multi-step workflows · isolated reasoning loop</td>
+</tr>
+</tbody>
+</table>
+<p><strong>How the Coordinator executes each mode:</strong></p>
+<ul>
+<li><strong><code>mcp_tools</code></strong> — tool schemas from the skill are appended to the Coordinator's available tools. The Coordinator fires them in parallel within a single turn. Results stream back into context.</li>
+<li><strong><code>persona_prompt</code></strong> — the skill's character definition is injected into the system prompt. No tools, no extra LLM calls. Lowest latency mode.</li>
+<li><strong><code>agent_as_tool</code></strong> — the Coordinator spawns an isolated subagent (e.g. <code>tax_saathi</code>). The subagent runs its own ReAct loop and returns one compressed result. +1 LLM hop. The user never sees this — the Coordinator presents the result as if it were a direct tool response.</li>
+</ul>
+<p><strong>Real examples from the pipeline:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Query</th>
+<th>Execution mode</th>
+<th>P50</th>
+<th>LLMs</th>
+<th>What fires</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em>"I'm feeling anxious about exams"</em></td>
+<td><code>persona_prompt</code></td>
+<td>~3s</td>
+<td>1</td>
+<td>Saathi persona overlay</td>
+</tr>
+<tr>
+<td><em>"IPL matches day after tomorrow?"</em></td>
+<td><code>mcp_tools</code></td>
+<td>4–6s</td>
+<td>1–2</td>
+<td>Cricket skill MCPs</td>
+</tr>
+<tr>
+<td><em>"Panchang for Oscar day next year?"</em></td>
+<td><code>mcp_tools</code></td>
+<td>6–9s</td>
+<td>2–3</td>
+<td>Panchang MCP + search defaults</td>
+</tr>
+<tr>
+<td><em>"File my income tax"</em></td>
+<td><code>agent_as_tool</code></td>
+<td>~8s</td>
+<td>2+</td>
+<td>tax_saathi subagent</td>
+</tr>
+<tr>
+<td><em>"Plan a trip to Bangalore"</em></td>
+<td><code>mcp_tools</code> × 3</td>
+<td>15–25s</td>
+<td>4–8</td>
+<td>Travel · food · hotel skills</td>
+</tr>
+</tbody>
+</table>
+<p>Most domains use all three modes across different use cases. The mode is declared per skill — the Coordinator decides based on query intent which mode to invoke.</p>
+<hr />
+<h3 id="2b-skill-manifest-what-to-declare">2b. Skill Manifest — What to Declare</h3>
+<p>The skill manifest is what gets indexed in the skills DB and retrieved by RAG. It must contain everything the Coordinator needs to execute the skill correctly.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>What to define</th>
+<th>Why it matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Skill name + description</strong></td>
+<td>Clear, retrieval-optimised description of what this skill does</td>
+<td>RAG matches this against the query — vague descriptions = retrieval misses</td>
+</tr>
+<tr>
+<td><strong>Execution mode</strong></td>
+<td><code>persona_prompt</code> / <code>mcp_tools</code> / <code>agent_as_tool</code></td>
+<td>Determines how Coordinator executes the skill</td>
+</tr>
+<tr>
+<td><strong>Persona body</strong></td>
+<td>Character, tone, never-does injected into system prompt</td>
+<td>Active for <code>persona_prompt</code> and as overlay for <code>mcp_tools</code></td>
+</tr>
+<tr>
+<td><strong>MCP tool schemas</strong></td>
+<td>Each tool: name · input schema · output schema · what triggers it</td>
+<td>Appended to Coordinator's tool list on retrieval</td>
+</tr>
+<tr>
+<td><strong>Token budget</strong></td>
+<td>Expected tokens this skill adds to Coordinator context</td>
+<td>Each skill adds ~2K–4K tokens — must stay within budget</td>
+</tr>
+<tr>
+<td><strong>Agent reference</strong></td>
+<td>For <code>agent_as_tool</code> — which subagent to spawn and what to pass it</td>
+<td>Required for isolated specialist flows</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="2c-mcp-tool-list">2c. MCP Tool List</h3>
+<p>Every MCP tool in the domain must be declared in the skill manifest:</p>
+<table>
+<thead>
+<tr>
+<th>What to specify</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Tool name</strong></td>
+<td>How the Coordinator identifies and invokes it</td>
+</tr>
+<tr>
+<td><strong>Input schema</strong></td>
+<td>What the Coordinator must pass — keeps tool calls correct</td>
+</tr>
+<tr>
+<td><strong>Output schema</strong></td>
+<td>What data shape comes back — informs primitive selection</td>
+</tr>
+<tr>
+<td><strong>What triggers it</strong></td>
+<td>Which query intent or signal fires this tool</td>
+</tr>
+<tr>
+<td><strong>Fires in parallel with</strong></td>
+<td>Which other tools can fire concurrently in the same turn</td>
+</tr>
+<tr>
+<td><strong>Proprietary or not</strong></td>
+<td>Proprietary tool on Jio data = signature · Public tool = everyday use case</td>
+</tr>
+</tbody>
+</table>
+<p>Tools fire in parallel within a single Coordinator turn. Design tool boundaries so independent data fetches can fire concurrently — a Cricket query firing JioCinema live + fantasy API in parallel is faster than sequentially.</p>
+<p><strong>No proprietary MCP = no signature experience = no moat for this domain.</strong></p>
+<hr />
+<h3 id="2d-cross-domain-invocation">2d. Cross-Domain Invocation</h3>
+<p>When a user raises a Y-domain topic inside an X-domain conversation, X must handle it without redirecting the user. The mechanism is <code>agent_as_tool</code>.</p>
+<ul>
+<li>Declare which domains can be invoked as <code>agent_as_tool</code> from this skill</li>
+<li>Define the intent signal or query pattern that triggers the invocation</li>
+<li>The Coordinator spawns the Y subagent, gets one compressed result, presents it in X's voice</li>
+<li>The user never leaves X. The domain boundary is invisible.</li>
+</ul>
+<p><strong>The Coordinator sees the Y subagent's result as a single tool call — same as any MCP.</strong></p>
+<hr />
+<h3 id="2e-primitive-templates">2e. Primitive Templates</h3>
+<p>Define which primitives fire for this domain and in what combination per user profile:</p>
+<table>
+<thead>
+<tr>
+<th>Primitive</th>
+<th>Rule for this domain</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Voice Output</strong></td>
+<td>Always for Seg C/D users — standalone-complete · meaningful without the screen</td>
+</tr>
+<tr>
+<td><strong>Text Response</strong></td>
+<td>Mirrors or extends voice</td>
+</tr>
+<tr>
+<td><strong>Rich Card</strong></td>
+<td>For content, products, jobs — not for decisions</td>
+</tr>
+<tr>
+<td><strong>Action</strong></td>
+<td>Closes the loop — add to cart, confirm, book, file</td>
+</tr>
+<tr>
+<td><strong>Clarification</strong></td>
+<td>Max one per response — never chain</td>
+</tr>
+<tr>
+<td><strong>Next Step</strong></td>
+<td>Primary re-engagement — must fit domain character</td>
+</tr>
+<tr>
+<td><strong>Navigation</strong></td>
+<td>Only when depth in surface is better than in conversation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="step-3-set-the-rules">Step 3 — Set the Rules</h2>
+<h3 id="safety-rules-domain-specific">Safety Rules (domain-specific)</h3>
+<p>Every domain has hard safety rules that override everything else:</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Hard rule</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Health</td>
+<td>Never diagnose · triage only · route to doctor if serious</td>
+</tr>
+<tr>
+<td>Finance</td>
+<td>Numbers only · no investment advice · no product recommendation</td>
+</tr>
+<tr>
+<td>News</td>
+<td>Never editorialise · no opinion · fact-check only</td>
+</tr>
+<tr>
+<td>Astrology</td>
+<td>Never over-promise on predictions · belief respected, not exploited</td>
+</tr>
+<tr>
+<td>Life Companion</td>
+<td>Never diagnostic · emotional distress → professional resource routing</td>
+</tr>
+<tr>
+<td>Government Services</td>
+<td>Proof-first · never hype a scheme · auto-link documents or don't mention it</td>
+</tr>
+</tbody>
+</table>
+<h3 id="memory-schema-ocp">Memory Schema (OCP)</h3>
+<p>Define exactly what this domain reads from OCP at pre-flight and writes back at session end:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>What to define</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Pre-flight read</strong></td>
+<td>Which OCP fields this domain loads — language, profile signals, domain-specific history</td>
+</tr>
+<tr>
+<td><strong>Session write</strong></td>
+<td>What gets written back — what was asked, what was resolved, what matters for next session</td>
+</tr>
+<tr>
+<td><strong>Cross-domain readable</strong></td>
+<td>Which fields other domains can read from this domain's writes — e.g. Saathi reads Health, Finance, Scheme activity</td>
+</tr>
+</tbody>
+</table>
+<p>Memory schema must be defined per domain. Without it, OCP grows without structure and personalisation breaks.</p>
+<h3 id="domain-boundary-rules">Domain Boundary Rules</h3>
+<p>When does this domain hand off — and how:</p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Rule</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Y topic raised inside X — answerable from LLM knowledge</td>
+<td>X handles it in X's character. No invocation.</td>
+</tr>
+<tr>
+<td>Y topic raised inside X — needs Y's MCPs</td>
+<td>X silently invokes Y as <code>agent_as_tool</code>. X presents result. User never redirected.</td>
+</tr>
+<tr>
+<td>Query is ambiguous — could be X or Y</td>
+<td>Coordinator routes based on strongest intent signal. If still ambiguous — ask one clarification.</td>
+</tr>
+<tr>
+<td>User explicitly names another domain</td>
+<td>Switch domain. Load Y character. Session context carries.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>No user-facing redirects. Ever.</strong></p>
+<hr />
+<h2 id="step-4-evals">Step 4 — Evals</h2>
+<p>Evals validate two different things. Both are required before a domain ships.</p>
+<hr />
+<h3 id="type-1-functional-evals-did-it-work">Type 1 — Functional Evals (Did it work?)</h3>
+<p>Automatable. Run on every build and on every integration change.</p>
+<table>
+<thead>
+<tr>
+<th>What to test</th>
+<th>Test type</th>
+<th>Pass condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Routing accuracy</strong></td>
+<td>Unit test — send 20 domain-specific queries</td>
+<td>Correct domain skill retrieved ≥ 95%</td>
+</tr>
+<tr>
+<td><strong>MCP tool invocation</strong></td>
+<td>Integration test — send signature query</td>
+<td>Correct MCP fires · correct data schema returns</td>
+</tr>
+<tr>
+<td><strong>Parallel MCP execution</strong></td>
+<td>Integration test — query needing 2+ MCPs</td>
+<td>Both fire in parallel · both return before response</td>
+</tr>
+<tr>
+<td><strong>Cross-domain invocation</strong></td>
+<td>Integration test — Y topic inside X conversation</td>
+<td>Y invoked as <code>agent_as_tool</code> · result returned to X · user not redirected</td>
+</tr>
+<tr>
+<td><strong>OCP pre-flight read</strong></td>
+<td>Unit test — session start with known OCP state</td>
+<td>Correct fields loaded · language + profile signals present in context</td>
+</tr>
+<tr>
+<td><strong>OCP memory write</strong></td>
+<td>Unit test — end of session with known events</td>
+<td>Correct fields written back · no data loss · schema intact</td>
+</tr>
+<tr>
+<td><strong>Memory round-trip</strong></td>
+<td>Integration test — session 1 write → session 2 read</td>
+<td>Session 2 pre-flight contains session 1 writes</td>
+</tr>
+<tr>
+<td><strong>Language detection</strong></td>
+<td>Unit test — input in Gujarati / Bhojpuri / Hinglish</td>
+<td>Output in matching language · no Hindi fallback</td>
+</tr>
+<tr>
+<td><strong>Execution mode escalation</strong></td>
+<td>Integration test — shallow query vs deep query in same domain</td>
+<td>Shallow → <code>persona_prompt</code> · deep → <code>mcp_tools</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="type-2-experience-evals-did-it-feel-right">Type 2 — Experience Evals (Did it feel right?)</h3>
+<p>Cannot be automated with rule-based tests. Requires LLM-as-judge or human raters using the personality spec and never-does list as the rubric.</p>
+<h4 id="character-consistency">Character Consistency</h4>
+<p>Test whether the domain character holds across query types, depths, and user registers.</p>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>How</th>
+<th>Pass condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tone stays in character</td>
+<td>LLM-as-judge — score 10 responses against character definition</td>
+<td>≥ 8/10 rated consistent with defined tone</td>
+</tr>
+<tr>
+<td>Never-does not violated</td>
+<td>Automated red-team — probe each never-does rule with adversarial inputs</td>
+<td>Zero violations across 50 probes per rule</td>
+</tr>
+<tr>
+<td>Character doesn't bleed into adjacent domains</td>
+<td>Send queries near domain boundary</td>
+<td>X character holds · no blending with Y character</td>
+</tr>
+</tbody>
+</table>
+<h4 id="use-case-persona-cell-evals">Use Case × Persona Cell Evals</h4>
+<p>Every <code>●</code> cell in the use case × persona map is a required eval. Every <code>◑</code> cell is recommended. The domain does not ship until all <code>●</code> cells pass.</p>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>How</th>
+<th>Pass condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Primary cell functional</strong></td>
+<td>Send the exact query for this use case as this persona</td>
+<td>Correct MCP fires · correct data returns · correct primitive renders</td>
+</tr>
+<tr>
+<td><strong>Primary cell experience</strong></td>
+<td>Human rater reads response as that persona</td>
+<td>Register matches · magic moment lands · never-does not violated</td>
+</tr>
+<tr>
+<td><strong>Secondary cell functional</strong></td>
+<td>Send query for <code>◑</code> use cases</td>
+<td>Handled gracefully — either <code>persona_prompt</code> or MCP · not an error</td>
+</tr>
+</tbody>
+</table>
+<h4 id="register-adaptation">Register Adaptation</h4>
+<p>One golden test case per persona × domain cell. Defined by the team who wrote the persona profile.</p>
+<table>
+<thead>
+<tr>
+<th>Persona</th>
+<th>What to test</th>
+<th>Pass condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sunita</td>
+<td>Send query in Gujarati → response must be in Gujarati</td>
+<td>No Hindi word in output</td>
+</tr>
+<tr>
+<td>Raju</td>
+<td>Send voice-intent query → response ≤ 2 sentences</td>
+<td>Brevity + Bhojpuri/Hindi · no jargon</td>
+</tr>
+<tr>
+<td>Ramesh</td>
+<td>Send business query → response is price + action, no preamble</td>
+<td>Numbers-first · no warm-up paragraph</td>
+</tr>
+<tr>
+<td>Priya</td>
+<td>Send financial decision query → response leads with ₹ impact</td>
+<td>Decision-ready output · no generic advice</td>
+</tr>
+<tr>
+<td>Arjun</td>
+<td>Send exam-related query → response has countdown urgency</td>
+<td>Deadline prominent · peer tone</td>
+</tr>
+</tbody>
+</table>
+<h4 id="magic-moment-test">Magic Moment Test</h4>
+<p>The signature experience must fire for the right query. Defined once per domain.</p>
+<table>
+<thead>
+<tr>
+<th>What to test</th>
+<th>How</th>
+<th>Pass condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Signature experience triggers</td>
+<td>Send the exact query type that should trigger it</td>
+<td>MCP fires · proprietary data in response · not a generic answer</td>
+</tr>
+<tr>
+<td>Magic moment lands for target persona</td>
+<td>Human rater reads response as that persona</td>
+<td>Would this make Ramesh call his supplier? Would Sunita forward this?</td>
+</tr>
+</tbody>
+</table>
+<h4 id="cross-domain-context-carry">Cross-Domain Context Carry</h4>
+<p>The most important experience eval — validates that domain switches don't lose the thread.</p>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Setup</th>
+<th>Pass condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Context carries on domain switch</td>
+<td>Run Finance conversation → switch to Scheme Buddy</td>
+<td>Scheme Buddy references Finance context without being told</td>
+</tr>
+<tr>
+<td>Saathi knows the session</td>
+<td>Run 2 domain conversations → switch to Life Companion</td>
+<td>Saathi opens with awareness of what happened in earlier domains</td>
+</tr>
+<tr>
+<td>No user-facing redirect</td>
+<td>Raise Y topic inside X conversation</td>
+<td>X handles it or invokes Y silently — no instruction to the user to go elsewhere</td>
+</tr>
+<tr>
+<td>Returns to domain mid-transaction</td>
+<td>Switch away from domain mid-task → return</td>
+<td>Domain picks up exactly where it left off · no re-asking</td>
+</tr>
+</tbody>
+</table>
+<h4 id="n1-arc-progression">N=1 Arc Progression</h4>
+<p>Validates that the personalisation arc actually moves — session 20 must feel materially different from session 1.</p>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>How</th>
+<th>Pass condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Session 1 baseline</td>
+<td>Run first query with cold OCP</td>
+<td>Response uses cohort defaults — not individual data</td>
+</tr>
+<tr>
+<td>Session 6–20 mid-arc</td>
+<td>Run same query with populated OCP</td>
+<td>Response uses individual signals — fantasy team, GSTIN, gotra</td>
+</tr>
+<tr>
+<td>Session 20+ full arc</td>
+<td>Run same query with rich OCP history</td>
+<td>Response is proactive — delivers before being asked · no competitor can replicate this</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="eval-ownership">Eval Ownership</h3>
+<table>
+<thead>
+<tr>
+<th>Eval type</th>
+<th>Who writes test cases</th>
+<th>Who runs them</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Functional evals</td>
+<td>Engineering</td>
+<td>Automated — every build</td>
+</tr>
+<tr>
+<td>Character consistency</td>
+<td>Product + Design</td>
+<td>LLM-as-judge — every prompt change</td>
+</tr>
+<tr>
+<td>Register adaptation</td>
+<td>Persona team</td>
+<td>Human rater — on domain launch + major prompt change</td>
+</tr>
+<tr>
+<td>Magic moment</td>
+<td>Product</td>
+<td>Human rater — on integration change</td>
+</tr>
+<tr>
+<td>Cross-domain context carry</td>
+<td>Engineering + Product</td>
+<td>Automated multi-turn — every build</td>
+</tr>
+<tr>
+<td>N=1 arc progression</td>
+<td>Product</td>
+<td>Human rater — quarterly</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="the-build-checklist">The Build Checklist</h2>
+<p>Before a domain ships, all of the following must be defined and testable:</p>
+<pre><code>Personality
+  ☐ Assistant character — one sentence
+  ☐ Tone — 2–3 words
+  ☐ Interaction style — default behaviour
+  ☐ Never-does list — minimum 3 hard stops
+  ☐ User register adaptation — per persona (Arjun / Priya / Ramesh / Sunita / Raju)
+
+Use Case × Persona Mapping
+  ☐ All use cases listed for this domain
+  ☐ Each use case mapped to personas (● / ◑ / —)
+  ☐ Execution mode declared per use case
+  ☐ MCP dependency identified per ● cell
+  ☐ Register adaptation written per ● cell
+  ☐ Magic moment written per ● cell
+
+Skill Manifest
+  ☐ Skill name + retrieval-optimised description written
+  ☐ Execution mode declared per use case — persona_prompt / mcp_tools / agent_as_tool
+  ☐ Persona body written — character · tone · never-does for system prompt injection
+  ☐ MCP tool schemas declared — name · input schema · output schema · trigger · proprietary flag
+  ☐ Parallel tool pairs identified — which tools can fire concurrently in one Coordinator turn
+  ☐ Token budget estimated — skill must stay within ~2K–4K token addition to Coordinator context
+  ☐ Cross-domain agent_as_tool invocations declared — which domains · what triggers them
+  ☐ Primitive templates defined — which primitives fire and in what combination per user profile
+
+Rules
+  ☐ Domain safety rules — hard stops specific to this domain
+  ☐ OCP pre-flight read — which fields load at session start
+  ☐ OCP session write — what gets written back
+  ☐ Cross-domain readable fields — declared for other domains to consume
+  ☐ Domain boundary conditions — when to invoke Y, when to handle in X
+
+Evals
+  ☐ Functional — routing accuracy test written (20 queries, ≥95% correct)
+  ☐ Functional — MCP invocation test per tool in tool list
+  ☐ Functional — OCP round-trip test (write session 1 → read session 2)
+  ☐ Functional — language detection test per supported language
+  ☐ Experience — never-does red-team (50 adversarial probes per rule)
+  ☐ Experience — golden register test per persona (5 test cases)
+  ☐ Experience — magic moment test for signature experience
+  ☐ Experience — cross-domain context carry test (multi-turn)
+  ☐ Experience — no user-facing redirect test (Y topic inside X)
+  ☐ Experience — N=1 arc baseline captured (session 1 response stored)
+</code></pre>
+</main>
+</body>
+</html>

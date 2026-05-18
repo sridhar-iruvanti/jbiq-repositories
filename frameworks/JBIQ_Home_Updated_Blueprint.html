@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JioBharatIQ · Home Blueprint · Updated</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #06070F;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 16px 48px;
+}
+
+/* ── Page header ── */
+.page-header { text-align: center; margin-bottom: 28px; }
+.page-header h1 { font-size: 22px; font-weight: 700; color: #fff; letter-spacing: -0.3px; }
+.page-header p  { font-size: 13px; color: rgba(255,255,255,0.35); margin-top: 4px; }
+
+/* ── Change log ── */
+.change-log {
+  max-width: 860px; width: 100%;
+  background: rgba(75,123,245,0.08);
+  border: 1px solid rgba(75,123,245,0.2);
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin-bottom: 28px;
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+.change-pill {
+  font-size: 12px; font-weight: 500;
+  padding: 4px 10px; border-radius: 20px;
+  background: rgba(75,123,245,0.12);
+  border: 1px solid rgba(75,123,245,0.2);
+  color: #7BA7F7;
+}
+.change-pill.fix  { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.2); color: #F87171; }
+.change-pill.add  { background: rgba(34,197,94,0.1); border-color: rgba(34,197,94,0.2); color: #4ADE80; }
+
+/* ── State tabs ── */
+.state-tabs {
+  display: flex; gap: 8px; margin-bottom: 24px;
+  flex-wrap: wrap; justify-content: center;
+}
+.tab {
+  padding: 9px 18px; border-radius: 22px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: transparent; color: rgba(255,255,255,0.4);
+  font-size: 13px; font-weight: 500; cursor: pointer;
+  transition: all 0.18s;
+}
+.tab:hover { border-color: rgba(255,255,255,0.25); color: rgba(255,255,255,0.7); }
+.tab.active { background: #4B7BF5; border-color: #4B7BF5; color: #fff; }
+
+/* ── Phone frames row ── */
+.phones-row {
+  display: flex; gap: 0; align-items: flex-start;
+  overflow-x: auto; padding-bottom: 16px;
+}
+
+/* ── Phone frame ── */
+.phone-wrap { display: flex; flex-direction: column; align-items: center; }
+.phone-state-label {
+  font-size: 11px; color: rgba(255,255,255,0.3);
+  margin-bottom: 10px; font-weight: 500; letter-spacing: 0.3px;
+}
+.phone {
+  width: 360px; height: 780px;
+  background: #080B14;
+  border-radius: 40px;
+  border: 1.5px solid rgba(255,255,255,0.1);
+  overflow: hidden; position: relative;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.7);
+  flex-shrink: 0;
+}
+
+/* ── Status bar ── */
+.status-bar {
+  height: 40px; display: flex;
+  align-items: center; justify-content: space-between;
+  padding: 0 20px;
+  font-size: 12px; font-weight: 600; color: #fff;
+}
+.sb-right { display: flex; align-items: center; gap: 5px; font-size: 11px; }
+
+/* ── Nav ── */
+.nav {
+  height: 48px; display: flex;
+  align-items: center; justify-content: space-between;
+  padding: 0 16px;
+}
+.nav-left { display: flex; align-items: center; gap: 10px; }
+.hamburger { font-size: 16px; color: rgba(255,255,255,0.6); }
+.nav-greeting { font-size: 16px; font-weight: 700; color: #fff; }
+.nav-greeting .namaste { color: rgba(255,255,255,0.5); font-size: 13px; font-weight: 400; }
+.nav-right { display: flex; align-items: center; gap: 10px; }
+.nav-icon {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: rgba(255,255,255,0.07);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; cursor: pointer;
+}
+
+/* ── Scrollable area ── */
+.scroll-area {
+  height: calc(780px - 40px - 48px - 64px);
+  overflow-y: auto; overflow-x: hidden;
+  scrollbar-width: none;
+}
+.scroll-area::-webkit-scrollbar { display: none; }
+
+/* ── Domain strip ── */
+.domain-strip {
+  padding: 10px 16px 12px;
+  display: flex; gap: 18px;
+  overflow-x: auto; scrollbar-width: none;
+}
+.domain-strip::-webkit-scrollbar { display: none; }
+.domain-item {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 5px; flex-shrink: 0; cursor: pointer;
+}
+.domain-avatar {
+  width: 46px; height: 46px; border-radius: 50%;
+  display: flex; align-items: center;
+  justify-content: center; font-size: 19px;
+  position: relative;
+}
+.domain-avatar.dot::after {
+  content: ''; position: absolute; top: 1px; right: 1px;
+  width: 9px; height: 9px;
+  background: #4B7BF5; border-radius: 50%;
+  border: 2px solid #080B14;
+}
+.domain-label { font-size: 10px; color: rgba(255,255,255,0.5); font-weight: 500; }
+.domain-label.active { color: #4B7BF5; }
+
+/* ── Value strip ── */
+.value-strip {
+  margin: 0 16px 10px;
+  padding: 9px 14px;
+  background: rgba(245,158,11,0.08);
+  border: 1px solid rgba(245,158,11,0.18);
+  border-radius: 10px;
+  display: flex; align-items: center;
+  justify-content: space-between;
+  font-size: 12px; color: #F59E0B; font-weight: 600;
+}
+.value-strip .vs-right { font-size: 11px; opacity: 0.6; }
+
+/* ── Section label ── */
+.section-label {
+  font-size: 11px; font-weight: 700;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.8px; text-transform: uppercase;
+  padding: 14px 16px 8px;
+}
+
+/* ── Updates card ── */
+.updates-card {
+  margin: 4px 16px 10px;
+  background: #131929;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.06);
+  overflow: hidden;
+}
+.updates-row {
+  padding: 12px 14px;
+  display: flex; gap: 11px; align-items: flex-start;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.updates-row:last-child { border-bottom: none; }
+.upd-icon {
+  width: 30px; height: 30px; border-radius: 8px;
+  display: flex; align-items: center;
+  justify-content: center; font-size: 15px; flex-shrink: 0;
+}
+.upd-text { flex: 1; }
+.upd-title { font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 2px; line-height: 1.3; }
+.upd-sub { font-size: 11px; color: rgba(255,255,255,0.45); line-height: 1.4; }
+.upd-cta { font-size: 11px; color: #4B7BF5; font-weight: 600; margin-top: 5px; }
+.upd-arrow { font-size: 14px; color: rgba(255,255,255,0.2); align-self: center; }
+
+/* ── Quick actions ── */
+.qa-wrap {
+  padding: 4px 16px 12px;
+  display: flex; gap: 8px;
+  overflow-x: auto; scrollbar-width: none;
+}
+.qa-wrap::-webkit-scrollbar { display: none; }
+.qa-chip {
+  display: flex; align-items: center; gap: 6px;
+  padding: 9px 13px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  font-size: 12px; font-weight: 500; color: #fff;
+  white-space: nowrap; flex-shrink: 0; cursor: pointer;
+}
+.qa-chip .qi { font-size: 14px; }
+.qa-chip.accent {
+  background: rgba(75,123,245,0.1);
+  border-color: rgba(75,123,245,0.25);
+  color: #7BA7F7;
+}
+
+/* ── For You section ── */
+
+/* Full-width domain card */
+.domain-card {
+  margin: 0 16px 10px;
+  border-radius: 14px; overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.dc-header {
+  padding: 12px 14px 8px;
+  display: flex; align-items: center;
+  justify-content: space-between;
+}
+.dc-left { display: flex; align-items: center; gap: 8px; }
+.dc-avatar {
+  width: 26px; height: 26px; border-radius: 7px;
+  display: flex; align-items: center;
+  justify-content: center; font-size: 13px;
+}
+.dc-name { font-size: 11px; color: rgba(255,255,255,0.45); font-weight: 600; }
+.dc-body { padding: 0 14px 14px; }
+.dc-result { font-size: 14px; font-weight: 700; color: #fff; line-height: 1.35; margin-bottom: 6px; }
+.dc-detail { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.5; }
+.dc-tags { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+.dc-tag {
+  padding: 4px 9px; border-radius: 6px;
+  font-size: 11px; font-weight: 500;
+  background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.6);
+}
+.dc-footer {
+  padding: 11px 14px;
+  background: rgba(75,123,245,0.07);
+  border-top: 1px solid rgba(75,123,245,0.12);
+  display: flex; align-items: center;
+  justify-content: space-between;
+  font-size: 12px; color: #4B7BF5; font-weight: 600;
+}
+
+/* Half-width pair */
+.half-row { margin: 0 16px 10px; display: flex; gap: 8px; }
+.half-card {
+  flex: 1; background: #131929;
+  border-radius: 14px; padding: 13px;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.hc-icon { font-size: 22px; margin-bottom: 7px; }
+.hc-title { font-size: 12px; font-weight: 700; color: #fff; margin-bottom: 3px; line-height: 1.3; }
+.hc-sub { font-size: 11px; color: rgba(255,255,255,0.4); line-height: 1.4; }
+.hc-cta { font-size: 11px; color: #4B7BF5; font-weight: 600; margin-top: 7px; }
+
+/* Quiz / Interactive card */
+.quiz-card {
+  margin: 0 16px 10px;
+  background: #131929;
+  border-radius: 14px; padding: 15px;
+  border: 1px solid rgba(123,92,245,0.18);
+}
+.quiz-tag {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 9px; border-radius: 20px;
+  background: rgba(123,92,245,0.12);
+  font-size: 10px; font-weight: 700;
+  color: #9B7DF5; letter-spacing: 0.3px;
+  margin-bottom: 10px;
+}
+.quiz-q { font-size: 14px; font-weight: 600; color: #fff; line-height: 1.4; margin-bottom: 12px; }
+.quiz-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.quiz-opt {
+  padding: 9px 11px; border-radius: 9px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.09);
+  font-size: 12px; color: rgba(255,255,255,0.75);
+  font-weight: 500; cursor: pointer;
+  transition: all 0.15s;
+}
+.quiz-opt:hover { background: rgba(123,92,245,0.15); border-color: rgba(123,92,245,0.3); }
+.quiz-opt.correct { background: rgba(34,197,94,0.12); border-color: rgba(34,197,94,0.3); color: #4ADE80; }
+.quiz-opt.wrong   { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.25); color: rgba(255,255,255,0.4); }
+
+/* Audio card */
+.audio-card {
+  margin: 0 16px 10px;
+  background: #131929;
+  border-radius: 14px; padding: 14px;
+  border: 1px solid rgba(34,197,94,0.15);
+  display: flex; gap: 13px; align-items: center;
+}
+.audio-play {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: #22C55E;
+  display: flex; align-items: center;
+  justify-content: center; font-size: 18px;
+  flex-shrink: 0; cursor: pointer;
+}
+.audio-info { flex: 1; }
+.audio-title { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 3px; }
+.audio-meta { font-size: 11px; color: rgba(255,255,255,0.4); }
+.audio-wave { display: flex; align-items: flex-end; gap: 2px; margin-top: 8px; height: 20px; }
+.wb {
+  width: 3px; background: rgba(34,197,94,0.35); border-radius: 2px;
+  animation: wv 1.2s ease-in-out infinite;
+}
+.wb:nth-child(1) { height: 8px; animation-delay: 0s; }
+.wb:nth-child(2) { height: 14px; animation-delay: 0.1s; }
+.wb:nth-child(3) { height: 18px; animation-delay: 0.2s; }
+.wb:nth-child(4) { height: 10px; animation-delay: 0.3s; }
+.wb:nth-child(5) { height: 16px; animation-delay: 0.15s; }
+.wb:nth-child(6) { height: 12px; animation-delay: 0.25s; }
+.wb:nth-child(7) { height: 6px; animation-delay: 0.05s; }
+.wb:nth-child(8) { height: 14px; animation-delay: 0.35s; }
+@keyframes wv {
+  0%, 100% { transform: scaleY(0.4); opacity: 0.4; }
+  50% { transform: scaleY(1); opacity: 1; }
+}
+
+/* Continue card */
+.continue-card {
+  margin: 0 16px 10px;
+  background: #131929;
+  border-radius: 14px; padding: 13px 14px;
+  border: 1px solid rgba(255,255,255,0.06);
+  display: flex; gap: 11px; align-items: center;
+}
+.cont-icon {
+  width: 38px; height: 38px; border-radius: 10px;
+  background: rgba(75,123,245,0.1);
+  display: flex; align-items: center;
+  justify-content: center; font-size: 17px; flex-shrink: 0;
+}
+.cont-text { flex: 1; }
+.cont-title { font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 2px; }
+.cont-meta { font-size: 11px; color: rgba(255,255,255,0.4); }
+.cont-arrow { font-size: 14px; color: rgba(255,255,255,0.25); }
+
+/* Partner card */
+.partner-card {
+  margin: 0 16px 10px;
+  background: #131929;
+  border-radius: 14px; padding: 13px 14px;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.partner-label {
+  font-size: 9px; letter-spacing: 0.8px;
+  text-transform: uppercase; color: rgba(255,255,255,0.25);
+  font-weight: 600; margin-bottom: 9px;
+}
+
+/* Live badge */
+.live-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 7px; border-radius: 4px;
+  background: rgba(239,68,68,0.12);
+  font-size: 10px; font-weight: 800;
+  color: #EF4444; letter-spacing: 0.5px;
+}
+.live-dot {
+  width: 5px; height: 5px;
+  background: #EF4444; border-radius: 50%;
+  animation: pulse 1s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* Festival card */
+.festival-card {
+  margin: 4px 16px 10px;
+  background: linear-gradient(135deg, #1F1400 0%, #130D00 100%);
+  border-radius: 14px; padding: 16px;
+  border: 1px solid rgba(245,158,11,0.25);
+  text-align: center;
+}
+.fest-emoji { font-size: 36px; margin-bottom: 8px; }
+.fest-title { font-size: 18px; font-weight: 800; color: #F59E0B; margin-bottom: 4px; }
+.fest-sub { font-size: 12px; color: rgba(245,158,11,0.55); margin-bottom: 14px; }
+.fest-cta {
+  display: inline-flex; padding: 10px 22px;
+  background: #F59E0B; border-radius: 10px;
+  font-size: 13px; font-weight: 700; color: #000;
+}
+
+/* Greeting card (D0 showcase) */
+.showcase-card {
+  margin: 0 16px 10px;
+  border-radius: 14px; padding: 14px;
+  background: linear-gradient(135deg, #0D1F3A 0%, #131929 100%);
+  border: 1px solid rgba(75,123,245,0.18);
+}
+.sc-eyebrow {
+  font-size: 10px; font-weight: 700; color: rgba(75,123,245,0.7);
+  letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 8px;
+}
+.sc-prompt {
+  font-size: 13px; color: rgba(255,255,255,0.45);
+  font-style: italic; margin-bottom: 8px;
+}
+.sc-result {
+  font-size: 14px; font-weight: 600; color: #fff;
+  line-height: 1.45; margin-bottom: 10px;
+}
+.sc-try {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 8px 14px; border-radius: 8px;
+  background: rgba(75,123,245,0.12);
+  border: 1px solid rgba(75,123,245,0.25);
+  font-size: 12px; font-weight: 600; color: #4B7BF5;
+}
+
+/* Insight stat strip */
+.stat-strip {
+  margin: 0 16px 10px;
+  display: flex; gap: 8px;
+}
+.stat-item {
+  flex: 1; background: #131929;
+  border-radius: 12px; padding: 11px;
+  border: 1px solid rgba(255,255,255,0.06);
+  text-align: center;
+}
+.stat-val { font-size: 17px; font-weight: 800; color: #fff; }
+.stat-label { font-size: 10px; color: rgba(255,255,255,0.35); margin-top: 2px; }
+
+/* ── Chat input ── */
+.chat-input {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 64px;
+  background: rgba(8,11,20,0.97);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(255,255,255,0.07);
+  display: flex; align-items: center;
+  padding: 0 12px; gap: 8px;
+}
+.ci-field {
+  flex: 1;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 22px;
+  padding: 10px 14px;
+  font-size: 13px; color: rgba(255,255,255,0.3);
+  display: flex; align-items: center; gap: 8px;
+}
+.ci-field .ci-placeholder { flex: 1; }
+.ci-field .ci-img { font-size: 14px; color: rgba(255,255,255,0.2); }
+.ci-mic {
+  width: 42px; height: 42px; border-radius: 50%;
+  background: #4B7BF5;
+  display: flex; align-items: center;
+  justify-content: center; font-size: 17px;
+  flex-shrink: 0; cursor: pointer;
+  box-shadow: 0 4px 16px rgba(75,123,245,0.4);
+}
+
+/* ── Discovery card (D0 use case) ── */
+.discovery-pill {
+  margin: 0 16px 10px;
+  padding: 13px 14px;
+  background: #131929;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.06);
+  display: flex; align-items: center; gap: 12px;
+}
+.dp-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  display: flex; align-items: center;
+  justify-content: center; font-size: 20px; flex-shrink: 0;
+}
+.dp-text { flex: 1; }
+.dp-title { font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 3px; }
+.dp-sub { font-size: 11px; color: rgba(255,255,255,0.4); }
+.dp-try {
+  font-size: 11px; font-weight: 600; color: #4B7BF5;
+  background: rgba(75,123,245,0.1);
+  border: 1px solid rgba(75,123,245,0.2);
+  padding: 5px 10px; border-radius: 7px;
+  flex-shrink: 0;
+}
+
+/* State visibility */
+.state-content { display: none; }
+.state-content.active { display: block; }
+
+/* Spacer at bottom of scroll */
+.scroll-spacer { height: 20px; }
+
+/* Domain color backgrounds */
+.d-news    { background: rgba(239,68,68,0.15); }
+.d-entmt   { background: rgba(168,85,247,0.15); }
+.d-astro   { background: rgba(251,191,36,0.15); }
+.d-devot   { background: rgba(249,115,22,0.15); }
+.d-jobs    { background: rgba(59,130,246,0.15); }
+.d-finance { background: rgba(34,197,94,0.15); }
+.d-health  { background: rgba(244,63,94,0.15); }
+.d-assist  { background: rgba(99,102,241,0.15); }
+.d-cricket { background: rgba(251,191,36,0.15); }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>JioBharatIQ · Home Blueprint</h1>
+  <p>Updated · 4 session states · Fixed against Sunit's v1</p>
+</div>
+
+<div class="change-log">
+  <span style="font-size:12px;color:rgba(255,255,255,0.3);align-self:center;margin-right:4px;">Changes from v1 →</span>
+  <span class="change-pill fix">✕ Value ribbon removed at D0</span>
+  <span class="change-pill fix">✕ "thread" → "chat" throughout</span>
+  <span class="change-pill fix">✕ 9 sections → 5 sections max</span>
+  <span class="change-pill add">+ Quick Actions chips added</span>
+  <span class="change-pill add">+ Interactive / Quiz card format</span>
+  <span class="change-pill add">+ Audio card with placement rule</span>
+  <span class="change-pill add">+ D0 showcase cards (not blank)</span>
+  <span class="change-pill add">+ Updates / For You boundary locked</span>
+  <span class="change-pill add">+ Festival state (Diwali)</span>
+</div>
+
+<div class="state-tabs">
+  <button class="tab active" onclick="setState('d0')">Day 0 · New User</button>
+  <button class="tab" onclick="setState('d7')">Day 7 · Habit Forming</button>
+  <button class="tab" onclick="setState('festival')">Festival · Diwali</button>
+  <button class="tab" onclick="setState('am')">Morning · Power User</button>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!--  PHONE 1 — DAY 0                      -->
+<!-- ══════════════════════════════════════ -->
+<div class="phone-wrap state-content active" id="state-d0">
+  <div class="phone-state-label">Day 0 — Arjun, 21, Delhi. First open.</div>
+  <div class="phone">
+    <!-- Status bar -->
+    <div class="status-bar">
+      <span>9:41</span>
+      <div class="sb-right">
+        <span>▲▲▲</span>
+        <span>WiFi</span>
+        <span>⚡ 87%</span>
+      </div>
+    </div>
+
+    <!-- Nav -->
+    <div class="nav">
+      <div class="nav-left">
+        <span class="hamburger">☰</span>
+        <div>
+          <div class="nav-greeting">Namasté, Arjun</div>
+        </div>
+      </div>
+      <div class="nav-right">
+        <div class="nav-icon">🔔</div>
+        <div class="nav-icon" style="background:rgba(75,123,245,0.15);color:#4B7BF5;font-weight:700;font-size:12px;">A</div>
+      </div>
+    </div>
+
+    <!-- Scroll area -->
+    <div class="scroll-area">
+
+      <!-- Domain strip — ordered by popularity at D0 -->
+      <div class="domain-strip">
+        <div class="domain-item">
+          <div class="domain-avatar d-news dot">📰</div>
+          <span class="domain-label active">News</span>
+        </div>
+        <div class="domain-item">
+          <div class="domain-avatar d-cricket">🏏</div>
+          <span class="domain-label">Cricket</span>
+        </div>
+        <div class="domain-item">
+          <div class="domain-avatar d-entmt">🎬</div>
+          <span class="domain-label">Entmt</span>
+        </div>
+        <div class="domain-item">
+          <div class="domain-avatar d-jobs">💼</div>
+          <span class="domain-label">Jobs</span>
+        </div>
+        <div class="domain-item">
+          <div class="domain-avatar d-astro">⭐</div>
+          <span class="domain-label">Astro</span>
+        </div>
+        <div class="domain-item">
+          <div class="domain-avatar d-finance">📊</div>
+          <span class="domain-label">Finance</span>
+        </div>
+        <div class="domain-item">
+          <div class="domain-avatar d-devot">🙏</div>
+          <span class="domain-label">Devotion</span>
+        </div>
+        <div class="domain-item">
+          <div class="domain-avatar d-health">❤️</div>
+          <span class="domain-label">Health</span>
+        </div>
+      </div>
+
+      <!-- Updates card — news + feature discovery (no alert for new user) -->
+      <div class="section-label">Updates</div>
+      <div class="updates-card">
+        <div class="updates-row">
+          <div class="upd-icon" style="background:rgba(239,68,68,0.12);">📰</div>
+          <div class="upd-text">
+            <div class="upd-title">UPSC 2026 — Prelims date announced</div>
+            <div class="upd-sub">Civil Services Prelims scheduled for 25 May 2026. Notification out.</div>
+            <div class="upd-cta">Read full update ›</div>
+          </div>
+          <div class="upd-arrow">›</div>
+        </div>
+        <div class="updates-row">
+          <div class="upd-icon" style="background:rgba(75,123,245,0.12);">✨</div>
+          <div class="upd-text">
+            <div class="upd-title">JioBharatIQ tracks your exam prep</div>
+            <div class="upd-sub">Ask me about Prelims syllabus, weak areas, or today's current affairs.</div>
+            <div class="upd-cta">Try it ›</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions — seeded by persona defaults at D0 -->
+      <div class="section-label">Quick Actions</div>
+      <div class="qa-wrap">
+        <div class="qa-chip accent"><span class="qi">📖</span> UPSC syllabus</div>
+        <div class="qa-chip"><span class="qi">📰</span> Aaj ka news</div>
+        <div class="qa-chip"><span class="qi">🏏</span> Cricket score</div>
+        <div class="qa-chip"><span class="qi">⭐</span> Rashifal</div>
+        <div class="qa-chip" style="color:rgba(255,255,255,0.35);">+ Explore more</div>
+      </div>
+
+      <!-- For You — D0 uses showcase cards to show what JBIQ can do -->
+      <div class="section-label">For You</div>
+
+      <!-- Showcase card 1 — shows a completed output, not a feature name -->
+      <div class="showcase-card">
+        <div class="sc-eyebrow">Jobs &amp; Skills · What others asked</div>
+        <div class="sc-prompt">"UPSC Prelims mein kitne din bacha hai?"</div>
+        <div class="sc-result">UPSC Prelims 2026 — 25 May. <strong>67 din bacha hai.</strong><br>Polity aur Geography critical hai. Aaj 2 Polity sets karo?</div>
+        <div class="sc-try">▶ Ask me this</div>
+      </div>
+
+      <!-- Half-width pair -->
+      <div class="half-row">
+        <div class="half-card">
+          <div class="hc-icon">💰</div>
+          <div class="hc-title">Fixed vs Floating EMI</div>
+          <div class="hc-sub">Konsa better hai? ₹ impact dekhte hain.</div>
+          <div class="hc-cta">Try Finance ›</div>
+        </div>
+        <div class="half-card">
+          <div class="hc-icon">🏏</div>
+          <div class="hc-title">IPL Live · MI vs CSK</div>
+          <div class="hc-sub">
+            <div class="live-badge"><div class="live-dot"></div> LIVE</div>
+            MI 142/4 · 16.2 ov
+          </div>
+          <div class="hc-cta">See analysis ›</div>
+        </div>
+      </div>
+
+      <!-- Quiz card — D0 uses general quiz to spark engagement -->
+      <div class="quiz-card">
+        <div class="quiz-tag">⚡ Daily Quiz · General Knowledge</div>
+        <div class="quiz-q">Article 21A of the Indian Constitution deals with which Fundamental Right?</div>
+        <div class="quiz-opts">
+          <div class="quiz-opt" onclick="markQuiz(this,'correct')">Right to Education</div>
+          <div class="quiz-opt" onclick="markQuiz(this,'wrong')">Right to Equality</div>
+          <div class="quiz-opt" onclick="markQuiz(this,'wrong')">Right to Life</div>
+          <div class="quiz-opt" onclick="markQuiz(this,'wrong')">Right to Privacy</div>
+        </div>
+      </div>
+
+      <!-- Discovery pill — surface another domain -->
+      <div class="discovery-pill">
+        <div class="dp-icon d-health">❤️</div>
+        <div class="dp-text">
+          <div class="dp-title">Health — ask anything</div>
+          <div class="dp-sub">Symptoms, medicines, nearby doctors</div>
+        </div>
+        <div class="dp-try">Try ›</div>
+      </div>
+
+      <div class="scroll-spacer"></div>
+    </div><!-- /scroll-area -->
+
+    <!-- Chat input — sticky always -->
+    <div class="chat-input">
+      <div class="ci-field">
+        <span class="ci-placeholder">Ask JioBharatIQ anything…</span>
+        <span class="ci-img">📎</span>
+      </div>
+      <div class="ci-mic">🎙</div>
+    </div>
+  </div><!-- /phone -->
+</div>
+
+
+<!-- ══════════════════════════════════════ -->
+<!--  PHONE 2 — DAY 7                      -->
+<!-- ══════════════════════════════════════ -->
+<div class="phone-wrap state-content" id="state-d7">
+  <div class="phone-state-label">Day 7 — Arjun, habit forming. Personalised.</div>
+  <div class="phone">
+    <div class="status-bar">
+      <span>8:14</span>
+      <div class="sb-right"><span>▲▲▲</span><span>WiFi</span><span>⚡ 74%</span></div>
+    </div>
+
+    <div class="nav">
+      <div class="nav-left">
+        <span class="hamburger">☰</span>
+        <div class="nav-greeting">Namasté, Arjun</div>
+      </div>
+      <div class="nav-right">
+        <div class="nav-icon">🔔</div>
+        <div class="nav-icon" style="background:rgba(75,123,245,0.15);color:#4B7BF5;font-weight:700;font-size:12px;">A</div>
+      </div>
+    </div>
+
+    <div class="scroll-area">
+
+      <!-- Domain strip — personalised order by Day 7 -->
+      <div class="domain-strip">
+        <div class="domain-item">
+          <div class="domain-avatar d-jobs dot">💼</div>
+          <span class="domain-label active">Jobs</span>
+        </div>
+        <div class="domain-item">
+          <div class="domain-avatar d-news">📰</div>
+          <span class="domain-label">News</span>
+        </div>
+        <div class="domain-item">
+          <div class="domain-avatar d-cricket dot">🏏</div>
+          <span class="domain-label">Cricket</span>
+        </div>
+        <div class="domain-item">
+          <div class="domain-avatar d-finance">📊</div>
+          <span class="domain-label">Finance</span>
+        </div>
+        <div class="domain-item">
+          <div class="domain-avatar d-entmt">🎬</div>
+          <span class="domain-label">Entmt</span>
+        </div>
+        <div class="domain-item">
+          <div class="domain-avatar d-astro">⭐</div>
+          <span class="domain-label">Astro</span>
+        </div>
+        <div class="domain-item">
+          <div class="domain-avatar d-health">❤️</div>
+          <span class="domain-label">Health</span>
+        </div>
+      </div>
+
+      <!-- Value strip — earned after Day 1+ -->
+      <div class="value-strip">
+        <span>🔥 7 days · 42 sessions · 6 weak areas fixed</span>
+        <span class="vs-right">View ›</span>
+      </div>
+
+      <!-- Updates — news + time-sensitive alert -->
+      <div class="section-label">Updates</div>
+      <div class="updates-card">
+        <div class="updates-row">
+          <div class="upd-icon" style="background:rgba(239,68,68,0.12);">⚡</div>
+          <div class="upd-text">
+            <div class="upd-title">UPSC Prelims — 67 din bacha hai</div>
+            <div class="upd-sub">Geography weak area. 3 topics need attention before the exam.</div>
+            <div class="upd-cta">See prep plan ›</div>
+          </div>
+        </div>
+        <div class="updates-row">
+          <div class="upd-icon" style="background:rgba(239,68,68,0.12);">📰</div>
+          <div class="upd-text">
+            <div class="upd-title">Budget 2026 — 3 key changes for students</div>
+            <div class="upd-sub">Scholarship limit raised, NPS tax benefit extended.</div>
+            <div class="upd-cta">Read ›</div>
+          </div>
+          <div class="upd-arrow">›</div>
+        </div>
+      </div>
+
+      <!-- Quick Actions — personalised by usage -->
+      <div class="section-label">Quick Actions</div>
+      <div class="qa-wrap">
+        <div class="qa-chip accent"><span class="qi">📖</span> Polity MCQ</div>
+        <div class="qa-chip"><span class="qi">🗞️</span> Today's editorial</div>
+        <div class="qa-chip"><span class="qi">📝</span> Mains answer</div>
+        <div class="qa-chip"><span class="qi">🗺️</span> Geography test</div>
+      </div>
+
+      <!-- For You -->
+      <div class="section-label">For You</div>
+
+      <!-- Audio card — morning window (8:14 AM) -->
+      <div class="audio-card">
+        <div class="audio-play">▶</div>
+        <div class="audio-info">
+          <div class="audio-title">Morning Current Affairs Brief</div>
+          <div class="audio-meta">Hindi · 4 min · UPSC relevant · Today</div>
+          <div class="audio-wave">
+            <div class="wb"></div><div class="wb"></div><div class="wb"></div>
+            <div class="wb"></div><div class="wb"></div><div class="wb"></div>
+            <div class="wb"></div><div class="wb"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Domain card — UPSC prep, shows real output -->
+      <div class="domain-card">
+        <div class="dc-header">
+          <div class="dc-left">
+            <div class="dc-avatar d-jobs">💼</div>
+            <span class="dc-name">Jobs &amp; Skills · UPSC Prep</span>
+          </div>
+        </div>
+        <div class="dc-body">
+          <div class="dc-result">Geography — 3 weak areas identified</div>
+          <div class="dc-detail">Climatology (42% accuracy), Indian Rivers (58%), Map-based Q (51%). Based on your last 7 test sets.</div>
+          <div class="dc-tags">
+            <span class="dc-tag">Climatology</span>
+            <span class="dc-tag">Indian Rivers</span>
+            <span class="dc-tag">Maps</span>
+          </div>
+        </div>
+        <div class="dc-footer">
+          <span>Start Geography revision</span>
+          <span>›</span>
+        </div>
+      </div>
+
+      <!-- Quiz card — UPSC Polity MCQ personalised -->
+      <div class="quiz-card">
+        <div class="quiz-tag">⚡ UPSC Daily · Polity</div>
+        <div class="quiz-q">The Preamble of the Indian Constitution was amended by which Constitutional Amendment?</div>
+        <div class="quiz-opts">
+          <div class="quiz-opt" onclick="markQuiz(this,'wrong')">44th Amendment</div>
+          <div class="quiz-opt" onclick="markQuiz(this,'correct')">42nd Amendment</div>
+          <div class="quiz-opt" onclick="markQuiz(this,'wrong')">46th Amendment</div>
+          <div class="quiz-opt" onclick="markQuiz(this,'wrong')">52nd Amendment</div>
+        </div>
+      </div>
+
+      <!-- Half-width pair -->
+      <div class="half-row">
+        <div class="half-card">
+          <div class="hc-icon">🗞️</div>
+          <div class="hc-title">Today's Hindu Editorial</div>
+          <div class="hc-sub">5 UPSC-relevant points extracted</div>
+          <div class="hc-cta">Read summary ›</div>
+        </div>
+        <div class="half-card">
+          <div class="hc-icon">📅</div>
+          <div class="hc-title">Constitution Article of the Day</div>
+          <div class="hc-sub">Article 368 — Amendment Procedure</div>
+          <div class="hc-cta">Deep dive ›</div>
+        </div>
+      </div>
+
+      <!-- Continue — resume last chat -->
+      <div class="section-label">Continue</div>
+      <div class="continue-card">
+        <div class="cont-icon">📝</div>
+        <div class="cont-text">
+          <div class="cont-title">Mains answer writing — GS Paper 1</div>
+          <div class="cont-meta">Your last chat · 9 hours ago · 3 answers drafted</div>
+        </div>
+        <div class="cont-arrow">›</div>
+      </div>
+
+      <div class="scroll-spacer"></div>
+    </div>
+
+    <div class="chat-input">
+      <div class="ci-field">
+        <span class="ci-placeholder">Ask JioBharatIQ anything…</span>
+        <span class="ci-img">📎</span>
+      </div>
+      <div class="ci-mic">🎙</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════ -->
+<!--  PHONE 3 — FESTIVAL (DIWALI)          -->
+<!-- ══════════════════════════════════════ -->
+<div class="phone-wrap state-content" id="state-festival">
+  <div class="phone-state-label">Festival — Priya, 25, Pune. Diwali week.</div>
+  <div class="phone">
+    <div class="status-bar">
+      <span>7:02 PM</span>
+      <div class="sb-right"><span>▲▲▲</span><span>4G</span><span>⚡ 61%</span></div>
+    </div>
+
+    <div class="nav">
+      <div class="nav-left">
+        <span class="hamburger">☰</span>
+        <div class="nav-greeting">Namasté, Priya</div>
+      </div>
+      <div class="nav-right">
+        <div class="nav-icon" style="background:rgba(245,158,11,0.1);font-size:14px;">🪔</div>
+        <div class="nav-icon" style="background:rgba(75,123,245,0.15);color:#4B7BF5;font-weight:700;font-size:12px;">P</div>
+      </div>
+    </div>
+
+    <div class="scroll-area">
+
+      <div class="domain-strip">
+        <div class="domain-item">
+          <div class="domain-avatar d-finance dot">📊</div>
+          <span class="domain-label active">Finance</span>
+        </div>
+        <div class="domain-item">
+          <div class="domain-avatar d-devot dot">🙏</div>
+          <span class="domain-label">Devotion</span>
+        </div>
+        <div class="domain-item">
+          <div class="domain-avatar d-entmt">🎬</div>
+          <span class="domain-label">Entmt</span>
+        </div>
+        <div class="domain-item">
+          <div class="domain-avatar d-jobs">💼</div>
+          <span class="domain-label">Jobs</span>
+        </div>
+        <div class="domain-item">
+          <div class="domain-avatar d-news">📰</div>
+          <span class="domain-label">News</span>
+        </div>
+        <div class="domain-item">
+          <div class="domain-avatar d-health">❤️</div>
+          <span class="domain-label">Health</span>
+        </div>
+      </div>
+
+      <!-- Value strip with festival tint -->
+      <div class="value-strip" style="background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.2);">
+        <span>🔥 18 days · ₹12,400 tracked · 46 tasks</span>
+        <span class="vs-right">View ›</span>
+      </div>
+
+      <!-- Festival anchor card -->
+      <div class="festival-card">
+        <div class="fest-emoji">🪔</div>
+        <div class="fest-title">Shubh Diwali!</div>
+        <div class="fest-sub">Lakshmi puja muhurat — aaj raat 7:43 PM</div>
+        <div class="fest-cta">Make a Diwali greeting</div>
+      </div>
+
+      <!-- Updates — festival-specific -->
+      <div class="section-label">Updates</div>
+      <div class="updates-card">
+        <div class="updates-row">
+          <div class="upd-icon" style="background:rgba(245,158,11,0.12);">💰</div>
+          <div class="upd-text">
+            <div class="upd-title">Dhanteras — Gold at ₹7,240/gram</div>
+            <div class="upd-sub">Up ₹140 from yesterday. 22K and 24K rates updated.</div>
+            <div class="upd-cta">See gold rates ›</div>
+          </div>
+        </div>
+        <div class="updates-row">
+          <div class="upd-icon" style="background:rgba(239,68,68,0.12);">🪔</div>
+          <div class="upd-text">
+            <div class="upd-title">Tax-saving investments — last 2 days</div>
+            <div class="upd-sub">ELSS, PPF, NPS window closes on 31 Oct. ₹1.5L limit check.</div>
+            <div class="upd-cta">Calculate savings ›</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions — festival-specific -->
+      <div class="section-label">Quick Actions</div>
+      <div class="qa-wrap">
+        <div class="qa-chip accent"><span class="qi">🎉</span> Diwali wishes</div>
+        <div class="qa-chip"><span class="qi">🎁</span> Gift ideas</div>
+        <div class="qa-chip"><span class="qi">📊</span> Bonus calculator</div>
+        <div class="qa-chip"><span class="qi">🙏</span> Puja steps</div>
+      </div>
+
+      <!-- For You -->
+      <div class="section-label">For You</div>
+
+      <!-- Greeting creation card -->
+      <div class="domain-card" style="border-color:rgba(245,158,11,0.2);">
+        <div class="dc-header">
+          <div class="dc-left">
+            <div class="dc-avatar" style="background:rgba(245,158,11,0.15);">✨</div>
+            <span class="dc-name">Create · Greetings</span>
+          </div>
+        </div>
+        <div class="dc-body">
+          <div class="dc-result">Send Diwali wishes to your team</div>
+          <div class="dc-detail">JioBharatIQ will create a personalised greeting card — English, Hindi, or Hinglish. Share on WhatsApp in one tap.</div>
+        </div>
+        <div class="dc-footer" style="background:rgba(245,158,11,0.07);border-color:rgba(245,158,11,0.15);color:#F59E0B;">
+          <span>Create greeting card</span>
+          <span>›</span>
+        </div>
+      </div>
+
+      <!-- Finance card — Dhanteras gold -->
+      <div class="half-row">
+        <div class="half-card">
+          <div class="hc-icon">🪙</div>
+          <div class="hc-title">Gold SGB vs Physical</div>
+          <div class="hc-sub">Is Dhanteras the right time to buy? ₹ comparison.</div>
+          <div class="hc-cta">See analysis ›</div>
+        </div>
+        <div class="half-card">
+          <div class="hc-icon">🙏</div>
+          <div class="hc-title">Lakshmi Puja Vidhi</div>
+          <div class="hc-sub">Step-by-step. Aaj raat 7:43 PM muhurat.</div>
+          <div class="hc-cta">See vidhi ›</div>
+        </div>
+      </div>
+
+      <!-- Quiz — Diwali trivia -->
+      <div class="quiz-card">
+        <div class="quiz-tag">🪔 Diwali Trivia</div>
+        <div class="quiz-q">Diwali kaun se tithi ko manaya jata hai?</div>
+        <div class="quiz-opts">
+          <div class="quiz-opt" onclick="markQuiz(this,'wrong')">Amavasya</div>
+          <div class="quiz-opt" onclick="markQuiz(this,'wrong')">Purnima</div>
+          <div class="quiz-opt" onclick="markQuiz(this,'correct')">Kartik Amavasya</div>
+          <div class="quiz-opt" onclick="markQuiz(this,'wrong')">Navami</div>
+        </div>
+      </div>
+
+      <!-- Continue -->
+      <div class="section-label">Continue</div>
+      <div class="continue-card">
+        <div class="cont-icon">📊</div>
+        <div class="cont-text">
+          <div class="cont-title">Tax-saving plan — FY26</div>
+          <div class="cont-meta">Your last chat · 2 days ago · ₹84K gap identified</div>
+        </div>
+        <div class="cont-arrow">›</div>
+      </div>
+
+      <div class="scroll-spacer"></div>
+    </div>
+
+    <div class="chat-input">
+      <div class="ci-field">
+        <span class="ci-placeholder">Ask JioBharatIQ anything…</span>
+        <span class="ci-img">📎</span>
+      </div>
+      <div class="ci-mic">🎙</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════ -->
+<!--  PHONE 4 — MORNING POWER USER         -->
+<!-- ══════════════════════════════════════ -->
+<div class="phone-wrap state-content" id="state-am">
+  <div class="phone-state-label">Morning, 7:02 AM — Priya, 42 days in. Power user.</div>
+  <div class="phone">
+    <div class="status-bar">
+      <span>7:02</span>
+      <div class="sb-right"><span>▲▲▲</span><span>4G</span><span>⚡ 92%</span></div>
+    </div>
+
+    <div class="nav">
+      <div class="nav-left">
+        <span class="hamburger">☰</span>
+        <div class="nav-greeting">Namasté, Priya</div>
+      </div>
+      <div class="nav-right">
+        <div class="nav-icon">🔔</div>
+        <div class="nav-icon" style="background:rgba(75,123,245,0.15);color:#4B7BF5;font-weight:700;font-size:12px;">P</div>
+      </div>
+    </div>
+
+    <div class="scroll-area">
+
+      <div class="domain-strip">
+        <div class="domain-item">
+          <div class="domain-avatar d-finance dot">📊</div>
+          <span class="domain-label active">Finance</span>
+        </div>
+        <div class="domain-item">
+          <div class="domain-avatar d-jobs dot">💼</div>
+          <span class="domain-label">Jobs</span>
+        </div>
+        <div class="domain-item">
+          <div class="domain-avatar d-news">📰</div>
+          <span class="domain-label">News</span>
+        </div>
+        <div class="domain-item">
+          <div class="domain-avatar d-health">❤️</div>
+          <span class="domain-label">Health</span>
+        </div>
+        <div class="domain-item">
+          <div class="domain-avatar d-entmt">🎬</div>
+          <span class="domain-label">Entmt</span>
+        </div>
+        <div class="domain-item">
+          <div class="domain-avatar d-cricket">🏏</div>
+          <span class="domain-label">Cricket</span>
+        </div>
+      </div>
+
+      <!-- Value strip — rich, earned -->
+      <div class="value-strip">
+        <span>🔥 42 days · ₹2.4L tracked · 180 tasks</span>
+        <span class="vs-right">View ›</span>
+      </div>
+
+      <!-- Updates — morning brief + alert -->
+      <div class="section-label">Updates</div>
+      <div class="updates-card">
+        <div class="updates-row">
+          <div class="upd-icon" style="background:rgba(239,68,68,0.12);">⚡</div>
+          <div class="upd-text">
+            <div class="upd-title">Nifty pre-market — down 0.4%</div>
+            <div class="upd-sub">IT stocks weak. Banking index flat. Your portfolio impact: −₹2,100 est.</div>
+            <div class="upd-cta">See breakdown ›</div>
+          </div>
+        </div>
+        <div class="updates-row">
+          <div class="upd-icon" style="background:rgba(34,197,94,0.12);">📅</div>
+          <div class="upd-text">
+            <div class="upd-title">Performance review — Friday 10 AM</div>
+            <div class="upd-sub">Team review in 2 days. Want me to prep talking points?</div>
+            <div class="upd-cta">Yes, prepare ›</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions — power user, high intent -->
+      <div class="section-label">Quick Actions</div>
+      <div class="qa-wrap">
+        <div class="qa-chip accent"><span class="qi">📈</span> Nifty update</div>
+        <div class="qa-chip"><span class="qi">📅</span> My schedule</div>
+        <div class="qa-chip"><span class="qi">✉️</span> Draft email</div>
+        <div class="qa-chip"><span class="qi">💰</span> FD calculator</div>
+      </div>
+
+      <!-- For You — audio first in morning -->
+      <div class="section-label">For You</div>
+
+      <!-- Audio card — morning window, first in feed -->
+      <div class="audio-card">
+        <div class="audio-play">▶</div>
+        <div class="audio-info">
+          <div class="audio-title">Morning Business Brief</div>
+          <div class="audio-meta">English · 4 min · Markets + HR news · Today</div>
+          <div class="audio-wave">
+            <div class="wb"></div><div class="wb"></div><div class="wb"></div>
+            <div class="wb"></div><div class="wb"></div><div class="wb"></div>
+            <div class="wb"></div><div class="wb"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats strip — portfolio snapshot -->
+      <div class="stat-strip">
+        <div class="stat-item">
+          <div class="stat-val" style="color:#22C55E;">+₹14.2K</div>
+          <div class="stat-label">This week</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val">₹2.4L</div>
+          <div class="stat-label">Tracked total</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val" style="color:#EF4444;">−₹2.1K</div>
+          <div class="stat-label">Today est.</div>
+        </div>
+      </div>
+
+      <!-- Domain card — Finance, decision quality -->
+      <div class="domain-card">
+        <div class="dc-header">
+          <div class="dc-left">
+            <div class="dc-avatar d-finance">📊</div>
+            <span class="dc-name">Finance · Your Portfolio</span>
+          </div>
+        </div>
+        <div class="dc-body">
+          <div class="dc-result">Switch to fixed rate — net benefit ₹62K</div>
+          <div class="dc-detail">Fixed rate saves ₹84K over loan tenure. Switch cost ₹22K. Net benefit ₹62K. Monday bank call recommended.</div>
+        </div>
+        <div class="dc-footer">
+          <span>Set Monday reminder</span>
+          <span>›</span>
+        </div>
+      </div>
+
+      <!-- Half-width -->
+      <div class="half-row">
+        <div class="half-card">
+          <div class="hc-icon">💼</div>
+          <div class="hc-title">3 new openings</div>
+          <div class="hc-sub">Companies you follow. Director+ roles.</div>
+          <div class="hc-cta">View openings ›</div>
+        </div>
+        <div class="half-card">
+          <div class="hc-icon">💸</div>
+          <div class="hc-title">Spend this week</div>
+          <div class="hc-sub">₹18,400 · 12% above avg. Dining ↑</div>
+          <div class="hc-cta">See breakdown ›</div>
+        </div>
+      </div>
+
+      <!-- Quiz — Finance literacy -->
+      <div class="quiz-card">
+        <div class="quiz-tag">⚡ Finance Quiz · Daily</div>
+        <div class="quiz-q">Which mutual fund category has the lowest exit load after 1 year?</div>
+        <div class="quiz-opts">
+          <div class="quiz-opt" onclick="markQuiz(this,'wrong')">Sectoral Fund</div>
+          <div class="quiz-opt" onclick="markQuiz(this,'correct')">ELSS</div>
+          <div class="quiz-opt" onclick="markQuiz(this,'wrong')">Liquid Fund</div>
+          <div class="quiz-opt" onclick="markQuiz(this,'wrong')">Debt Fund</div>
+        </div>
+      </div>
+
+      <!-- Continue -->
+      <div class="section-label">Continue</div>
+      <div class="continue-card">
+        <div class="cont-icon">📊</div>
+        <div class="cont-text">
+          <div class="cont-title">SIP calculator — retirement plan</div>
+          <div class="cont-meta">Your last chat · Yesterday · ₹45K/mo target set</div>
+        </div>
+        <div class="cont-arrow">›</div>
+      </div>
+
+      <!-- Partner card — labelled -->
+      <div class="partner-card">
+        <div class="partner-label">Partner · Jio Financial Services</div>
+        <div class="dc-result" style="font-size:13px;margin-bottom:4px;">Fixed Deposit — 8.6% p.a. · Jio Finance</div>
+        <div class="dc-detail" style="font-size:11px;">₹1L for 1 year = ₹8,600 interest. No lock-in penalty after 3 months.</div>
+        <div class="upd-cta" style="margin-top:8px;">Open FD ›</div>
+      </div>
+
+      <div class="scroll-spacer"></div>
+    </div>
+
+    <div class="chat-input">
+      <div class="ci-field">
+        <span class="ci-placeholder">Ask JioBharatIQ anything…</span>
+        <span class="ci-img">📎</span>
+      </div>
+      <div class="ci-mic">🎙</div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+function setState(id) {
+  document.querySelectorAll('.state-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+  document.getElementById('state-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function markQuiz(el, type) {
+  const opts = el.closest('.quiz-opts').querySelectorAll('.quiz-opt');
+  opts.forEach(o => o.classList.remove('correct', 'wrong'));
+  el.classList.add(type);
+  if (type === 'wrong') {
+    opts.forEach(o => {
+      if (o.dataset.correct === 'true') o.classList.add('correct');
+    });
+  }
+}
+
+// Mark correct answers in data attributes for reveal on wrong answer
+document.querySelectorAll('.quiz-opts').forEach(opts => {
+  const items = opts.querySelectorAll('.quiz-opt');
+  items.forEach((item, i) => {
+    // The "correct" one was set via onclick — we'll trust the onclick pattern
+  });
+});
+</script>
+</body>
+</html>

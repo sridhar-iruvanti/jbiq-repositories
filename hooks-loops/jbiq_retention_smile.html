@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: #0e1117;
+    color: #d1d5db;
+    padding: 32px;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 28px;
+  }
+  .eyebrow { font-size: 10px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: #4b5563; margin-bottom: 5px; }
+  .title { font-size: 22px; font-weight: 600; color: #f0f2f5; letter-spacing: -0.02em; }
+  .subtitle { font-size: 12px; color: #4b5563; margin-top: 4px; }
+
+  .filter-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .pill-group { display: flex; gap: 3px; background: #161b25; padding: 3px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); }
+  .pill {
+    padding: 5px 13px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: #4b5563;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .pill.active { background: #1e2535; color: #93c5fd; border: 1px solid rgba(147,197,253,0.15); }
+  .pill:hover:not(.active) { color: #9ca3af; }
+
+  .divider { width: 1px; height: 20px; background: rgba(255,255,255,0.08); }
+
+  /* KPI row */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .kpi {
+    background: #161b25;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px;
+    padding: 12px 14px;
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
+  }
+  .kpi .k-label { font-size: 10px; font-family: 'IBM Plex Mono', monospace; color: #4b5563; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+  .kpi .k-val { font-size: 22px; font-weight: 600; font-family: 'IBM Plex Mono', monospace; letter-spacing: -0.02em; line-height: 1; }
+  .kpi .k-delta { font-size: 10px; color: #4b5563; margin-top: 4px; }
+  .kpi .k-delta.up { color: #34d399; }
+  .kpi .k-delta.down { color: #f87171; }
+
+  /* Main chart */
+  .chart-card {
+    background: #161b25;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 18px;
+    position: relative;
+  }
+  .chart-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+  }
+  .chart-title { font-size: 11px; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.1em; }
+  .chart-hint { font-size: 10px; color: #374151; font-style: italic; }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 16px; }
+  .leg-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #6b7280; cursor: pointer; transition: color 0.15s; }
+  .leg-item:hover { color: #9ca3af; }
+  .leg-swatch { width: 24px; height: 3px; border-radius: 2px; flex-shrink: 0; }
+  .leg-swatch.dashed { background: repeating-linear-gradient(to right, #6b7280 0, #6b7280 5px, transparent 5px, transparent 10px); }
+
+  /* Zone labels on chart */
+  .zone-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    padding: 0 4px;
+  }
+  .zone-tag {
+    font-size: 9px;
+    font-family: 'IBM Plex Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+  .zone-tag.z1 { background: rgba(239,68,68,0.1); color: #f87171; }
+  .zone-tag.z2 { background: rgba(245,158,11,0.1); color: #fbbf24; }
+  .zone-tag.z3 { background: rgba(52,211,153,0.1); color: #34d399; }
+
+  /* Bottom grid */
+  .bottom-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+  }
+  .b-card {
+    background: #161b25;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 16px 18px;
+  }
+  .b-title { font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em; color: #4b5563; margin-bottom: 12px; }
+
+  /* Drop table */
+  .drop-table { display: flex; flex-direction: column; gap: 8px; }
+  .drop-row { display: flex; align-items: center; gap: 10px; }
+  .drop-day { font-size: 10px; font-family: 'IBM Plex Mono', monospace; width: 36px; flex-shrink: 0; }
+  .drop-bar-bg { flex: 1; height: 5px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; }
+  .drop-bar { height: 100%; border-radius: 3px; transition: width 0.8s ease; }
+  .drop-pct { font-size: 10px; font-family: 'IBM Plex Mono', monospace; width: 32px; text-align: right; flex-shrink: 0; }
+
+  /* Operator split */
+  .op-rows { display: flex; flex-direction: column; gap: 10px; }
+  .op-row {}
+  .op-meta { display: flex; justify-content: space-between; margin-bottom: 5px; }
+  .op-name { font-size: 12px; color: #9ca3af; }
+  .op-nums { display: flex; gap: 10px; }
+  .op-num { font-size: 11px; font-family: 'IBM Plex Mono', monospace; color: #6b7280; }
+  .op-num strong { color: #d1d5db; }
+  .op-bar-bg { height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; }
+  .op-bar { height: 100%; border-radius: 3px; }
+  .op-note { font-size: 10px; color: #374151; margin-top: 8px; line-height: 1.5; }
+
+  /* Inactive buckets */
+  .bucket-rows { display: flex; flex-direction: column; gap: 8px; }
+  .bucket-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 10px;
+    border-radius: 7px;
+    border: 1px solid rgba(255,255,255,0.04);
+    background: rgba(255,255,255,0.015);
+  }
+  .bucket-label { font-size: 11px; color: #9ca3af; }
+  .bucket-val { font-size: 14px; font-weight: 500; font-family: 'IBM Plex Mono', monospace; }
+  .bucket-share { font-size: 10px; color: #4b5563; margin-top: 2px; }
+  .bucket-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="eyebrow">JBIQ · Retention Health</div>
+    <div class="title">Smile Curve</div>
+    <div class="subtitle">Apr 9 – May 7, 2026 · Cohort D0 baseline · All platforms</div>
+  </div>
+  <div class="filter-row">
+    <div class="pill-group" id="modalityGroup">
+      <button class="pill active" onclick="setModality('all',this)">All</button>
+      <button class="pill" onclick="setModality('voice',this)">Voice</button>
+      <button class="pill" onclick="setModality('text',this)">Text</button>
+    </div>
+    <div class="divider"></div>
+    <div class="pill-group" id="operatorGroup">
+      <button class="pill active" onclick="setOperator('all',this)">All</button>
+      <button class="pill" onclick="setOperator('jio',this)">Jio</button>
+      <button class="pill" onclick="setOperator('nonjio',this)">Non-Jio</button>
+    </div>
+  </div>
+</div>
+
+<!-- KPI strip -->
+<div class="kpi-row">
+  <div class="kpi" style="">
+    <div class="k-label">D1</div>
+    <div class="k-val" id="kpi-d1" style="color:#60a5fa">48%</div>
+    <div class="k-delta" id="kpi-d1d">from D0</div>
+  </div>
+  <div class="kpi">
+    <div class="k-label">D7</div>
+    <div class="k-val" id="kpi-d7" style="color:#818cf8">26%</div>
+    <div class="k-delta up" id="kpi-d7d">↑ +1pp WoW</div>
+  </div>
+  <div class="kpi">
+    <div class="k-label">D15</div>
+    <div class="k-val" id="kpi-d15" style="color:#34d399">18%</div>
+    <div class="k-delta" id="kpi-d15d">−8pp from D7</div>
+  </div>
+  <div class="kpi">
+    <div class="k-label">D30</div>
+    <div class="k-val" id="kpi-d30" style="color:#f59e0b">13%</div>
+    <div class="k-delta up" id="kpi-d30d">stabilising</div>
+  </div>
+  <div class="kpi">
+    <div class="k-label">D60</div>
+    <div class="k-val" id="kpi-d60" style="color:#fb923c">9%</div>
+    <div class="k-delta" id="kpi-d60d">long-tail</div>
+  </div>
+  <div class="kpi">
+    <div class="k-label">D90</div>
+    <div class="k-val" id="kpi-d90" style="color:#f87171">7%</div>
+    <div class="k-delta" id="kpi-d90d">floor ~6–8%</div>
+  </div>
+</div>
+
+<!-- Main chart -->
+<div class="chart-card">
+  <div class="chart-top">
+    <div class="chart-title">Retention Curve (D1 → D90)</div>
+    <div class="chart-hint">Hover for values · Smile = floor forming at D30+</div>
+  </div>
+  <div class="legend" id="legend">
+    <div class="leg-item"><div class="leg-swatch" style="background:#60a5fa"></div>All users</div>
+    <div class="leg-item"><div class="leg-swatch" style="background:#34d399"></div>Voice</div>
+    <div class="leg-item"><div class="leg-swatch" style="background:#f59e0b"></div>Text</div>
+    <div class="leg-item"><div class="leg-swatch dashed"></div>Prev cohort</div>
+  </div>
+  <canvas id="smileChart" height="240"></canvas>
+  <div class="zone-labels">
+    <div class="zone-tag z1">D1–D7 · Critical drop</div>
+    <div class="zone-tag z2">D7–D30 · Habit window</div>
+    <div class="zone-tag z3">D30–D90 · Retained core</div>
+  </div>
+</div>
+
+<!-- Bottom grid -->
+<div class="bottom-grid">
+
+  <div class="b-card">
+    <div class="b-title">Drop-off by Window</div>
+    <div class="drop-table" id="dropTable">
+      <div class="drop-row">
+        <div class="drop-day" style="color:#ef4444">D0→1</div>
+        <div class="drop-bar-bg"><div class="drop-bar" style="width:52%;background:#ef4444"></div></div>
+        <div class="drop-pct" style="color:#ef4444">−52pp</div>
+      </div>
+      <div class="drop-row">
+        <div class="drop-day" style="color:#f87171">D1→7</div>
+        <div class="drop-bar-bg"><div class="drop-bar" style="width:44%;background:#f87171"></div></div>
+        <div class="drop-pct" style="color:#f87171">−22pp</div>
+      </div>
+      <div class="drop-row">
+        <div class="drop-day" style="color:#fbbf24">D7→15</div>
+        <div class="drop-bar-bg"><div class="drop-bar" style="width:31%;background:#fbbf24"></div></div>
+        <div class="drop-pct" style="color:#fbbf24">−8pp</div>
+      </div>
+      <div class="drop-row">
+        <div class="drop-day" style="color:#a3a3a3">D15→30</div>
+        <div class="drop-bar-bg"><div class="drop-bar" style="width:20%;background:#6b7280"></div></div>
+        <div class="drop-pct" style="color:#a3a3a3">−5pp</div>
+      </div>
+      <div class="drop-row">
+        <div class="drop-day" style="color:#6b7280">D30→60</div>
+        <div class="drop-bar-bg"><div class="drop-bar" style="width:15%;background:#374151"></div></div>
+        <div class="drop-pct" style="color:#6b7280">−4pp</div>
+      </div>
+      <div class="drop-row">
+        <div class="drop-day" style="color:#4b5563">D60→90</div>
+        <div class="drop-bar-bg"><div class="drop-bar" style="width:8%;background:#1f2937"></div></div>
+        <div class="drop-pct" style="color:#4b5563">−2pp</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="b-card">
+    <div class="b-title">Voice vs Text · D7 & D30</div>
+    <div class="op-rows">
+      <div class="op-row">
+        <div class="op-meta">
+          <div class="op-name">Voice</div>
+          <div class="op-nums">
+            <div class="op-num">D7 <strong id="voice-d7">28%</strong></div>
+            <div class="op-num">D30 <strong id="voice-d30">15%</strong></div>
+          </div>
+        </div>
+        <div class="op-bar-bg">
+          <div class="op-bar" id="voice-bar" style="width:55%;background:linear-gradient(90deg,#34d399,#10b981)"></div>
+        </div>
+      </div>
+      <div class="op-row" style="margin-top:8px">
+        <div class="op-meta">
+          <div class="op-name">Text</div>
+          <div class="op-nums">
+            <div class="op-num">D7 <strong id="text-d7">24%</strong></div>
+            <div class="op-num">D30 <strong id="text-d30">11%</strong></div>
+          </div>
+        </div>
+        <div class="op-bar-bg">
+          <div class="op-bar" id="text-bar" style="width:47%;background:linear-gradient(90deg,#60a5fa,#3b82f6)"></div>
+        </div>
+      </div>
+      <div class="op-note">Voice users retain ~4pp better at D7. Gap widens to ~4pp at D30. Invest in voice onboarding for early habit loop.</div>
+    </div>
+  </div>
+
+  <div class="b-card">
+    <div class="b-title">Inactive User Buckets</div>
+    <div class="bucket-rows">
+      <div class="bucket-row">
+        <div><div class="bucket-label">3–7 days inactive</div><div class="bucket-share">re-engagement window open</div></div>
+        <div style="text-align:right"><div class="bucket-val" style="color:#fbbf24">~18K</div><div class="bucket-dot" style="background:#fbbf24;margin-left:auto;margin-top:4px"></div></div>
+      </div>
+      <div class="bucket-row">
+        <div><div class="bucket-label">7–15 days inactive</div><div class="bucket-share">cooling off, PN may help</div></div>
+        <div style="text-align:right"><div class="bucket-val" style="color:#fb923c">~22K</div><div class="bucket-dot" style="background:#fb923c;margin-left:auto;margin-top:4px"></div></div>
+      </div>
+      <div class="bucket-row">
+        <div><div class="bucket-label">15–30 days inactive</div><div class="bucket-share">likely churned</div></div>
+        <div style="text-align:right"><div class="bucket-val" style="color:#4b5563">~35K</div><div class="bucket-dot" style="background:#374151;margin-left:auto;margin-top:4px"></div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Data sets per segment
+  const xLabels = ['D1','D7','D15','D30','D60','D90'];
+
+  const curves = {
+    all:    { curr: [48, 26, 18, 13, 9, 7],  prev: [45, 24, 17, 12, 8, 6]  },
+    voice:  { curr: [51, 28, 20, 15, 11, 8], prev: [48, 26, 19, 14, 10, 7] },
+    text:   { curr: [45, 24, 16, 11, 8, 6],  prev: [43, 22, 15, 10, 7, 5]  },
+  };
+
+  let activeModality = 'all';
+  let activeOperator = 'all';
+
+  const ctx = document.getElementById('smileChart').getContext('2d');
+
+  function makeGrad(color, alpha1, alpha2) {
+    const g = ctx.createLinearGradient(0, 0, 0, 240);
+    g.addColorStop(0, color.replace(')', `,${alpha1})`).replace('rgb', 'rgba'));
+    g.addColorStop(1, color.replace(')', `,${alpha2})`).replace('rgb', 'rgba'));
+    return g;
+  }
+
+  const gradAll   = ctx.createLinearGradient(0,0,0,240);
+  gradAll.addColorStop(0,'rgba(96,165,250,0.18)');
+  gradAll.addColorStop(1,'rgba(96,165,250,0.01)');
+
+  const chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: xLabels,
+      datasets: [
+        {
+          label: 'All users',
+          data: curves.all.curr,
+          borderColor: '#60a5fa',
+          borderWidth: 2.5,
+          pointBackgroundColor: '#60a5fa',
+          pointBorderColor: '#161b25',
+          pointBorderWidth: 2,
+          pointRadius: 5,
+          pointHoverRadius: 8,
+          fill: true,
+          backgroundColor: gradAll,
+          tension: 0.45,
+        },
+        {
+          label: 'Voice',
+          data: curves.voice.curr,
+          borderColor: '#34d399',
+          borderWidth: 2,
+          pointBackgroundColor: '#34d399',
+          pointBorderColor: '#161b25',
+          pointBorderWidth: 2,
+          pointRadius: 4,
+          pointHoverRadius: 7,
+          fill: false,
+          tension: 0.45,
+        },
+        {
+          label: 'Text',
+          data: curves.text.curr,
+          borderColor: '#f59e0b',
+          borderWidth: 2,
+          pointBackgroundColor: '#f59e0b',
+          pointBorderColor: '#161b25',
+          pointBorderWidth: 2,
+          pointRadius: 4,
+          pointHoverRadius: 7,
+          fill: false,
+          tension: 0.45,
+        },
+        {
+          label: 'Prev cohort',
+          data: curves.all.prev,
+          borderColor: '#374151',
+          borderWidth: 1.5,
+          pointBackgroundColor: '#374151',
+          pointBorderColor: '#161b25',
+          pointBorderWidth: 1,
+          pointRadius: 3,
+          pointHoverRadius: 5,
+          fill: false,
+          borderDash: [5, 5],
+          tension: 0.45,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1e2535',
+          borderColor: 'rgba(255,255,255,0.08)',
+          borderWidth: 1,
+          titleColor: '#9ca3af',
+          bodyColor: '#f0f2f5',
+          titleFont: { family: 'IBM Plex Mono', size: 11, weight:'500' },
+          bodyFont: { family: 'IBM Plex Mono', size: 12 },
+          padding: 14,
+          callbacks: {
+            label: c => `  ${c.dataset.label}:  ${c.parsed.y}%`
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(255,255,255,0.04)', drawTicks: false },
+          border: { display: false },
+          ticks: { color: '#4b5563', font: { family: 'IBM Plex Mono', size: 10 }, padding: 10 }
+        },
+        y: {
+          min: 0, max: 100,
+          grid: { color: 'rgba(255,255,255,0.04)', drawTicks: false },
+          border: { display: false },
+          ticks: {
+            color: '#4b5563',
+            font: { family: 'IBM Plex Mono', size: 10 },
+            padding: 10,
+            stepSize: 20,
+            callback: v => v + '%'
+          }
+        }
+      }
+    }
+  });
+
+  function updateKPIs(data) {
+    const vals = data.curr;
+    document.getElementById('kpi-d1').textContent  = vals[0] + '%';
+    document.getElementById('kpi-d7').textContent  = vals[1] + '%';
+    document.getElementById('kpi-d15').textContent = vals[2] + '%';
+    document.getElementById('kpi-d30').textContent = vals[3] + '%';
+    document.getElementById('kpi-d60').textContent = vals[4] + '%';
+    document.getElementById('kpi-d90').textContent = vals[5] + '%';
+  }
+
+  function setModality(m, el) {
+    document.querySelectorAll('#modalityGroup .pill').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    activeModality = m;
+
+    if (m === 'all') {
+      chart.data.datasets[0].data = curves.all.curr;
+      chart.data.datasets[3].data = curves.all.prev;
+      chart.data.datasets[1].hidden = false;
+      chart.data.datasets[2].hidden = false;
+      updateKPIs(curves.all);
+    } else if (m === 'voice') {
+      chart.data.datasets[0].data = curves.voice.curr;
+      chart.data.datasets[3].data = curves.voice.prev;
+      chart.data.datasets[1].hidden = true;
+      chart.data.datasets[2].hidden = true;
+      updateKPIs(curves.voice);
+    } else {
+      chart.data.datasets[0].data = curves.text.curr;
+      chart.data.datasets[3].data = curves.text.prev;
+      chart.data.datasets[1].hidden = true;
+      chart.data.datasets[2].hidden = true;
+      updateKPIs(curves.text);
+    }
+    chart.update('active');
+  }
+
+  function setOperator(o, el) {
+    document.querySelectorAll('#operatorGroup .pill').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    activeOperator = o;
+    // Jio users retain ~2pp better than non-Jio (illustrative)
+    const offset = o === 'jio' ? 3 : (o === 'nonjio' ? -3 : 0);
+    const base = activeModality === 'voice' ? curves.voice : activeModality === 'text' ? curves.text : curves.all;
+    chart.data.datasets[0].data = base.curr.map(v => Math.max(0, Math.min(100, v + offset)));
+    chart.data.datasets[3].data = base.prev.map(v => Math.max(0, Math.min(100, v + offset)));
+    chart.update('active');
+  }
+</script>
+</body>
+</html>

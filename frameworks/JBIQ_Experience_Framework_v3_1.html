@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: Arial, sans-serif; background:#fff; padding:32px; color:#222; font-size:12px; line-height:1.5; }
+
+/* ── TYPE ── */
+.doc-title  { font-size:20px; font-weight:700; color:#1F4E79; margin-bottom:3px; }
+.doc-sub    { font-size:11px; color:#bbb; margin-bottom:30px; }
+.s-title    { font-size:10px; font-weight:700; color:#1F4E79; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+.s-title::after { content:''; flex:1; height:1px; background:#e8e8e8; }
+.s-spacer   { margin-bottom:28px; }
+
+/* ── COLOUR TOKENS ── */
+.c-new   { color:#0C447C; } .bg-new  { background:#E6F1FB; } .bd-new { border-color:#185FA5; }
+.c-ret   { color:#085041; } .bg-ret  { background:#E1F5EE; } .bd-ret { border-color:#0F6E56; }
+.c-sig   { color:#3C3489; } .bg-sig  { background:#EEEDFE; } .bd-sig { border-color:#534AB7; }
+.c-loop1 { color:#0C447C; } .bg-loop1{ background:#E6F1FB; } .bd-loop1{ border-color:#B5D4F4; }
+.c-loop2 { color:#3C3489; } .bg-loop2{ background:#EEEDFE; } .bd-loop2{ border-color:#AFA9EC; }
+.c-loop3 { color:#085041; } .bg-loop3{ background:#E1F5EE; } .bd-loop3{ border-color:#9FE1CB; }
+.c-dont  { color:#712B13; } .bg-dont { background:#FAECE7; } .bd-dont { border-color:#F0997B; }
+.c-val   { color:#633806; } .bg-val  { background:#FAEEDA; } .bd-val  { border-color:#EF9F27; }
+.c-disc  { color:#444441; } .bg-disc { background:#F1EFE8; } .bd-disc { border-color:#B4B2A9; }
+
+/* ── TAG ── */
+.tag { display:inline-block; padding:2px 7px; border-radius:3px; font-size:9.5px; font-weight:700; margin:2px 2px 0 0; }
+
+/* ═══════ SECTION 1 — SIGNALS ═══════ */
+.sig-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:8px; }
+.sig-card { border-radius:8px; padding:12px 14px; background:#fafafa; border:1px solid #e8e8e8; }
+.sig-hdr  { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:7px; display:flex; align-items:center; gap:6px; }
+.sig-dot  { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+.sig-li   { font-size:11px; color:#555; line-height:1.7; }
+.sig-li::before { content:"· "; color:#ccc; }
+.sig-badge{ display:inline-block; font-size:9px; font-weight:700; border-radius:3px; padding:2px 6px; margin-top:8px; }
+
+/* ═══════ SECTION 2 — LOOPS ═══════ */
+.loop-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.loop-card { border-radius:8px; padding:14px 16px; border:1.5px solid; }
+.loop-title   { font-size:13px; font-weight:700; margin-bottom:2px; }
+.loop-trigger { font-size:10px; font-style:italic; margin-bottom:10px; opacity:0.75; }
+.loop-cols    { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.loop-ch { font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:4px; opacity:0.6; }
+.loop-li { font-size:11px; color:#444; line-height:1.7; }
+.loop-li::before { content:"· "; color:#ccc; }
+
+/* ═══════ SECTION 3 — DISCOVERY ═══════ */
+.disc-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; }
+.disc-card { border-radius:8px; padding:12px 14px; background:#fafafa; border:1px solid #e8e8e8; }
+.disc-num  { font-size:22px; font-weight:700; color:#e8e8e8; line-height:1; margin-bottom:4px; }
+.disc-name { font-size:12px; font-weight:700; color:#222; margin-bottom:10px; }
+.disc-lbl  { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:#bbb; margin-bottom:2px; }
+.disc-val  { font-size:11px; color:#555; line-height:1.5; margin-bottom:8px; }
+.disc-rule { font-size:9.5px; font-weight:700; padding:3px 8px; border-radius:3px; display:inline-block; margin-top:4px; }
+
+/* ═══════ SECTION 4 — VALUE ═══════ */
+.val-grid { display:grid; grid-template-columns:140px 1fr 1fr 1fr; gap:0; border:1px solid #e0e0e0; border-radius:8px; overflow:hidden; }
+.val-hdr  { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; padding:8px 12px; background:#f5f5f5; border-bottom:1px solid #e8e8e8; border-right:1px solid #e0e0e0; color:#888; }
+.val-hdr:last-child { border-right:none; }
+.val-row  { display:contents; }
+.val-cell { padding:10px 12px; border-right:1px solid #ebebeb; border-bottom:1px solid #ebebeb; font-size:11px; color:#555; line-height:1.55; vertical-align:top; }
+.val-cell:last-child { border-right:none; }
+.val-cell.type-label { font-size:11px; font-weight:700; color:#333; background:#fafafa; }
+.val-row-last .val-cell { border-bottom:none; }
+
+/* ═══════ SECTIONS 5 & 6 — FRAMEWORK GRIDS ═══════ */
+.fw-grid { display:grid; grid-template-columns:100px 1fr 1fr; border:1.5px solid #ccc; border-radius:10px; overflow:hidden; }
+.fw-corner { background:#f5f5f5; border-right:1px solid #ccc; border-bottom:1.5px solid #ccc; }
+.fw-hdr    { font-size:13px; font-weight:700; text-align:center; padding:11px 14px; border-bottom:1.5px solid #ccc; }
+.fw-hdr.n  { background:#E6F1FB; color:#0C447C; border-right:1px solid #ccc; }
+.fw-hdr.r  { background:#E1F5EE; color:#085041; }
+
+.fw-rl { background:#f9f9f9; border-right:1px solid #ddd; border-bottom:1px solid #ebebeb; padding:10px 8px; font-size:9.5px; font-weight:700; color:#777; text-transform:uppercase; letter-spacing:0.04em; display:flex; align-items:center; justify-content:center; text-align:center; line-height:1.4; }
+.fw-rl.last { border-bottom:none; }
+
+.fw-cell { padding:14px 16px; border-right:1px solid #ebebeb; border-bottom:1px solid #ebebeb; background:#fff; }
+.fw-cell:last-child { border-right:none; }
+.fw-cell.last { border-bottom:none; }
+.fw-cell.sh   { background:#fafafa; }
+
+.slot      { margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid #f2f2f2; }
+.slot:last-child { margin-bottom:0; padding-bottom:0; border-bottom:none; }
+.slot-name { font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:#bbb; margin-bottom:3px; }
+.slot-val  { font-size:12px; font-weight:700; color:#222; margin-bottom:2px; line-height:1.4; }
+.slot-desc { font-size:11px; color:#666; line-height:1.55; }
+.slot-sig  { font-size:10px; color:#aaa; margin-top:3px; font-style:italic; }
+
+.inactive  { font-size:11.5px; font-weight:600; color:#bbb; }
+
+.badge-new { background:#E6F1FB; color:#0C447C; font-size:9px; font-weight:700; padding:2px 6px; border-radius:3px; display:inline-block; margin-bottom:8px; }
+.badge-ret { background:#E1F5EE; color:#085041; font-size:9px; font-weight:700; padding:2px 6px; border-radius:3px; display:inline-block; margin-bottom:8px; }
+
+/* principle row */
+.fw-p-lbl { background:#f5f5f5; border-right:1px solid #ddd; padding:12px 8px; font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:#888; display:flex; align-items:center; justify-content:center; text-align:center; }
+.fw-p-new { background:#E6F1FB; color:#0C447C; font-size:12px; font-weight:700; font-style:italic; padding:14px 18px; line-height:1.5; border-right:1px solid #ccc; }
+.fw-p-ret { background:#E1F5EE; color:#085041; font-size:12px; font-weight:700; font-style:italic; padding:14px 18px; line-height:1.5; }
+
+/* vertical theming note */
+.vt-note { display:grid; grid-template-columns:1fr 1fr; gap:0; border:1px solid #e0e0e0; border-radius:8px; overflow:hidden; margin-bottom:10px; }
+.vt-col  { padding:14px 16px; font-size:11px; color:#555; line-height:1.7; }
+.vt-col-title { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:6px; }
+.vt-col.can  { background:#F1EFE8; color:#444441; border-right:1px solid #e0e0e0; }
+.vt-col.cant { background:#FAECE7; color:#712B13; }
+.vt-li { line-height:1.8; }
+.vt-li.can::before  { content:"✓  "; color:#639922; }
+.vt-li.cant::before { content:"✕  "; color:#D85A30; }
+
+/* ═══════ SECTION 7 — MUST NOT ═══════ */
+.dont-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.dont-card { background:#FAECE7; border:1px solid #F0997B; border-radius:8px; padding:14px 16px; }
+.dont-title{ font-size:11px; font-weight:700; color:#712B13; margin-bottom:8px; }
+.dont-li   { font-size:11px; color:#712B13; line-height:1.8; }
+.dont-li::before { content:"✕  "; font-size:10px; }
+</style>
+</head>
+<body>
+
+<div class="doc-title">JBIQ — Home & Vertical Page Experience Framework</div>
+<div class="doc-sub">Input signals · Loop types · Discovery paths · Value measurement · Home page · Vertical page · Rules</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- S1 — INPUT SIGNALS -->
+<!-- ═══════════════════════════════════════ -->
+<div class="s-title">1 &nbsp; Input signals &nbsp;·&nbsp; what drives what is shown on every surface</div>
+<div class="sig-grid s-spacer">
+
+  <div class="sig-card">
+    <div class="sig-hdr"><div class="sig-dot" style="background:#378ADD"></div><span style="color:#0C447C;">UCP · Jio profile</span></div>
+    <div class="sig-li">Language preference</div>
+    <div class="sig-li">Location (Jio circle)</div>
+    <div class="sig-li">Age, device, OEM</div>
+    <div class="sig-li">Jio services active</div>
+    <div class="sig-li">Recharge history</div>
+    <div class="sig-badge bg-new c-new">Available Day 0</div>
+  </div>
+
+  <div class="sig-card">
+    <div class="sig-hdr"><div class="sig-dot" style="background:#7F77DD"></div><span style="color:#3C3489;">Context · world state</span></div>
+    <div class="sig-li">Time of day</div>
+    <div class="sig-li">Live events (IPL, Budget)</div>
+    <div class="sig-li">Season / festival</div>
+    <div class="sig-li">Breaking news</div>
+    <div class="sig-li">Day of week</div>
+    <div class="sig-badge bg-new c-new">Day 0 · always on</div>
+  </div>
+
+  <div class="sig-card">
+    <div class="sig-hdr"><div class="sig-dot" style="background:#D85A30"></div><span style="color:#712B13;">App / ambient</span></div>
+    <div class="sig-li">Device location (GPS)</div>
+    <div class="sig-li">Calendar events</div>
+    <div class="sig-li">Network quality (2G/WiFi)</div>
+    <div class="sig-li">DND state</div>
+    <div class="sig-li">Cross-app intent</div>
+    <div class="sig-badge bg-val c-val">Day 0 if permissions granted</div>
+  </div>
+
+  <div class="sig-card">
+    <div class="sig-hdr"><div class="sig-dot" style="background:#1D9E75"></div><span style="color:#085041;">In-app behaviour</span></div>
+    <div class="sig-li">Queries, domains, modality</div>
+    <div class="sig-li">Sessions and streaks</div>
+    <div class="sig-li">Tasks and reminders</div>
+    <div class="sig-li">Loop affinity</div>
+    <div class="sig-li">Value actions completed</div>
+    <div class="sig-badge bg-ret c-ret">Builds from session 1</div>
+  </div>
+
+  <div class="sig-card">
+    <div class="sig-hdr"><div class="sig-dot" style="background:#BA7517"></div><span style="color:#633806;">Jio ecosystem</span></div>
+    <div class="sig-li">Activity across Jio services</div>
+    <div class="sig-li">Recharge and plan signals</div>
+    <div class="sig-li">Cross-service behaviour</div>
+    <div class="sig-badge bg-val c-val">If Jio services active</div>
+  </div>
+
+  <div class="sig-card">
+    <div class="sig-hdr"><div class="sig-dot" style="background:#888780"></div><span style="color:#444441;">3P partners</span></div>
+    <div class="sig-li">Partner content signals</div>
+    <div class="sig-li">External service activity</div>
+    <div class="sig-li">NAM skill usage (post-GA)</div>
+    <div class="sig-badge bg-disc c-disc">Post-GA · as partners onboard</div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- S2 — LOOP TYPES -->
+<!-- ═══════════════════════════════════════ -->
+<div class="s-title">2 &nbsp; Loop types &nbsp;·&nbsp; how engagement compounds across time</div>
+<div class="loop-grid s-spacer">
+
+  <div class="loop-card bg-loop1 bd-loop1">
+    <div class="loop-title c-loop1">Daily loop</div>
+    <div class="loop-trigger c-loop1">Trigger: time signal · fires every day</div>
+    <div class="loop-cols">
+      <div>
+        <div class="loop-ch c-loop1">Use cases</div>
+        <div class="loop-li">Morning briefing</div>
+        <div class="loop-li">Rashifal</div>
+        <div class="loop-li">Panchang / aarti</div>
+        <div class="loop-li">Cricket score</div>
+        <div class="loop-li">News anchor</div>
+      </div>
+      <div>
+        <div class="loop-ch c-loop1">Surfaces on</div>
+        <div class="loop-li">Updates card · top slot</div>
+        <div class="loop-li">For You · habit tile</div>
+        <div class="loop-li">PN · habit-triggered</div>
+        <div class="loop-li">Vertical · daily slot</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="loop-card bg-loop2 bd-loop2">
+    <div class="loop-title c-loop2">Week / month loop</div>
+    <div class="loop-trigger c-loop2">Trigger: event or deadline signal</div>
+    <div class="loop-cols">
+      <div>
+        <div class="loop-ch c-loop2">Use cases</div>
+        <div class="loop-li">Interview prep streak</div>
+        <div class="loop-li">Bill tracking</div>
+        <div class="loop-li">Job alerts</div>
+        <div class="loop-li">Exam countdown</div>
+        <div class="loop-li">Scheme status</div>
+      </div>
+      <div>
+        <div class="loop-ch c-loop2">Surfaces on</div>
+        <div class="loop-li">Updates card · deadline</div>
+        <div class="loop-li">Continue · task resume</div>
+        <div class="loop-li">PN · event-triggered</div>
+        <div class="loop-li">Vertical · task card</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="loop-card bg-loop3 bd-loop3">
+    <div class="loop-title c-loop3">Lifecycle loop</div>
+    <div class="loop-trigger c-loop3">Trigger: seasonal or episodic signal</div>
+    <div class="loop-cols">
+      <div>
+        <div class="loop-ch c-loop3">Use cases</div>
+        <div class="loop-li">Navratri / Ramadan</div>
+        <div class="loop-li">IPL season</div>
+        <div class="loop-li">Tax / ITR season</div>
+        <div class="loop-li">Harvest / sowing cycle</div>
+      </div>
+      <div>
+        <div class="loop-ch c-loop3">Surfaces on</div>
+        <div class="loop-li">For You · seasonal card</div>
+        <div class="loop-li">Vertical · season home</div>
+        <div class="loop-li">WA · seasonal re-entry</div>
+        <div class="loop-li">PN · lifecycle-triggered</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- S3 — DISCOVERY PATHS -->
+<!-- ═══════════════════════════════════════ -->
+<div class="s-title">3 &nbsp; 5 discovery paths &nbsp;·&nbsp; how users reach vertical content</div>
+<div class="disc-grid s-spacer">
+
+  <div class="disc-card">
+    <div class="disc-num">01</div>
+    <div class="disc-name">Home feed slot</div>
+    <div class="disc-lbl">Core provides</div>
+    <div class="disc-val">Feed architecture, signal ranking, card template, 4-group structure</div>
+    <div class="disc-lbl">Vertical must bring</div>
+    <div class="disc-val">Context spec — what card shows, under which signal conditions, what it loads on tap</div>
+    <div class="disc-rule bg-dont c-dont">No context spec = not in feed</div>
+  </div>
+
+  <div class="disc-card">
+    <div class="disc-num">02</div>
+    <div class="disc-name">Persona tap</div>
+    <div class="disc-lbl">Core provides</div>
+    <div class="disc-val">Tap-to-context-load mechanism, domain routing</div>
+    <div class="disc-lbl">Vertical must bring</div>
+    <div class="disc-val">What loads on tap — which use case, with what preloaded context</div>
+    <div class="disc-rule bg-dont c-dont">Cold tap = vertical failure</div>
+  </div>
+
+  <div class="disc-card">
+    <div class="disc-num">03</div>
+    <div class="disc-name">Chat routing</div>
+    <div class="disc-lbl">Core provides</div>
+    <div class="disc-val">Intent recognition, routing logic, multi-turn handling</div>
+    <div class="disc-lbl">Vertical must bring</div>
+    <div class="disc-val">The use case experience that resolves the intent</div>
+    <div class="disc-rule bg-ret c-ret">Works even if user doesn't know vertical exists</div>
+  </div>
+
+  <div class="disc-card">
+    <div class="disc-num">04</div>
+    <div class="disc-name">Post-task next step</div>
+    <div class="disc-lbl">Core provides</div>
+    <div class="disc-val">Task completion detection, next-step trigger slot</div>
+    <div class="disc-lbl">Vertical must bring</div>
+    <div class="disc-val">The logical next step within that domain's journey</div>
+    <div class="disc-rule bg-sig c-sig">Highest intent moment — user just completed something</div>
+  </div>
+
+  <div class="disc-card">
+    <div class="disc-num">05</div>
+    <div class="disc-name">PN and WhatsApp</div>
+    <div class="disc-lbl">Core provides</div>
+    <div class="disc-val">Channel infrastructure, deep-link architecture, personalised hook from signal model</div>
+    <div class="disc-lbl">Vertical must bring</div>
+    <div class="disc-val">Trigger condition — what event warrants PN/WA and what specific hook to use</div>
+    <div class="disc-rule bg-dont c-dont">Generic hook = destroys channel trust</div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- S4 — VALUE MEASUREMENT -->
+<!-- ═══════════════════════════════════════ -->
+<div class="s-title">4 &nbsp; Value measurement &nbsp;·&nbsp; what JBIQ has done for the user</div>
+<div class="val-grid s-spacer">
+  <div class="val-hdr">Value type</div>
+  <div class="val-hdr">Metric</div>
+  <div class="val-hdr">Home page</div>
+  <div class="val-hdr">Vertical page</div>
+
+  <div class="val-cell type-label">Time saved</div>
+  <div class="val-cell">Minutes saved per task × tasks completed</div>
+  <div class="val-cell">Aggregate value strip. Weekly update. "Aapne is hafte 4 ghante bachaye."</div>
+  <div class="val-cell">Not shown — too generic per domain</div>
+
+  <div class="val-cell type-label">Money saved</div>
+  <div class="val-cell">Rupee value of scheme, deal, or price difference found</div>
+  <div class="val-cell">Aggregate value strip. Milestone card on first ₹500 saved.</div>
+  <div class="val-cell">Domain Moments card. Mandi, Commerce, Finance verticals.</div>
+
+  <div class="val-cell type-label">Money earned</div>
+  <div class="val-cell">Job found, interview cracked, income opportunity</div>
+  <div class="val-cell">Aggregate value strip. Milestone card.</div>
+  <div class="val-cell">Domain Moments card. Jobs, Skilling verticals.</div>
+
+  <div class="val-cell type-label">Effort saved</div>
+  <div class="val-cell">Tasks that avoided a physical trip or app switch</div>
+  <div class="val-cell">Moments card. Weekly recap.</div>
+  <div class="val-cell">Domain Moments card where applicable.</div>
+
+  <div class="val-cell type-label val-row-last">Progress made</div>
+  <div class="val-cell val-row-last">Score improvement, streak, skill level change</div>
+  <div class="val-cell val-row-last">Not applicable at home level</div>
+  <div class="val-cell val-row-last">Vertical page only. Each vertical defines its own metric. Interview Prep: score. Cricket: streak. Rashifal: days read.</div>
+</div>
+
+<div style="padding:10px 14px; background:#FAEEDA; border:1px solid #EF9F27; border-radius:8px; font-size:11px; color:#633806; margin-bottom:28px;">
+  <strong>Value strip rule:</strong> Always specific, never generic. "₹340 bachaye" not "money saved." "4 ghante bachaye" not "time saved." A round number or vague claim destroys trust. &nbsp;·&nbsp; Hidden for new users until at least one value action is completed. &nbsp;·&nbsp; Updates weekly on home. Updates on each value action on vertical.
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- S5 — HOME PAGE -->
+<!-- ═══════════════════════════════════════ -->
+<div class="s-title">5 &nbsp; Home page &nbsp;·&nbsp; global scope &nbsp;·&nbsp; aggregation of all 12 domains</div>
+<div class="fw-grid s-spacer">
+
+  <div class="fw-corner"></div>
+  <div class="fw-hdr n">New user &nbsp;·&nbsp; Sessions 1–5*</div>
+  <div class="fw-hdr r">Returning user &nbsp;·&nbsp; Sessions 6+*</div>
+  <div style="grid-column:1/-1; background:#FAEEDA; border-bottom:1px solid #EF9F27; padding:7px 16px; font-size:10.5px; color:#633806;">
+    * Session thresholds are indicative. Transition from new to returning is evaluated based on depth and quality of signals — not a hardbound session count. A user who completes high-intent tasks across multiple domains in 2 sessions may behave as a returning user earlier. A passive user may remain in new-user state longer.
+  </div>
+
+  <!-- OBJECTIVE -->
+  <div class="fw-rl">Objective</div>
+  <div class="fw-cell">
+    <div class="slot-val">Get to first value fast</div>
+    <div class="slot-desc">Reduce blank canvas anxiety. Prove the product works. Create one reason to return.</div>
+  </div>
+  <div class="fw-cell">
+    <div class="slot-val">Surface the most relevant thing instantly</div>
+    <div class="slot-desc">Honour what's been built. Reward return. Get out of the way.</div>
+  </div>
+
+  <!-- PERSISTENT LAYER -->
+  <div class="fw-rl">Persistent layer · always on</div>
+  <div class="fw-cell sh">
+    <div class="slot">
+      <div class="slot-name">Chat interface · hero</div>
+      <div class="slot-desc">Voice + text + image. One clear invitation to start. Nothing competes with it above the fold.</div>
+    </div>
+    <div class="slot">
+      <div class="slot-name">Personas strip · 12 domains</div>
+      <div class="slot-desc">Always visible. Proves breadth at a glance. Never hidden, never signal-ranked.</div>
+    </div>
+    <div class="slot">
+      <div class="slot-name">Value strip</div>
+      <div class="slot-val inactive">Hidden — no value generated yet</div>
+    </div>
+  </div>
+  <div class="fw-cell sh">
+    <div class="slot">
+      <div class="slot-name">Chat interface · hero</div>
+      <div class="slot-desc">Same. Gets out of the way faster. User knows what to do.</div>
+    </div>
+    <div class="slot">
+      <div class="slot-name">Personas strip · 12 domains</div>
+      <div class="slot-desc">Same. User navigates intentionally — they know which persona owns their domain.</div>
+    </div>
+    <div class="slot">
+      <div class="slot-name">Value strip · persistent</div>
+      <div class="slot-desc">Aggregate time + money saved/earned this week. Specific number, real action. Updates weekly.</div>
+      <div class="slot-sig">Signals: in-app behaviour + ecosystem</div>
+    </div>
+  </div>
+
+  <!-- UPDATES -->
+  <div class="fw-rl">Updates · max 2–3 cards</div>
+  <div class="fw-cell">
+    <div class="slot-val inactive">Not active · hidden</div>
+    <div class="slot-desc" style="margin-top:4px;">No tasks, reminders or deadlines set yet. Section does not appear.</div>
+  </div>
+  <div class="fw-cell">
+    <div class="slot">
+      <div class="slot-name">Most important action right now</div>
+      <div class="slot-desc">Task deadline, appointment due, domain update needing attention, bill due today. Max 2–3 cards only. Not shown if nothing is actionable.</div>
+    </div>
+    <div class="slot">
+      <div class="slot-name">Loop mapping</div>
+      <div class="slot-desc">Daily loop → today's habit. Week/month loop → deadline or task due. Lifecycle loop → seasonal reminder.</div>
+      <div class="slot-sig">Signals: calendar (ambient) + active tasks (in-app) + ecosystem alerts</div>
+    </div>
+  </div>
+
+  <!-- FOR YOU -->
+  <div class="fw-rl">Feed · For You</div>
+  <div class="fw-cell sh">
+    <div class="slot">
+      <div class="slot-name">Editorial amalgamation</div>
+      <div class="slot-desc">Best card from each relevant domain picked by UCP + Context. Morning = briefing, devotion. Evening = cricket, news. EI tiles give a visible menu of what to ask.</div>
+    </div>
+    <div class="slot">
+      <div class="slot-name">Personalisation</div>
+      <div class="slot-val inactive">UCP + Context only · not active</div>
+    </div>
+    <div class="slot-sig">Signals: UCP + Context</div>
+  </div>
+  <div class="fw-cell sh">
+    <div class="slot">
+      <div class="slot-name">Personalised amalgamation</div>
+      <div class="slot-desc">What they actually use rises to the top. Cricket-daily user sees cricket first. Best card from each domain the user engages with, ranked by behaviour. Predictive at N=1 (Sessions 20+).</div>
+    </div>
+    <div class="slot">
+      <div class="slot-name">Personalisation</div>
+      <div class="slot-desc">Fully active. All 5 signals running. Feed ranked, adapted, anticipating.</div>
+    </div>
+    <div class="slot-sig">Signals: all 5 — UCP + Context + App/ambient + In-app behaviour + Ecosystem</div>
+  </div>
+
+  <!-- CONTINUE -->
+  <div class="fw-rl">Feed · Continue</div>
+  <div class="fw-cell">
+    <div class="slot-val inactive">Empty · hidden</div>
+    <div class="slot-desc" style="margin-top:4px;">Nothing to continue. Section does not appear. No placeholder, no empty state.</div>
+  </div>
+  <div class="fw-cell">
+    <div class="slot">
+      <div class="slot-name">Session continuity</div>
+      <div class="slot-desc">Mid-task resume. Habit streak card. Gap return card. Continuation card (new info on a past topic). Domain updates.</div>
+    </div>
+    <div class="slot">
+      <div class="slot-name">Loop mapping</div>
+      <div class="slot-desc">Daily loop → streak card. Week/month → task resume. Lifecycle → gap return after seasonal absence.</div>
+    </div>
+  </div>
+
+  <!-- DISCOVER -->
+  <div class="fw-rl">Feed · Discover</div>
+  <div class="fw-cell sh">
+    <div class="slot">
+      <div class="slot-name">Carries page with For You</div>
+      <div class="slot-desc">Domain introduction cards. One or two verticals they haven't touched. What's new card. Broad — show what exists.</div>
+    </div>
+  </div>
+  <div class="fw-cell sh">
+    <div class="slot">
+      <div class="slot-name">What they haven't found yet</div>
+      <div class="slot-desc">Surfaces domains or capabilities not yet touched. One card per unseen domain. Earns the slot or doesn't appear. Not shown to all users — high-affinity cohort only.</div>
+    </div>
+  </div>
+
+  <!-- MOMENTS -->
+  <div class="fw-rl">Feed · Moments</div>
+  <div class="fw-cell">
+    <div class="slot-val inactive">Not active · hidden</div>
+    <div class="slot-desc" style="margin-top:4px;">No value actions completed. No shareable outputs. Section hidden.</div>
+  </div>
+  <div class="fw-cell">
+    <div class="slot">
+      <div class="slot-name">Value gain + shareable outputs</div>
+      <div class="slot-desc">Value recap card — specific rupee or time saved tied to a real action. Shareable output card post-task. Streak milestone. Referral card once after a shareable moment.</div>
+    </div>
+    <div class="slot">
+      <div class="slot-name">Cadence</div>
+      <div class="slot-desc">Weekly value recap. Milestone cards (first ₹500 saved, first job applied). Gap return value summary.</div>
+    </div>
+  </div>
+
+  <!-- PRINCIPLE -->
+  <div class="fw-p-lbl fw-rl last">Principle</div>
+  <div class="fw-p-new last">"Reduce uncertainty. Show what's possible. Make the first step obvious."</div>
+  <div class="fw-p-ret last">"Reduce friction. Honour what's been built. Get to value instantly."</div>
+
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- S6 — VERTICAL PAGE -->
+<!-- ═══════════════════════════════════════ -->
+<div class="s-title">6 &nbsp; Vertical / inner page &nbsp;·&nbsp; domain scope &nbsp;·&nbsp; same structure, single domain</div>
+
+<div class="vt-note" style="display:block; border:1px solid #e0e0e0; border-radius:8px; overflow:hidden; margin-bottom:10px;">
+  <div class="vt-col" style="padding:14px 16px; background:#F1EFE8; border-right:none;">
+    <div class="vt-col-title" style="color:#444441; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:6px;">Vertical page structure and ownership</div>
+    <div style="font-size:11.5px; color:#444; line-height:1.7; margin-bottom:8px;">Every vertical page follows the same structure as the home page — persistent layer, Updates, For You, Continue, Discover, Moments — for consistency across the app. Within that structure, verticals have full ownership to build any use case or feature experience their domain needs.</div>
+    <div style="font-size:11.5px; color:#444; line-height:1.7;">Look and feel, avatar personality, tone of voice, content design, domain-specific value metrics, and the depth of experience within each feed slot — all owned by the vertical. The structure is the foundation. What gets built on it is entirely the vertical's.</div>
+  </div>
+</div>
+
+<div class="fw-grid s-spacer">
+
+  <div class="fw-corner"></div>
+  <div class="fw-hdr n">New user &nbsp;·&nbsp; first visit to this vertical*</div>
+  <div class="fw-hdr r">Returning user &nbsp;·&nbsp; has been here before*</div>
+  <div style="grid-column:1/-1; background:#FAEEDA; border-bottom:1px solid #EF9F27; padding:7px 16px; font-size:10.5px; color:#633806;">
+    * First visit vs returning is evaluated per vertical independently. A user can be a returning user at the app level but a new user to a specific vertical. Signal depth within that domain determines the experience state.
+  </div>
+
+  <!-- OBJECTIVE -->
+  <div class="fw-rl">Objective</div>
+  <div class="fw-cell">
+    <div class="slot-val">Prove value before user does anything</div>
+    <div class="slot-desc">One clear first action. No history, no clutter. No explanation needed.</div>
+  </div>
+  <div class="fw-cell">
+    <div class="slot-val">Feel like a home in this domain</div>
+    <div class="slot-desc">Continuity first. Reward return immediately. Never restart cold.</div>
+  </div>
+
+  <!-- PERSISTENT LAYER -->
+  <div class="fw-rl">Persistent layer</div>
+  <div class="fw-cell sh">
+    <div class="slot">
+      <div class="slot-name">Live value proof · first above fold</div>
+      <div class="slot-desc">Cricket → today's match or next match. Rashifal → today's reading. Interview Prep → sample question. Proves the vertical before user does anything.</div>
+    </div>
+    <div class="slot">
+      <div class="slot-name">One primary action</div>
+      <div class="slot-desc">Not a menu. One specific low-risk entry. "Ask about today's match." "Get your rashifal." Removes decision paralysis.</div>
+    </div>
+    <div class="slot">
+      <div class="slot-name">Domain persona</div>
+      <div class="slot-desc">Sets tone and trust immediately. Introductory.</div>
+    </div>
+    <div class="slot">
+      <div class="slot-name">Domain value proof</div>
+      <div class="slot-val inactive">Hidden — no value generated yet</div>
+    </div>
+  </div>
+  <div class="fw-cell sh">
+    <div class="slot">
+      <div class="slot-name">Continuity · first above fold</div>
+      <div class="slot-desc">Their ongoing session, streak, tracked topic. Cricket knows their team. Interview Prep picks up their study plan. Page is never static.</div>
+    </div>
+    <div class="slot">
+      <div class="slot-name">Domain persona</div>
+      <div class="slot-desc">Same persona. User has a relationship with it. More familiar, less introductory.</div>
+    </div>
+    <div class="slot">
+      <div class="slot-name">Domain value proof · inline</div>
+      <div class="slot-desc">Domain-specific. "Score improved 18 points." "₹340 saved on mandi price this month." Specific and real.</div>
+    </div>
+  </div>
+
+  <!-- UPDATES -->
+  <div class="fw-rl">Updates · max 2 cards</div>
+  <div class="fw-cell">
+    <div class="slot-val inactive">Not active · hidden</div>
+    <div class="slot-desc" style="margin-top:4px;">No domain-specific tasks or alerts set yet.</div>
+  </div>
+  <div class="fw-cell">
+    <div class="slot-name">Domain-specific alert</div>
+    <div class="slot-desc">Match starting in 30 mins. Bill due today. Exam tomorrow. Study session overdue. Relevant only to this domain.</div>
+  </div>
+
+  <!-- FOR YOU -->
+  <div class="fw-rl">Feed · For You</div>
+  <div class="fw-cell sh">
+    <div class="slot">
+      <div class="slot-name">UCP + Context · scoped to this domain</div>
+      <div class="slot-desc">What's relevant in this domain right now. Live match. Today's reading. Current affairs in this vertical.</div>
+      <div class="slot-sig">Signals: UCP + Context + App/ambient</div>
+    </div>
+  </div>
+  <div class="fw-cell sh">
+    <div class="slot">
+      <div class="slot-name">Behaviour-ranked · domain personalisation</div>
+      <div class="slot-desc">Their preferences within this vertical surface naturally. Their team, their difficulty level, their content format preference.</div>
+      <div class="slot-sig">Signals: all 5 — domain-scoped in-app behaviour drives ranking</div>
+    </div>
+  </div>
+
+  <!-- CONTINUE -->
+  <div class="fw-rl">Feed · Continue</div>
+  <div class="fw-cell">
+    <div class="slot-val inactive">Empty · hidden</div>
+    <div class="slot-desc" style="margin-top:4px;">No domain history yet.</div>
+  </div>
+  <div class="fw-cell">
+    <div class="slot">
+      <div class="slot-name">Domain continuity</div>
+      <div class="slot-desc">Resume last session. Active streak in this domain. Ongoing task (study plan, tracker, series).</div>
+    </div>
+    <div class="slot">
+      <div class="slot-name">Gap return handling</div>
+      <div class="slot-desc">Not "you've been away." A re-invitation: "Here's what you missed." "Your plan is still here." Resumes context, never restarts cold.</div>
+    </div>
+  </div>
+
+  <!-- DISCOVER -->
+  <div class="fw-rl">Feed · Discover</div>
+  <div class="fw-cell sh">
+    <div class="slot-name">What else this vertical can do</div>
+    <div class="slot-desc">Adjacent features one at a time. Interview Prep → mock interview, GD sim, English coach — not all at once.</div>
+  </div>
+  <div class="fw-cell sh">
+    <div class="slot-name">Depth they haven't reached</div>
+    <div class="slot-desc">Advanced features. New content formats. New capability added since last visit. Earns the slot or doesn't appear.</div>
+  </div>
+
+  <!-- MOMENTS -->
+  <div class="fw-rl">Feed · Moments</div>
+  <div class="fw-cell">
+    <div class="slot-val inactive">Not active · hidden</div>
+    <div class="slot-desc" style="margin-top:4px;">No domain-level value actions completed yet.</div>
+  </div>
+  <div class="fw-cell">
+    <div class="slot-name">Domain value gain · shareable output</div>
+    <div class="slot-desc">Domain-specific. "₹340 saved on mandi price this month." "Interview score improved 18 points." Shareable moment from within this vertical.</div>
+  </div>
+
+  <!-- LOOP -->
+  <div class="fw-rl">Loop surface</div>
+  <div class="fw-cell sh">
+    <div class="slot-name">Context + UCP only</div>
+    <div class="slot-desc">What's live in this domain from the world right now. No behavioural signals yet.</div>
+  </div>
+  <div class="fw-cell sh">
+    <div class="slot-name">All 3 loops active</div>
+    <div class="slot-desc">Daily tile if daily habit here. Week/month task card if active. Lifecycle seasonal card if season relevant to this domain.</div>
+  </div>
+
+  <!-- PRINCIPLE -->
+  <div class="fw-p-lbl fw-rl last">Principle</div>
+  <div class="fw-p-new last">"Prove value first. Give one door in. Nothing else."</div>
+  <div class="fw-p-ret last">"This is their domain. Know them. Pick up where they left off."</div>
+
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- S7 — MUST NOT DO -->
+<!-- ═══════════════════════════════════════ -->
+<div class="s-title">7 &nbsp; Must not do</div>
+<div class="dont-grid">
+  <div class="dont-card">
+    <div class="dont-title">New user — never do this</div>
+    <div class="dont-li">Ask for preferences before delivering any value</div>
+    <div class="dont-li">Show empty Continue, history, or streak sections</div>
+    <div class="dont-li">Overwhelm with features before first query</div>
+    <div class="dont-li">Run tutorials or walkthroughs on entry</div>
+    <div class="dont-li">Require the user to know what to ask</div>
+    <div class="dont-li">Load a vertical with no context — cold tap is a failure</div>
+    <div class="dont-li">Show ₹0 or 0 hours saved on the value strip</div>
+  </div>
+  <div class="dont-card">
+    <div class="dont-title">Returning user — never do this</div>
+    <div class="dont-li">Show onboarding content or tooltips after session 1</div>
+    <div class="dont-li">Treat session 15 like session 1</div>
+    <div class="dont-li">Make them re-discover what they already use</div>
+    <div class="dont-li">Start a vertical cold when prior context exists</div>
+    <div class="dont-li">Send a generic WA or PN hook — specific or nothing</div>
+    <div class="dont-li">Show a round-number value gain — must be specific and real</div>
+    <div class="dont-li">Show a blank Continue to a retained user</div>
+  </div>
+</div>
+
+</body>
+</html>

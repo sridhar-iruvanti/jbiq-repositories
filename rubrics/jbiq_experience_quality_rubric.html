@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Experience Quality Rubric — JBIQ</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg: #F6F5F1;
+  --surface: #FFFFFF;
+  --surface2: #F0EEE9;
+  --border: #E2DFD6;
+  --border-strong: #C4C0B4;
+  --text-primary: #1A1917;
+  --text-secondary: #6A6860;
+  --text-tertiary: #9A9890;
+  --p0-bg:#FDF0EE;--p0-text:#7A2218;--p0-border:#E8B4AC;
+  --p1-bg:#FDF5E8;--p1-text:#6B3E08;--p1-border:#E8CC96;
+  --p2-bg:#EBF3FC;--p2-text:#0D4480;--p2-border:#A8CCF0;
+  --p3-bg:#F0EEE9;--p3-text:#4A4840;--p3-border:#C4C0B4;
+  --pass-bg:#EDF5E4;--pass-text:#2A5E10;--pass-border:#A8D488;
+  --warn-bg:#FDF5E8;--warn-text:#6B3E08;--warn-border:#E8CC96;
+  --fail-bg:#FDF0EE;--fail-text:#7A2218;--fail-border:#E8B4AC;
+  --inc-bg:#F0EEE9;--inc-text:#4A4840;--inc-border:#C4C0B4;
+  --amp-bg:#FDF5E8;--amp-text:#6B3E08;--amp-border:#E8CC96;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* HEADER */
+.header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 28px 48px 24px;
+}
+.header-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px; }
+.header-title { font-size: 22px; font-weight: 600; letter-spacing: -0.3px; }
+.header-meta { font-size: 12px; color: var(--text-tertiary); font-family: 'DM Mono', monospace; margin-top: 4px; }
+.header-badge {
+  font-size: 11px; font-weight: 500; padding: 4px 12px;
+  border-radius: 20px; background: var(--surface2);
+  border: 1px solid var(--border); color: var(--text-secondary);
+  white-space: nowrap; margin-top: 4px;
+}
+.header-desc { font-size: 13px; color: var(--text-secondary); max-width: 680px; line-height: 1.7; margin-top: 10px; }
+
+/* SCOPE NOTICE */
+.scope-notice {
+  background: #FFFBF0;
+  border: 1px solid #E8D888;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 12px;
+  color: #6B5A08;
+  margin: 16px 48px 0;
+  line-height: 1.6;
+}
+
+/* NAV TABS */
+.nav {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 48px;
+  display: flex;
+  gap: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav-tab {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  padding: 14px 16px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+.nav-tab:hover { color: var(--text-primary); }
+.nav-tab.active { color: var(--text-primary); font-weight: 500; border-bottom-color: var(--text-primary); }
+
+/* MAIN */
+main { flex: 1; padding: 32px 48px; max-width: 1200px; width: 100%; }
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* SECTION LABELS */
+.section-label {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--text-tertiary);
+  margin-bottom: 14px;
+}
+
+/* DIMENSION BLOCKS */
+.dim-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-bottom: 10px;
+}
+.dim-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 6px;
+}
+.dim-name { font-size: 14px; font-weight: 500; }
+.dim-q { font-size: 12px; color: var(--text-secondary); font-style: italic; margin-bottom: 12px; }
+.criteria-grid {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;
+}
+.cc {
+  border-radius: 6px; padding: 8px 10px;
+  font-size: 11px; line-height: 1.55;
+}
+.cc-pass { background: var(--pass-bg); color: var(--pass-text); border: 1px solid var(--pass-border); }
+.cc-warn { background: var(--warn-bg); color: var(--warn-text); border: 1px solid var(--warn-border); }
+.cc-fail { background: var(--fail-bg); color: var(--fail-text); border: 1px solid var(--fail-border); }
+.cc-label { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 3px; opacity: 0.7; }
+.dim-footnote { font-size: 11px; color: var(--text-tertiary); margin-top: 10px; }
+
+/* BADGES */
+.badge {
+  display: inline-block; font-size: 10px; font-weight: 500;
+  padding: 2px 8px; border-radius: 20px; white-space: nowrap;
+  border: 1px solid transparent;
+}
+.badge-p0 { background: var(--p0-bg); color: var(--p0-text); border-color: var(--p0-border); }
+.badge-p1 { background: var(--p1-bg); color: var(--p1-text); border-color: var(--p1-border); }
+.badge-p2 { background: var(--p2-bg); color: var(--p2-text); border-color: var(--p2-border); }
+.badge-p3 { background: var(--p3-bg); color: var(--p3-text); border-color: var(--p3-border); }
+.badge-pass { background: var(--pass-bg); color: var(--pass-text); border-color: var(--pass-border); }
+.badge-amp { background: var(--amp-bg); color: var(--amp-text); border-color: var(--amp-border); }
+.badge-inc { background: var(--inc-bg); color: var(--inc-text); border-color: var(--inc-border); }
+.badge-central { background: #EEEDF8; color: #3A3490; border-color: #C0BCEC; }
+.badge-team { background: #E4F4EE; color: #0D5E40; border-color: #90D4B4; }
+
+/* TABLES */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+th {
+  font-size: 10px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.06em; color: var(--text-tertiary);
+  padding: 8px 12px; border-bottom: 1px solid var(--border);
+  text-align: left; background: var(--surface2);
+  white-space: nowrap;
+}
+td {
+  padding: 10px 12px; border-bottom: 1px solid var(--border);
+  vertical-align: top; line-height: 1.6; color: var(--text-primary);
+  font-size: 12px;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #FAFAF8; }
+.table-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; overflow: hidden; margin-bottom: 16px;
+}
+
+/* METRIC CARDS */
+.metric-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+.metric-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px 16px;
+}
+.metric-val { font-size: 22px; font-weight: 600; margin-bottom: 3px; }
+.metric-label { font-size: 11px; color: var(--text-secondary); line-height: 1.4; }
+
+/* NOTE */
+.note {
+  background: var(--surface2); border-radius: 8px;
+  padding: 10px 14px; font-size: 11px; color: var(--text-secondary);
+  line-height: 1.7; margin-top: 12px;
+}
+
+/* DIVIDER */
+.divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+/* VERDICT GRID */
+.verdict-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
+.vc {
+  border-radius: 10px; padding: 12px 14px;
+  border: 1px solid var(--border); background: var(--surface);
+}
+.vc-val { font-size: 20px; font-weight: 600; margin-bottom: 3px; }
+.vc-label { font-size: 11px; color: var(--text-secondary); line-height: 1.4; }
+
+/* TWO COL */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+.layer-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px 16px;
+}
+.layer-card-title { font-size: 13px; font-weight: 500; margin: 8px 0 4px; }
+.layer-card-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+
+/* UC TABS */
+.uc-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.uc-tab {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px; padding: 5px 12px;
+  border-radius: 20px; border: 1px solid var(--border);
+  background: transparent; color: var(--text-secondary);
+  cursor: pointer; transition: all 0.15s;
+}
+.uc-tab:hover { background: var(--surface2); color: var(--text-primary); }
+.uc-tab.active {
+  background: var(--text-primary); color: #FFFFFF;
+  border-color: var(--text-primary);
+}
+.uc-panel { display: none; }
+.uc-panel.active { display: block; }
+
+/* OWNER NOTE */
+.owner-note {
+  font-size: 11px; color: var(--text-secondary);
+  padding: 8px 12px;
+  border-left: 3px solid var(--border-strong);
+  margin-top: 12px; line-height: 1.6;
+  background: var(--surface2); border-radius: 0 6px 6px 0;
+}
+
+/* STEP TABLE */
+.step-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px; font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* HOWTO STEPS */
+.step-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px 16px; margin-bottom: 8px;
+  display: grid; grid-template-columns: 32px 1fr; gap: 12px; align-items: start;
+}
+.step-num-circle {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--surface2); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 600; color: var(--text-secondary);
+  flex-shrink: 0; margin-top: 2px;
+}
+.step-title { font-size: 13px; font-weight: 500; margin-bottom: 3px; }
+.step-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+.step-output {
+  display: inline-block; font-size: 10px; font-weight: 500;
+  padding: 2px 8px; border-radius: 4px; margin-top: 6px;
+  background: var(--surface2); border: 1px solid var(--border);
+  color: var(--text-secondary); font-family: 'DM Mono', monospace;
+}
+
+/* FOOTER */
+footer {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 16px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-family: 'DM Mono', monospace;
+}
+.footer-left { display: flex; gap: 24px; align-items: center; }
+.footer-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border-strong); }
+
+/* PRINT */
+@media print {
+  .nav, footer { position: static; }
+  .panel { display: block !important; page-break-before: always; }
+  .panel:first-child { page-break-before: auto; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-top">
+    <div>
+      <div class="header-title">Experience Quality Rubric</div>
+      <div class="header-meta">JBIQ · Core Experience · FnF Release</div>
+    </div>
+    <div class="header-badge">Front-end consumer experiences only</div>
+  </div>
+  <div class="header-desc">
+    A two-layer evaluation framework for all user-facing experiences on the JBIQ app. The universal rubric (7 dimensions) is fixed and applies to every use case. Criteria cards are team-owned and define what pass, warn, and fail look like for each specific use case type.
+  </div>
+</header>
+
+<div class="scope-notice">
+  <strong>Scope:</strong> This rubric applies to front-end consumer-facing experiences only — anything a user sees and touches on the app. Internal systems (APIs, ML models, UCP pipeline, backend infra, eval pipelines) run independently and are not in scope here. They feed into this rubric but are evaluated separately.
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <button class="nav-tab active" onclick="showPanel('overview')">Overview</button>
+  <button class="nav-tab" onclick="showPanel('dims')">7 Dimensions</button>
+  <button class="nav-tab" onclick="showPanel('cards')">Criteria Cards</button>
+  <button class="nav-tab" onclick="showPanel('design')">Design Evaluation</button>
+  <button class="nav-tab" onclick="showPanel('voice')">Voice Evaluation</button>
+  <button class="nav-tab" onclick="showPanel('howto')">How to Run</button>
+  <button class="nav-tab" onclick="showPanel('ownership')">Ownership</button>
+  <button class="nav-tab" onclick="showPanel('verdict')">Scoring + Verdict</button>
+</nav>
+
+<main>
+
+<!-- ── OVERVIEW ── -->
+<div id="overview" class="panel active">
+  <div class="section-label">What this is</div>
+  <div class="two-col" style="margin-bottom:20px;">
+    <div class="layer-card">
+      <span class="badge badge-central">Central — Core Exp</span>
+      <div class="layer-card-title">Layer 1 — Universal rubric</div>
+      <div class="layer-card-desc">Seven dimensions. Same structure for every use case, every team, every test run. Never changes. QA always runs this layer. Owned by Core Experience POD.</div>
+    </div>
+    <div class="layer-card">
+      <span class="badge badge-team">Team-owned</span>
+      <div class="layer-card-title">Layer 2 — Criteria cards</div>
+      <div class="layer-card-desc">What pass, warn, and fail looks like within each dimension for a specific use case. Each team writes and owns their card. QA pulls the relevant card at test time.</div>
+    </div>
+  </div>
+
+  <div class="section-label">Seven dimensions at a glance</div>
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:6%;">Dim</th>
+          <th style="width:22%;">Name</th>
+          <th style="width:36%;">Core question</th>
+          <th style="width:12%;">P0 trigger</th>
+          <th style="width:24%;">Owner of criteria</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="step-num">D1</td><td>Functional behaviour</td><td>Did the feature do what it was supposed to do for this input on this device?</td><td><span class="badge badge-p0">Yes — if score 2</span></td><td>QA + feature team</td></tr>
+        <tr><td class="step-num">D2</td><td>Output and response quality</td><td>Was the output factually correct, relevant, and complete for the user's intent?</td><td><span class="badge badge-p0">Yes — if score 2</span></td><td>Bharat / ML Evals</td></tr>
+        <tr><td class="step-num">D3</td><td>Trust and user experience</td><td>Would a real user trust this output and continue using the product?</td><td><span class="badge badge-p0">Yes — if score 2</span></td><td>Core Exp</td></tr>
+        <tr><td class="step-num">D4</td><td>Language and localisation</td><td>Was the response in the right language, script, and cultural register?</td><td><span class="badge badge-p0">Yes — if score 2</span></td><td>Language SME + Bharat</td></tr>
+        <tr><td class="step-num">D5</td><td>Visual design and IA</td><td>Does the UI render correctly, follow the spec, and make sense as an information structure?</td><td><span class="badge badge-p0">Yes — if score 2</span></td><td>Matt / Sunit</td></tr>
+        <tr><td class="step-num">D6</td><td>Voice interaction quality</td><td>Did voice input, output, and all states work correctly end to end?</td><td><span class="badge badge-p0">Yes — if score 2</span></td><td>Karan + Core Exp</td></tr>
+        <tr><td class="step-num">D7</td><td>Flow and reach</td><td>Where in the user journey does this happen and how many users are affected?</td><td><span class="badge badge-amp">Amplifier only</span></td><td>QA</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="verdict-grid">
+    <div class="vc"><div class="vc-val" style="color:var(--p0-text);">P0</div><div class="vc-label">Score 9–14 or any of D1–D6 scores 2. Release blocked.</div></div>
+    <div class="vc"><div class="vc-val" style="color:var(--p1-text);">P1</div><div class="vc-label">Score 6–8. Fix before release if feasible.</div></div>
+    <div class="vc"><div class="vc-val" style="color:var(--p2-text);">P2</div><div class="vc-label">Score 3–5. Ship and track post-release.</div></div>
+    <div class="vc"><div class="vc-val" style="color:var(--p3-text);">P3</div><div class="vc-label">Score 0–2. Log, revisit as capacity allows.</div></div>
+  </div>
+
+  <div class="note">Max score is 14 (7 × 2). For non-voice use cases D6 scores 0 automatically — max is 12. D7 alone can never trigger P0 regardless of score. A single D1–D6 score of 2 overrides the total and triggers P0 immediately.</div>
+</div>
+
+<!-- ── 7 DIMENSIONS ── -->
+<div id="dims" class="panel">
+  <div class="section-label">Universal dimensions — fixed for all FE use cases</div>
+
+  <div class="dim-block">
+    <div class="dim-header"><span class="dim-name">D1 — Functional behaviour</span><span class="badge badge-p0">P0 if score = 2</span></div>
+    <div class="dim-q">Did the feature do what it was supposed to do for this input on this device?</div>
+    <div class="criteria-grid">
+      <div class="cc cc-pass"><div class="cc-label">0 — pass</div>Feature completed the task as expected. Output matched test criteria.</div>
+      <div class="cc cc-warn"><div class="cc-label">1 — warn</div>Feature ran but output was incomplete, inconsistent across retries, or required a workaround.</div>
+      <div class="cc cc-fail"><div class="cc-label">2 — fail</div>Feature failed, errored, timed out, or produced no output.</div>
+    </div>
+  </div>
+
+  <div class="dim-block">
+    <div class="dim-header"><span class="dim-name">D2 — Output and response quality</span><span class="badge badge-p0">P0 if score = 2</span></div>
+    <div class="dim-q">Was the output factually correct, relevant, and complete for the user's intent?</div>
+    <div class="criteria-grid">
+      <div class="cc cc-pass"><div class="cc-label">0 — pass</div>Correct, directly addresses query, complete. Matches golden answer where one exists.</div>
+      <div class="cc cc-warn"><div class="cc-label">1 — warn</div>Partially correct or relevant. Right intent, minor factual gap or wrong format.</div>
+      <div class="cc cc-fail"><div class="cc-label">2 — fail</div>Wrong fact stated confidently. Hallucinated entity or name. Irrelevant answer to a clear query.</div>
+    </div>
+  </div>
+
+  <div class="dim-block">
+    <div class="dim-header"><span class="dim-name">D3 — Trust and user experience</span><span class="badge badge-p0">P0 if score = 2</span></div>
+    <div class="dim-q">Would a real user trust this output and continue using the product?</div>
+    <div class="criteria-grid">
+      <div class="cc cc-pass"><div class="cc-label">0 — pass</div>Output feels confident and safe. User has no reason to doubt the product.</div>
+      <div class="cc cc-warn"><div class="cc-label">1 — warn</div>Output felt odd but user could still proceed. Minor friction, trust intact.</div>
+      <div class="cc cc-fail"><div class="cc-label">2 — fail</div>Output breaks trust. User would stop, question the product, or abandon the task.</div>
+    </div>
+  </div>
+
+  <div class="dim-block">
+    <div class="dim-header"><span class="dim-name">D4 — Language and localisation</span><span class="badge badge-p0">P0 if score = 2</span></div>
+    <div class="dim-q">Was the response in the right language, script, and cultural register?</div>
+    <div class="criteria-grid">
+      <div class="cc cc-pass"><div class="cc-label">0 — pass</div>Right language throughout. Script renders correctly. Phrasing natural for a native speaker.</div>
+      <div class="cc cc-warn"><div class="cc-label">1 — warn</div>Right language, minor awkward phrasing or transliteration error. Mixed script in one sentence.</div>
+      <div class="cc cc-fail"><div class="cc-label">2 — fail</div>Wrong language. Script garbled or unreadable. Culturally inappropriate or offensive phrasing.</div>
+    </div>
+  </div>
+
+  <div class="dim-block">
+    <div class="dim-header"><span class="dim-name">D5 — Visual design and IA</span><span class="badge badge-p0">P0 if score = 2</span></div>
+    <div class="dim-q">Does the UI render correctly, follow the spec, and make sense as an information structure?</div>
+    <div class="criteria-grid">
+      <div class="cc cc-pass"><div class="cc-label">0 — pass</div>Renders correctly on target device. Matches Figma spec. IA clear — user knows where they are and what to do next.</div>
+      <div class="cc cc-warn"><div class="cc-label">1 — warn</div>Minor spacing or layout deviation. IA mostly clear but one element confusing. Figma delta is cosmetic only.</div>
+      <div class="cc cc-fail"><div class="cc-label">2 — fail</div>Layout broken on target device. Key action hidden or unreachable. IA broken. No Figma spec and build not signed off.</div>
+    </div>
+  </div>
+
+  <div class="dim-block">
+    <div class="dim-header"><span class="dim-name">D6 — Voice interaction quality</span><span class="badge badge-p0">P0 if score = 2</span></div>
+    <div class="dim-q">Did voice input, output, and all interaction states work correctly end to end?</div>
+    <div class="criteria-grid">
+      <div class="cc cc-pass"><div class="cc-label">0 — pass</div>STT transcribes correctly. TTS natural and intelligible. Barge-in works. All states — listening, processing, speaking — visible and correct.</div>
+      <div class="cc cc-warn"><div class="cc-label">1 — warn</div>Minor STT inaccuracy. TTS slightly unnatural but intelligible. State feedback delayed but present.</div>
+      <div class="cc cc-fail"><div class="cc-label">2 — fail</div>STT fails silently. TTS unintelligible. Barge-in broken. No state feedback shown. Voice loop broken.</div>
+    </div>
+    <div class="dim-footnote">Score 0 if use case has no voice component — D6 does not apply and does not inflate the total.</div>
+  </div>
+
+  <div class="dim-block">
+    <div class="dim-header"><span class="dim-name">D7 — Flow and reach</span><span class="badge badge-amp">Amplifier only — cannot trigger P0</span></div>
+    <div class="dim-q">Where in the user journey does this happen and how many users are affected?</div>
+    <div class="criteria-grid">
+      <div class="cc cc-pass"><div class="cc-label">0 — pass</div>Edge case or low-frequency path. Most users unaffected.</div>
+      <div class="cc cc-warn"><div class="cc-label">1 — warn</div>Secondary flow. A subset of users on a specific path would hit this.</div>
+      <div class="cc cc-fail"><div class="cc-label">2 — fail</div>Core flow. Most users attempting this task would encounter it.</div>
+    </div>
+    <div class="dim-footnote">D7 amplifies the total score but cannot trigger P0 on its own. A cosmetic issue in a core flow is still P2, not P0.</div>
+  </div>
+</div>
+
+<!-- ── CRITERIA CARDS ── -->
+<div id="cards" class="panel">
+  <div class="section-label">Criteria cards — team-owned, one per use case type</div>
+  <div class="note" style="margin-bottom:16px;">Each team fills the blank template and signs off before QA starts testing that use case. No signed criteria card = no test run. QA returns unsigned cards to the owner.</div>
+
+  <div class="uc-tabs">
+    <button class="uc-tab active" onclick="showUC('skill')">Skill responses</button>
+    <button class="uc-tab" onclick="showUC('onboard')">Onboarding</button>
+    <button class="uc-tab" onclick="showUC('home')">Homepage</button>
+    <button class="uc-tab" onclick="showUC('voice')">Voice / multimodal</button>
+    <button class="uc-tab" onclick="showUC('lang')">Language</button>
+    <button class="uc-tab" onclick="showUC('blank')">Blank template</button>
+  </div>
+
+  <div id="uc-skill" class="uc-panel active">
+    <div class="table-card">
+      <table>
+        <thead><tr><th style="width:8%;">Dim</th><th style="width:28%;">Score 0 — pass</th><th style="width:28%;">Score 1 — warn</th><th style="width:24%;">Score 2 — fail</th><th style="width:12%;">P0 trigger</th></tr></thead>
+        <tbody>
+          <tr><td class="step-num">D1</td><td>Skill returned a relevant, structured response for the query.</td><td>Responded but output was incomplete or inconsistent across retries.</td><td>Failed, errored, timed out, or returned no output.</td><td><span class="badge badge-p0">Yes</span></td></tr>
+          <tr><td class="step-num">D2</td><td>Factually correct against golden answer. No hallucinated entities, scores, or names.</td><td>Partially correct. Right intent, minor factual gap.</td><td>Wrong fact stated with confidence. Hallucinated entity or number.</td><td><span class="badge badge-p0">Yes</span></td></tr>
+          <tr><td class="step-num">D3</td><td>Tone matches skill persona. Response feels confident and appropriate.</td><td>Tone slightly off for context. Response feels generic, not persona-specific.</td><td>Offensive, dismissive, or culturally insensitive. Confidently wrong in a way that misleads.</td><td><span class="badge badge-p0">Yes</span></td></tr>
+          <tr><td class="step-num">D4</td><td>Response in user's UCP language. Script renders correctly. Phrasing natural.</td><td>Right language, minor awkward phrasing or script mixing.</td><td>Wrong language. Script garbled. Culturally inappropriate.</td><td><span class="badge badge-p0">Yes</span></td></tr>
+          <tr><td class="step-num">D5</td><td>Response card renders correctly on target device. Text not truncated. Layout matches spec.</td><td>Minor layout delta. Text slightly truncated but readable.</td><td>Response card broken or text unreadable. No spec and build not signed off.</td><td><span class="badge badge-p0">Yes</span></td></tr>
+          <tr><td class="step-num">D6</td><td colspan="3" style="color:var(--text-tertiary);font-style:italic;">Not applicable for text skills — score 0 automatically.</td><td>—</td></tr>
+          <tr><td class="step-num">D7</td><td>Edge case query or rare skill variant.</td><td>Secondary skill feature — subset of users.</td><td>Core skill query — most users of this skill send this.</td><td><span class="badge badge-amp">Amp</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="owner-note"><strong>D1–D2:</strong> Bharat (ML Evals) with golden dataset · <strong>D3:</strong> Core Exp · <strong>D4:</strong> Language SME · <strong>D5:</strong> Sunit · <strong>D7:</strong> QA</div>
+  </div>
+
+  <div id="uc-onboard" class="uc-panel">
+    <div class="table-card">
+      <table>
+        <thead><tr><th style="width:8%;">Dim</th><th style="width:28%;">Score 0 — pass</th><th style="width:28%;">Score 1 — warn</th><th style="width:24%;">Score 2 — fail</th><th style="width:12%;">P0 trigger</th></tr></thead>
+        <tbody>
+          <tr><td class="step-num">D1</td><td>All steps complete. User reaches home screen. UCP first signal written correctly.</td><td>Flow completes but one step required retry. UCP partially written.</td><td>Flow breaks mid-step. Dead end with no exit. UCP not written. User cannot reach home.</td><td><span class="badge badge-p0">Yes</span></td></tr>
+          <tr><td class="step-num">D2</td><td>Language preference saved. Name captured correctly. All prompts clear and actionable.</td><td>One prompt unclear but user completes anyway. Minor copy error.</td><td>Language not saved. Wrong name captured. Misleading prompt causes wrong selection.</td><td><span class="badge badge-p0">Yes</span></td></tr>
+          <tr><td class="step-num">D3</td><td>User feels in control. Progress is clear. No unexpected data requests.</td><td>One step confusing but recoverable. Progress indicator missing on one screen.</td><td>User feels lost or misled. Unexpected permission request with no explanation. No way back.</td><td><span class="badge badge-p0">Yes</span></td></tr>
+          <tr><td class="step-num">D4</td><td>All onboarding copy in selected language. Script renders correctly from step one.</td><td>One screen has mixed language. Minor translation awkwardness.</td><td>Onboarding in wrong language after selection. Script broken on any step.</td><td><span class="badge badge-p0">Yes</span></td></tr>
+          <tr><td class="step-num">D5</td><td>All screens match Figma spec. Spacing and IA correct on target device.</td><td>Minor spacing delta. One element misaligned but flow clear.</td><td>Screen broken on target device. Key CTA unreachable. No spec and not signed off.</td><td><span class="badge badge-p0">Yes</span></td></tr>
+          <tr><td class="step-num">D6</td><td colspan="3" style="color:var(--text-tertiary);font-style:italic;">N/A unless voice onboarding is in scope — score 0.</td><td>—</td></tr>
+          <tr><td class="step-num">D7</td><td>Optional or skip-able onboarding step.</td><td>Secondary screen — affects users who selected a specific option.</td><td>Core step — every new user goes through this.</td><td><span class="badge badge-amp">Amp</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="owner-note"><strong>D1–D2:</strong> Jitendra (UCP / onboarding architecture) · <strong>D3:</strong> Core Exp · <strong>D4:</strong> Language SME · <strong>D5:</strong> Sunit / Matt · <strong>D7:</strong> QA</div>
+  </div>
+
+  <div id="uc-home" class="uc-panel">
+    <div class="table-card">
+      <table>
+        <thead><tr><th style="width:8%;">Dim</th><th style="width:28%;">Score 0 — pass</th><th style="width:28%;">Score 1 — warn</th><th style="width:24%;">Score 2 — fail</th><th style="width:12%;">P0 trigger</th></tr></thead>
+        <tbody>
+          <tr><td class="step-num">D1</td><td>Home loads. All three sections render. Correct UCP data populates each section.</td><td>Loads but one section shows fallback or partial data.</td><td>Home blank. Sections missing. UCP data not reflected for a known profile.</td><td><span class="badge badge-p0">Yes</span></td></tr>
+          <tr><td class="step-num">D2</td><td>Correct personas shown. Quick actions match UCP context. Updates relevant to user.</td><td>Personas correct but wrong order. Quick actions partially relevant.</td><td>Wrong personas. Quick actions unrelated to UCP. Greeting card missing when trigger is met.</td><td><span class="badge badge-p0">Yes</span></td></tr>
+          <tr><td class="step-num">D3</td><td>Home feels personalised for this user. No generic placeholder text visible.</td><td>Mostly personalised but one section feels generic. Placeholder briefly visible on load.</td><td>Home completely generic. Wrong user's data shown. Personalisation visibly broken.</td><td><span class="badge badge-p0">Yes</span></td></tr>
+          <tr><td class="step-num">D4</td><td>All home copy in user's language. Persona names localised correctly.</td><td>One label in wrong language. Minor localisation gap.</td><td>Home in wrong language. Persona name wrong in user's language.</td><td><span class="badge badge-p0">Yes</span></td></tr>
+          <tr><td class="step-num">D5</td><td>Layout matches spec on target device. IA clear — sections scannable. Spacing and padding correct.</td><td>Minor spacing deviation. One section slightly dense or misaligned.</td><td>Layout broken. Sections overlap or unreachable. IA unclear. No spec and not signed off.</td><td><span class="badge badge-p0">Yes</span></td></tr>
+          <tr><td class="step-num">D6</td><td colspan="3" style="color:var(--text-tertiary);font-style:italic;">N/A — score 0.</td><td>—</td></tr>
+          <tr><td class="step-num">D7</td><td>Secondary widget on home.</td><td>One of the three main sections — personas, quick actions, or updates.</td><td>Home screen itself — every user lands here on every session.</td><td><span class="badge badge-amp">Amp</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="owner-note"><strong>D1–D2:</strong> Core Exp (Sridhar) · Jitendra confirms UCP mapping · <strong>D3:</strong> Core Exp · <strong>D4:</strong> Language SME · <strong>D5:</strong> Matt / Sunit · <strong>D7:</strong> QA</div>
+  </div>
+
+  <div id="uc-voice" class="uc-panel">
+    <div class="table-card">
+      <table>
+        <thead><tr><th style="width:8%;">Dim</th><th style="width:28%;">Score 0 — pass</th><th style="width:28%;">Score 1 — warn</th><th style="width:24%;">Score 2 — fail</th><th style="width:12%;">P0 trigger</th></tr></thead>
+        <tbody>
+          <tr><td class="step-num">D1</td><td>Mic activates. STT transcribes spoken input. Response addresses intent.</td><td>Mic activates with delay. Transcription has minor error, intent preserved.</td><td>Mic does not activate. STT fails silently. Intent lost.</td><td><span class="badge badge-p0">Yes</span></td></tr>
+          <tr><td class="step-num">D2</td><td>Transcription matches spoken input. Response quality matches text equivalent.</td><td>Word-level error but response still relevant.</td><td>Transcription error changes meaning. Response addresses wrong intent entirely.</td><td><span class="badge badge-p0">Yes</span></td></tr>
+          <tr><td class="step-num">D3</td><td>Visual feedback shown during listening, processing, and speaking. User always knows system state.</td><td>Feedback delayed but present. State unclear for one moment.</td><td>No feedback shown. Silent failure. User cannot tell if mic is active.</td><td><span class="badge badge-p0">Yes</span></td></tr>
+          <tr><td class="step-num">D4</td><td>STT handles target language correctly. TTS output natural in that language.</td><td>STT struggles with accent but recovers. TTS slightly unnatural.</td><td>STT fails on target language entirely. TTS unintelligible. Response in wrong language.</td><td><span class="badge badge-p0">Yes</span></td></tr>
+          <tr><td class="step-num">D5</td><td>Voice UI states match spec. Listening, processing, and speaking visuals render correctly.</td><td>Minor animation or state visual deviation from spec.</td><td>Voice UI states broken or missing. No spec and not signed off.</td><td><span class="badge badge-p0">Yes</span></td></tr>
+          <tr><td class="step-num">D6</td><td>Barge-in works. Silence detection correct. TTS interruptible. End-of-speech detection accurate. No double-trigger.</td><td>Barge-in has slight lag. Silence detection fires slightly early or late.</td><td>Barge-in not working. TTS cannot be interrupted. Silence detection missing. Double-trigger occurring.</td><td><span class="badge badge-p0">Yes</span></td></tr>
+          <tr><td class="step-num">D7</td><td>Optional voice path.</td><td>Voice available on secondary flows or skills.</td><td>Voice as primary input on core flow — all users using voice affected.</td><td><span class="badge badge-amp">Amp</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="owner-note"><strong>D1–D2:</strong> Bharat + Core Exp · <strong>D3:</strong> Core Exp · <strong>D4:</strong> Language SME per language · <strong>D5:</strong> Sunit · <strong>D6:</strong> Karan (Platform) + Core Exp · <strong>D7:</strong> QA</div>
+  </div>
+
+  <div id="uc-lang" class="uc-panel">
+    <div class="table-card">
+      <table>
+        <thead><tr><th style="width:8%;">Dim</th><th style="width:28%;">Score 0 — pass</th><th style="width:28%;">Score 1 — warn</th><th style="width:24%;">Score 2 — fail</th><th style="width:12%;">P0 trigger</th></tr></thead>
+        <tbody>
+          <tr><td class="step-num">D1</td><td>Language switch takes effect within one turn. UCP language preference saved and persists.</td><td>Switch takes two turns to reflect. UCP saved but requires app restart.</td><td>Switch has no effect. UCP not saved. Previous language persists after explicit change.</td><td><span class="badge badge-p0">Yes</span></td></tr>
+          <tr><td class="step-num">D2</td><td>Response fully in target language. No mixed script. Phrasing natural for a native speaker.</td><td>Mostly correct. One phrase in wrong language. Minor transliteration error.</td><td>Wrong language. Critical term wrong due to translation. Meaning changed by language error.</td><td><span class="badge badge-p0">Yes</span></td></tr>
+          <tr><td class="step-num">D3</td><td>Product feels like it understands the user's language preference.</td><td>One unexpected language switch that resolves. User notices but continues.</td><td>Product ignores language preference entirely. User feels unrecognised.</td><td><span class="badge badge-p0">Yes</span></td></tr>
+          <tr><td class="step-num">D4</td><td>Script renders correctly. Font handles all characters. No garbling.</td><td>Minor rendering artifact on one character. Visually inconsistent.</td><td>Script garbled or unreadable. Font missing characters. Wrong script for language.</td><td><span class="badge badge-p0">Yes</span></td></tr>
+          <tr><td class="step-num">D5</td><td>Language selector UI matches spec. All language labels render correctly.</td><td>Minor UI deviation in selector. One label truncated.</td><td>Language selector broken. Labels unreadable. No spec and not signed off.</td><td><span class="badge badge-p0">Yes</span></td></tr>
+          <tr><td class="step-num">D6</td><td>TTS in correct language. Pronunciation natural for target language.</td><td>TTS slightly accented but intelligible.</td><td>TTS in wrong language or unintelligible for this language.</td><td><span class="badge badge-p0">Yes</span></td></tr>
+          <tr><td class="step-num">D7</td><td>Edge case dialect or low user-base language.</td><td>Supported language with partial coverage.</td><td>Primary FnF language — Hindi, Tamil, Bengali etc — all users on this language affected.</td><td><span class="badge badge-amp">Amp</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="owner-note"><strong>D1:</strong> Jitendra (UCP) · <strong>D2 + D4:</strong> Language SME per language · <strong>D3:</strong> Core Exp · <strong>D5:</strong> Sunit · <strong>D6:</strong> Bharat + Language SME · <strong>D7:</strong> QA · One card per FnF language in scope.</div>
+  </div>
+
+  <div id="uc-blank" class="uc-panel">
+    <div class="note" style="margin-bottom:12px;">Copy this template. Fill each cell with observable, specific criteria — not judgments. Sign off with your name and date before handing to QA. No unsigned card enters the test pipeline.</div>
+    <div class="table-card">
+      <table>
+        <thead><tr><th style="width:8%;">Dim</th><th style="width:28%;">Score 0 — pass<br><span style="font-weight:400;font-style:italic;">What working looks like</span></th><th style="width:28%;">Score 1 — warn<br><span style="font-weight:400;font-style:italic;">What degraded looks like</span></th><th style="width:24%;">Score 2 — fail<br><span style="font-weight:400;font-style:italic;">What broken looks like</span></th><th style="width:12%;">P0 trigger</th></tr></thead>
+        <tbody>
+          <tr><td class="step-num">D1</td><td style="color:var(--text-tertiary);font-style:italic;">Define here</td><td style="color:var(--text-tertiary);font-style:italic;">Define here</td><td style="color:var(--text-tertiary);font-style:italic;">Define here</td><td><span class="badge badge-p0">Yes</span></td></tr>
+          <tr><td class="step-num">D2</td><td style="color:var(--text-tertiary);font-style:italic;">Define here</td><td style="color:var(--text-tertiary);font-style:italic;">Define here</td><td style="color:var(--text-tertiary);font-style:italic;">Define here</td><td><span class="badge badge-p0">Yes</span></td></tr>
+          <tr><td class="step-num">D3</td><td style="color:var(--text-tertiary);font-style:italic;">Define here</td><td style="color:var(--text-tertiary);font-style:italic;">Define here</td><td style="color:var(--text-tertiary);font-style:italic;">Define here</td><td><span class="badge badge-p0">Yes</span></td></tr>
+          <tr><td class="step-num">D4</td><td style="color:var(--text-tertiary);font-style:italic;">Define here</td><td style="color:var(--text-tertiary);font-style:italic;">Define here</td><td style="color:var(--text-tertiary);font-style:italic;">Define here</td><td><span class="badge badge-p0">Yes</span></td></tr>
+          <tr><td class="step-num">D5</td><td style="color:var(--text-tertiary);font-style:italic;">Define here</td><td style="color:var(--text-tertiary);font-style:italic;">Define here</td><td style="color:var(--text-tertiary);font-style:italic;">Define here</td><td><span class="badge badge-p0">Yes</span></td></tr>
+          <tr><td class="step-num">D6</td><td style="color:var(--text-tertiary);font-style:italic;">Define here or mark N/A</td><td style="color:var(--text-tertiary);font-style:italic;">Define here or —</td><td style="color:var(--text-tertiary);font-style:italic;">Define here or —</td><td><span class="badge badge-p0">Yes</span></td></tr>
+          <tr><td class="step-num">D7</td><td>Edge case · low reach</td><td>Secondary flow · subset of users</td><td>Core flow · most users affected</td><td><span class="badge badge-amp">Amp</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:12px;font-size:12px;color:var(--text-secondary);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px;display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <div><strong>Use case name:</strong> <span style="color:var(--text-tertiary);">_______________</span></div>
+      <div><strong>Owner:</strong> <span style="color:var(--text-tertiary);">_______________</span></div>
+      <div><strong>Signed off by:</strong> <span style="color:var(--text-tertiary);">_______________</span></div>
+      <div><strong>Date + version:</strong> <span style="color:var(--text-tertiary);">_______________</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── DESIGN EVALUATION ── -->
+<div id="design" class="panel">
+  <div class="section-label">D5 expanded — design evaluation criteria</div>
+  <div class="note" style="margin-bottom:16px;">Design evaluation covers six layers within D5. The most important gate is whether a Figma spec exists and is signed off. Without it, D5 is inconclusive and the use case cannot ship. Visual expression feasibility is a pre-development check — not a QA finding.</div>
+
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:16%;">Design layer</th>
+          <th style="width:20%;">What QA checks</th>
+          <th style="width:20%;">Pass</th>
+          <th style="width:20%;">Warn</th>
+          <th style="width:16%;">Fail</th>
+          <th style="width:8%;">Severity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Figma spec</strong></td>
+          <td>Is there a signed-off Figma file to evaluate against?</td>
+          <td>Figma spec exists, signed off by Matt or Sunit.</td>
+          <td>Spec exists but not signed off. Treat as provisional — flag to leads.</td>
+          <td>No spec. Build made on the fly with no sign-off. D5 = inconclusive. Cannot ship without explicit risk acceptance.</td>
+          <td><span class="badge badge-p0">P0</span></td>
+        </tr>
+        <tr>
+          <td><strong>Spacing and padding</strong></td>
+          <td>Does spacing match JDS tokens on target device? No unintended crowding or overflow?</td>
+          <td>Spacing matches JDS tokens. No overflow. Comfortable on ₹7K device screen.</td>
+          <td>1–2 elements with minor spacing deviation. Doesn't affect readability.</td>
+          <td>Content overflowing container. Text touching edges. Unusable on minimum target device.</td>
+          <td><span class="badge badge-p1">P1</span></td>
+        </tr>
+        <tr>
+          <td><strong>Information architecture</strong></td>
+          <td>Can the user orient, navigate, and understand hierarchy at a glance?</td>
+          <td>Clear hierarchy. Primary action obvious. User knows where they are and what to do next.</td>
+          <td>Hierarchy mostly clear but one section ambiguous or competing with another.</td>
+          <td>User cannot tell what to do next. Primary action buried. Multiple competing focal points.</td>
+          <td><span class="badge badge-p0">P0</span></td>
+        </tr>
+        <tr>
+          <td><strong>Typography and readability</strong></td>
+          <td>Is text readable on target devices in all supported languages?</td>
+          <td>Font size legible on minimum target device. All scripts render. Line height comfortable.</td>
+          <td>Slightly small on one device. One script slightly cramped but readable.</td>
+          <td>Text unreadable on target device. Script not rendering. Font missing characters for a supported language.</td>
+          <td><span class="badge badge-p0">P0</span></td>
+        </tr>
+        <tr>
+          <td><strong>Component fidelity</strong></td>
+          <td>Do built components match the Figma spec in colour, shape, and interaction states?</td>
+          <td>Components match spec. JDS tokens applied correctly. All states — default, pressed, disabled — present.</td>
+          <td>Minor colour or radius deviation. One interaction state missing but flow works.</td>
+          <td>Component visually unrecognisable from spec. JDS tokens not applied. Key state missing.</td>
+          <td><span class="badge badge-p1">P1</span></td>
+        </tr>
+        <tr>
+          <td><strong>Visual expression feasibility</strong></td>
+          <td>Is what was designed in Figma actually achievable in the tech stack on target devices?</td>
+          <td>All visual expressions in spec are achievable and implemented correctly.</td>
+          <td>One visual expression approximated — looks close but not exact. Logged with Matt.</td>
+          <td>Visual expression in Figma is not achievable in current stack. No fallback defined. Ships broken.</td>
+          <td><span class="badge badge-p0">P0</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note"><strong>Visual expression feasibility check must happen before development starts — not at QA.</strong> If a Figma component cannot be built as designed on target devices, that is a design–engineering conversation during sprint planning. Matt owns this check. If it reaches QA as a broken visual, it is already too late and costs a sprint.</div>
+</div>
+
+<!-- ── VOICE EVALUATION ── -->
+<div id="voice" class="panel">
+  <div class="section-label">D6 expanded — full voice interaction evaluation</div>
+  <div class="note" style="margin-bottom:16px;">Voice evaluation must be run per language. STT and TTS quality differs significantly across Hindi, Tamil, Bengali, and other FnF target languages. Passing on one language does not cover others. D6 scores 0 for all non-voice use cases.</div>
+
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:14%;">Voice layer</th>
+          <th style="width:20%;">What QA checks</th>
+          <th style="width:20%;">Pass</th>
+          <th style="width:20%;">Warn</th>
+          <th style="width:18%;">Fail</th>
+          <th style="width:8%;">Severity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Mic activation</strong></td>
+          <td>Does the mic activate on tap? Is activation feedback immediate?</td>
+          <td>Mic activates within 200ms. Visual feedback — waveform or indicator — appears immediately.</td>
+          <td>Mic activates but feedback delayed 500ms+. User unsure if it registered.</td>
+          <td>Mic does not activate. No feedback. Silent failure with no error state.</td>
+          <td><span class="badge badge-p0">P0</span></td>
+        </tr>
+        <tr>
+          <td><strong>STT — speech to text</strong></td>
+          <td>Does transcription accurately capture spoken input in the target language?</td>
+          <td>Transcription matches spoken input. Word error rate within threshold. Intent preserved.</td>
+          <td>Minor word-level error. Intent preserved but one word wrong.</td>
+          <td>Transcription so wrong intent is lost. Fails on target language. Silent failure.</td>
+          <td><span class="badge badge-p0">P0</span></td>
+        </tr>
+        <tr>
+          <td><strong>TTS — text to speech</strong></td>
+          <td>Is synthesised voice output natural, intelligible, and in the right language?</td>
+          <td>TTS natural and intelligible. Language correct. Pronunciation acceptable for target audience.</td>
+          <td>Slightly robotic but intelligible. One word mispronounced but not misleading.</td>
+          <td>TTS unintelligible. Wrong language. Mispronunciation changes meaning.</td>
+          <td><span class="badge badge-p0">P0</span></td>
+        </tr>
+        <tr>
+          <td><strong>Barge-in</strong></td>
+          <td>Can the user interrupt TTS playback by speaking? Does it stop and listen correctly?</td>
+          <td>Barge-in works reliably. TTS stops within 300ms. System switches to listening state.</td>
+          <td>Barge-in works but has 500ms+ lag. TTS takes a moment to stop.</td>
+          <td>Barge-in not working. TTS continues over user speech. User has to wait or tap to stop.</td>
+          <td><span class="badge badge-p0">P0</span></td>
+        </tr>
+        <tr>
+          <td><strong>Listening state</strong></td>
+          <td>Is it clear to the user that the system is actively listening?</td>
+          <td>Listening state clearly indicated — waveform, animation, or label. Duration feels comfortable.</td>
+          <td>Listening indicator present but subtle. User may not notice.</td>
+          <td>No listening indicator. User cannot tell if system is ready. Listening times out with no feedback.</td>
+          <td><span class="badge badge-p0">P0</span></td>
+        </tr>
+        <tr>
+          <td><strong>Silence detection</strong></td>
+          <td>Does the system correctly detect end of speech and stop listening at the right moment?</td>
+          <td>End-of-speech detection accurate. No premature cutoff. No excessive wait after user stops.</td>
+          <td>Fires slightly early — last word occasionally cut. Or waits 1–2s longer than expected.</td>
+          <td>Cuts user off mid-sentence consistently. Or never detects end of speech — user has to tap to stop.</td>
+          <td><span class="badge badge-p1">P1</span></td>
+        </tr>
+        <tr>
+          <td><strong>Processing state</strong></td>
+          <td>Is there visual feedback while the system processes the voice input?</td>
+          <td>Processing indicator shown between end of listening and start of response. No blank gap.</td>
+          <td>Processing indicator shown but disappears before response loads — brief blank gap.</td>
+          <td>No processing indicator. Blank screen between listening and response. User thinks system failed.</td>
+          <td><span class="badge badge-p1">P1</span></td>
+        </tr>
+        <tr>
+          <td><strong>Error recovery</strong></td>
+          <td>When voice fails — mic error, STT failure, network drop — does the user get a clear recovery path?</td>
+          <td>Error state shown clearly. User offered to retry or switch to text. No dead end.</td>
+          <td>Error state shown but recovery path not obvious. User has to figure out next step.</td>
+          <td>Silent failure. No error state. No recovery path. User is stuck with no exit.</td>
+          <td><span class="badge badge-p0">P0</span></td>
+        </tr>
+        <tr>
+          <td><strong>Double-trigger prevention</strong></td>
+          <td>Does the system prevent accidental double-activation of the mic by TTS output?</td>
+          <td>No double-trigger. Mic deactivates correctly after response. TTS output does not trigger mic.</td>
+          <td>Rare double-trigger in specific conditions. Reproducible but infrequent.</td>
+          <td>TTS output triggers mic. Consistent double-trigger. Endless loop possible.</td>
+          <td><span class="badge badge-p0">P0</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ── HOW TO RUN ── -->
+<div id="howto" class="panel">
+  <div class="section-label">How QA runs this for any use case — 8 steps</div>
+
+  <div class="step-card">
+    <div class="step-num-circle">1</div>
+    <div>
+      <div class="step-title">Identify the use case type</div>
+      <div class="step-desc">Determine which of the five use case types this test covers — skill response, onboarding, homepage, voice, or language. If it spans more than one, split into separate test runs.</div>
+      <span class="step-output">Output: use case type confirmed</span>
+    </div>
+  </div>
+  <div class="step-card">
+    <div class="step-num-circle">2</div>
+    <div>
+      <div class="step-title">Pull the signed criteria card</div>
+      <div class="step-desc">Get the team's criteria card for that use case type. If no signed card exists — stop. Raise it as a process blocker. Do not start testing until the card is signed off by the owner.</div>
+      <span class="step-output">Output: criteria card in hand</span>
+    </div>
+  </div>
+  <div class="step-card">
+    <div class="step-num-circle">3</div>
+    <div>
+      <div class="step-title">Run the test input</div>
+      <div class="step-desc">Execute the test against a known input — ideally from the golden dataset. Record exact output. For voice: capture the transcription. For UI: record tap sequence and screenshot.</div>
+      <span class="step-output">Output: raw output captured</span>
+    </div>
+  </div>
+  <div class="step-card">
+    <div class="step-num-circle">4</div>
+    <div>
+      <div class="step-title">Score each dimension D1–D7</div>
+      <div class="step-desc">Score each dimension 0, 1, or 2 using the criteria card. Write the reason in one sentence per dimension — not a judgment, an observation. "D2 scored 2 because the response stated the wrong match score against the golden answer."</div>
+      <span class="step-output">Output: 7 scores + 7 reasons</span>
+    </div>
+  </div>
+  <div class="step-card">
+    <div class="step-num-circle">5</div>
+    <div>
+      <div class="step-title">Check P0 override immediately</div>
+      <div class="step-desc">If any of D1, D2, D3, D4, D5, or D6 scores 2 — it is P0 regardless of total. Do not wait to add up the score. Flag immediately.</div>
+      <span class="step-output">Output: P0 confirmed or ruled out</span>
+    </div>
+  </div>
+  <div class="step-card">
+    <div class="step-num-circle">6</div>
+    <div>
+      <div class="step-title">Add up total and assign priority</div>
+      <div class="step-desc">Sum D1–D7. Apply scoring table: 9–14 = P0 · 6–8 = P1 · 3–5 = P2 · 0–2 = P3. For non-voice use cases D6 = 0 automatically.</div>
+      <span class="step-output">Output: priority assigned</span>
+    </div>
+  </div>
+  <div class="step-card">
+    <div class="step-num-circle">7</div>
+    <div>
+      <div class="step-title">Log in ADO</div>
+      <div class="step-desc">If P0 or P1: raise a bug with score breakdown, reason per dimension, use case type, and owner. If P2/P3: add to backlog with score. A bug without a score breakdown is returned to the logger.</div>
+      <span class="step-output">Output: ADO ticket created</span>
+    </div>
+  </div>
+  <div class="step-card">
+    <div class="step-num-circle">8</div>
+    <div>
+      <div class="step-title">Set use case verdict</div>
+      <div class="step-desc">If any P0 open → use case does not work. If only P1/P2 open → works with known issues. Zero issues → works. Inconclusive if test could not complete.</div>
+      <span class="step-output">Output: use case verdict confirmed</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── OWNERSHIP ── -->
+<div id="ownership" class="panel">
+  <div class="section-label">What sits where — central vs team-owned</div>
+  <div class="two-col" style="margin-bottom:20px;">
+    <div class="layer-card">
+      <span class="badge badge-central">Central — Core Exp</span>
+      <div class="layer-card-title">Rubric structure</div>
+      <div class="layer-card-desc">The 7 dimensions, scoring logic, pass/fail thresholds, and verdict rules. Owned by Core Exp. Changes require POD lead sign-off. Stable across releases.</div>
+    </div>
+    <div class="layer-card">
+      <span class="badge badge-team">Team-owned</span>
+      <div class="layer-card-title">Criteria cards</div>
+      <div class="layer-card-desc">What pass, warn, and fail looks like per dimension for each use case type. Updated when the use case changes — not when the rubric changes.</div>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:22%;">Component</th>
+          <th style="width:12%;">Layer</th>
+          <th style="width:18%;">Owner</th>
+          <th style="width:28%;">Responsibility</th>
+          <th style="width:20%;">When it updates</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Universal rubric — 7 dimensions + scoring</td><td><span class="badge badge-central">Central</span></td><td>Core Exp</td><td>Define, version, and communicate changes to all teams.</td><td>Stable — changes need POD lead sign-off</td></tr>
+        <tr><td>Skill response criteria card</td><td><span class="badge badge-team">Team</span></td><td>Bharat</td><td>D1–D2 with golden dataset · Lang SME on D4 · Core Exp on D3</td><td>Per model or prompt change</td></tr>
+        <tr><td>Onboarding criteria card</td><td><span class="badge badge-team">Team</span></td><td>Jitendra</td><td>D1–D2 · Sunit on D3 visual · Lang SME on D4</td><td>Per onboarding flow change</td></tr>
+        <tr><td>Homepage criteria card</td><td><span class="badge badge-team">Team</span></td><td>Core Exp</td><td>D1–D3 · Jitendra confirms UCP mapping · Sunit confirms D5</td><td>Per personalisation logic change</td></tr>
+        <tr><td>Voice criteria card</td><td><span class="badge badge-team">Team</span></td><td>Core Exp + Karan</td><td>Core Exp on D1–D3 · Bharat + Lang SME on D4 · Karan on D6</td><td>Per ASR or input model change</td></tr>
+        <tr><td>Language criteria card</td><td><span class="badge badge-team">Team</span></td><td>Bharat + Lang SME</td><td>One card per language in scope · D2 and D4 per language</td><td>Per language model update</td></tr>
+        <tr><td>QA execution and scoring</td><td><span class="badge badge-central">Central</span></td><td>QA lead</td><td>Run the rubric · Score each dimension · Log in ADO · Surface verdict</td><td>Every test run</td></tr>
+        <tr><td>Release verdict and escalation</td><td><span class="badge badge-central">Central</span></td><td>Core Exp leads</td><td>Consolidate verdicts across use cases · Escalate P0s · Sign off on release readiness</td><td>Every milestone gate</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">A criteria card without an owner name and sign-off date is not valid for use in QA. QA should reject any unsigned card — it cannot enter the test pipeline.</div>
+</div>
+
+<!-- ── SCORING + VERDICT ── -->
+<div id="verdict" class="panel">
+  <div class="section-label">Scoring table — updated for 7 dimensions</div>
+  <div class="table-card" style="margin-bottom:16px;">
+    <table>
+      <thead><tr><th style="width:14%;">Total score</th><th style="width:12%;">Priority</th><th style="width:40%;">Override rule</th><th style="width:34%;">Release decision</th></tr></thead>
+      <tbody>
+        <tr><td style="font-size:16px;font-weight:600;">9 – 14</td><td><span class="badge badge-p0">P0</span></td><td>Also P0 if any of D1, D2, D3, D4, D5, or D6 scores 2 — regardless of total score.</td><td>Use case does not work. Hold release. Explicit risk acceptance from leads required.</td></tr>
+        <tr><td style="font-size:16px;font-weight:600;">6 – 8</td><td><span class="badge badge-p1">P1</span></td><td>—</td><td>Use case works with known issues. Fix before release if feasible. Document if not.</td></tr>
+        <tr><td style="font-size:16px;font-weight:600;">3 – 5</td><td><span class="badge badge-p2">P2</span></td><td>—</td><td>Use case works. Ship and track in post-release sprint.</td></tr>
+        <tr><td style="font-size:16px;font-weight:600;">0 – 2</td><td><span class="badge badge-p3">P3</span></td><td>—</td><td>Use case works. Log and revisit as capacity allows.</td></tr>
+        <tr><td colspan="2"><span class="badge badge-inc">Inconclusive</span></td><td>D5 has no Figma spec and no sign-off. Or test could not complete due to missing env, UCP state, or unsigned criteria card.</td><td>Cannot ship. Raise as a process blocker. Re-run after resolution.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-label">Use case verdict rollup</div>
+  <div class="table-card" style="margin-bottom:16px;">
+    <table>
+      <thead><tr><th style="width:18%;">Verdict</th><th style="width:38%;">Condition</th><th style="width:44%;">What happens next</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-pass">Works</span></td><td>All dimensions pass. Zero fail conditions hit across all test inputs for this use case type.</td><td>Use case qualified. Logged in release tracker. No ADO ticket raised.</td></tr>
+        <tr><td><span class="badge badge-p1">Works with issues</span></td><td>All pass conditions met. One or more P1/P2 open. Zero P0s.</td><td>Qualified with caveats. Known issues logged in ADO with post-release sprint target.</td></tr>
+        <tr><td><span class="badge badge-p0">Does not work</span></td><td>Any single P0 hit — regardless of how many other dimensions pass.</td><td>Blocked. P0 raised in ADO. Release held for this use case. Leads escalation required.</td></tr>
+        <tr><td><span class="badge badge-inc">Inconclusive</span></td><td>Test could not complete — missing spec, env issue, missing UCP state, or no signed criteria card.</td><td>Test blocked. Raise as process blocker. Re-run scheduled after resolution.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-label">Release readiness rollup — all use cases</div>
+  <div class="table-card">
+    <table>
+      <thead><tr><th style="width:22%;">State</th><th style="width:40%;">Condition</th><th style="width:38%;">Release decision</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-pass">Ready to release</span></td><td>All use case types = Works or Works with known issues. Zero P0s open.</td><td>Ship. Known issues documented and owned with sprint targets.</td></tr>
+        <tr><td><span class="badge badge-p1">Conditional release</span></td><td>One use case = Does not work. Leads have explicitly accepted the risk in writing.</td><td>Ship with documented exception. P0 on fix timeline agreed before shipping.</td></tr>
+        <tr><td><span class="badge badge-p0">Not ready</span></td><td>Any use case = Does not work and no risk acceptance from leads.</td><td>Hold release. No exceptions.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">Max score for voice use cases: 14 (all 7 dimensions active). Max score for non-voice use cases: 12 (D6 = 0 excluded). D7 cannot trigger P0 alone regardless of score or reach.</div>
+</div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">
+    <span>Experience Quality Rubric</span>
+    <div class="footer-dot"></div>
+    <span>Author: Sridhar</span>
+    <div class="footer-dot"></div>
+    <span>JBIQ · Core Experience</span>
+  </div>
+  <div>FnF Release · v3.0</div>
+</footer>
+
+<script>
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function showUC(id) {
+  document.querySelectorAll('.uc-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.uc-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('uc-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>

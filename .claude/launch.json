@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "JBIQ Prototypes",
-      "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "3000", "--directory", "/Users/sridhar.iruvanti/Downloads/DEMO"],
+      "runtimeExecutable": "ruby",
+      "runtimeArgs": ["-run", "-e", "httpd", "/tmp", "-p", "3000"],
       "port": 3000
     }
   ]

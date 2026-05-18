@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JBIQ — Core Experience IA</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+@font-face { font-family:'JioType'; font-weight:400; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeVarW05-Regular.woff2') format('woff2'); }
+@font-face { font-family:'JioType'; font-weight:500; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Medium.woff2') format('woff2'); }
+@font-face { font-family:'JioType'; font-weight:700; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Bold.woff2') format('woff2'); }
+@font-face { font-family:'JioType'; font-weight:900; src:url('https://raw.githubusercontent.com/sunit1986/JioBharatIQ_Server/main/assets/fonts/woff2/JioTypeW05-Black.woff2') format('woff2'); }
+
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+
+:root {
+  --primary:   #3535f3;
+  --secondary: #f7ab20;
+  --sparkle:   #1eccb0;
+  --indigo:    #3900ad;
+  --coral:     #ff6644;
+  --green:     #00a758;
+  --teal:      #4bbeab;
+  --surface:   #ffffff;
+  --surface-min: #f5f5f5;
+  --grey-40:   #e0e0e0;
+  --text-high: #141414;
+  --text-low:  rgba(25,27,30,0.6);
+  --text-dis:  rgba(25,27,30,0.35);
+}
+
+html, body { height:100%; overflow:hidden; }
+body { background:var(--surface-min); font-family:'JioType',sans-serif; -webkit-font-smoothing:antialiased; }
+
+/* NAV */
+.nav {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  height:48px; background:var(--surface);
+  border-bottom:1px solid var(--grey-40);
+  display:flex; align-items:center; padding:0 24px; gap:12px;
+}
+.nav-brand { font-size:13px; font-weight:900; color:var(--primary); letter-spacing:.06em; }
+.nav-sep { color:var(--text-dis); }
+.nav-title { font-size:13px; font-weight:500; color:var(--text-low); }
+.nav-hint { margin-left:auto; font-size:11px; font-weight:500; color:var(--text-dis); }
+
+/* TREE CANVAS */
+#canvas {
+  position:fixed; top:48px; left:0; right:0; bottom:0;
+  overflow:hidden; cursor:grab;
+}
+#canvas:active { cursor:grabbing; }
+#canvas svg { width:100%; height:100%; }
+
+/* DETAIL PANEL */
+#panel {
+  position:fixed; top:48px; right:0; bottom:0; width:320px;
+  background:var(--surface); border-left:1px solid var(--grey-40);
+  transform:translateX(100%); transition:transform .28s cubic-bezier(.4,0,.2,1);
+  overflow-y:auto; z-index:50;
+  display:flex; flex-direction:column;
+}
+#panel.open { transform:translateX(0); }
+.panel-head {
+  padding:20px 20px 16px;
+  border-bottom:1px solid var(--grey-40);
+  display:flex; align-items:flex-start; gap:12px;
+}
+.panel-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; margin-top:5px; }
+.panel-name { font-size:17px; font-weight:900; letter-spacing:-.02em; line-height:1.2; }
+.panel-type { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--text-dis); margin-top:3px; }
+.panel-close {
+  margin-left:auto; width:28px; height:28px; border-radius:50%;
+  border:none; background:var(--surface-min); cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  font-size:14px; color:var(--text-low); flex-shrink:0;
+}
+.panel-close:hover { background:var(--grey-40); }
+.panel-body { padding:16px 20px; flex:1; }
+.panel-section { margin-bottom:18px; }
+.panel-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--text-dis); margin-bottom:6px; }
+.panel-val { font-size:13px; font-weight:500; color:var(--text-high); line-height:1.65; }
+.panel-pill { display:inline-block; margin:2px 2px 0 0; padding:2px 8px; border-radius:4px; font-size:10px; font-weight:700; background:var(--surface-min); color:var(--text-low); border:1px solid var(--grey-40); }
+.panel-pill.ga { background:#e2f5ed; color:#00a758; border-color:#00a758; }
+.panel-pill.post { background:#f5f5f5; color:var(--text-dis); }
+.panel-sig { background:#f2f2fe; border:1px solid #e8e8fc; border-radius:8px; padding:10px 12px; font-size:12px; font-weight:500; color:var(--primary); line-height:1.6; margin-top:4px; }
+
+/* LEGEND */
+.legend {
+  position:fixed; bottom:20px; left:24px; z-index:60;
+  display:flex; gap:14px; align-items:center;
+  background:var(--surface); border:1px solid var(--grey-40);
+  border-radius:999px; padding:7px 16px;
+}
+.legend-item { display:flex; align-items:center; gap:6px; font-size:10px; font-weight:700; color:var(--text-low); }
+.legend-dot { width:9px; height:9px; border-radius:50%; }
+
+/* ZOOM CONTROLS */
+.zoom-ctrl {
+  position:fixed; bottom:20px; right:340px; z-index:60;
+  display:flex; gap:4px;
+  background:var(--surface); border:1px solid var(--grey-40);
+  border-radius:8px; padding:4px;
+}
+.zoom-ctrl.panel-closed { right:24px; }
+.zoom-btn {
+  width:32px; height:32px; border-radius:6px;
+  border:none; background:transparent; cursor:pointer;
+  font-size:16px; color:var(--text-low);
+  display:flex; align-items:center; justify-content:center;
+}
+.zoom-btn:hover { background:var(--surface-min); }
+
+/* SVG node styles */
+.node rect {
+  stroke-width: 1.5px;
+  rx: 8;
+  ry: 8;
+  transition: filter .15s;
+}
+.node:hover rect { filter: brightness(.95); }
+.node.selected rect { stroke-width: 2.5px !important; }
+.node text { pointer-events: none; }
+.link { fill: none; stroke: #d0d0d8; stroke-width: 1.5px; }
+.link.faded { stroke: #e8e8ea; }
+.collapse-badge { cursor:pointer; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <span class="nav-brand">JBIQ</span>
+  <span class="nav-sep">·</span>
+  <span class="nav-title">Core Experience IA</span>
+  <span class="nav-hint">Click to expand · Click node for details · Scroll to zoom · Drag to pan</span>
+</nav>
+
+<div id="canvas"><svg id="tree"></svg></div>
+
+<!-- Detail Panel -->
+<div id="panel">
+  <div class="panel-head">
+    <div class="panel-dot" id="panel-dot"></div>
+    <div>
+      <div class="panel-name" id="panel-name">—</div>
+      <div class="panel-type" id="panel-type">—</div>
+    </div>
+    <button class="panel-close" onclick="closePanel()">✕</button>
+  </div>
+  <div class="panel-body" id="panel-body"></div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#3900ad"></div>Root</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#3535f3"></div>Trunk</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff6644"></div>Surface</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#1eccb0"></div>Screen</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#f7ab20"></div>Domain</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#e0e0e0;border:1px solid #ccc"></div>Channel</div>
+</div>
+
+<div class="zoom-ctrl" id="zoom-ctrl">
+  <button class="zoom-btn" id="btn-in">+</button>
+  <button class="zoom-btn" id="btn-out">−</button>
+  <button class="zoom-btn" id="btn-reset" style="font-size:11px;font-weight:700;width:auto;padding:0 8px;">Reset</button>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────
+const nodeDetails = {
+  "Bharat": {
+    type:"Root", color:"#3900ad",
+    desc:"The foundation everything grows from. Voice-first, 12 languages, tier 2–3 India, phone as the only screen. Every decision in the product traces back to this constraint.",
+    attrs:[["Segments","B · C · D"],["Input model","Voice-first"],["Languages","12 scheduled + dialects"],["Device","Android, 2GB RAM"],["Screen","Phone only"]]
+  },
+  "AI Engine": {
+    type:"Trunk", color:"#3535f3",
+    desc:"One engine — not five products. Shared conversation core with domain knowledge configurations and per-user register adaptation.",
+    attrs:[["Architecture","One engine, not 7 products"],["Layers","Domain knowledge · Register adaptation · Primitive rendering"],["Primitives","Voice · Text · Rich Card · Action · Clarification · Next Step · Navigation"]]
+  },
+  "App": {
+    type:"Surface · GA", color:"#3535f3",
+    desc:"Android native app. JBIQ owns the full experience. All 12 domains accessible. Primary surface at GA.",
+    attrs:[["Input","Touch · Voice · Image · Text"],["Output","Screen + TTS + Rich Cards + Actions"],["Ownership","JBIQ owns full experience"],["Domains","All 12"],["Status","GA"]]
+  },
+  "Messaging": {
+    type:"Surface · Post-GA", color:"#00a758",
+    desc:"WhatsApp and RCS. JBIQ operates as a guest — constrained by the messaging platform's rendering rules. Subset of domains and interactions available.",
+    attrs:[["Input","Text · Voice note · Image"],["Output","Text · Cards · Quick replies"],["Ownership","Guest — WA/RCS rules apply"],["Status","Post-GA"]]
+  },
+  "Speakers": {
+    type:"Surface · Post-GA", color:"#f7ab20",
+    desc:"JioPhone feature phones and smart speakers. Voice-only surface — no screen. Every response must be meaningful as audio alone.",
+    attrs:[["Input","Voice only"],["Output","Audio only — no screen"],["Rule","All responses must be voice-complete"],["Status","Post-GA"]]
+  },
+  "TV": {
+    type:"Surface · Post-GA", color:"#ff6644",
+    desc:"JioTV and smart TV. 10-foot UI — no touch, d-pad or voice navigation. Entertainment-first with ambient assistant overlay.",
+    attrs:[["Input","Voice · Remote (d-pad)"],["Output","10-foot UI overlay · TTS"],["Primary domain","Entertainment"],["Status","Post-GA"]]
+  },
+  "Wearables": {
+    type:"Surface · Future", color:"#3900ad",
+    desc:"JioGlass and smartwatch. Ambient, always-on form factor. Gaze, gesture, and voice input. Glanceable output — no traditional screen interaction.",
+    attrs:[["Input","Voice · Gaze · Gesture"],["Output","Ambient overlay · Glanceable card · TTS"],["Status","Future"]]
+  },
+  "Onboarding": {
+    type:"First-Run Experience", color:"#1eccb0",
+    desc:"Not a screen users return to. A first-time flow that runs once on top of the App surface to seed the UCP. Option B (Personalised, 8 steps) is the preferred path.",
+    attrs:[["Type","Experience — not a surface"],["Runs","Once only"],["Output","UCP seeded: language, location, interests, birth data"],["Preferred path","Option B — Personalised (8 steps)"]]
+  },
+  "Home": {
+    type:"Surface of Intersection", color:"#1eccb0",
+    desc:"The adaptive hub. Three persistent layers always visible. Adaptive feed changes across 6 lifecycle states.",
+    attrs:[["Persistent","Header · Avatar strip · Chat bar · Bottom nav"],["Adaptive","Feed changes by state: D0 · D7 · D30 · Gap · Fest · Pow"],["Access","12 domains via avatar strip or feed"],["Updates bar","Hooks surfaced: alerts, digest, reminders"]]
+  },
+  "Domain Page": {
+    type:"Surface of Intersection", color:"#1eccb0",
+    desc:"The deep domain experience surface. One template shared across all 12 domains — adapted per domain persona.",
+    attrs:[["Header","Domain persona avatar + name + status"],["Content area","Domain-specific tiles, cards, signature experience slot"],["Conversation bar","Always present — domain-contextualised input"],["Next steps","Post-task suggestions, cross-domain hooks"]]
+  },
+  "Conversation Thread": {
+    type:"Surface of Intersection", color:"#1eccb0",
+    desc:"The AI interaction surface. Voice and text as one unified thread. 6 voice states define the full arc of a conversation.",
+    attrs:[["Voice states","Idle · Listening · Thinking · Speaking · User-speaking · Complete"],["Input","Text · Voice · Image"],["Output","7 primitives — voice + screen in parallel"],["Rule","Voice always standalone-complete"]]
+  },
+  "Chat History": {
+    type:"Surface of Intersection", color:"#1eccb0",
+    desc:"Past conversations grouped by domain and date. Re-enter any session with full context restored.",
+    attrs:[["List","Past conversations by domain + date"],["Continue","Re-enter session with full context"],["Search","By keyword or domain"],["Memory signals","What JBIQ has learnt — shown here"]]
+  },
+  "Search / Discovery": {
+    type:"Surface of Intersection", color:"#1eccb0",
+    desc:"Cross-domain search and content discovery. Results grouped by domain — entry point into the relevant Domain Page.",
+    attrs:[["Input","Text or voice search across 12 domains"],["Results","Grouped by domain with Domain Page entry"],["Suggestions","Based on UCP + time of day + trending"]]
+  },
+  "Profile": {
+    type:"Surface of Intersection", color:"#1eccb0",
+    desc:"User context view — what JBIQ knows about the user. Domain-specific memory stores visible here.",
+    attrs:[["UCP view","Language, location, interests, N=1 state"],["Domain memory","Kundali · Health history · Job prefs · Purchase history"],["Notification settings","Which hooks are on/off"]]
+  },
+  "App Settings": {
+    type:"Surface of Intersection", color:"#1eccb0",
+    desc:"Product configuration — language, voice, data and privacy controls.",
+    attrs:[["Language","App language + AI response language"],["Voice","TTS speed · Voice on/off"],["Data + privacy","Memory controls · Data deletion"]]
+  },
+  "Notifications Centre": {
+    type:"Surface of Intersection", color:"#1eccb0",
+    desc:"All fired hooks in one place. Tap any to re-enter the relevant domain with that hook's context loaded.",
+    attrs:[["Log","All alerts, digests, reminders"],["Re-enter","Tap hook → Domain Page with context"],["Manage","Turn off specific hook types"]]
+  },
+  "Push Notification": {
+    type:"Channel", color:"#999",
+    desc:"System-level delivery. JBIQ uses it to fire hooks — match alerts, digest, festival reminders, job matches. Not an experience — a trigger.",
+    attrs:[["Renders","Title + 1–2 lines + tap CTA"],["Used for","Match alerts · Digest · Festival · Job match · Health check-in"],["Cannot","Hold conversation · Accept input · Render cards"],["On tap","Carries context payload into App surface"]]
+  },
+  "WhatsApp": {
+    type:"Channel", color:"#999",
+    desc:"Messaging platform channel. JBIQ is a guest — constrained by WA's rendering. Used for lightweight queries, digest delivery, and re-engagement.",
+    attrs:[["Renders","Text · List menus · Quick replies · Deep links"],["Used for","Lightweight queries · Digest · Viral loop sharing"],["Cannot","Rich cards · Voice states · UCP memory · Transactions"],["On link tap","Conversation context carried into App surface"]]
+  },
+  "News": {
+    type:"Domain · GA", color:"#3535f3",
+    desc:"Personalised news in the user's language, location, and interest context.",
+    attrs:[["Persona","News Buddy"],["Everyday","Headlines · Topic search · Regional news"],["Signature","Personalised briefing — Jio location + UCP interest graph"],["Anchors","Raju · Ramesh · All 5"]]
+  },
+  "Entertainment": {
+    type:"Domain · GA", color:"#ff6644",
+    desc:"Cricket, cinema, music, web series. Entry from JioCinema and JioSaavn with viewing/listening context pre-loaded.",
+    attrs:[["Persona","Entertainment Buddy"],["Everyday","Live scores · Movie recs · Song requests · Fantasy"],["Signature","Watch on JioCinema directly from conversation"],["Source","JioCinema API + JioSaavn API + viewing history"],["Anchors","Arjun · Sunita · Raju"]]
+  },
+  "Astrology": {
+    type:"Domain · GA", color:"#f7ab20",
+    desc:"Daily rashifal, kundali, muhurat. Personalised to actual birth data — not generic sun sign.",
+    attrs:[["Persona","Astro Buddy"],["Everyday","Daily rashifal · Muhurat · Compatibility check"],["Signature","Personalised kundali tied to actual birth data"],["Source","User birth data stored in profile"],["Anchors","Sunita · Ramesh · Raju"]]
+  },
+  "Devotion": {
+    type:"Domain · GA", color:"#3900ad",
+    desc:"Daily panchang, mantras, festival calendar, pilgrimage. Content in regional mother tongues — not just Hindi translation.",
+    attrs:[["Persona","Devotion Buddy"],["Everyday","Panchang · Mantras · Festival info · Temple timings"],["Signature","Religious content in Bhojpuri / Maithili / regional mother tongue"],["Source","Regional language content library + pilgrimage APIs"],["Anchors","Sunita · Raju · Ramesh"]]
+  },
+  "Jobs & Skilling": {
+    type:"Domain · GA", color:"#00a758",
+    desc:"Location-aware job discovery using Jio network signals. NCS portal + Skill India scheme matching.",
+    attrs:[["Persona","Jobs Buddy"],["Everyday","Jobs near me · Resume tips · Interview prep · Scheme check"],["Signature","NCS + Skill India matching via Jio location signals"],["Source","NCS portal + Jio network location"],["Anchors","Priya · Raju · Arjun"]]
+  },
+  "Commerce": {
+    type:"Domain · GA", color:"#1eccb0",
+    desc:"Add to JioMart cart, place order, track delivery — entirely from conversation. Personalised on purchase history.",
+    attrs:[["Persona","Commerce Buddy"],["Everyday","Find product · Compare prices · Track order"],["Signature","JioMart — add to cart, order, track from conversation"],["Source","JioMart catalogue + order API + purchase history"],["Anchors","Sunita · Ramesh · Priya"]]
+  },
+  "Health & Wellness": {
+    type:"Domain · GA", color:"#4bbeab",
+    desc:"Symptom guidance, medicine info, longitudinal health memory across sessions. Doctor consultation routing.",
+    attrs:[["Persona","Health Buddy"],["Everyday","Symptom check · Medicine info · Diet tips"],["Signature","Longitudinal health memory — conditions, meds, history across sessions"],["Source","Health memory (UCP) + JioHealth + Practo"],["Anchors","Sunita · Raju · Priya"]]
+  },
+  "Finance": {
+    type:"Domain · Post-GA", color:"#141414",
+    desc:"Tax, savings, markets, loans. Indian-first — lakh/crore format, ITR filing, NSE/BSE live data.",
+    attrs:[["Persona","CA Buddy"],["Everyday","ITR guidance · Savings / loan advice · Market data"],["Signature","ITR filing via API + Form 16 parsing + scheme eligibility"],["Status","Post-GA"]]
+  },
+  "Government Services": {
+    type:"Domain · Post-GA", color:"#f7ab20",
+    desc:"Scheme eligibility, ration card, Voter ID, forms — in plain language. No middleman.",
+    attrs:[["Persona","Sarkari Buddy"],["Everyday","Scheme eligibility · Form guidance · Ration / Voter ID"],["Signature","Scheme eligibility engine + regional office locator"],["Status","Post-GA"]]
+  },
+  "Local Services": {
+    type:"Domain · Post-GA", color:"#00a758",
+    desc:"Nearby services — plumber, transport, electrician — in regional language. Location-aware via Jio Local network.",
+    attrs:[["Persona","Local Buddy"],["Everyday","Local service booking · Trusted provider recall · Market prices"],["Signature","Jio Local network — location-aware service routing"],["Status","Post-GA"]]
+  },
+  "Daily Assistant": {
+    type:"Domain · Post-GA", color:"#3535f3",
+    desc:"Reminders, calendar, weather (IMD), daily life operations. Indian calendar with festival dates baked in.",
+    attrs:[["Persona","Saathi"],["Everyday","Reminders · Weather · Translate · Family events"],["Signature","Indian calendar — festival dates, regional events"],["Status","Post-GA"]]
+  },
+  "Life Companion": {
+    type:"Domain · Post-GA", color:"#3900ad",
+    desc:"Emotional support, life decisions, motivation. Deep personal memory across sessions. Non-judgmental, izzat-preserving.",
+    attrs:[["Persona","Dost"],["Everyday","Decision support · Emotional support · Family situation"],["Signature","Deep personal memory — life, family, aspirations across sessions"],["Status","Post-GA"]]
+  }
+};
+
+// ── TREE STRUCTURE ────────────────────────────────────────────────────
+const treeData = {
+  name:"Bharat", type:"root",
+  children:[{
+    name:"AI Engine", type:"trunk",
+    children:[
+      {
+        name:"App", type:"surface", status:"ga",
+        children:[
+          {name:"Onboarding", type:"experience"},
+          {name:"Home", type:"soi"},
+          {
+            name:"Domain Page", type:"soi",
+            children:[
+              {name:"News",              type:"domain", status:"ga",      color:"#3535f3"},
+              {name:"Entertainment",     type:"domain", status:"ga",      color:"#ff6644"},
+              {name:"Astrology",         type:"domain", status:"ga",      color:"#f7ab20"},
+              {name:"Devotion",          type:"domain", status:"ga",      color:"#3900ad"},
+              {name:"Jobs & Skilling",   type:"domain", status:"ga",      color:"#00a758"},
+              {name:"Commerce",          type:"domain", status:"ga",      color:"#1eccb0"},
+              {name:"Health & Wellness", type:"domain", status:"ga",      color:"#4bbeab"},
+              {name:"Finance",           type:"domain", status:"post-ga", color:"#888"},
+              {name:"Government Services",type:"domain",status:"post-ga", color:"#888"},
+              {name:"Local Services",    type:"domain", status:"post-ga", color:"#888"},
+              {name:"Daily Assistant",   type:"domain", status:"post-ga", color:"#888"},
+              {name:"Life Companion",    type:"domain", status:"post-ga", color:"#888"},
+            ]
+          },
+          {name:"Conversation Thread", type:"soi"},
+          {name:"Chat History",        type:"soi"},
+          {name:"Search / Discovery",  type:"soi"},
+          {name:"Profile",             type:"soi"},
+          {name:"App Settings",        type:"soi"},
+          {name:"Notifications Centre",type:"soi"},
+        ]
+      },
+      {name:"Messaging", type:"surface", status:"post-ga"},
+      {name:"Speakers",  type:"surface", status:"post-ga"},
+      {name:"TV",        type:"surface", status:"post-ga"},
+      {name:"Wearables", type:"surface", status:"future"},
+    ]
+  }]
+};
+
+// Channels — separate from tree
+const channels = [
+  {name:"Push Notification", type:"channel"},
+  {name:"WhatsApp",          type:"channel"}
+];
+
+// ── COLORS ────────────────────────────────────────────────────────────
+function nodeColor(d){
+  const t = d.data.type;
+  if(t==="root")       return "#3900ad";
+  if(t==="trunk")      return "#3535f3";
+  if(t==="surface")    return d.data.status==="ga" ? "#3535f3" : d.data.status==="future" ? "#3900ad" : "#999";
+  if(t==="experience") return "#1eccb0";
+  if(t==="soi")        return "#1eccb0";
+  if(t==="domain")     return d.data.color || "#888";
+  if(t==="channel")    return "#aaa";
+  return "#888";
+}
+
+function textColor(d){
+  const c = nodeColor(d);
+  const dark = ["#3900ad","#3535f3","#ff6644","#00a758","#1eccb0","#4bbeab"];
+  return (dark.includes(c) || c.startsWith("#3") || c.startsWith("#0") || c.startsWith("#1")) ? "#fff" : "#141414";
+}
+
+function strokeColor(d){
+  if(d.data.type==="soi" || d.data.type==="experience") return "#00c4a0";
+  return nodeColor(d);
+}
+
+// ── D3 SETUP ──────────────────────────────────────────────────────────
+const svg = d3.select("#tree");
+const g   = svg.append("g");
+
+const zoom = d3.zoom()
+  .scaleExtent([0.15, 2.5])
+  .on("zoom", e => g.attr("transform", e.transform));
+
+svg.call(zoom);
+
+// Node dimensions
+const NW = 160, NH = 36, NR = 8;
+const DX = 52, DY = 200;
+
+// Build hierarchy
+const root = d3.hierarchy(treeData);
+root.x0 = 0; root.y0 = 0;
+
+// Collapse all beyond depth 1
+function collapse(d){
+  if(d.children){
+    d._children = d.children;
+    d._children.forEach(collapse);
+    d.children = null;
+  }
+}
+root.children.forEach(c => {
+  if(c.children) c.children.forEach(collapse);
+});
+
+// Tree layout
+const tree = d3.tree().nodeSize([DX, DY]);
+
+let selectedNode = null;
+
+// ── UPDATE ────────────────────────────────────────────────────────────
+function update(source){
+  const duration = 400;
+  const nodes = root.descendants();
+  const links = root.links();
+
+  tree(root);
+
+  // Normalize: shift so root is centered
+  const minX = d3.min(nodes, d => d.x);
+  const maxX = d3.max(nodes, d => d.x);
+
+  // ── LINKS ──
+  const link = g.selectAll(".link").data(links, d => d.target.id || (d.target.id = ++linkId));
+
+  const linkEnter = link.enter().insert("path", ".node")
+    .attr("class","link")
+    .attr("d", d => diagonal({x:source.x0||0, y:source.y0||0}, {x:source.x0||0, y:source.y0||0}));
+
+  linkEnter.merge(link).transition().duration(duration)
+    .attr("d", d => diagonal(d.source, d.target))
+    .attr("class", d => "link" + (d.target.data.status==="post-ga" || d.target.data.status==="future" ? " faded" : ""));
+
+  link.exit().transition().duration(duration)
+    .attr("d", d => diagonal({x:source.x, y:source.y}, {x:source.x, y:source.y}))
+    .remove();
+
+  // ── NODES ──
+  const node = g.selectAll(".node").data(nodes, d => d.id || (d.id = ++nodeId));
+
+  const nodeEnter = node.enter().append("g")
+    .attr("class","node")
+    .attr("transform", d => `translate(${source.y0||0},${source.x0||0})`)
+    .style("opacity",0)
+    .style("cursor","pointer")
+    .on("click", (e, d) => { e.stopPropagation(); toggleNode(d); });
+
+  // Background rect
+  nodeEnter.append("rect")
+    .attr("x", -NW/2).attr("y", -NH/2)
+    .attr("width", NW).attr("height", NH)
+    .attr("rx", NR).attr("ry", NR)
+    .attr("fill", d => {
+      const c = nodeColor(d);
+      if(d.data.type==="soi" || d.data.type==="experience") return "#f0fdfb";
+      if(d.data.status==="post-ga" || d.data.status==="future") return "#f5f5f5";
+      return c;
+    })
+    .attr("stroke", d => nodeColor(d))
+    .attr("stroke-width", 1.5);
+
+  // Primary label
+  nodeEnter.append("text")
+    .attr("dy","0.32em")
+    .attr("text-anchor","middle")
+    .style("font-family","'JioType',sans-serif")
+    .style("font-size", d => d.data.type==="root" ? "13px" : "11px")
+    .style("font-weight", d => ["root","trunk"].includes(d.data.type) ? "900" : "700")
+    .style("fill", d => {
+      if(d.data.type==="soi" || d.data.type==="experience") return "#009e88";
+      if(d.data.status==="post-ga" || d.data.status==="future") return "#aaa";
+      return textColor(d);
+    })
+    .text(d => {
+      const name = d.data.name;
+      return name.length > 18 ? name.slice(0,16)+"…" : name;
+    });
+
+  // Collapse badge (children count)
+  nodeEnter.append("circle")
+    .attr("class","collapse-badge")
+    .attr("cx", NW/2 - 2).attr("cy", -NH/2 + 2)
+    .attr("r", 8)
+    .attr("fill","#3535f3")
+    .attr("stroke","#fff").attr("stroke-width",1.5)
+    .style("display","none");
+
+  nodeEnter.append("text")
+    .attr("class","collapse-badge")
+    .attr("x", NW/2 - 2).attr("y", -NH/2 + 6)
+    .attr("text-anchor","middle")
+    .style("font-family","'JioType',sans-serif")
+    .style("font-size","8px").style("font-weight","900")
+    .style("fill","#fff").style("pointer-events","none")
+    .style("display","none");
+
+  // Merge & transition
+  const nodeUpdate = nodeEnter.merge(node);
+
+  nodeUpdate.transition().duration(duration)
+    .attr("transform", d => `translate(${d.y},${d.x})`)
+    .style("opacity", d => (d.data.status==="post-ga"||d.data.status==="future") ? 0.55 : 1);
+
+  // Update collapse badges
+  nodeUpdate.select("circle.collapse-badge")
+    .style("display", d => d._children ? null : "none");
+  nodeUpdate.select("text.collapse-badge")
+    .style("display", d => d._children ? null : "none")
+    .text(d => d._children ? d._children.length : "");
+
+  // Update selected ring
+  nodeUpdate.select("rect")
+    .attr("stroke-width", d => d === selectedNode ? 2.5 : 1.5)
+    .attr("filter", d => d === selectedNode ? "drop-shadow(0 0 4px rgba(53,53,243,.35))" : null);
+
+  node.exit().transition().duration(duration)
+    .attr("transform", d => `translate(${source.y},${source.x})`)
+    .style("opacity",0).remove();
+
+  // Save positions
+  nodes.forEach(d => { d.x0 = d.x; d.y0 = d.y; });
+
+  // Auto-center on first render
+  if(!initialized){
+    initialized = true;
+    const w = +svg.node().getBoundingClientRect().width;
+    const h = +svg.node().getBoundingClientRect().height;
+    const rootNode = root;
+    svg.transition().duration(600).call(
+      zoom.transform,
+      d3.zoomIdentity.translate(w*0.12, h/2).scale(1)
+    );
+  }
+}
+
+let nodeId = 0, linkId = 0, initialized = false;
+
+function diagonal(s, t){
+  return `M${s.y},${s.x}C${(s.y+t.y)/2},${s.x} ${(s.y+t.y)/2},${t.x} ${t.y},${t.x}`;
+}
+
+function toggleNode(d){
+  // Show panel
+  showPanel(d);
+  // Expand/collapse
+  if(d.data.type === "root") return;
+  if(d.children){ d._children = d.children; d.children = null; }
+  else if(d._children){ d.children = d._children; d._children = null; }
+  update(d);
+}
+
+// Initial render
+update(root);
+
+// ── CHANNELS (floating) ───────────────────────────────────────────────
+const channelG = svg.append("g").attr("class","channels");
+
+function drawChannels(){
+  const w = svg.node().getBoundingClientRect().width;
+  const h = svg.node().getBoundingClientRect().height;
+  channelG.selectAll("*").remove();
+  channels.forEach((ch, i) => {
+    const x = 40, y = h - 80 - i*52;
+    const cg = channelG.append("g")
+      .style("cursor","pointer")
+      .on("click", () => showPanelDirect(ch.name));
+    cg.append("rect")
+      .attr("x",x).attr("y",y)
+      .attr("width",150).attr("height",36)
+      .attr("rx",8).attr("ry",8)
+      .attr("fill","#f5f5f5").attr("stroke","#ccc").attr("stroke-width",1.5);
+    cg.append("text")
+      .attr("x",x+75).attr("y",y+22)
+      .attr("text-anchor","middle")
+      .style("font-family","'JioType',sans-serif")
+      .style("font-size","11px").style("font-weight","700")
+      .style("fill","#888")
+      .text(ch.name);
+  });
+  // Channel label
+  channelG.append("text")
+    .attr("x",115).attr("y",h-80-channels.length*52+10)
+    .attr("text-anchor","middle")
+    .style("font-family","'JioType',sans-serif")
+    .style("font-size","9px").style("font-weight","700")
+    .style("fill","#ccc").style("text-transform","uppercase").style("letter-spacing","0.1em")
+    .text("CHANNELS");
+}
+drawChannels();
+
+// ── PANEL ─────────────────────────────────────────────────────────────
+function showPanel(d){
+  selectedNode = d;
+  update(d);
+  const info = nodeDetails[d.data.name];
+  if(!info) return;
+  renderPanel(info, d.data.name);
+  document.getElementById("panel").classList.add("open");
+  // Move zoom controls
+  document.getElementById("zoom-ctrl").classList.remove("panel-closed");
+}
+
+function showPanelDirect(name){
+  selectedNode = null;
+  const info = nodeDetails[name];
+  if(!info) return;
+  renderPanel(info, name);
+  document.getElementById("panel").classList.add("open");
+  document.getElementById("zoom-ctrl").classList.remove("panel-closed");
+}
+
+function renderPanel(info, name){
+  document.getElementById("panel-dot").style.background = info.color;
+  document.getElementById("panel-name").textContent = name;
+  document.getElementById("panel-type").textContent = info.type;
+
+  let html = "";
+  if(info.desc){
+    html += `<div class="panel-section"><div class="panel-label">What it is</div><div class="panel-val">${info.desc}</div></div>`;
+  }
+  if(info.attrs){
+    info.attrs.forEach(([label, val]) => {
+      if(label==="Signature"){
+        html += `<div class="panel-section"><div class="panel-label">${label}</div><div class="panel-sig">${val}</div></div>`;
+      } else if(label==="Status"){
+        const cls = val==="GA" ? "ga" : "post";
+        html += `<div class="panel-section"><div class="panel-label">${label}</div><span class="panel-pill ${cls}">${val}</span></div>`;
+      } else {
+        html += `<div class="panel-section"><div class="panel-label">${label}</div><div class="panel-val">${val}</div></div>`;
+      }
+    });
+  }
+  document.getElementById("panel-body").innerHTML = html;
+}
+
+function closePanel(){
+  document.getElementById("panel").classList.remove("open");
+  document.getElementById("zoom-ctrl").classList.add("panel-closed");
+  selectedNode = null;
+  g.selectAll(".node rect").attr("stroke-width",1.5).attr("filter",null);
+}
+
+// ── ZOOM CONTROLS ─────────────────────────────────────────────────────
+document.getElementById("btn-in").onclick = () => svg.transition().duration(250).call(zoom.scaleBy, 1.35);
+document.getElementById("btn-out").onclick = () => svg.transition().duration(250).call(zoom.scaleBy, 0.75);
+document.getElementById("btn-reset").onclick = () => {
+  const w = svg.node().getBoundingClientRect().width;
+  const h = svg.node().getBoundingClientRect().height;
+  svg.transition().duration(400).call(zoom.transform, d3.zoomIdentity.translate(w*0.12, h/2).scale(1));
+};
+
+// Dismiss panel on canvas click
+svg.on("click", () => closePanel());
+
+// ── LEVEL LABELS ──────────────────────────────────────────────────────
+const levelLabels = [
+  {x:0,    label:"Root"},
+  {x:DY,   label:"Trunk"},
+  {x:DY*2, label:"Surface"},
+  {x:DY*3, label:"Screen"},
+  {x:DY*4, label:"Domain"},
+];
+
+const labelsG = g.append("g").attr("class","level-labels");
+levelLabels.forEach(({x, label}) => {
+  labelsG.append("text")
+    .attr("x", x)
+    .attr("y", -999)
+    .attr("text-anchor","middle")
+    .style("font-family","'JioType',sans-serif")
+    .style("font-size","9px").style("font-weight","700")
+    .style("fill","rgba(25,27,30,.25)").style("text-transform","uppercase").style("letter-spacing","0.12em")
+    .text(label);
+});
+
+// Update level label y positions after layout
+function updateLevelLabels(){
+  const allNodes = root.descendants();
+  const minX = d3.min(allNodes, d => d.x);
+  labelsG.selectAll("text").attr("y", minX - 28);
+}
+setTimeout(updateLevelLabels, 450);
+
+</script>
+</body>
+</html>

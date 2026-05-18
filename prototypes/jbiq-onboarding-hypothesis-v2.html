@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JBIQ — Onboarding Hypothesis</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --jio:#0A1628;
+  --jio-mid:#112240;
+  --blue:#2B7FD4;
+  --blue-bg:#EBF3FC;
+  --blue-dark:#0C447C;
+  --amber:#B06A10;
+  --amber-bg:#FDF0DC;
+  --amber-dark:#6B3C06;
+  --teal:#0F8A62;
+  --teal-bg:#E3F6EF;
+  --teal-dark:#065040;
+  --red:#9B2C2C;
+  --red-bg:#FDECEC;
+  --surface:#F4F6FA;
+  --surface-2:#E9EDF4;
+  --white:#FFFFFF;
+  --text-1:#111827;
+  --text-2:#374151;
+  --text-3:#6B7280;
+  --border:#CBD5E0;
+  --border-light:#E2E8F0;
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--surface);color:var(--text-1);font-size:14px;line-height:1.6}
+
+/* HEADER */
+.header{background:var(--jio);padding:48px 64px 42px;position:relative;overflow:hidden}
+.header::before{content:'';position:absolute;top:-80px;right:-80px;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(43,127,212,0.12) 0%,transparent 70%);pointer-events:none}
+.header-meta{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.header-tag{font-family:'Syne',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#7EC8F0;background:rgba(126,200,240,0.12);border:1px solid rgba(126,200,240,0.2);padding:4px 12px;border-radius:4px}
+.header-date{font-size:12px;color:rgba(255,255,255,0.4);font-weight:300}
+.header-title{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:#fff;line-height:1.15;letter-spacing:-0.02em;margin-bottom:10px}
+.header-title span{color:#7EC8F0}
+.header-sub{font-size:14px;color:rgba(255,255,255,0.55);font-weight:300;max-width:560px;line-height:1.65}
+
+/* NAV */
+.nav{background:#0d1d38;border-bottom:1px solid rgba(255,255,255,0.08);padding:0 64px;display:flex;gap:0;overflow-x:auto}
+.nav a{font-family:'Syne',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:rgba(255,255,255,0.5);padding:14px 18px;text-decoration:none;white-space:nowrap;border-bottom:3px solid transparent;transition:all 0.18s;display:flex;align-items:center;gap:6px}
+.nav a:hover{color:#fff;border-bottom-color:#7EC8F0;background:rgba(255,255,255,0.04)}
+.nav-num{font-size:10px;opacity:0.5;font-weight:400}
+
+/* MAIN */
+.main{max-width:1160px;margin:0 auto;padding:52px 64px 80px}
+
+/* SECTION */
+.section{margin-bottom:64px}
+.section-eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.section-tag{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--blue);background:var(--blue-bg);padding:3px 9px;border-radius:4px}
+.section-title{font-family:'Syne',sans-serif;font-size:21px;font-weight:700;color:var(--text-1);margin-bottom:18px;letter-spacing:-0.01em}
+
+/* OBJ BAR */
+.obj-bar{background:var(--white);border:1.5px solid var(--blue);border-radius:8px;padding:13px 18px;font-size:14px;color:var(--text-2);margin-bottom:18px;line-height:1.6}
+.obj-bar strong{color:var(--text-1);font-weight:500}
+
+/* CALLOUT */
+.callout{background:var(--white);border:1px solid var(--border-light);border-left:3px solid var(--border);border-radius:0 8px 8px 0;padding:13px 18px;font-size:13.5px;color:var(--text-2);margin-bottom:24px;line-height:1.65}
+.callout strong{color:var(--text-1);font-weight:500}
+
+/* FUTURE CALLOUT */
+.future-callout{background:#FFFBEB;border:1px solid #FCD34D;border-radius:8px;padding:13px 18px;font-size:13px;color:#78350F;margin-bottom:20px;line-height:1.6}
+.future-callout strong{font-weight:500;color:#451A03}
+
+/* FLOW CARDS */
+.flow-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-bottom:28px}
+.flow-card{background:var(--white);border:1.5px solid var(--border-light);border-radius:12px;overflow:hidden;transition:border-color 0.2s,box-shadow 0.2s}
+.flow-card:hover{border-color:var(--border);box-shadow:0 2px 16px rgba(10,22,40,0.07)}
+.fc-o1{border-top:3px solid var(--blue)}
+.fc-o2{border-top:3px solid var(--amber)}
+.fc-o3{border-top:3px solid var(--teal)}
+.flow-top{padding:16px 18px 13px;border-bottom:1px solid var(--border-light)}
+.badge{display:inline-block;font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:3px 9px;border-radius:4px;margin-bottom:8px}
+.b-blue{background:var(--blue-bg);color:var(--blue-dark)}
+.b-amber{background:var(--amber-bg);color:var(--amber-dark)}
+.b-teal{background:var(--teal-bg);color:var(--teal-dark)}
+.flow-name{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--text-1);margin-bottom:3px}
+.flow-tagline{font-size:12px;color:var(--text-3);font-style:italic}
+.flow-body{padding:16px 18px 18px}
+.flow-row{display:flex;gap:10px;margin-bottom:11px;align-items:flex-start}
+.row-label{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-3);min-width:52px;padding-top:2px;flex-shrink:0}
+.row-val{font-size:12.5px;color:var(--text-2);line-height:1.55}
+.risk-val{color:var(--red);font-size:12.5px;line-height:1.55}
+.steps{display:flex;flex-direction:column;gap:4px}
+.step{font-size:12px;color:var(--text-2);display:flex;align-items:flex-start;gap:6px;line-height:1.45}
+.dot{width:5px;height:5px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.d-blue{background:var(--blue)}
+.d-amber{background:var(--amber)}
+.d-teal{background:var(--teal)}
+.skip-block{margin-top:8px;background:var(--surface);border:1px solid var(--border-light);border-radius:6px;padding:8px 11px}
+.skip-label{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-3);margin-bottom:3px}
+.skip-val{font-size:12px;color:var(--text-2);line-height:1.45}
+.note-inline{font-size:11px;color:var(--text-3);font-style:italic;margin-top:5px;padding-left:10px;border-left:2px solid var(--border-light)}
+
+/* DIVIDER */
+.divider{border:none;border-top:1.5px solid var(--border-light);margin:36px 0}
+.sub-title{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-3);margin-bottom:14px}
+
+/* TABLES */
+.tbl-wrap{overflow-x:auto;border:1.5px solid var(--border-light);border-radius:12px;background:var(--white);margin-bottom:8px}
+table{width:100%;border-collapse:collapse;table-layout:fixed}
+thead tr{background:var(--surface-2)}
+thead th{padding:12px 14px;text-align:left;font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--text-2);border-bottom:1.5px solid var(--border);white-space:nowrap}
+thead th.th-o1{background:var(--blue-bg);color:var(--blue-dark)}
+thead th.th-o2{background:var(--amber-bg);color:var(--amber-dark)}
+thead th.th-o3{background:var(--teal-bg);color:var(--teal-dark)}
+tbody tr{border-bottom:1px solid var(--border-light)}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:#F8FAFC}
+td{padding:11px 14px;vertical-align:top;font-size:13px;color:var(--text-2);line-height:1.55;word-wrap:break-word;overflow-wrap:break-word}
+td.dim{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-2);background:var(--surface-2)}
+.pill{display:inline-block;font-family:'Syne',sans-serif;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:0.04em}
+.pill-yes{background:var(--teal-bg);color:var(--teal-dark)}
+.pill-no{background:var(--red-bg);color:var(--red)}
+.pill-blue{background:var(--blue-bg);color:var(--blue-dark)}
+.pill-amber{background:var(--amber-bg);color:var(--amber-dark)}
+.pill-teal{background:var(--teal-bg);color:var(--teal-dark)}
+.risk-td{color:var(--red)}
+
+/* ROUTING SECTION */
+.signal-categories{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:20px}
+.signal-cat{background:var(--white);border:1.5px solid var(--border-light);border-radius:10px;overflow:hidden}
+.signal-cat-header{padding:11px 14px;border-bottom:1px solid var(--border-light);background:var(--surface-2);display:flex;align-items:center;gap:8px}
+.signal-cat-icon{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.signal-cat-title{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-2)}
+.signal-cat-body{padding:12px 14px;display:flex;flex-direction:column;gap:7px}
+.signal-row{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.signal-name{font-size:12.5px;color:var(--text-2);line-height:1.45;flex:1}
+.signal-route{flex-shrink:0}
+
+/* MECHANIC */
+.mechanic-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.mech-card{background:var(--white);border:1.5px solid var(--border-light);border-radius:12px;padding:20px;border-left:3px solid var(--jio)}
+.mech-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--text-1);margin-bottom:8px;letter-spacing:-0.01em}
+.mech-desc{font-size:13px;color:var(--text-2);line-height:1.65;margin-bottom:12px}
+.mech-example{background:var(--surface);border-left:3px solid var(--blue);border-radius:0 6px 6px 0;padding:9px 13px;font-size:12px;color:var(--text-2);font-style:italic;line-height:1.55}
+
+/* GAPS */
+.gap-list{display:flex;flex-direction:column;gap:10px}
+.gap-item{background:var(--white);border:1.5px solid var(--border-light);border-radius:10px;padding:14px 18px;display:flex;gap:12px;align-items:flex-start}
+.gap-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px}
+.gap-red{background:var(--red-bg);color:var(--red)}
+.gap-amber{background:var(--amber-bg);color:var(--amber-dark)}
+.gap-title{font-size:13.5px;font-weight:500;color:var(--text-1);margin-bottom:3px}
+.gap-why{font-size:12.5px;color:var(--text-3);line-height:1.55}
+
+/* REC */
+.rec-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.rec-card{background:var(--white);border:1.5px solid var(--border-light);border-radius:12px;padding:20px}
+.rec-primary{border-top:3px solid var(--amber)}
+.rec-fallback{border-top:3px solid var(--teal)}
+.rec-variant{border-top:3px solid var(--blue)}
+.rec-rank{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px}
+.r-amber{color:var(--amber)}
+.r-teal{color:var(--teal)}
+.r-blue{color:var(--blue)}
+.rec-name{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--text-1);margin-bottom:7px}
+.rec-why{font-size:12.5px;color:var(--text-2);line-height:1.6}
+
+/* FOOTER */
+.footer{background:var(--jio);color:rgba(255,255,255,0.4);padding:20px 64px;font-size:12px;display:flex;justify-content:space-between;align-items:center}
+.footer strong{color:rgba(255,255,255,0.7)}
+.footer-pill{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);padding:4px 12px;border-radius:4px;font-family:'Syne',sans-serif;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.45)}
+
+@media(max-width:900px){
+  .header,.nav,.main,.footer{padding-left:24px;padding-right:24px}
+  .flow-grid,.mechanic-grid,.rec-grid,.signal-categories{grid-template-columns:1fr}
+  .header-title{font-size:26px}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-meta">
+    <span class="header-tag">Core Experience POD</span>
+    <span class="header-date">FnF · April 2026</span>
+  </div>
+  <div class="header-title">JBIQ Onboarding<br><span>Hypothesis Document</span></div>
+  <div class="header-sub">Three flows. Three bets. One objective — get the user registered and on the home page.</div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="#s1"><span class="nav-num">01</span> Three Approaches</a>
+  <a href="#s2"><span class="nav-num">02</span> Shared Mechanic</a>
+  <a href="#s3"><span class="nav-num">03</span> Cohort Plan</a>
+  <a href="#s4"><span class="nav-num">04</span> FnF Learnings</a>
+  <a href="#s5"><span class="nav-num">05</span> Not Testing</a>
+  <a href="#s6"><span class="nav-num">06</span> Recommendation</a>
+</nav>
+
+<div class="main">
+
+  <!-- S1: THREE APPROACHES -->
+  <div class="section" id="s1">
+    <div class="section-eyebrow"><span class="section-tag">Section 01</span></div>
+    <div class="section-title">Three approaches</div>
+
+    <div class="obj-bar"><strong>Objective of onboarding:</strong> User completes registration without drop-off and lands on the home page.</div>
+
+    <div class="callout">Three hypotheses on how to get a Day 1 user to that point. <strong>Skipping the AI-first moment in O1 or O2 routes to O3</strong> — user still completes registration and lands on home. All three end with a guided tour. O1 and O2 include an optional pre-registration query — if it lands well, it can be a hook. That is a bonus, not the objective.</div>
+
+    <div class="flow-grid">
+
+      <div class="flow-card fc-o1">
+        <div class="flow-top">
+          <span class="badge b-blue">O1 · Open-ended</span>
+          <div class="flow-name">Voice first, open-ended</div>
+          <div class="flow-tagline">"Let the user lead"</div>
+        </div>
+        <div class="flow-body">
+          <div class="flow-row">
+            <span class="row-label">Flow</span>
+            <div class="steps">
+              <div class="step"><span class="dot d-blue"></span>Speak or type — any topic, any language</div>
+              <div class="step"><span class="dot d-blue"></span>AI responds</div>
+              <div class="step"><span class="dot d-blue"></span>2nd turn: name + phone ask</div>
+              <div class="step"><span class="dot d-blue"></span>OTP → home screen</div>
+              <div class="step"><span class="dot d-blue"></span>Guided tour — hook card if query landed well</div>
+              <div class="skip-block">
+                <div class="skip-label">If user skips</div>
+                <div class="skip-val">Routes to O3 — phone → OTP → home → generic tour</div>
+              </div>
+            </div>
+          </div>
+          <div class="flow-row">
+            <span class="row-label">FnF bet</span>
+            <span class="row-val">If the AI handles any topic well, the pre-registration query becomes a natural hook to return</span>
+          </div>
+          <div class="flow-row">
+            <span class="row-label">FnF risk</span>
+            <span class="risk-val">AI quality inconsistent on open topics at this stage. No recovery if first response misses.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-card fc-o2">
+        <div class="flow-top">
+          <span class="badge b-amber">O2 · Guided</span>
+          <div class="flow-name">Voice first, guided</div>
+          <div class="flow-tagline">"Show JBIQ at its best"</div>
+        </div>
+        <div class="flow-body">
+          <div class="flow-row">
+            <span class="row-label">Flow</span>
+            <div class="steps">
+              <div class="step"><span class="dot d-amber"></span>Choose from 3–4 topics where JBIQ is strong</div>
+              <div class="step"><span class="dot d-amber"></span>Speak or tap — AI responds with confidence</div>
+              <div class="step"><span class="dot d-amber"></span>2nd turn: name + phone ask</div>
+              <div class="step"><span class="dot d-amber"></span>OTP → home screen</div>
+              <div class="step"><span class="dot d-amber"></span>Guided tour — hook card from chosen topic</div>
+              <div class="skip-block">
+                <div class="skip-label">If user skips</div>
+                <div class="skip-val">Routes to O3 — phone → OTP → home → generic tour</div>
+              </div>
+            </div>
+          </div>
+          <div class="flow-row">
+            <span class="row-label">Topics</span>
+            <div>
+              <span class="row-val">3–4 topics TBD — confirmed AI quality at FnF</span>
+              <div class="note-inline">Current tiles are representational — final selection to be confirmed</div>
+            </div>
+          </div>
+          <div class="flow-row">
+            <span class="row-label">FnF bet</span>
+            <span class="row-val">Controlling first interaction to known-strong topics gives the best chance of a good impression before the registration ask</span>
+          </div>
+          <div class="flow-row">
+            <span class="row-label">FnF risk</span>
+            <span class="risk-val">Topic tiles may feel limiting. User outside those 3–4 areas has no clear entry point.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-card fc-o3">
+        <div class="flow-top">
+          <span class="badge b-teal">O3 · Traditional</span>
+          <div class="flow-name">Traditional setup</div>
+          <div class="flow-tagline">"Fast onboarding, user in control"</div>
+        </div>
+        <div class="flow-body">
+          <div class="flow-row">
+            <span class="row-label">Flow</span>
+            <div class="steps">
+              <div class="step"><span class="dot d-teal"></span>Language selection — 5 languages</div>
+              <div class="step"><span class="dot d-teal"></span>Phone number entry</div>
+              <div class="step"><span class="dot d-teal"></span>OTP verification</div>
+              <div class="step"><span class="dot d-teal"></span>Home screen</div>
+              <div class="step"><span class="dot d-teal"></span>Guided tour — features including voice introduction</div>
+            </div>
+          </div>
+          <div class="flow-row">
+            <span class="row-label">Skip path</span>
+            <span class="row-val">Primary flow only</span>
+          </div>
+          <div class="flow-row">
+            <span class="row-label">FnF bet</span>
+            <span class="row-val">Users with Jio context or clear intent just want to get set up — no AI demo needed before registration</span>
+          </div>
+          <div class="flow-row">
+            <span class="row-label">FnF risk</span>
+            <span class="risk-val">No pre-registration interaction. Home screen and guided tour do the full job of showing what JBIQ is.</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- COMPARISON TABLE -->
+    <div class="sub-title">Comparison</div>
+    <div class="tbl-wrap">
+      <table>
+        <colgroup><col style="width:19%"><col style="width:27%"><col style="width:27%"><col style="width:27%"></colgroup>
+        <thead>
+          <tr>
+            <th style="background:var(--surface-2);color:var(--text-2)">Dimension</th>
+            <th class="th-o1">O1 · Open-ended</th>
+            <th class="th-o2">O2 · Guided</th>
+            <th class="th-o3">O3 · Traditional</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="dim">Pre-reg interaction</td><td><span class="pill pill-yes">Yes</span> — open query, any topic</td><td><span class="pill pill-yes">Yes</span> — guided to strong topics</td><td><span class="pill pill-no">No</span> — registration first</td></tr>
+          <tr><td class="dim">Registration ask</td><td>Conversational, after turn 1</td><td>Conversational, after turn 1</td><td>Upfront — phone before any experience</td></tr>
+          <tr><td class="dim">Skip path</td><td>Skip → routes to O3</td><td>Skip → routes to O3</td><td>Primary flow only</td></tr>
+          <tr><td class="dim">Language</td><td>Auto-detect + voice inference</td><td>Auto-detect + voice inference</td><td>Explicit picker — 5 languages</td></tr>
+          <tr><td class="dim">Guided tour</td><td>Hook card if query landed, then features</td><td>Hook card from chosen topic, then features</td><td>Features only — voice shown explicitly</td></tr>
+          <tr><td class="dim">Hook card</td><td><span class="pill pill-yes">If query landed</span></td><td><span class="pill pill-yes">Yes</span> — chosen topic</td><td><span class="pill pill-no">No</span> — generic home</td></tr>
+          <tr><td class="dim">UCP seed</td><td>First query — post OTP only</td><td>Topic + query — post OTP only</td><td>Language only — post OTP</td></tr>
+          <tr><td class="dim">Home personalisation</td><td>Richer from Day 0 — first query signal seeds home on landing</td><td>Richer from Day 0 — topic + query signal seeds home on landing</td><td>Language only — generic until first post-landing interaction</td></tr>
+          <tr><td class="dim">Best for</td><td>AI-comfortable, wants to explore freely</td><td>New to AI, needs a starting point</td><td>Wants fast setup or skipped AI-first</td></tr>
+          <tr><td class="dim">FnF risk</td><td class="risk-td">AI quality on open topics at this stage</td><td class="risk-td">Topic tiles may exclude some users</td><td class="risk-td">Home and tour carry full job of introducing the product</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- FLOW ROUTING -->
+    <div style="margin-top:32px"></div>
+    <div class="sub-title">Flow routing — future state</div>
+
+    <div class="future-callout">
+      <strong>Note — this is not part of FnF.</strong> At FnF, flows will be manually assigned or defaulted. This routing logic represents how the system should work once the product and platform mature — when signals are reliably available server-side and the routing can be automated. Signals will expand over time as acquisition channels diversify.
+    </div>
+
+    <div class="signal-categories">
+
+      <div class="signal-cat">
+        <div class="signal-cat-header">
+          <div class="signal-cat-icon" style="background:var(--blue-bg)">📱</div>
+          <div class="signal-cat-title">Device signals</div>
+        </div>
+        <div class="signal-cat-body">
+          <div class="signal-row">
+            <span class="signal-name">Existing JioID detected on device</span>
+            <span class="signal-route"><span class="pill pill-teal">O3</span></span>
+          </div>
+          <div class="signal-row">
+            <span class="signal-name">Low-end device (limited RAM, older Android)</span>
+            <span class="signal-route"><span class="pill pill-teal">O3</span></span>
+          </div>
+          <div class="signal-row">
+            <span class="signal-name">iOS device</span>
+            <span class="signal-route"><span class="pill pill-blue">O1</span></span>
+          </div>
+          <div class="signal-row">
+            <span class="signal-name">Android, mid-range or above</span>
+            <span class="signal-route"><span class="pill pill-amber">O2</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="signal-cat">
+        <div class="signal-cat-header">
+          <div class="signal-cat-icon" style="background:var(--teal-bg)">📍</div>
+          <div class="signal-cat-title">Location + locale signals</div>
+        </div>
+        <div class="signal-cat-body">
+          <div class="signal-row">
+            <span class="signal-name">English or bilingual device locale, metro location</span>
+            <span class="signal-route"><span class="pill pill-blue">O1</span></span>
+          </div>
+          <div class="signal-row">
+            <span class="signal-name">Regional language locale, Tier 2/3 location</span>
+            <span class="signal-route"><span class="pill pill-amber">O2</span></span>
+          </div>
+          <div class="signal-row">
+            <span class="signal-name">SIM registered in Tier 2/3 city</span>
+            <span class="signal-route"><span class="pill pill-amber">O2</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="signal-cat">
+        <div class="signal-cat-header">
+          <div class="signal-cat-icon" style="background:var(--amber-bg)">📣</div>
+          <div class="signal-cat-title">Acquisition channel signals</div>
+        </div>
+        <div class="signal-cat-body">
+          <div class="signal-row">
+            <span class="signal-name">Reliance ecosystem — JioMart, MyJio, JioSaavn, Jio store</span>
+            <span class="signal-route"><span class="pill pill-teal">O3</span></span>
+          </div>
+          <div class="signal-row">
+            <span class="signal-name">Offline — Jio retail store, assisted onboarding</span>
+            <span class="signal-route"><span class="pill pill-teal">O3</span></span>
+          </div>
+          <div class="signal-row">
+            <span class="signal-name">Digital marketing campaign (performance)</span>
+            <span class="signal-route"><span class="pill pill-amber">O2</span></span>
+          </div>
+          <div class="signal-row">
+            <span class="signal-name">Organic / word of mouth / referral</span>
+            <span class="signal-route"><span class="pill pill-blue">O1</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="signal-cat">
+        <div class="signal-cat-header">
+          <div class="signal-cat-icon" style="background:#F3E8FF">🎯</div>
+          <div class="signal-cat-title">User cohort assumptions</div>
+        </div>
+        <div class="signal-cat-body">
+          <div class="signal-row">
+            <span class="signal-name">Inferred power user (existing digital app usage pattern)</span>
+            <span class="signal-route"><span class="pill pill-blue">O1</span></span>
+          </div>
+          <div class="signal-row">
+            <span class="signal-name">First-time AI assistant user (no prior AI app)</span>
+            <span class="signal-route"><span class="pill pill-amber">O2</span></span>
+          </div>
+          <div class="signal-row">
+            <span class="signal-name">Existing Jio subscriber — known user type</span>
+            <span class="signal-route"><span class="pill pill-teal">O3</span></span>
+          </div>
+          <div class="signal-row">
+            <span class="signal-name">No signal / cold install — default</span>
+            <span class="signal-route"><span class="pill pill-amber">O2</span></span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- S2: SHARED MECHANIC -->
+  <div class="section" id="s2">
+    <div class="section-eyebrow"><span class="section-tag">Section 02</span></div>
+    <div class="section-title">Shared mechanic — O1 and O2</div>
+    <div class="callout">Both flows depend on two moments that are the real hypothesis — not the steps before them. If these don't land, the flow design around them is irrelevant.</div>
+    <div class="mechanic-grid">
+      <div class="mech-card">
+        <div class="mech-title">Second-turn ask</div>
+        <div class="mech-desc">After the first AI response, the assistant makes the registration ask conversationally — anchored to what just happened. Not a form that appears out of nowhere. The transition copy matters as much as the UX.</div>
+        <div class="mech-example">"That's a good one. I can keep you updated on this — takes 10 seconds. What's your name?"</div>
+      </div>
+      <div class="mech-card">
+        <div class="mech-title">Hook card on home screen</div>
+        <div class="mech-desc">Post-OTP, the home screen surfaces a card directly tied to the first interaction. Home is a continuation of the conversation — not a generic landing page. The guided tour starts here.</div>
+        <div class="mech-example">User asked about India match → live score + "Set match alert." User asked about a film → cast + "Follow updates."</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- S3: COHORT PLAN -->
+  <div class="section" id="s3">
+    <div class="section-eyebrow"><span class="section-tag">Section 03</span></div>
+    <div class="section-title">Cohort plan for FnF</div>
+    <div class="callout">FnF users skew urban, educated, and digitally comfortable — they are not representative of real Bharat users. Assign cohorts deliberately so each flow is stress-tested by the right people.</div>
+    <div class="tbl-wrap">
+      <table>
+        <colgroup><col style="width:10%"><col style="width:22%"><col style="width:28%"><col style="width:25%"><col style="width:15%"></colgroup>
+        <thead>
+          <tr>
+            <th style="background:var(--surface-2);color:var(--text-2)">Flow</th>
+            <th style="background:var(--surface-2);color:var(--text-2)">Who</th>
+            <th style="background:var(--surface-2);color:var(--text-2)">Their job in FnF</th>
+            <th style="background:var(--surface-2);color:var(--text-2)">Primary signal</th>
+            <th style="background:var(--surface-2);color:var(--text-2)">Size</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="dim"><span class="pill pill-blue">O1</span></td>
+            <td>25–40, urban, bilingual. Have used ChatGPT or similar before.</td>
+            <td>Find where open-ended AI response breaks. Try edge cases and unexpected queries.</td>
+            <td>First query distribution + second-turn conversion rate</td>
+            <td style="font-size:20px;font-weight:500;color:var(--text-1)">20–30</td>
+          </tr>
+          <tr>
+            <td class="dim"><span class="pill pill-amber">O2</span></td>
+            <td>30–55, metro + Tier 2 mix. Jio subscribers, not active AI users. Non-English primary language preferred.</td>
+            <td>Validate topic tile resonance. Does the AI response on guided topics land well enough to convert?</td>
+            <td>Topic tile selection spread + D1 return rate</td>
+            <td style="font-size:20px;font-weight:500;color:var(--text-1)">40–50</td>
+          </tr>
+          <tr>
+            <td class="dim"><span class="pill pill-teal">O3</span></td>
+            <td>45+, Jio subscribers, low digital confidence. Finance, legal, ops colleagues. Parents of team members.</td>
+            <td>Complete the funnel cleanly. Flag where steps feel unclear or unnecessary.</td>
+            <td>Step-by-step funnel completion + language picker usage</td>
+            <td style="font-size:20px;font-weight:500;color:var(--text-1)">20–30</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- S4: FNF LEARNINGS -->
+  <div class="section" id="s4">
+    <div class="section-eyebrow"><span class="section-tag">Section 04</span></div>
+    <div class="section-title">What FnF should teach us</div>
+    <div class="tbl-wrap">
+      <table>
+        <colgroup><col style="width:36%"><col style="width:38%"><col style="width:26%"></colgroup>
+        <thead>
+          <tr>
+            <th style="background:var(--surface-2);color:var(--text-2)">Question</th>
+            <th style="background:var(--surface-2);color:var(--text-2)">Signal to watch</th>
+            <th style="background:var(--surface-2);color:var(--text-2)">Applies to</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Does pre-registration interaction improve registration completion?</td><td>Completion rate: O1 + O2 vs. O3</td><td>All three</td></tr>
+          <tr><td>Does open-ended or guided land better?</td><td>Second-turn conversion: O1 vs. O2</td><td>O1 vs. O2</td></tr>
+          <tr><td>Does the hook card create a reason to return?</td><td>Day 1 → Day 3 return; hook card tap rate</td><td>O1, O2</td></tr>
+          <tr><td>What does JBIQ get perceived as on Day 0?</td><td>First query distribution in O1</td><td>O1</td></tr>
+          <tr><td>Where does O3 lose users in the funnel?</td><td>Drop-off by step: language → phone → OTP → home</td><td>O3</td></tr>
+          <tr><td>Do guided topic tiles work across user types?</td><td>Topic tile selection spread; skip rate on tiles</td><td>O2</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- S5: NOT TESTING -->
+  <div class="section" id="s5">
+    <div class="section-eyebrow"><span class="section-tag">Section 05</span></div>
+    <div class="section-title">What we are not testing at FnF</div>
+    <div class="gap-list">
+      <div class="gap-item">
+        <div class="gap-icon gap-red">✕</div>
+        <div>
+          <div class="gap-title">Long-form profile building during onboarding</div>
+          <div class="gap-why">Family role + 6 interest categories is too many steps before registration. Home screen cannot yet deliver on the personalisation promise those choices imply at FnF.</div>
+        </div>
+      </div>
+      <div class="gap-item">
+        <div class="gap-icon gap-red">✕</div>
+        <div>
+          <div class="gap-title">Language picker as Step 1 in O1 and O2</div>
+          <div class="gap-why">For a voice-first product, language is better inferred through interaction than declared upfront. Auto-detect from device locale + voice handles the baseline.</div>
+        </div>
+      </div>
+      <div class="gap-item">
+        <div class="gap-icon gap-red">✕</div>
+        <div>
+          <div class="gap-title">Forcing voice over text</div>
+          <div class="gap-why">Mic is offered, text is always available. No user should feel blocked by not wanting to speak first.</div>
+        </div>
+      </div>
+      <div class="gap-item">
+        <div class="gap-icon gap-amber">!</div>
+        <div>
+          <div class="gap-title">Guided tour content and depth — TBD</div>
+          <div class="gap-why">All three flows end with a guided tour but its content is not yet defined. For O3 especially, the tour must actively demonstrate voice — not just show a mic icon — since users arrive with no prior AI interaction.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- S6: RECOMMENDATION -->
+  <div class="section" id="s6">
+    <div class="section-eyebrow"><span class="section-tag">Section 06</span></div>
+    <div class="section-title">Recommendation</div>
+    <div class="rec-grid">
+      <div class="rec-card rec-primary">
+        <div class="rec-rank r-amber">Primary flow</div>
+        <div class="rec-name">O2 — Guided voice first</div>
+        <div class="rec-why">Best balance of a good first impression and realistic AI quality at FnF stage. Controlled topics mean higher confidence responses. Most users at FnF will benefit from a starting point.</div>
+      </div>
+      <div class="rec-card rec-fallback">
+        <div class="rec-rank r-teal">Fallback + skip destination</div>
+        <div class="rec-name">O3 — Traditional</div>
+        <div class="rec-why">For users who skip the AI-first moment in O1/O2, have existing Jio context, are on low-end devices, or simply prefer to set up on their own terms.</div>
+      </div>
+      <div class="rec-card rec-variant">
+        <div class="rec-rank r-blue">Variant</div>
+        <div class="rec-name">O1 — Open-ended</div>
+        <div class="rec-why">Run for the digitally confident FnF cohort. First-query distribution data tells us what JBIQ is perceived as before we define it ourselves. Valuable learning even if conversion is lower.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <div><strong>Core Experience POD</strong> · JBIQ Onboarding Hypothesis · April 2026</div>
+  <span class="footer-pill">Pre-demo — not a final design decision</span>
+</div>
+
+</body>
+</html>
