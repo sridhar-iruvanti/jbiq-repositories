@@ -1,0 +1,347 @@
+<!DOCTYPE html><html><head><meta charset=utf-8><style>body{font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;line-height:1.5;color:#0a0a14;max-width:900px;margin:2em auto;padding:1em}h1{color:#0A2885;border-bottom:2px solid #E63946;padding-bottom:6px}h2{color:#0A2885;border-bottom:1px solid #E0E0EA;padding-bottom:4px;margin-top:2em}h3,h4,h5{color:#0A2885;margin-top:1.5em}h5{font-size:1em;color:#444}table{border-collapse:collapse;margin:1em 0;width:100%;font-size:.95em}th,td{border:1px solid #E0E0EA;padding:8px 12px;text-align:left;vertical-align:top}th{background:#F5F5FA;color:#0A2885}code{background:#F5F5FA;padding:2px 5px;border-radius:3px;font-family:SF Mono,Monaco,monospace;font-size:.9em}pre{background:#F5F5FA;padding:12px;border-radius:4px;overflow-x:auto}em{color:#666677}strong{color:#0A0A14}hr{border:none;border-top:1px solid #E0E0EA;margin:2em 0}</style></head><body><h1>JioBharatIQ — Bharat Metrics Framework</h1>
+<p><em>Parallel framework to the Product Metrics tree. Reviewed in totality, periodically. Not part of the always-on product tree.</em></p>
+<p><em>Owner: Sridhar · Last updated: 2026-05-10</em></p>
+<hr />
+<h2>What this framework is — and what it isn't</h2>
+<p><strong>It is:</strong> A parallel view that combines <strong>Product Metrics sliced by Cohort A–E</strong> with <strong>Bharat-specific qualitative resonance metrics</strong> (the soft stuff that doesn't fit in always-on product instrumentation).</p>
+<p><strong>It is not:</strong> A separate layer of the product tree. The behavioural resonance test — <em>"are users in each cohort coming back organically?"</em> — is already captured by Active Habit Rate sliced by Cohort A–E. That's a cross-cut in the product tree, not a separate metric.</p>
+<p><strong>Why the framework exists:</strong> Some resonance signals are inherently qualitative, periodic, and Bharat-specific — <em>"feels native or translated?"</em>, persona-fit feel, cultural relevance. These can't sit in always-on instrumentation. They belong in a separate framework reviewed quarterly.</p>
+<p><strong>The product is working for a cohort when:</strong>
+- The cohort's Active Habit Rate is healthy (behavioural resonance — measured in product tree)
+- The cohort's qualitative resonance signals say it feels native (cultural resonance — measured here)</p>
+<p>Both must hold.</p>
+<hr />
+<h2>How this connects to the Product Metrics tree</h2>
+<pre><code>PRODUCT METRICS TREE                   BHARAT METRICS FRAMEWORK
+(canonical, always-on)                 (this doc, periodic)
+─────────────                          ─────────────
+
+Layer 1: The User Loop                 Section 1: Per-Cohort Product Health
+Layer 2: The Personalization             (inherits from Product Tree, sliced by A–E)
+Layer 3: The Conversation                See §1 below.
+Layer 4: The Task Delivery             
+Layer 5: The Quality                   Section 2: Bharat-Specific Resonance
+Layer 6: The Platform                    (NEW metrics not in Product Tree —
+Layer 7: The Partners                     qualitative, periodic, cohort-specific)
+                                         See §2 below.
+Cross-cut: Cohort A–E                  
+applies to all metrics                 Reviewed in totality, quarterly.
+</code></pre>
+<hr />
+<h2>Section 1 — Per-Cohort Product Health (inherited)</h2>
+<p><strong>Cohort definitions:</strong> A through E, per <code>jbiq_user_cohort_gtm__v1.docx</code>. Each cohort encapsulates language, device tier, geography, and segment attributes. Cohort definitions are deliberately not unpacked here — the GTM doc is the single source of truth.</p>
+<p>For each cohort A–E, track the Product Tree metrics filtered to that cohort:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Source layer in Product Tree</th>
+<th>Per-cohort question</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Active Habit Rate (Organic DQU ÷ MQU)</td>
+<td>Layer 1 L0</td>
+<td>Are users in this cohort returning organically?</td>
+</tr>
+<tr>
+<td>Useful Task Rate</td>
+<td>Product L0</td>
+<td>When this cohort uses JBIQ, does the AI deliver?</td>
+</tr>
+<tr>
+<td>Personalization Resonance Rate</td>
+<td>Layer 2 L0</td>
+<td>Does it feel made for this cohort?</td>
+</tr>
+<tr>
+<td>Multi-turn Coherence Rate</td>
+<td>Layer 3 L0</td>
+<td>Do conversations work for this cohort?</td>
+</tr>
+<tr>
+<td>Task Resolution Rate</td>
+<td>Layer 4 L0</td>
+<td>Does the orchestrator serve this cohort?</td>
+</tr>
+<tr>
+<td>Production Quality Floor</td>
+<td>Layer 5 L0</td>
+<td>Is response quality holding up for this cohort?</td>
+</tr>
+<tr>
+<td>Reliability-Adjusted Availability</td>
+<td>Layer 6 L0</td>
+<td>Is the platform serving this cohort reliably?</td>
+</tr>
+<tr>
+<td>NPS</td>
+<td>Layer 1 L1</td>
+<td>Does this cohort recommend it?</td>
+</tr>
+<tr>
+<td>First-session activation rate</td>
+<td>Layer 1 L1</td>
+<td>Did the cohort get value on first visit?</td>
+</tr>
+<tr>
+<td>D7, D30, D90 organic return rate</td>
+<td>Layer 1 L1</td>
+<td>Retention curve per cohort</td>
+</tr>
+<tr>
+<td>Voice Primary User Share</td>
+<td>Layer 3 L1</td>
+<td>Is voice the primary mode for this cohort?</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The Cohort Score (per cohort) is a weighted composite of these.</strong> Same template across cohorts; weights tuned to reflect what matters for each cohort (e.g., voice metrics weighted higher for voice-primary cohorts).</p>
+<h3>The diagnostic — Cohort Variance</h3>
+<pre><code>Cohort Variance = max(Cohort Score across A–E) − min(Cohort Score across A–E)
+</code></pre>
+<p>If Cohort Variance is high, the product is winning unevenly. Even a healthy <em>average</em> across cohorts can hide one cohort failing.</p>
+<p>This metric is <strong>also kept at Layer 1 L2 of the product tree</strong> so leadership reviewing the tree alone catches it.</p>
+<hr />
+<h2>Section 2 — Bharat-Specific Resonance Metrics (new, qualitative, periodic)</h2>
+<p>These metrics are <strong>not in the product tree</strong> because they're survey-based, qualitative, or require linguistic deep-dive. They live here, reviewed quarterly.</p>
+<h3>A — Cultural &amp; linguistic resonance</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>How measured</th>
+<th>Cadence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>"Feels native vs translated" score</strong> per language</td>
+<td>Native-speaker blind eval — rate AI responses in their language for native-feel on a 1–5 scale</td>
+<td>Quarterly per language</td>
+</tr>
+<tr>
+<td><strong>Code-mix authenticity</strong> (Hinglish, Tanglish, Gujlish, etc.)</td>
+<td>Native-speaker eval — does code-mix feel like how Indians actually speak, or stilted?</td>
+<td>Quarterly per language pair</td>
+</tr>
+<tr>
+<td><strong>Cultural relevance rating</strong></td>
+<td>Survey on cultural moments handling — festival awareness, idiom usage, regional nuance, religious sensitivity</td>
+<td>Quarterly</td>
+</tr>
+<tr>
+<td><strong>Regional idiom usage rate</strong></td>
+<td>NLP scan of AI responses for region-correct idioms (target language ≥ X% rate)</td>
+<td>Monthly</td>
+</tr>
+</tbody>
+</table>
+<h3>B — Persona-fit / "made for me" signals</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>How measured</th>
+<th>Cadence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Persona-fit score per cohort</strong></td>
+<td>Survey item: <em>"Felt like a friend / felt like a tool / felt foreign"</em> — collected per cohort</td>
+<td>Quarterly</td>
+</tr>
+<tr>
+<td><strong>"It understands me" score</strong></td>
+<td>Survey item: <em>"How well does JBIQ understand who you are?"</em> on a 1–5 scale per cohort</td>
+<td>Quarterly</td>
+</tr>
+<tr>
+<td><strong>"Made for users like me" agreement rate</strong></td>
+<td>Survey item: <em>"This product feels made for someone like me"</em> (agree/disagree) per cohort</td>
+<td>Quarterly</td>
+</tr>
+</tbody>
+</table>
+<h3>C — Bharat user-pattern signals (qualitative deep-dive)</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>How measured</th>
+<th>Cadence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Shared-device handling quality</strong></td>
+<td>Diary-study observation: are family members getting context-correct responses without confusion?</td>
+<td>Quarterly</td>
+</tr>
+<tr>
+<td><strong>Family-as-unit relevance</strong></td>
+<td>Qualitative: are household-relevant intents (homework, panchang, schemes-for-parents) surfacing for the right cohorts?</td>
+<td>Quarterly</td>
+</tr>
+<tr>
+<td><strong>Micro-loop satisfaction</strong> (≤60s, ≤90s sessions)</td>
+<td>FGD: do users in micro-loop cohorts feel the product values their time?</td>
+<td>Quarterly</td>
+</tr>
+<tr>
+<td><strong>Trust in low-end-device experience</strong></td>
+<td>FGD with low-end users: does it feel like the product is built for their device, or like a degraded version?</td>
+<td>Quarterly</td>
+</tr>
+</tbody>
+</table>
+<h3>D — Brand-voice + tone (cross-language deep-dive)</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>How measured</th>
+<th>Cadence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Brand-voice character traits adherence</strong> (cross-language)</td>
+<td>Audit of AI responses against the 6 character traits (<code>CLAUDE.md</code> brand voice doc): <em>Never Behind · Seedha Baat Pyaar Se · No Dead Ends · Infinite Patience · Celebrates Small Wins · Honest About Limits</em></td>
+<td>Quarterly per language</td>
+</tr>
+<tr>
+<td><strong>Sycophancy rate</strong> ("Great question!" or padding)</td>
+<td>NLP scan — should trend → 0 in all languages</td>
+<td>Monthly</td>
+</tr>
+<tr>
+<td><strong>"Translated feel" detection</strong></td>
+<td>Linguist rating — does the AI sound like English-translated-to-Hindi, or natively Hindi?</td>
+<td>Quarterly per language</td>
+</tr>
+</tbody>
+</table>
+<h3>E — Cohort qualitative deep-dive (FGD + diary)</h3>
+<table>
+<thead>
+<tr>
+<th>Output</th>
+<th>Cadence</th>
+<th>Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Top 5 promoter and detractor themes per cohort A–E</td>
+<td>Quarterly</td>
+<td>Research + Sridhar</td>
+</tr>
+<tr>
+<td>Diary-study findings per cohort</td>
+<td>Quarterly</td>
+<td>Research</td>
+</tr>
+<tr>
+<td>Cross-cohort comparison: which cohorts are most/least served, and why</td>
+<td>Quarterly synthesis</td>
+<td>Sridhar</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>How to use this framework</h2>
+<h3>Quarterly review (in totality)</h3>
+<ul>
+<li>Walk the full per-cohort scorecard (Section 1) — surface which cohorts are clicking</li>
+<li>Walk the Bharat-specific resonance metrics (Section 2) — surface where the product feels native vs translated</li>
+<li><strong>The integrative question:</strong> <em>Which cohorts are we serving well behaviourally AND resonance-wise?</em></li>
+</ul>
+<h3>Decision rule for cohort bets</h3>
+<ul>
+<li>High Active Habit + high Persona-fit = doubling down</li>
+<li>High Active Habit + low Persona-fit = users are stuck (no alternative); resonance work needed</li>
+<li>Low Active Habit + high Persona-fit = small loyal base; expand carefully</li>
+<li>Low Active Habit + low Persona-fit = the bet is failing; investigate before scaling</li>
+</ul>
+<h3>Where this connects to product decisions</h3>
+<ul>
+<li>Any feature that improves headlines but degrades any cohort's resonance is <strong>net negative</strong> — Bharat is the strategic moat</li>
+<li>Any feature that <em>increases Cohort Variance</em> (helps Cohort A but not D) is suspect — even if absolute headlines move up</li>
+<li>Quarterly Bharat review feeds back into Layer 5 (brand-voice, language authenticity at L1) and Layer 1 (NPS verbatim themes at L2)</li>
+</ul>
+<hr />
+<h2>On user-level cohort identification</h2>
+<p>Every user is assigned to one of cohorts A–E based on signals (language, device tier, geography, behaviour). This is:
+- Standard product analytics — most consumer apps do this
+- Algorithmic — rules-based assignment from Day 0 signals, refined by behaviour over time
+- Owned by the Data layer (Vinay), per definitions in the GTM cohort doc
+- Not a manual decision per user — automated classification</p>
+<p>The cost: real but standard one-time eng work. The benefit: every product metric in the tree becomes sliceable by cohort, and this Bharat framework becomes operable.</p>
+<hr />
+<h2>Open questions</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Question</th>
+<th>Decision needed from</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>B1</td>
+<td>Cohort Score component weights — how to weight Active Habit, Useful Task, Personalization, NPS, voice signals within each cohort?</td>
+<td>Sridhar + Vinay</td>
+</tr>
+<tr>
+<td>B2</td>
+<td>Cohort weights for any composite — equal across A–E, or weighted by population / strategic importance?</td>
+<td>Sridhar + leadership</td>
+</tr>
+<tr>
+<td>B3</td>
+<td>Cohort definitions — refer to <code>jbiq_user_cohort_gtm__v1.docx</code>; if cohorts evolve, who owns re-baselining of this framework?</td>
+<td>Sridhar + GTM</td>
+</tr>
+<tr>
+<td>B4</td>
+<td>"Translated vs native" rating — calibration across native speakers per language; agreement threshold?</td>
+<td>Research + Quality</td>
+</tr>
+<tr>
+<td>B5</td>
+<td>Persona-fit survey — minimum sample size per cohort for statistical validity?</td>
+<td>Research</td>
+</tr>
+<tr>
+<td>B6</td>
+<td>FGD / diary cadence — quarterly across all 5 cohorts feasible?</td>
+<td>Research</td>
+</tr>
+<tr>
+<td>B7</td>
+<td>NPS verbatim NLP classification — feeds Section 2 themes; instrumentation needed</td>
+<td>Vinay</td>
+</tr>
+<tr>
+<td>B8</td>
+<td>Code-mix authenticity instrumentation per language pair</td>
+<td>Anmol (Voice)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>References</h2>
+<p><strong>Source docs:</strong>
+- <code>jbiq_user_cohort_gtm__v1.docx</code> (April 29, 2026) — <strong>canonical cohort definitions A through E</strong>, 491M subscribers
+- <code>Bharat Concept Note.docx</code> (April 2026) — Soul, 6 Character traits, 4 Indian Pillars (the philosophy basis)
+- <code>JBIQ Product Mesh.docx</code> — "Bharat-first UX" listed as one of 5 Key Bets
+- <code>~/Desktop/claudespace/CLAUDE.md</code> — brand voice standard
+- <code>jbiq-domain-persona-matrix.md</code> — anchor persona definitions (Arjun, Priya, Ramesh, Sunita, Raju) — illustrative archetypes, not the cohort taxonomy</p>
+<p><strong>Companion:</strong>
+- <code>~/Desktop/claudespace/metrics/Product metrics/metrics-tree.md</code> — main metrics tree (always-on, this framework inherits from it)
+- <code>~/Desktop/claudespace/metrics/Product metrics/product-context.md</code> — product metrics context / synthesis
+- <code>~/Desktop/claudespace/metrics/Product metrics/non-product-metrics.md</code> — parallel tracks (Growth · Data · A/B · Unit Economics · Customer Lifecycle · etc.)</p></body></html>

@@ -1,0 +1,561 @@
+<!DOCTYPE html><html><head><meta charset=utf-8><style>body{font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;line-height:1.5;color:#0a0a14;max-width:900px;margin:2em auto;padding:1em}h1{color:#0A2885;border-bottom:2px solid #E63946;padding-bottom:6px}h2{color:#0A2885;border-bottom:1px solid #E0E0EA;padding-bottom:4px;margin-top:2em}h3,h4,h5{color:#0A2885;margin-top:1.5em}h5{font-size:1em;color:#444}table{border-collapse:collapse;margin:1em 0;width:100%;font-size:.95em}th,td{border:1px solid #E0E0EA;padding:8px 12px;text-align:left;vertical-align:top}th{background:#F5F5FA;color:#0A2885}code{background:#F5F5FA;padding:2px 5px;border-radius:3px;font-family:SF Mono,Monaco,monospace;font-size:.9em}pre{background:#F5F5FA;padding:12px;border-radius:4px;overflow-x:auto}em{color:#666677}strong{color:#0A0A14}hr{border:none;border-top:1px solid #E0E0EA;margin:2em 0}</style></head><body><h1>JioBharatIQ — Product Metrics Context</h1>
+<p><em>Owner: Sridhar · Status: Synthesis · Last updated: 2026-05-10</em></p>
+<p><em>This file is the </em><em>context wrapper</em><em> around the metrics work — it ties the canonical source docs (Product Mesh, Goals GA, FnF Dashboard, Lifecycle Framework) together with current ownership, milestones, and operational state. The actual product metrics tree lives in <code>metrics-tree.md</code>. The Bharat resonance framework lives in <code>bharat-metrics.md</code>. Non-product metrics tracks (Growth, Data, A/B, Unit Economics, Customer Lifecycle, etc.) live in <code>non-product-metrics.md</code>.</em></p>
+<hr />
+<h2>The crystallised view</h2>
+<p><strong>The metrics framework already exists.</strong> It is not one document — it is four, layered, by altitude:</p>
+<ol>
+<li><strong>Vision / Mission / Success</strong> — <code>JBIQ Product Mesh.docx</code> (Mar 2026, GA-defining)</li>
+<li><strong>Org goals (10) cascaded to Pods (10), with Beta + GA targets</strong> — <code>JBIQ Goals — GA Pod Cascade.md</code> + <code>JBIQ_Goals_GA.docx</code> (May 8, 2026, draft v0.5, awaiting Rushabh + Naroo review)</li>
+<li><strong>Lifecycle framework (8 stages) + comms triggers</strong> — <code>JBIQ_User_Lifecycle_Framework_v1.0.docx</code> (Apr 2026, Sridhar's)</li>
+<li><strong>Operational surface (FnF dashboard, 8 sections, ~150 metrics, instrumented across 6 systems)</strong> — <code>JBIQ_FnF_Metrics_Working.xlsx</code> (Apr 2026)</li>
+</ol>
+<p><strong>The work for this folder is not to draft a new framework — it is to:</strong>
+- Crystallise the single operational North Star
+- Map every metric to a layer + owner
+- Track instrumentation gaps blocking May 15 FnF wave 1
+- Calibrate provisional thresholds (X<em>, Y</em>) from FnF cohort data</p>
+<hr />
+<h2>1. Vision and Success (from Product Mesh)</h2>
+<blockquote>
+<p><strong>Vision:</strong> Democratize intelligence for 1.4 billion Indians — making AI abundant, affordable, and accessible to every Indian, in every language, across every domain of daily life.</p>
+<p><strong>Success:</strong> "When users say 'my day just works better' without thinking about the technology."</p>
+</blockquote>
+<p><strong>Underlying principle (P7):</strong> <em>Build for the loop, not the visit.</em> The measure of a product working is organic return without push.</p>
+<hr />
+<h2>2. The Operational North Star</h2>
+<p>Of the 10 org goals, <strong>Goal 4 is the operational North Star</strong> — it is the only goal that directly tests P7 at scale, and it captures both the core promise (the product works) and the loop principle (it works without being pushed).</p>
+<h3>Goal 4 — Consumer Outcomes</h3>
+<table>
+<thead>
+<tr>
+<th>Milestone</th>
+<th>Target</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Beta (by June 30, 2026)</strong></td>
+<td>25–30% of monthly users return <strong>daily without a push trigger</strong> AND 70%+ of tasks initiated are <strong>resolved</strong></td>
+</tr>
+<tr>
+<td><strong>GA (within 60 days of launch)</strong></td>
+<td>40%+ return daily without push AND 80%+ tasks resolved</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Why this and not MAU:</strong> Goal 1 (1M MAU at GA) is the <em>reach</em> outcome; it can be hit with paid acquisition and push spam without the product working. Goal 4 measures whether the loop works.</p>
+<p><strong>Composite framing (FnF dashboard's "Engagement North Star"):</strong> <code>DAU × Sessions/User</code> — combines reach and depth in one number.</p>
+<hr />
+<h2>3. The 10 Org Goals (cascaded targets)</h2>
+<p>From <code>JBIQ Goals — GA Pod Cascade.md</code> (May 8, 2026, draft v0.5).</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Cluster</th>
+<th>Beta (June 30, 2026)</th>
+<th>GA (within 60 days)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1</strong></td>
+<td>Market Reach</td>
+<td>50K+ Reliance/Jio employee MAU</td>
+<td><strong>1M+ MAU within 90 days</strong></td>
+</tr>
+<tr>
+<td><strong>2</strong></td>
+<td>Market Reach</td>
+<td>10+ signature experiences across 3+ domains, D7 ≥25%, ≥1 at L3</td>
+<td>15+ across 5+ domains, D7 ≥40%</td>
+</tr>
+<tr>
+<td><strong>3</strong></td>
+<td>Consumer Outcomes</td>
+<td>30%+ first-session task completion</td>
+<td>40%+ first-session task completion</td>
+</tr>
+<tr>
+<td><strong>4</strong></td>
+<td><strong>Consumer Outcomes</strong></td>
+<td><strong>25–30% organic daily return + 70%+ task resolution</strong></td>
+<td><strong>40%+ organic daily return + 80%+ task resolution</strong></td>
+</tr>
+<tr>
+<td><strong>5</strong></td>
+<td>Platform Capability</td>
+<td>8+ languages at parity with benchmark WER</td>
+<td>12+ languages beating benchmark by 5%+</td>
+</tr>
+<tr>
+<td><strong>6</strong></td>
+<td>Platform Capability</td>
+<td>95%+ eval pass · stable at 25K concurrent</td>
+<td>99%+ eval pass · stable at 100K concurrent</td>
+</tr>
+<tr>
+<td><strong>7</strong></td>
+<td>Scale Readiness</td>
+<td>3+ Jio partners powering ≥25% queries</td>
+<td>5+ partners powering ≥40%</td>
+</tr>
+<tr>
+<td><strong>8</strong></td>
+<td>Scale Readiness</td>
+<td>1+ new SE/month, partner-built or autonomous</td>
+<td>2+ new SE/month, autonomous</td>
+</tr>
+<tr>
+<td><strong>9</strong></td>
+<td>Scale Readiness</td>
+<td>3+ external partners live, ≤7-day compliance</td>
+<td>5+ external partners, 3+ new/month</td>
+</tr>
+<tr>
+<td><strong>10</strong></td>
+<td>AI-Native Org</td>
+<td>70%+ org using AI tooling</td>
+<td>100% org using AI tooling</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>4. Pod Cascade — Who Owns What</h2>
+<p>Layered by floor (per Product Layers + Pod Cascade). <strong>Sridhar is sole owner of Core Experience.</strong></p>
+<h3>Top Floor — Experience</h3>
+<table>
+<thead>
+<tr>
+<th>Pod</th>
+<th>Owner</th>
+<th>Owns</th>
+<th>Supports</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Core Experience</strong></td>
+<td><strong>Sridhar</strong></td>
+<td>Goal 4 (return rate)</td>
+<td>1, 2, 3</td>
+</tr>
+<tr>
+<td><strong>Vertical Experience</strong></td>
+<td><strong>Sridhar</strong></td>
+<td>Goal 2</td>
+<td>4, 8</td>
+</tr>
+<tr>
+<td>Partner Experience</td>
+<td>Sushant</td>
+<td>Goals 7, 8, 9</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<h3>Middle Floor — Capability</h3>
+<table>
+<thead>
+<tr>
+<th>Pod</th>
+<th>Owner</th>
+<th>Owns</th>
+<th>Supports</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Agentic Orchestration</td>
+<td>Bharat</td>
+<td>Goal 3, Goal 4 (task resolution)</td>
+<td>6</td>
+</tr>
+<tr>
+<td>Speech / Voice</td>
+<td>Anmol</td>
+<td>Goal 5</td>
+<td>4</td>
+</tr>
+<tr>
+<td>Memory / Personalisation</td>
+<td>Karan</td>
+<td>—</td>
+<td>3, 4</td>
+</tr>
+</tbody>
+</table>
+<h3>Bottom Floor — Foundation</h3>
+<table>
+<thead>
+<tr>
+<th>Pod</th>
+<th>Owner</th>
+<th>Owns</th>
+<th>Supports</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Data</td>
+<td>Vinay</td>
+<td>—</td>
+<td>All 10</td>
+</tr>
+<tr>
+<td>DevOps</td>
+<td>(TBC)</td>
+<td>Goal 6 (capacity)</td>
+<td>All</td>
+</tr>
+<tr>
+<td>Evals + Trust</td>
+<td>Karan</td>
+<td>Goal 6 (quality)</td>
+<td>All</td>
+</tr>
+</tbody>
+</table>
+<h3>Cross-cutting</h3>
+<table>
+<thead>
+<tr>
+<th>Pod</th>
+<th>Owner</th>
+<th>Owns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Business / GTM</td>
+<td>(TBC)</td>
+<td>Goal 1</td>
+</tr>
+<tr>
+<td>AI-Native Org</td>
+<td>All pods</td>
+<td>Goal 10</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>5. Core Experience — My Pod's Six Beta-to-GA Commitments</h2>
+<p>These are mine to deliver. Pulled verbatim from the Pod Cascade.</p>
+<table>
+<thead>
+<tr>
+<th>Goal</th>
+<th>Beta target</th>
+<th>GA target</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>First-session activation</td>
+<td>50%+ first-time users issue ≥1 query</td>
+<td>70%+</td>
+</tr>
+<tr>
+<td><strong>Organic daily return</strong></td>
+<td><strong>25–30% of monthly users return daily without push</strong></td>
+<td><strong>40%+</strong></td>
+</tr>
+<tr>
+<td>Experience discovery</td>
+<td>40%+ discover ≥2 SEs in first week</td>
+<td>60%+</td>
+</tr>
+<tr>
+<td>Satisfaction (NPS)</td>
+<td>NPS ≥30 (≥30% survey response)</td>
+<td>NPS ≥50</td>
+</tr>
+<tr>
+<td>Homepage performance</td>
+<td>≤3s p95 at 25K concurrent</td>
+<td>≤2s p95 at 100K concurrent</td>
+</tr>
+<tr>
+<td>D7 retention signal</td>
+<td>Top 3 driver experiences + top 3 drop-offs identified by Beta exit</td>
+<td>D7 retention ↑ ≥5pp over Beta baseline</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>6. Lifecycle Framework (8 stages, drives comms)</h2>
+<p>From <code>JBIQ_User_Lifecycle_Framework_v1.0.docx</code> (Apr 2026, mine). Stages are defined by <strong>intent signals</strong>, not days. Day markers are intervention windows.</p>
+<pre><code>Onboarding → Activation → Engagement → Retention(Prompted) → Retention(Organic)
+                                                 │                  │
+                                                 ↓                  ↓
+                                            Re-engagement ← Uninstalled → Winback
+                                                                            │
+                                                                            ↓
+                                                                       Advocacy (outcome layer)
+</code></pre>
+<p><strong>Critical metric — Habit Formation Rate:</strong> % of Prompted users who become Organic within 60 days. <em>A consistently low rate signals the product loop needs strengthening, not more comms.</em> This is the single best integrative health signal for P7.</p>
+<p><strong>Companion engineering brief:</strong> <code>JBIQ_CT_WA_Instrumentation_Spec_v1.0_1.docx</code> — 14 CleverTap events, 9 user properties, 11 campaign configs. Pre-FnF instrumentation checklist defined.</p>
+<hr />
+<h2>7. FnF Operational Dashboard (May 15 – June 12, 2026)</h2>
+<p>From <code>JBIQ_FnF_Metrics_Working.xlsx</code>. Two waves (May 15, May 29). Target: 3,000–4,000 active users across waves.</p>
+<h3>Eight sections, ~150 metrics</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Section</th>
+<th>What it measures</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>Top of Funnel</td>
+<td>Reach → Acquisition → Onboarding → Activation</td>
+</tr>
+<tr>
+<td>B</td>
+<td>Engagement</td>
+<td>Sessions, Depth, Breadth (incl. <strong>Engagement North Star = DAU × Sessions/User</strong>)</td>
+</tr>
+<tr>
+<td>C</td>
+<td>Retention &amp; Lifecycle</td>
+<td>Cohort returns (D1/D3/D7/D14/D21), inactive thresholds</td>
+</tr>
+<tr>
+<td>D</td>
+<td>User Profiling</td>
+<td>Cohort, Modality, Language, Device, Permissions</td>
+</tr>
+<tr>
+<td>E</td>
+<td><strong>Persona / Vertical FnF Marquee</strong></td>
+<td>19 personas/tools — Attempt %, Completion %, 24hr Return</td>
+</tr>
+<tr>
+<td>F</td>
+<td>Quality, Performance, Ops</td>
+<td>Thumbs up/down, NPS, eval scores, hallucination, latency, crash, uptime</td>
+</tr>
+<tr>
+<td>G</td>
+<td>Voice Performance</td>
+<td>Voice session %, abandonment, ASR WER</td>
+</tr>
+<tr>
+<td>H</td>
+<td>Campaigns &amp; Nudges</td>
+<td>PN/WA delivery, CTR, post-click action</td>
+</tr>
+</tbody>
+</table>
+<h3>FnF gate metrics</h3>
+<ul>
+<li><strong>D3 organic return ≥22% (W1) / ≥18% (W2)</strong> — primary early signal</li>
+<li><strong>D7 return ≥15%</strong> — gate for Wave 2 open (May 22)</li>
+<li><strong>DAU/MAU ≥30% at D30</strong> (no Alpha baseline)</li>
+<li><strong>NPS ≥50</strong> at D7 + D21 surveys (≥80% completion target)</li>
+<li><strong>Crash rate &lt;1% per 100 sessions</strong></li>
+<li><strong>p95 latency &lt;2,000ms</strong> (Alpha p90 was 26s — hard requirement to beat)</li>
+<li><strong>AI resolution rate ≥99%</strong></li>
+</ul>
+<h3>Magic number hypothesis (FnF activation)</h3>
+<p><strong>"3 tasks, 2 domains, 7 days"</strong> — % of D7 users with 3+ flows ≥40% predicts D7 organic return. Validating this in FnF.</p>
+<h3>19 FnF personas/tools tracked individually</h3>
+<p><strong>Personas:</strong> Cricket Companion · Rashifal/Kundali · Devotion (Aarti/Sankalp/Mandir/Sandesh) · Interview Prep · English Learning · Microlearning · Govt Exam Prep · Daily News Reader · Fact Check Shield · Market Pulse · Apna Dost · Saheli · Jaankaar Bhaiya · Subah Ka Saathi
+<strong>Tools:</strong> Create Image · Edit Image · Email/Message Writer · Analyse Document · Translate</p>
+<p>Each tracked: Attempt Rate %, Completion Rate %, 24hr Return % (P0 priority on first two, P1 on third).</p>
+<hr />
+<h2>8. Instrumentation Stack</h2>
+<p>Six systems, joined on <code>user_id</code> and <code>session_id</code>. Per Goal 7 (Data): all sources must be joined within 15 min at Beta, 5 min at GA.</p>
+<table>
+<thead>
+<tr>
+<th>System</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Firebase / GA4</strong></td>
+<td>Mobile events (app launch, prompts, taps, permissions, crashes)</td>
+</tr>
+<tr>
+<td><strong>Langfuse</strong></td>
+<td>LLM traces, eval scores, hallucination, ASR/TTS performance</td>
+</tr>
+<tr>
+<td><strong>Databricks</strong></td>
+<td>Joined event/user data, cohort analytics, retention curves</td>
+</tr>
+<tr>
+<td><strong>CleverTap</strong></td>
+<td>Lifecycle campaigns, PN/WA delivery, segmentation</td>
+</tr>
+<tr>
+<td><strong>New Relic</strong></td>
+<td>Backend latency, error rate, uptime</td>
+</tr>
+<tr>
+<td><strong>Crashlytics</strong></td>
+<td>Mobile crash and ANR monitoring</td>
+</tr>
+<tr>
+<td>(GrowthBook)</td>
+<td>Experimentation — <em>blocked at FnF, InfoSec gating</em></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Goal 7 (Data, Vinay):</strong> Every metric in this doc has a live dashboard openable in ≤10s by Beta exit. Self-serve analytics: any team member creates a dashboard in &lt;2 min.</p>
+<hr />
+<h2>9. Critical Instrumentation Gaps — Block FnF May 15</h2>
+<p>From the FnF Metrics xlsx "Instrumentation Gaps" sheet. <strong>All P0 must be resolved before Wave 1 opens.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Gap</th>
+<th>Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Avg Session Duration</td>
+<td>session_start/end timestamps not in Firebase</td>
+<td>App + Firebase</td>
+</tr>
+<tr>
+<td>Task Completion Rate</td>
+<td>No completion signal defined</td>
+<td>Product + Langfuse</td>
+</tr>
+<tr>
+<td>First-Try Success / Rephrase Rate</td>
+<td>Rephrase detection not built</td>
+<td>Langfuse</td>
+</tr>
+<tr>
+<td>Language on prompt_submitted</td>
+<td>Language param missing from all Firebase events</td>
+<td>App instrumentation</td>
+</tr>
+<tr>
+<td>Turn-level join (trace_id)</td>
+<td>trace_id missing — <strong>#1 instrumentation gap</strong></td>
+<td>App + orchestrator</td>
+</tr>
+<tr>
+<td>Mid-Session Drop-Off Rate</td>
+<td>No session-end event for abandoned sessions</td>
+<td>Firebase</td>
+</tr>
+<tr>
+<td>Feature Penetration</td>
+<td>agents_used ≥2 derived metric not built</td>
+<td>Databricks</td>
+</tr>
+<tr>
+<td><strong>Family cohort identification</strong></td>
+<td>No referral link — cannot flag family vs employee</td>
+<td>Registration flow (<strong>Open Q1</strong>)</td>
+</tr>
+<tr>
+<td><strong>Channel attribution tagging</strong></td>
+<td>Source channel not captured at allow-list registration</td>
+<td>Registration flow (<strong>Open Q2</strong>)</td>
+</tr>
+<tr>
+<td>Push campaign → session join</td>
+<td>push_notification_tapped event not built</td>
+<td>App + CleverTap ETL</td>
+</tr>
+</tbody>
+</table>
+<p>P1 gaps (can defer): Time to Activation, City Tier/State/City, Age/Gender, Persona ID on events, Domain field rename, Fallback to English Rate, GrowthBook variant assignment.</p>
+<hr />
+<h2>10. Open Questions (status as of 2026-05-09)</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Question</th>
+<th>Decision needed from</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Q1</td>
+<td>Family cohort identification at registration — referral link mechanic?</td>
+<td>Sridhar + Registration flow team</td>
+</tr>
+<tr>
+<td>Q2</td>
+<td>Channel attribution tagging — how is source captured at allow-list?</td>
+<td>Sridhar + GTM</td>
+</tr>
+<tr>
+<td>Q3</td>
+<td>Calibrate X<em> (day) and Y</em> (query) thresholds in lifecycle framework from FnF cohort data</td>
+<td>Sridhar + Vinay (after Wave 1)</td>
+</tr>
+<tr>
+<td>Q4</td>
+<td>Loop-level reporting (Daily / Task / Life cuts per Product Mesh) — does the data layer support this from Wave 1?</td>
+<td>Vinay</td>
+</tr>
+<tr>
+<td>Q5</td>
+<td>Speech / Voice pod owner — not named in Pod Cascade</td>
+<td>Naroo</td>
+</tr>
+<tr>
+<td>Q6</td>
+<td>DevOps pod owner + Business/GTM pod owner — not named</td>
+<td>Naroo</td>
+</tr>
+<tr>
+<td>Q7</td>
+<td>"Bharat Pulse" dashboard — referenced in concept note as the always-on Sridhar/Analytics view; design and cadence not specified</td>
+<td>Sridhar + Vinay</td>
+</tr>
+<tr>
+<td>Q8</td>
+<td>Goals GA doc is awaiting Rushabh + Naroo review (draft v0.5, May 8) — when does it lock?</td>
+<td>Naroo</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>11. Where this leaves Core Experience for the next 6 weeks</h2>
+<p><strong>Wave 1 opens May 15.</strong> My focus before that:</p>
+<ol>
+<li><strong>Close P0 instrumentation gaps</strong> (or accept degraded view) — coordinate with Vinay, Karan, App eng</li>
+<li><strong>Resolve Q1 (family cohort) and Q2 (channel attribution)</strong> — registration flow change</li>
+<li><strong>Define task completion signal</strong> with Bharat + Karan — currently undefined, blocks M3 and Goal 4</li>
+<li><strong>Confirm magic number hypothesis instrumentation</strong> — % users with 3+ flows by D7 needs <code>agents_used ≥ 2 per session</code> derived metric</li>
+<li><strong>Lock NPS survey mechanics</strong> — D7 + D21, ≥80% completion, ≥30% response</li>
+</ol>
+<p><strong>During Wave 1 (May 15 – May 22):</strong>
+- Watch D3 organic return and D7 return as gate metrics for Wave 2 open
+- Identify top 3 driver SEs and top 3 drop-off points (per Goal 6 scale-readiness for Core Experience)</p>
+<p><strong>Between FnF and Beta exit (June 30):</strong>
+- Calibrate X<em>/Y</em> thresholds in lifecycle framework
+- Diagnose any gap on Goal 4 (organic daily return) — is it onboarding, discovery, or engagement loop?</p>
+<hr />
+<h2>12. References</h2>
+<p><strong>Source docs (saloni's OneDrive — <code>01 Product/</code>):</strong>
+- <code>JBIQ Product Mesh.docx</code> (Mar 2026) — Vision, Success, 7 GA metrics, 3 Loops (Daily/Task/Life), 10 Signature Experiences, 5 Key Bets, scope boundaries
+- <code>Product Layers/JBIQ Product Layers.pptx</code> (Mar 2026) — Layer stack (Experiences/Intelligence/Systems), pod ownership
+- <code>Product Milestones/JBIQ Goals — GA Pod Cascade.md</code> (May 8, 2026, v0.5) — 10 org goals × 10 pods × Beta+GA targets
+- <code>Product Milestones/JBIQ_Goals_GA.docx</code> (May 9, 2026) — Same content in docx form
+- <code>JBIQ_FnF_Metrics_Working.xlsx</code> (Apr 2026) — FnF dashboard, ~150 metrics across 8 sections + instrumentation gaps
+- <code>User Lifecycle/JBIQ_User_Lifecycle_Framework_v1.0.docx</code> (Apr 2026) — 8-stage lifecycle, comms triggers, Habit Formation Rate
+- <code>User Lifecycle/JBIQ_CT_WA_Instrumentation_Spec_v1.0_1.docx</code> (Apr 2026) — 14 events, 9 properties, campaign config map
+- <code>JBIQ GA Launch PRFAQ.docx</code> (May 2026) — Public framing for GA launch
+- <code>JBIQ_CLM_Strategy_Working - V3.docx</code> (Apr 26, 2026) — CLM strategy v3 (not yet integrated into this doc)</p>
+<p><strong>In claudespace:</strong>
+- <code>JBIQ_Onboarding_Full_Doc.md</code> — onboarding success metrics (feeds first-session activation)
+- <code>JBIQ Experience Decks/06-hooks-loops/DECK_BRIEF.md</code> — PLG framework (Hooks/Loops/Growth)
+- <code>JBIQ Experience Decks/decisions/jbiq-chat-log.md</code> — architectural decisions, dropped S8 metrics slide context</p></body></html>

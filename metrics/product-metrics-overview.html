@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JBIQ Product Metrics Design</title>
+<style>
+:root {
+  --blue: #0A2885;
+  --blue-2: #1F3DAA;
+  --blue-light: #4A6BD0;
+  --red: #E63946;
+  --red-soft: #FCEEEF;
+  --ink: #0A0A14;
+  --grey: #666677;
+  --grey-2: #444455;
+  --caption: #999999;
+  --hair: #E0E0EA;
+  --bg: #FAFAFC;
+  --bg-soft: #F5F5FA;
+  --bg-blue-soft: #EEF1FB;
+  --white: #FFFFFF;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+/* ===== HERO ===== */
+.hero { background: var(--blue); color: white; padding: 28px 0; }
+.hero-eyebrow { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.7); font-weight: 600; }
+.hero h1 { font-size: 30px; line-height: 1.15; margin: 6px 0; color: white; font-weight: 700; letter-spacing: -0.01em; }
+.hero-tag { font-size: 14px; line-height: 1.5; color: rgba(255,255,255,0.85); margin: 0; max-width: 760px; }
+.hero-meta { margin-top: 12px; font-size: 12px; color: rgba(255,255,255,0.65); }
+.hero-meta b { color: white; font-weight: 600; }
+
+/* ===== LAYOUT (sidebar + main) ===== */
+.layout { display: flex; gap: 24px; align-items: flex-start; padding: 24px 0 20px; }
+.sidenav {
+  flex: 0 0 180px; position: sticky; top: 16px;
+  background: white; border: 1px solid var(--hair); border-radius: 6px;
+  padding: 14px 12px; max-height: calc(100vh - 32px); overflow-y: auto;
+}
+.sidenav-label {
+  font-size: 10px; letter-spacing: 0.12em; color: var(--caption);
+  font-weight: 700; text-transform: uppercase; margin-bottom: 8px; padding: 0 6px;
+}
+.sidenav a {
+  display: block; padding: 6px 8px; color: var(--grey-2); text-decoration: none;
+  font-size: 13px; border-radius: 4px; line-height: 1.3;
+}
+.sidenav a:hover { background: var(--bg-blue-soft); color: var(--blue); }
+.sidenav a .num { color: var(--red); font-weight: 700; font-size: 11px; margin-right: 6px; }
+.main-content { flex: 1; min-width: 0; }
+
+/* ===== SECTION (collapsible) ===== */
+section { margin: 0 0 14px; scroll-margin-top: 16px; }
+.sec-details { background: white; border: 1px solid var(--hair); border-radius: 6px; }
+.sec-details[open] { border-color: var(--blue-light); }
+.sec-summary {
+  cursor: pointer; padding: 14px 18px; display: flex; align-items: baseline; gap: 12px;
+  list-style: none; user-select: none;
+}
+.sec-summary::-webkit-details-marker { display: none; }
+.sec-num {
+  font-size: 11px; color: var(--red); font-weight: 700;
+  letter-spacing: 0.12em; font-variant-numeric: tabular-nums;
+}
+.sec-summary h2 { font-size: 18px; color: var(--blue); margin: 0; font-weight: 700; }
+.sec-arrow { margin-left: auto; color: var(--blue); font-size: 16px; transition: transform 0.15s; line-height: 1; }
+.sec-details[open] .sec-arrow { transform: rotate(90deg); color: var(--red); }
+.sec-body { padding: 0 18px 16px; }
+.sec-body-divider { height: 1px; background: var(--hair); margin: 0 0 14px; }
+.sec-sub { color: var(--grey); font-size: 13px; margin: 0 0 14px; max-width: 760px; line-height: 1.5; }
+
+/* ===== CLAIMS ===== */
+.claims { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.claim { background: white; border: 1px solid var(--hair); border-left: 3px solid var(--blue); padding: 12px 14px; border-radius: 4px; }
+.claim-num { color: var(--red); font-weight: 700; font-size: 10px; letter-spacing: 0.12em; }
+.claim-title { font-weight: 700; font-size: 15px; color: var(--ink); margin: 4px 0 2px; }
+.claim-desc { color: var(--grey); font-size: 13px; line-height: 1.4; }
+
+/* ===== UNITS ===== */
+.units { display: flex; gap: 10px; flex-wrap: wrap; }
+.unit { flex: 1; min-width: 200px; background: white; border: 1px solid var(--hair); padding: 12px 14px; border-radius: 4px; }
+.unit-name { font-weight: 700; color: var(--blue); font-size: 14px; }
+.unit-name .abbr { color: var(--red); font-weight: 700; }
+.unit-def { color: var(--grey); font-size: 12px; margin-top: 4px; line-height: 1.45; }
+.unit-def strong { color: var(--ink); }
+
+/* ===== L0 PAIRED ===== */
+.l0-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.l0-card { background: white; border: 1px solid var(--hair); border-radius: 6px; padding: 14px; border-top: 4px solid var(--red); }
+.l0-label { display: inline-block; padding: 3px 9px; border-radius: 10px; background: var(--red-soft); color: var(--red); font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.l0-name { font-size: 18px; font-weight: 700; color: var(--blue); margin: 6px 0 6px; line-height: 1.2; }
+.l0-formula { font-family: 'SF Mono', Menlo, Monaco, Consolas, monospace; font-size: 12px; color: var(--ink); background: var(--bg-soft); padding: 7px 10px; border-radius: 4px; margin: 6px 0; }
+.l0-test { color: var(--grey); font-size: 12px; margin-top: 6px; line-height: 1.5; }
+.l0-test em { color: var(--blue-2); }
+.composite { margin-top: 10px; padding: 10px 14px; background: var(--bg-blue-soft); border-left: 3px solid var(--blue); border-radius: 0 4px 4px 0; font-size: 12px; color: var(--ink); line-height: 1.5; }
+.composite code { background: white; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-family: 'SF Mono', Menlo, monospace; }
+
+/* ===== CHIPS ===== */
+.chips-row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.chip { background: white; border: 1px solid var(--hair); border-radius: 14px; padding: 5px 11px; font-size: 12px; color: var(--blue); font-weight: 600; }
+.chip strong { color: var(--red); margin-right: 4px; }
+.chip-ghost { background: transparent; border: 1px dashed var(--caption); border-radius: 14px; padding: 5px 11px; font-size: 12px; color: var(--grey); font-style: italic; }
+
+/* ===== ATTRIBUTE CARDS ===== */
+.attrs-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.attr-card { background: white; border: 1px solid var(--hair); border-left: 3px solid var(--blue); padding: 10px 12px; border-radius: 4px; }
+.attr-name { font-weight: 700; color: var(--blue); font-size: 13px; }
+.attr-vals { color: var(--ink); font-size: 12px; margin-top: 3px; line-height: 1.4; }
+.attr-vals code { background: var(--bg-soft); padding: 1px 4px; border-radius: 3px; font-size: 11px; font-family: 'SF Mono', Menlo, monospace; }
+.attr-where { color: var(--grey); font-size: 12px; margin-top: 4px; line-height: 1.45; font-style: italic; }
+
+/* ===== LAYERS ===== */
+.layers { display: grid; grid-template-columns: 1fr; gap: 8px; }
+details.layer { background: white; border: 1px solid var(--hair); border-radius: 6px; overflow: hidden; }
+details.layer[open] { border-color: var(--blue-light); }
+.layer-summary { cursor: pointer; padding: 12px 14px; display: flex; align-items: center; gap: 12px; list-style: none; user-select: none; }
+.layer-summary::-webkit-details-marker { display: none; }
+.layer-num { flex: 0 0 32px; height: 32px; border-radius: 4px; background: var(--blue); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; }
+details.layer[open] .layer-num { background: var(--red); }
+.layer-text { flex: 1; }
+.layer-name { font-weight: 700; font-size: 15px; color: var(--blue); }
+.layer-q { font-size: 12px; color: var(--grey); margin-top: 1px; font-style: italic; }
+.layer-arrow { color: var(--blue); font-size: 16px; transition: transform 0.15s; line-height: 1; }
+details.layer[open] .layer-arrow { transform: rotate(90deg); color: var(--red); }
+.layer-body { padding: 0 14px 12px; }
+.layer-divider { height: 1px; background: var(--hair); margin: 0 0 10px; }
+
+.lbl { display: inline-block; padding: 2px 7px; border-radius: 10px; font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-right: 6px; vertical-align: middle; }
+.lbl-l0 { background: var(--red); color: white; }
+.lbl-l1 { background: var(--bg-blue-soft); color: var(--blue); }
+.lbl-l2 { background: var(--bg-soft); color: var(--grey); }
+
+.metric-block { margin: 8px 0; }
+.metric-row { display: flex; gap: 10px; padding: 5px 0; border-bottom: 1px dotted var(--hair); }
+.metric-row:last-child { border-bottom: 0; }
+.metric-row .name { flex: 0 0 38%; font-weight: 600; color: var(--ink); font-size: 13px; line-height: 1.4; }
+.metric-row .why { flex: 1; color: var(--grey); font-size: 13px; line-height: 1.45; }
+
+.l1-group { background: var(--bg-soft); padding: 10px 12px; border-radius: 4px; margin: 8px 0; }
+.l1-group-title { font-weight: 700; font-size: 11px; color: var(--blue); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+.l1-group-title .grp-letter { color: var(--red); margin-right: 3px; }
+
+.subgroup-title { font-weight: 700; font-size: 11px; color: var(--blue); text-transform: uppercase; letter-spacing: 0.06em; margin: 12px 0 4px; }
+
+.layer-attrs { margin-top: 10px; padding: 8px 12px; background: var(--bg-blue-soft); border-radius: 4px; font-size: 12px; color: var(--ink); line-height: 1.45; }
+.layer-attrs strong { color: var(--blue); }
+
+/* ===== BHARAT ===== */
+.bharat-card { background: white; border: 1px solid var(--hair); border-top: 3px solid var(--blue); border-radius: 6px; padding: 14px 16px; }
+.bharat-eyebrow { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--blue); font-weight: 700; }
+.bharat-title { font-size: 16px; font-weight: 700; color: var(--blue); margin: 4px 0 4px; }
+.bharat-tag { color: var(--grey-2); font-size: 13px; max-width: 760px; line-height: 1.5; }
+.bharat-l0 { background: var(--bg-soft); padding: 10px 12px; border-radius: 4px; margin-top: 10px; border-left: 3px solid var(--blue); }
+.bharat-l0-formula { font-family: 'SF Mono', Menlo, Monaco, monospace; background: white; padding: 6px 10px; border-radius: 4px; border: 1px solid var(--hair); font-size: 12px; margin-top: 6px; }
+.bharat-l1 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
+.bharat-l1-card { background: var(--bg-soft); padding: 10px 12px; border-radius: 4px; border: 1px solid var(--hair); }
+.bharat-l1-card .nm { font-weight: 700; color: var(--blue); font-size: 12px; }
+.bharat-l1-card .ds { color: var(--grey); font-size: 12px; margin-top: 4px; line-height: 1.45; }
+.bharat-cohorts { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 10px; }
+.cohort-pill { background: var(--bg-soft); border: 1px solid var(--hair); padding: 8px 6px; border-radius: 4px; text-align: center; }
+.cohort-pill .ch { font-weight: 700; color: var(--blue); font-size: 16px; }
+.cohort-pill .lb { font-size: 10px; color: var(--grey); margin-top: 2px; letter-spacing: 0.04em; text-transform: uppercase; }
+.bharat-l2 { margin-top: 10px; }
+.bharat-l2 .metric-row { background: var(--bg-soft); padding: 8px 12px; border-radius: 4px; margin-bottom: 4px; border: 1px solid var(--hair); }
+
+/* ===== OUT OF TREE ===== */
+.out { background: white; border: 1px dashed var(--caption); border-radius: 6px; padding: 12px 14px; }
+.out-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 8px; }
+.out-item { padding: 9px 12px; background: var(--bg-soft); border-radius: 4px; font-size: 12px; }
+.out-item .ot-name { font-weight: 700; color: var(--blue); font-size: 13px; }
+.out-item .ot-where { color: var(--grey); font-size: 12px; margin-top: 2px; line-height: 1.4; }
+
+/* ===== COMPANION ===== */
+.companion { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.cmp { background: white; border: 1px solid var(--hair); padding: 10px 12px; border-radius: 4px; }
+.cmp-name { font-weight: 700; color: var(--blue); font-size: 13px; font-family: 'SF Mono', Menlo, Monaco, monospace; }
+.cmp-desc { color: var(--grey); font-size: 12px; margin-top: 3px; line-height: 1.45; }
+
+/* ===== GLOSSARY ===== */
+.gloss-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 24px; }
+.gloss-entry { padding: 6px 0; border-bottom: 1px dotted var(--hair); display: grid; grid-template-columns: 80px 1fr; gap: 10px; font-size: 12px; line-height: 1.45; }
+.gloss-entry:last-child { border-bottom: none; }
+.gloss-term { font-family: 'SF Mono', Menlo, Monaco, monospace; font-weight: 700; color: var(--red); font-size: 11px; padding-top: 1px; }
+.gloss-def { color: var(--grey-2); }
+.gloss-def b { color: var(--ink); }
+
+/* ===== FOOTER ===== */
+.foot { background: var(--blue); color: white; padding: 16px 0; }
+.foot .wrap { display: flex; justify-content: space-between; align-items: center; font-size: 13px; flex-wrap: wrap; gap: 10px; }
+.foot-left { color: rgba(255,255,255,0.85); font-weight: 600; }
+.foot-right { color: rgba(255,255,255,0.85); }
+.foot-right span { color: white; font-weight: 600; }
+.foot-right .sep { color: rgba(255,255,255,0.4); margin: 0 10px; }
+
+/* ===== Responsive ===== */
+@media (max-width: 920px) {
+  .layout { flex-direction: column; }
+  .sidenav { position: static; flex: 0 0 auto; width: 100%; max-height: none; }
+  .sidenav a { display: inline-block; margin-right: 4px; }
+  .l0-grid, .claims, .out-list, .companion, .gloss-grid, .bharat-l1, .attrs-grid { grid-template-columns: 1fr; }
+  .bharat-cohorts { grid-template-columns: repeat(5, 1fr); gap: 4px; }
+  .metric-row { flex-direction: column; gap: 2px; padding: 8px 0; }
+  .metric-row .name { flex: 1 1 auto; }
+  .hero h1 { font-size: 22px; }
+  .foot .wrap { flex-direction: column; gap: 6px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-eyebrow">JioBharatIQ · Product</div>
+    <h1>Product Metrics Design</h1>
+    <p class="hero-tag">A user-experience-first metrics tree. Layers map to questions a user would actually ask of the product. Click any section or layer to expand its content.</p>
+    <div class="hero-meta">Version <b>v1</b></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="layout">
+
+    <!-- ===== SIDENAV (left) ===== -->
+    <aside class="sidenav">
+      <div class="sidenav-label">Sections</div>
+      <a href="#claims"><span class="num">01</span>Claims</a>
+      <a href="#units"><span class="num">02</span>Units</a>
+      <a href="#product"><span class="num">03</span>Product Metrics</a>
+      <a href="#bharat"><span class="num">04</span>Bharat Metrics</a>
+      <a href="#attrs"><span class="num">05</span>Cross-Cutting Attributes</a>
+      <a href="#out"><span class="num">06</span>Parallel Tracks</a>
+      <a href="#glossary"><span class="num">07</span>Glossary</a>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="main-content">
+
+<!-- ===== 01 CLAIMS ===== -->
+<section id="claims">
+  <details class="sec-details" open>
+    <summary class="sec-summary">
+      <span class="sec-num">01</span><h2>The Three Product Claims</h2>
+      <span class="sec-arrow">›</span>
+    </summary>
+    <div class="sec-body">
+      <div class="sec-body-divider"></div>
+      <p class="sec-sub">Every metric in the tree must trace back to one of these three claims. Together they define what "the product is working" means.</p>
+      <div class="claims">
+        <div class="claim"><div class="claim-num">CLAIM 1</div><div class="claim-title">Knows you</div><div class="claim-desc">Language, context, history</div></div>
+        <div class="claim"><div class="claim-num">CLAIM 2</div><div class="claim-title">Knows what you need</div><div class="claim-desc">Proactive, situational, in the moment</div></div>
+        <div class="claim"><div class="claim-num">CLAIM 3</div><div class="claim-title">Does the work</div><div class="claim-desc">Completes tasks, doesn't suggest</div></div>
+      </div>
+    </div>
+  </details>
+</section>
+
+<!-- ===== 02 UNITS ===== -->
+<section id="units">
+  <details class="sec-details" open>
+    <summary class="sec-summary">
+      <span class="sec-num">02</span><h2>Activity Units</h2>
+      <span class="sec-arrow">›</span>
+    </summary>
+    <div class="sec-body">
+      <div class="sec-body-divider"></div>
+      <p class="sec-sub">All units anchored at the monthly level for consistency. MAU is the funnel diagnostic. MQU is the activity unit and the L0 denominator. MTU surfaces value delivered.</p>
+      <div class="units">
+        <div class="unit"><div class="unit-name"><span class="abbr">MAU</span> · Monthly Active Users</div><div class="unit-def">Users who opened the app in last 30 days (rolling). <strong>Funnel diagnostic only</strong> — opened ≠ engaged.</div></div>
+        <div class="unit"><div class="unit-name"><span class="abbr">MQU</span> · Monthly Querying Users</div><div class="unit-def">Users who sent ≥1 query in last 30 days (rolling). <strong>The activity unit · L0 denominator</strong>.</div></div>
+        <div class="unit"><div class="unit-name"><span class="abbr">MTU</span> · Monthly Task Users</div><div class="unit-def">Users who completed ≥1 useful task in last 30 days (rolling). <strong>Monthly value-delivered unit</strong>.</div></div>
+      </div>
+      <p style="font-size: 12px; color: var(--grey); margin: 10px 0 0; line-height: 1.5;"><em>Note:</em> Active Habit Rate (L0) = Organic DQU ÷ MQU is a daily-stickiness ratio computed from these monthly bases — daily snapshots (querying users on a given day) are derived from MQU, not separate units to track.</p>
+    </div>
+  </details>
+</section>
+
+<!-- ===== 03 PRODUCT METRICS (North Star L0 + 7 Layers combined) ===== -->
+<section id="product">
+  <details class="sec-details" open>
+    <summary class="sec-summary">
+      <span class="sec-num">03</span><h2>Product Metrics — North Star L0 + 7 Layers</h2>
+      <span class="sec-arrow">›</span>
+    </summary>
+    <div class="sec-body">
+      <div class="sec-body-divider"></div>
+      <p class="sec-sub">A paired Product L0 sits at the top — both metrics must move together. Below it, 7 layers organised by user-experience question. Click any layer to expand.</p>
+
+      <div class="subgroup-title">North Star — paired L0</div>
+      <div class="l0-grid">
+        <div class="l0-card">
+          <span class="l0-label">The Loop</span>
+          <div class="l0-name">Active Habit Rate</div>
+          <div class="l0-formula">Organic DQU ÷ MQU</div>
+          <div class="l0-test"><strong>Tests:</strong> Did the product earn the user, or did push pay for the visit? <em>(P7 — Build for the loop, not the visit.)</em></div>
+        </div>
+        <div class="l0-card">
+          <span class="l0-label">The Work</span>
+          <div class="l0-name">Useful Task Rate</div>
+          <div class="l0-formula">% of queries that resolved AND user signaled value</div>
+          <div class="l0-test"><strong>Tests:</strong> Did the AI actually deliver something useful?</div>
+        </div>
+      </div>
+      <div class="composite">
+        <strong>Composite (rollup):</strong> <code>Compounding Habit Index = Active Habit × Useful Task</code>. Useful for reporting; never a substitute for the pair.
+      </div>
+
+      <div class="subgroup-title" style="margin-top: 18px;">The 7 Layers — click each to expand</div>
+      <div class="layers">
+
+        <!-- LAYER 1 -->
+        <details class="layer">
+          <summary class="layer-summary">
+            <div class="layer-num">1</div>
+            <div class="layer-text">
+              <div class="layer-name">The User Loop</div>
+              <div class="layer-q">Did the user come back?</div>
+            </div>
+            <div class="layer-arrow">›</div>
+          </summary>
+          <div class="layer-body">
+            <div class="layer-divider"></div>
+            <div class="metric-block">
+              <span class="lbl lbl-l0">L0</span>
+              <strong>Active Habit Rate</strong> = Organic DQU ÷ MQU &nbsp; <em style="color: var(--grey)">(this IS the product L0)</em>
+            </div>
+
+            <div class="l1-group">
+              <div class="l1-group-title"><span class="grp-letter">A</span>· Activation (entry to the loop, with window)</div>
+              <div class="metric-row"><div class="name">Activation Rate</div><div class="why">% of installs that fire ≥1 query within D7 window. Quality of the query lives in Useful Task Rate, not here.</div></div>
+              <div class="metric-row"><div class="name">First-session activation rate</div><div class="why">First query on Day 0</div></div>
+              <div class="metric-row"><div class="name">Delayed activation rate</div><div class="why">First query post-session-1, within window</div></div>
+              <div class="metric-row"><div class="name">Time-to-Activation</div><div class="why">Median, p90 hours from install to first query</div></div>
+            </div>
+
+            <div class="l1-group">
+              <div class="l1-group-title"><span class="grp-letter">B</span>· Engagement (depth + frequency + time)</div>
+              <div class="metric-row"><div class="name">Queries per DQU per day</div><div class="why">Per-user depth</div></div>
+              <div class="metric-row"><div class="name">Sessions per DQU per day</div><div class="why">Per-user frequency</div></div>
+              <div class="metric-row"><div class="name">Avg session duration (median, p95)</div><div class="why">Time spent per session — paired with completion to read as good/bad</div></div>
+              <div class="metric-row"><div class="name">Total time spent per DQU per day</div><div class="why">Aggregate engagement time per active user</div></div>
+              <div class="metric-row"><div class="name">Multi-query session rate</div><div class="why">% sessions with ≥2 queries</div></div>
+              <div class="metric-row"><div class="name">Multi-session day rate</div><div class="why">% DQU with ≥2 sessions in a day</div></div>
+              <div class="metric-row"><div class="name">Active days per week</div><div class="why">Avg days/week with ≥1 query (per MQU)</div></div>
+              <div class="metric-row"><div class="name">Power-user rate</div><div class="why">% of DAU with ≥X queries</div></div>
+              <div class="metric-row"><div class="name">Total query / session volume per day</div><div class="why">Operational scale (non-unique)</div></div>
+            </div>
+
+            <div class="l1-group">
+              <div class="l1-group-title"><span class="grp-letter">C</span>· Retention curve</div>
+              <div class="metric-row"><div class="name">D1 organic return rate</div><div class="why">Activation depth</div></div>
+              <div class="metric-row"><div class="name">D7 organic return rate</div><div class="why">Week-1 habit signal</div></div>
+              <div class="metric-row"><div class="name">D30 organic return rate</div><div class="why">Month-1 habit signal</div></div>
+              <div class="metric-row"><div class="name">D90 organic return rate</div><div class="why">Long-term loyalty signal</div></div>
+            </div>
+
+            <div class="l1-group">
+              <div class="l1-group-title"><span class="grp-letter">D</span>· Loop quality (Organic vs Inorganic users)</div>
+              <div class="metric-row"><div class="name">Organic Returning Users</div><div class="why">Returns without push attribution — the loop working</div></div>
+              <div class="metric-row"><div class="name">Inorganic Returning Users (push-attributed)</div><div class="why">Returns triggered by PN / WA tap — comms working</div></div>
+              <div class="metric-row"><div class="name">Loop Self-Sufficiency</div><div class="why">Organic ÷ Total returns</div></div>
+              <div class="metric-row"><div class="name">Habit Formation Rate</div><div class="why">% of Inorganic → Organic within 60d</div></div>
+            </div>
+
+            <div class="l1-group">
+              <div class="l1-group-title"><span class="grp-letter">E</span>· Sentiment + value</div>
+              <div class="metric-row"><div class="name">NPS</div><div class="why">Will the user recommend it?</div></div>
+              <div class="metric-row"><div class="name">User Satisfaction Rate</div><div class="why">Per-query, behavioural + explicit signals</div></div>
+              <div class="metric-row"><div class="name">Surface time-to-meaningful (p95)</div><div class="why">Any entry surface — earned the next tap</div></div>
+            </div>
+
+            <div class="l1-group">
+              <div class="l1-group-title"><span class="grp-letter">F</span>· Loop expansion</div>
+              <div class="metric-row"><div class="name">Experience discovery rate</div><div class="why">% of users who used ≥2 named experiences in week 1</div></div>
+              <div class="metric-row"><div class="name">Vertical breadth</div><div class="why">Avg distinct domains used per active user (D7)</div></div>
+              <div class="metric-row"><div class="name">Cross-domain engagement rate</div><div class="why">% users using ≥2 domains in a session</div></div>
+            </div>
+
+            <div class="l1-group">
+              <div class="l1-group-title"><span class="grp-letter">H</span>· Outcome value delivered to user &nbsp;<span style="color: var(--grey); font-weight: 500; text-transform: none; letter-spacing: 0;">aspirational at GA · per Mesh</span></div>
+              <div class="metric-row"><div class="name">Time saved per user per day (estimated)</div><div class="why">Per Mesh GA aspirational: 30–60 min/user/day. Estimated per task type: ordering vs going to store, info lookup vs Google, recharge vs MyJio, etc.</div></div>
+              <div class="metric-row"><div class="name">Money saved per user per month (estimated)</div><div class="why">Per Mesh GA aspirational: ₹500–2,000/user/month. Driven by deal-finding, mandi timing, GST/scheme advice, financial decisions.</div></div>
+              <div class="metric-row"><div class="name">Money earned per user per month (estimated)</div><div class="why">Income-driven use cases: jobs found, commerce sold at better timing (Raju's mandi advice), better financial timing</div></div>
+              <div class="metric-row"><div class="name">User-reported value (survey)</div><div class="why">Weekly survey: "How much time / money did JBIQ save you this week?" Self-reported quantification.</div></div>
+              <div class="metric-row"><div class="name">Substitution rate</div><div class="why">% of tasks where the user reports JBIQ replaced another app / service / call. Tests "completes things vs points elsewhere".</div></div>
+              <div class="metric-row"><div class="name">Value Ribbon surface engagement</div><div class="why">% of users who view the cumulative ₹-saved / time-saved widget on home — does showing the value back to the user drive return?</div></div>
+              <div class="metric-row"><div class="name">Per-domain value attribution</div><div class="why">Estimated time / money saved per domain — Cricket, Devotion, Commerce, Finance, Jobs, Govt Schemes have very different value profiles</div></div>
+            </div>
+
+            <div class="l1-group">
+              <div class="l1-group-title"><span class="grp-letter">G</span>· Experience metrics &nbsp;<span style="color: var(--grey); font-weight: 500; text-transform: none; letter-spacing: 0;">filter: Generic vs Signature</span></div>
+
+              <div class="subgroup-title" style="margin-top: 4px;">G.1 · Per-experience metrics (applies to all — slice by Generic / Signature)</div>
+              <div class="metric-row"><div class="name">Per-Experience Attempt Rate</div><div class="why">% of DQU who started a session with this experience</div></div>
+              <div class="metric-row"><div class="name">Per-Experience Completion Rate</div><div class="why">% of attempts resulting in a resolved task</div></div>
+              <div class="metric-row"><div class="name">Per-Experience 24-hour Return Rate</div><div class="why">Same-day pull</div></div>
+              <div class="metric-row"><div class="name">Per-Experience D7 / D30 Stickiness</div><div class="why">Multi-week pull</div></div>
+              <div class="metric-row"><div class="name">Per-Experience Avg Turns / Session Duration</div><div class="why">Depth of engagement</div></div>
+              <div class="metric-row"><div class="name">Per-Experience Cohort Penetration</div><div class="why">% of each Cohort A–E using this experience in last 30d</div></div>
+              <div class="metric-row"><div class="name">Per-Experience Net Promoter (in-context)</div><div class="why">Experience-specific satisfaction at flow exit</div></div>
+
+              <div class="subgroup-title">G.2 · Signature qualification benchmarks (must clear ALL to be classified Signature)</div>
+              <div class="metric-row"><div class="name">Proprietary data binding</div><div class="why">Verified Jio/RIL data binding OR exclusive 3P integration. Binary 1/0.</div></div>
+              <div class="metric-row"><div class="name">Loop-forming benchmark</div><div class="why">Per-Experience D7 ≥ threshold AND 24h return ≥ threshold</div></div>
+              <div class="metric-row"><div class="name">Cultural irreplaceability benchmark</div><div class="why">"Would you use another AI?" % saying No ≥ threshold + cultural relevance ≥ threshold</div></div>
+              <div class="metric-row"><div class="name">Signature Qualification Score (composite)</div><div class="why">Pass-count 0–3. Only 3/3 qualifies as Signature.</div></div>
+
+              <div class="subgroup-title">G.3 · Signature vs Non-Signature deltas (the real qualifier)</div>
+              <div class="metric-row"><div class="name">D7 Retention Delta</div><div class="why">D7(Signature) − D7(Non-Signature) for same domain</div></div>
+              <div class="metric-row"><div class="name">Completion Delta</div><div class="why">Useful Task Rate(Signature) − Useful Task Rate(Non-Signature)</div></div>
+              <div class="metric-row"><div class="name">Stickiness Delta</div><div class="why">D30(Signature) − D30(Non-Signature)</div></div>
+              <div class="metric-row"><div class="name">Per-Cohort Pull Delta</div><div class="why">% of cohort using Signature − % using Generic-only — per A–E</div></div>
+              <div class="metric-row"><div class="name">NPS Delta</div><div class="why">NPS(Signature in-context) − NPS(Generic chat for same intent)</div></div>
+              <div class="metric-row"><div class="name">Per-Domain Coverage Delta</div><div class="why">Queries served by Signature ÷ total in domain</div></div>
+              <div class="metric-row"><div class="name">Time-to-Resolution Delta</div><div class="why">Median time-to-resolved(Signature) − Median(Generic)</div></div>
+
+              <div class="subgroup-title">G.4 · Catalog velocity (how fast new experiences ship to users)</div>
+              <div class="metric-row"><div class="name">New experiences live / month</div><div class="why">Total Vertical Experiences shipped to production per month (1P + partner-built)</div></div>
+              <div class="metric-row"><div class="name">New Signature Experiences live / month</div><div class="why">Subset clearing 3/3 qualification benchmarks (G.2)</div></div>
+              <div class="metric-row"><div class="name">Time idea → live (median, p90 days)</div><div class="why">Process velocity</div></div>
+              <div class="metric-row"><div class="name">% of new experiences clearing D7 retention threshold within 30 days of launch</div><div class="why">Quality-adjusted velocity</div></div>
+            </div>
+
+            <div class="metric-block" style="margin-top: 12px;">
+              <span class="lbl lbl-l2">L2 — Diagnostics</span>
+              <div class="metric-row"><div class="name">Pre-activation funnel</div><div class="why">Install → DAU → DQU → Activation rates</div></div>
+              <div class="metric-row"><div class="name">Curve diagnostics</div><div class="why">D1→D7, D7→D30, D30→D90 drop-off rates</div></div>
+              <div class="metric-row"><div class="name">Behavioural satisfaction</div><div class="why">Rephrase rate, Re-ask rate, Response dwell time</div></div>
+              <div class="metric-row"><div class="name">Cohort Variance</div><div class="why">max − min Active Habit Rate across A–E (Bharat-resonance diagnostic)</div></div>
+              <div class="metric-row"><div class="name">Comms-layer effectiveness</div><div class="why">PN / WA open rate, post-click action rate</div></div>
+              <div class="metric-row"><div class="name">NPS verbatim themes, free-text sentiment</div><div class="why">Detractor / promoter signals</div></div>
+              <div class="metric-row"><div class="name">Trust signal events</div><div class="why">Shared output, advocacy actions</div></div>
+            </div>
+
+            <div class="layer-attrs">
+              <strong>Attributes captured:</strong> Cohort A–E · Time horizon (D1/D7/D30/D90) · Acquisition channel · Modality · Language · Experience type · Surface · Behavioural patterns
+            </div>
+          </div>
+        </details>
+
+        <!-- LAYER 2 -->
+        <details class="layer">
+          <summary class="layer-summary">
+            <div class="layer-num">2</div>
+            <div class="layer-text">
+              <div class="layer-name">The Personalization</div>
+              <div class="layer-q">Did it feel made for me?</div>
+            </div>
+            <div class="layer-arrow">›</div>
+          </summary>
+          <div class="layer-body">
+            <div class="layer-divider"></div>
+            <div class="metric-block">
+              <span class="lbl lbl-l0">L0</span>
+              <strong>Personalization Resonance Rate</strong> = % of returning sessions where (a) personalization fired, (b) was correct, AND (c) the user signaled value
+            </div>
+            <div class="metric-block">
+              <span class="lbl lbl-l1">L1 — Drivers</span>
+              <div class="metric-row"><div class="name">Memory-driven (Context-Driven Value Rate)</div><div class="why">Memory retrieved + applied + user did not re-explain</div></div>
+              <div class="metric-row"><div class="name">Surface-driven (Widget / tile tap rate)</div><div class="why">Taps ÷ impressions on any home widget or tile</div></div>
+              <div class="metric-row"><div class="name">Language-driven</div><div class="why">Correct-language session rate (no manual selection)</div></div>
+              <div class="metric-row"><div class="name">Identity-driven</div><div class="why">JioID pre-load rate</div></div>
+              <div class="metric-row"><div class="name">Adaptive engagement</div><div class="why">Next-prompt match rate · time-of-day relevance</div></div>
+              <div class="metric-row"><div class="name">N=1 Retention Lift</div><div class="why">D30(memory) − D30(no-memory cohort) — periodic causal validation</div></div>
+            </div>
+            <div class="metric-block">
+              <span class="lbl lbl-l2">L2 — Diagnostics</span>
+              <div class="metric-row"><div class="name">Memory capture / retrieval P/R</div><div class="why">Did we save and find the right things?</div></div>
+              <div class="metric-row"><div class="name">Re-explanation rate</div><div class="why">Direct test of "knows you"</div></div>
+              <div class="metric-row"><div class="name">Hallucinated facts per audit</div><div class="why">Memory hallucinations are the worst kind</div></div>
+              <div class="metric-row"><div class="name">Cross-language recall rate</div><div class="why">Set in Hindi, recalled in Tamil</div></div>
+              <div class="metric-row"><div class="name">Memory-trust signal events</div><div class="why">Saved Kundali, ongoing memory engagement</div></div>
+              <div class="metric-row"><div class="name">Per-widget-position tap rate</div><div class="why">Surface effectiveness diagnostic</div></div>
+            </div>
+            <div class="layer-attrs">
+              <strong>Attributes captured:</strong> Memory state · Language · Cohort A–E · Surface element (widget / tile / suggestion / card) · Time-of-day · Device tier
+            </div>
+          </div>
+        </details>
+
+        <!-- LAYER 3 -->
+        <details class="layer">
+          <summary class="layer-summary">
+            <div class="layer-num">3</div>
+            <div class="layer-text">
+              <div class="layer-name">The Conversation</div>
+              <div class="layer-q">Did talking to it feel natural?</div>
+            </div>
+            <div class="layer-arrow">›</div>
+          </summary>
+          <div class="layer-body">
+            <div class="layer-divider"></div>
+            <div class="metric-block">
+              <span class="lbl lbl-l0">L0</span>
+              <strong>Multi-turn Coherence Rate</strong> = % of multi-turn sessions where context held across turns AND modality switches succeeded
+            </div>
+            <div class="l1-group">
+              <div class="l1-group-title"><span class="grp-letter">·</span>Voice path (Key Bet — most detailed)</div>
+              <div class="metric-row"><div class="name">Voice Primary User Share</div><div class="why">% of DQU with ≥50% voice queries in 7d (Bharat-cut is the headline)</div></div>
+              <div class="metric-row"><div class="name">Voice Initiation · Stickiness · Fallback Rate</div><div class="why">Reach</div></div>
+              <div class="metric-row"><div class="name">ASR WER · Code-mix Completion · Voice Intent Accuracy</div><div class="why">Accuracy of input</div></div>
+              <div class="metric-row"><div class="name">E2E Voice Latency p95 · Barge-in · VAD F1</div><div class="why">Speed</div></div>
+              <div class="metric-row"><div class="name">TTS Naturalness · Playback Completion</div><div class="why">Output</div></div>
+              <div class="metric-row"><div class="name">Voice Carry-Through · Misunderstanding Recovery</div><div class="why">End-to-end</div></div>
+            </div>
+            <div class="l1-group">
+              <div class="l1-group-title"><span class="grp-letter">·</span>Text path</div>
+              <div class="metric-row"><div class="name">Text Query Latency · Completion · Multi-turn rate</div><div class="why">Text experience quality</div></div>
+              <div class="metric-row"><div class="name">Suggested-prompt usage rate</div><div class="why">Discovery within text</div></div>
+            </div>
+            <div class="l1-group">
+              <div class="l1-group-title"><span class="grp-letter">·</span>Image path</div>
+              <div class="metric-row"><div class="name">Image Upload Success · Vision Accuracy · Image-to-Task Completion</div><div class="why">Doc analysis · fact-check · image gen</div></div>
+            </div>
+            <div class="l1-group">
+              <div class="l1-group-title"><span class="grp-letter">·</span>Cross-modal</div>
+              <div class="metric-row"><div class="name">Multi-turn Coherence</div><div class="why">Context held across turns</div></div>
+              <div class="metric-row"><div class="name">Modality Switch Success</div><div class="why">Voice → text mid-flow works</div></div>
+              <div class="metric-row"><div class="name">Turn-Taking Quality</div><div class="why">Barge-in · pacing</div></div>
+            </div>
+            <div class="metric-block">
+              <span class="lbl lbl-l2">L2 — Diagnostics</span>
+              <div class="metric-row"><div class="name">Noise-ASR retention</div><div class="why">Kitchen, market, traffic</div></div>
+              <div class="metric-row"><div class="name">Per-network-type voice latency</div><div class="why">4G / 3G / 2G — Bharat-first</div></div>
+              <div class="metric-row"><div class="name">Per-device-tier voice metrics</div><div class="why">Low-end must hold latency SLO</div></div>
+              <div class="metric-row"><div class="name">Audio Replay Rate · Mic Permission Grant Rate</div><div class="why">Delivery / availability diagnostics</div></div>
+            </div>
+            <div class="layer-attrs">
+              <strong>Attributes captured:</strong> Modality · Language · Cohort A–E · Network type · Device tier · Turn count · Code-mix language pair
+            </div>
+          </div>
+        </details>
+
+        <!-- LAYER 4 -->
+        <details class="layer">
+          <summary class="layer-summary">
+            <div class="layer-num">4</div>
+            <div class="layer-text">
+              <div class="layer-name">The Task Delivery</div>
+              <div class="layer-q">Did the AI do what I asked?</div>
+            </div>
+            <div class="layer-arrow">›</div>
+          </summary>
+          <div class="layer-body">
+            <div class="layer-divider"></div>
+            <div class="metric-block">
+              <span class="lbl lbl-l0">L0</span>
+              <strong>Task Resolution Rate</strong> (system-side: task reached a resolved state)
+            </div>
+            <div class="l1-group">
+              <div class="l1-group-title"><span class="grp-letter">·</span>Accuracy</div>
+              <div class="metric-row"><div class="name">Intent Classification Accuracy</div><div class="why">Did we understand what was asked?</div></div>
+              <div class="metric-row"><div class="name">Routing Accuracy (right skill, first try)</div><div class="why">Right intent, wrong skill = same failure</div></div>
+              <div class="metric-row"><div class="name">Execution Success Rate</div><div class="why">Skill ran without error</div></div>
+              <div class="metric-row"><div class="name">Multi-step Task Success Rate</div><div class="why">Agentic chains are fragile</div></div>
+            </div>
+            <div class="l1-group">
+              <div class="l1-group-title"><span class="grp-letter">·</span>Speed</div>
+              <div class="metric-row"><div class="name">TTFT p95</div><div class="why">Time to first token</div></div>
+              <div class="metric-row"><div class="name">E2E Latency p95</div><div class="why">Full response time</div></div>
+            </div>
+            <div class="metric-block">
+              <span class="lbl lbl-l2">L2 — Diagnostics</span>
+              <div class="metric-row"><div class="name">Per-skill accuracy</div><div class="why">Where is routing weakest?</div></div>
+              <div class="metric-row"><div class="name">Per-domain task completion</div><div class="why">Which domains are weakest?</div></div>
+              <div class="metric-row"><div class="name">Confirmation-bypass rate</div><div class="why">Hard rule, must = 0</div></div>
+              <div class="metric-row"><div class="name">Per-network · per-device latency</div><div class="why">Bharat-first means slow networks must work</div></div>
+            </div>
+            <div class="layer-attrs">
+              <strong>Attributes captured:</strong> Skill · Domain · Intent class · Network type · Device tier · Multi-step depth · Latency percentile
+            </div>
+          </div>
+        </details>
+
+        <!-- LAYER 5 -->
+        <details class="layer">
+          <summary class="layer-summary">
+            <div class="layer-num">5</div>
+            <div class="layer-text">
+              <div class="layer-name">The Quality</div>
+              <div class="layer-q">Was the answer right?</div>
+            </div>
+            <div class="layer-arrow">›</div>
+          </summary>
+          <div class="layer-body">
+            <div class="layer-divider"></div>
+            <div class="metric-block">
+              <span class="lbl lbl-l0">L0</span>
+              <strong>Production Quality Floor</strong> = % of production responses passing all critical eval dimensions
+            </div>
+            <div class="metric-block">
+              <span class="lbl lbl-l1">L1 — Quality dimensions</span>
+              <div class="metric-row"><div class="name">Eval pass rate (offline golden)</div><div class="why">Pre-production quality gate</div></div>
+              <div class="metric-row"><div class="name">Hallucination rate</div><div class="why">Critical for News, Health, Govt Schemes</div></div>
+              <div class="metric-row"><div class="name">Guardrail block rate</div><div class="why">Adversarial inputs — safety at scale</div></div>
+              <div class="metric-row"><div class="name">Drift (online vs offline golden)</div><div class="why">Production must match what was tested (≤10pp)</div></div>
+              <div class="metric-row"><div class="name">CI/CD eval gating coverage</div><div class="why">Every merge must pass evals</div></div>
+              <div class="metric-row"><div class="name">Brand-voice adherence</div><div class="why">Cultural authenticity at response level</div></div>
+              <div class="metric-row"><div class="name">Language authenticity</div><div class="why">Native-speaker eval — sounds native or translated?</div></div>
+            </div>
+            <div class="metric-block">
+              <span class="lbl lbl-l2">L2 — Diagnostics</span>
+              <div class="metric-row"><div class="name">Per-language eval score</div><div class="why">Quality cannot drop in regional languages</div></div>
+              <div class="metric-row"><div class="name">Red-team violation count</div><div class="why">Trend over time</div></div>
+              <div class="metric-row"><div class="name">Eval misses that reached users</div><div class="why">Coverage gap signal</div></div>
+            </div>
+            <div class="layer-attrs">
+              <strong>Attributes captured:</strong> Language · Eval dimension · Drift window · Skill · Audit type
+            </div>
+          </div>
+        </details>
+
+        <!-- LAYER 6 -->
+        <details class="layer">
+          <summary class="layer-summary">
+            <div class="layer-num">6</div>
+            <div class="layer-text">
+              <div class="layer-name">The Platform</div>
+              <div class="layer-q">Did it work when I needed it?</div>
+            </div>
+            <div class="layer-arrow">›</div>
+          </summary>
+          <div class="layer-body">
+            <div class="layer-divider"></div>
+            <div class="metric-block">
+              <span class="lbl lbl-l0">L0</span>
+              <strong>Reliability-Adjusted Availability</strong> = % of seconds platform is up AND within latency SLO AND below crash threshold
+            </div>
+            <div class="metric-block">
+              <span class="lbl lbl-l1">L1 — Components</span>
+              <div class="metric-row"><div class="name">Service uptime %</div><div class="why">Pure availability</div></div>
+              <div class="metric-row"><div class="name">Latency SLO compliance</div><div class="why">Voice / agentic / dashboard SLOs</div></div>
+              <div class="metric-row"><div class="name">Crash rate per 100 sessions</div><div class="why">Trust-killer if visible</div></div>
+              <div class="metric-row"><div class="name">Scale headroom under load</div><div class="why">Capacity must lead, not lag, demand</div></div>
+              <div class="metric-row"><div class="name">PR-to-production velocity</div><div class="why">Speed of recovery and improvement</div></div>
+            </div>
+            <div class="metric-block">
+              <span class="lbl lbl-l2">L2 — Diagnostics</span>
+              <div class="metric-row"><div class="name">Per-service availability</div><div class="why">Where is reliability weakest?</div></div>
+              <div class="metric-row"><div class="name">Per-region latency</div><div class="why">Geo coverage holding?</div></div>
+              <div class="metric-row"><div class="name">Self-serve service setup time</div><div class="why">Foundation cost-of-shipping</div></div>
+              <div class="metric-row"><div class="name">Incident detect → ack time</div><div class="why">Operational responsiveness</div></div>
+            </div>
+            <div class="layer-attrs">
+              <strong>Attributes captured:</strong> Service · Region · Surface · SLO type · Concurrent load · Incident class
+            </div>
+          </div>
+        </details>
+
+        <!-- LAYER 7 -->
+        <details class="layer">
+          <summary class="layer-summary">
+            <div class="layer-num">7</div>
+            <div class="layer-text">
+              <div class="layer-name">The Partners</div>
+              <div class="layer-q">Scale path — supplier of Layers 4–5</div>
+            </div>
+            <div class="layer-arrow">›</div>
+          </summary>
+          <div class="layer-body">
+            <div class="layer-divider"></div>
+            <div class="metric-block">
+              <span class="lbl lbl-l0">L0</span>
+              <strong>% of skills served by partners</strong> &nbsp; <em style="color: var(--grey)">(everyday intent or Signature Experience — both count)</em>
+            </div>
+            <div class="metric-block">
+              <span class="lbl lbl-l1">L1</span>
+              <div class="metric-row"><div class="name">Partner-built skills live in production</div><div class="why">Catalog share — total partner skills</div></div>
+              <div class="metric-row"><div class="name">Self-serve onboarding compliance gate time</div><div class="why">Friction here = no partner ecosystem</div></div>
+              <div class="metric-row"><div class="name">New skills shipped/month autonomously</div><div class="why">Velocity of the ecosystem (no core eng)</div></div>
+              <div class="metric-row"><div class="name">External partners live in production</div><div class="why">Is the platform real?</div></div>
+            </div>
+            <div class="metric-block">
+              <span class="lbl lbl-l2">L2 — Diagnostics</span>
+              <div class="metric-row"><div class="name">Per-partner skill share</div><div class="why">Concentration risk</div></div>
+              <div class="metric-row"><div class="name">Per-partner-skill task completion rate</div><div class="why">Quality consistency across partners</div></div>
+              <div class="metric-row"><div class="name">Manual intervention steps per onboarding</div><div class="why">Friction count, must trend → 0</div></div>
+            </div>
+            <div class="layer-attrs">
+              <strong>Attributes captured:</strong> Partner type (1P / 2P / 3P) · Skill class · Domain · Onboarding stage · Manual-touch count
+            </div>
+          </div>
+        </details>
+
+      </div>
+    </div>
+  </details>
+</section>
+
+<!-- ===== 04 BHARAT ===== -->
+<section id="bharat">
+  <details class="sec-details" open>
+    <summary class="sec-summary">
+      <span class="sec-num">04</span><h2>Bharat Metrics — separate strategic frame</h2>
+      <span class="sec-arrow">›</span>
+    </summary>
+    <div class="sec-body">
+      <div class="sec-body-divider"></div>
+      <p class="sec-sub">Bharat is not a layer of the product tree — it's a parallel strategic frame, reviewed alongside it. Inherits product metrics sliced by Cohort A–E, plus adds qualitative resonance signals.</p>
+      <div class="bharat-card">
+        <div class="bharat-eyebrow">Strategic Frame · Reviewed Quarterly</div>
+        <div class="bharat-title">Does the product resonate with the users we built it for?</div>
+        <div class="bharat-tag">If the deeper user cohorts don't resonate, the strategic bet is failing — regardless of how headline metrics look.</div>
+        <div class="bharat-l0">
+          <span class="lbl lbl-l0">L0</span>
+          <strong>Bharat Persona Composite (BPC)</strong>
+          <div class="bharat-l0-formula">BPC = weighted average of Cohort Score across Cohorts A through E</div>
+          <p style="margin: 6px 0 0; font-size: 12px; color: var(--grey);">Single number leadership tracks. <strong style="color: var(--ink)">Cohort Variance</strong> (max − min) is itself the diagnostic — a healthy average can hide one failing cohort.</p>
+        </div>
+        <div style="margin-top: 12px;">
+          <span class="lbl lbl-l1">L1 — Per-cohort health (each 0–100)</span>
+          <div class="bharat-cohorts">
+            <div class="cohort-pill"><div class="ch">A</div><div class="lb">Cohort A</div></div>
+            <div class="cohort-pill"><div class="ch">B</div><div class="lb">Cohort B</div></div>
+            <div class="cohort-pill"><div class="ch">C</div><div class="lb">Cohort C</div></div>
+            <div class="cohort-pill"><div class="ch">D</div><div class="lb">Cohort D</div></div>
+            <div class="cohort-pill"><div class="ch">E</div><div class="lb">Cohort E</div></div>
+          </div>
+          <p style="font-size: 11px; color: var(--grey); margin: 6px 0 0;">Each Cohort Score = weighted composite of Active Habit, Useful Task, Personalization Resonance, NPS, voice signals — sliced to that cohort. Cohort definitions per <code style="font-size: 11px;">jbiq_user_cohort_gtm__v1.docx</code>.</p>
+        </div>
+        <div class="bharat-l1">
+          <div class="bharat-l1-card">
+            <div class="nm">Cultural & linguistic resonance</div>
+            <div class="ds">"Feels native vs translated" per language · Code-mix authenticity · Cultural relevance · Regional idiom usage</div>
+          </div>
+          <div class="bharat-l1-card">
+            <div class="nm">Persona-fit / "made for me"</div>
+            <div class="ds">Per-cohort survey items · "It understands me" · "Made for someone like me"</div>
+          </div>
+          <div class="bharat-l1-card">
+            <div class="nm">Bharat user-pattern signals</div>
+            <div class="ds">Shared-device handling · Family-as-unit relevance · Micro-loop satisfaction · Trust in low-end-device experience</div>
+          </div>
+        </div>
+        <div class="bharat-l2">
+          <span class="lbl lbl-l2">L2 — Diagnostics</span>
+          <div class="metric-row"><div class="name">Per-language brand-voice cross-language audit</div><div class="why">6 character traits · sycophancy rate · "translated feel" detection</div></div>
+          <div class="metric-row"><div class="name">FGD findings per cohort</div><div class="why">Top 5 promoter / detractor themes per A–E</div></div>
+          <div class="metric-row"><div class="name">Diary-study findings per cohort</div><div class="why">Longitudinal qualitative signal</div></div>
+          <div class="metric-row"><div class="name">Per-language code-mix completion</div><div class="why">Hinglish · Tanglish · Gujlish · Marlish · Kanglish</div></div>
+          <div class="metric-row"><div class="name">Cross-cohort comparison</div><div class="why">Which cohorts are most / least served, and why</div></div>
+        </div>
+        <p style="margin: 12px 0 0; font-size: 12px; color: var(--grey-2); padding: 10px 12px; background: var(--bg-blue-soft); border-radius: 4px;">
+          <strong>Detailed framework:</strong> <code style="font-size: 11px;">bharat-metrics.md</code> (Section 1: Per-Cohort Product Health · Section 2: Bharat-Specific Resonance metrics)
+        </p>
+      </div>
+    </div>
+  </details>
+</section>
+
+<!-- ===== 05 CROSS-CUTTING ATTRIBUTES (detailed) ===== -->
+<section id="attrs">
+  <details class="sec-details" open>
+    <summary class="sec-summary">
+      <span class="sec-num">05</span><h2>Cross-Cutting Attributes</h2>
+      <span class="sec-arrow">›</span>
+    </summary>
+    <div class="sec-body">
+      <div class="sec-body-divider"></div>
+      <p class="sec-sub">Every L0 / L1 in the tree must be sliceable by these. Every metric reported should carry the dimensions it was sliced by.</p>
+      <div class="attrs-grid">
+
+        <div class="attr-card">
+          <div class="attr-name">Cohort A · B · C · D · E</div>
+          <div class="attr-vals">5 user cohorts per <code>jbiq_user_cohort_gtm__v1.docx</code></div>
+          <div class="attr-where">Each cohort encapsulates language, device, geography, segment. Bharat L0, Active Habit, NPS, Useful Task — all slice by cohort.</div>
+        </div>
+
+        <div class="attr-card">
+          <div class="attr-name">Loop type</div>
+          <div class="attr-vals">Daily · Task · Life</div>
+          <div class="attr-where">Mesh use-case framing. Active Habit Rate per loop type, per-experience retention.</div>
+        </div>
+
+        <div class="attr-card">
+          <div class="attr-name">Domain</div>
+          <div class="attr-vals">12 daily-life domains</div>
+          <div class="attr-where">Daily Assistant · Entertainment · News · Jobs · Devotion · Astrology · Life Companion · Health · Finance · Commerce · Local Services · Govt Services. Useful Task Rate per domain.</div>
+        </div>
+
+        <div class="attr-card">
+          <div class="attr-name">Experience type</div>
+          <div class="attr-vals">Vertical · Signature · Generic chat</div>
+          <div class="attr-where">Group G filter. SE Retention Lift, Coverage Delta, Generic→SE Conversion all anchored on this cut.</div>
+        </div>
+
+        <div class="attr-card">
+          <div class="attr-name">Modality</div>
+          <div class="attr-vals">Voice · Text · Image</div>
+          <div class="attr-where">Voice is the Key Bet. Voice Primary User Share, modality switch success, per-modality completion.</div>
+        </div>
+
+        <div class="attr-card">
+          <div class="attr-name">Language</div>
+          <div class="attr-vals">12 Indian languages</div>
+          <div class="attr-where">Hindi · English · Tamil · Telugu · Gujarati · Bengali · Marathi · Kannada · Malayalam · Punjabi · Odia · Assamese. ASR WER, Production Quality Floor, NPS, brand-voice adherence.</div>
+        </div>
+
+        <div class="attr-card">
+          <div class="attr-name">Device tier</div>
+          <div class="attr-vals">Low-end · Mid-end · Flagship</div>
+          <div class="attr-where">Bharat-first means low-end must work. Latency, crash rate, voice abandonment.</div>
+        </div>
+
+        <div class="attr-card">
+          <div class="attr-name">Network type</div>
+          <div class="attr-vals">4G · 3G · 2G</div>
+          <div class="attr-where">Voice runs on 3G; text on 2G. Per-network voice latency, task completion.</div>
+        </div>
+
+        <div class="attr-card">
+          <div class="attr-name">Surface</div>
+          <div class="attr-vals">Home · Persona page · Suggestion tile · Widget · Deep link · Notification</div>
+          <div class="attr-where">Surface time-to-meaningful, widget tap rate, surface-driven personalization.</div>
+        </div>
+
+        <div class="attr-card">
+          <div class="attr-name">Time horizon</div>
+          <div class="attr-vals">D1 · D7 · D30 · D90</div>
+          <div class="attr-where">Retention curve, cohort analysis, all return rate metrics.</div>
+        </div>
+
+        <div class="attr-card">
+          <div class="attr-name">Acquisition channel</div>
+          <div class="attr-vals">Jio retail · MyJio · JioFiber · Organic · Paid · Referral</div>
+          <div class="attr-where">Per-channel D7 organic return — separates real users from vanity installs.</div>
+        </div>
+
+        <div class="attr-card">
+          <div class="attr-name">Session depth</div>
+          <div class="attr-vals">Single-turn · Multi-turn (≥3) · Extended (≥5)</div>
+          <div class="attr-where">Multi-turn Coherence, Engagement metrics, conversation quality.</div>
+        </div>
+
+        <div class="attr-card">
+          <div class="attr-name">Time of day</div>
+          <div class="attr-vals">Morning · Day · Evening · Night</div>
+          <div class="attr-where">Adaptive engagement (next-prompt), Personalization, contextual greeting.</div>
+        </div>
+
+        <div class="attr-card">
+          <div class="attr-name">Day of week</div>
+          <div class="attr-vals">Weekday · Weekend</div>
+          <div class="attr-where">Engagement frequency, weekend-specific use cases.</div>
+        </div>
+
+        <div class="attr-card">
+          <div class="attr-name">Region</div>
+          <div class="attr-vals">Urban · Tier-2 · Tier-3 · Rural</div>
+          <div class="attr-where">Per-region latency, distribution-derived cohort cuts, Bharat segment composite.</div>
+        </div>
+
+        <div class="attr-card">
+          <div class="attr-name">Skill class</div>
+          <div class="attr-vals">1P · 2P · 3P · Generic chat</div>
+          <div class="attr-where">Partner skill share, per-partner task completion (Layer 7).</div>
+        </div>
+
+      </div>
+    </div>
+  </details>
+</section>
+
+<!-- ===== 06 OUT OF TREE ===== -->
+<section id="out">
+  <details class="sec-details" open>
+    <summary class="sec-summary">
+      <span class="sec-num">06</span><h2>Parallel Tracks — outside the Product Tree</h2>
+      <span class="sec-arrow">›</span>
+    </summary>
+    <div class="sec-body">
+      <div class="sec-body-divider"></div>
+      <p class="sec-sub">Real, measurable, important — but they're infrastructure, GTM, or operations, not product-quality measures. Bharat is not in this list — see Section 06.</p>
+      <div class="out">
+        <div class="out-list">
+          <div class="out-item"><div class="ot-name">Growth (GTM)</div><div class="ot-where">Acquisition · CAC · Channel mix</div></div>
+          <div class="out-item"><div class="ot-name">Distribution (GTM)</div><div class="ot-where">Channels · Partnerships</div></div>
+          <div class="out-item"><div class="ot-name">Business / Monetization</div><div class="ot-where">ARPU · LTV · Subscription (post-GA)</div></div>
+          <div class="out-item"><div class="ot-name">Customer Lifecycle</div><div class="ot-where">8 user-journey stages · Habit Formation Rate</div></div>
+          <div class="out-item"><div class="ot-name">Data (Foundation)</div><div class="ot-where">Insight Velocity · Dashboards · Instrumentation</div></div>
+          <div class="out-item"><div class="ot-name">A/B Experimentation</div><div class="ot-where">Causal validation · Experiment velocity</div></div>
+          <div class="out-item"><div class="ot-name">Unit Economics</div><div class="ot-where">Tokens/user · Cost/query · Cost/MAU</div></div>
+        </div>
+      </div>
+    </div>
+  </details>
+</section>
+
+<!-- ===== 07 GLOSSARY ===== -->
+<section id="glossary">
+  <details class="sec-details">
+    <summary class="sec-summary">
+      <span class="sec-num">07</span><h2>Glossary — abbreviations and definitions</h2>
+      <span class="sec-arrow">›</span>
+    </summary>
+    <div class="sec-body">
+      <div class="sec-body-divider"></div>
+      <div class="gloss-grid">
+        <div class="gloss-entry"><span class="gloss-term">L0</span><span class="gloss-def"><b>Level 0</b> — the single primary metric for a layer; the north-star test</span></div>
+        <div class="gloss-entry"><span class="gloss-term">L1</span><span class="gloss-def"><b>Level 1</b> — primary drivers / components that decompose the L0</span></div>
+        <div class="gloss-entry"><span class="gloss-term">L2</span><span class="gloss-def"><b>Level 2</b> — leading indicators and diagnostics; cuts and signals to understand L1</span></div>
+        <div class="gloss-entry"><span class="gloss-term">DAU</span><span class="gloss-def"><b>Daily Active Users</b> — daily snapshot derived from MAU (users who opened the app today). Used in funnel diagnostics; not a primary unit.</span></div>
+        <div class="gloss-entry"><span class="gloss-term">DQU</span><span class="gloss-def"><b>Daily Querying Users</b> — daily snapshot derived from MQU (users who sent ≥1 query today). Used in the L0 stickiness ratio (Organic DQU ÷ MQU); not a primary unit.</span></div>
+        <div class="gloss-entry"><span class="gloss-term">MAU</span><span class="gloss-def"><b>Monthly Active Users</b> — opened the app in last 30 days (rolling). Funnel diagnostic only.</span></div>
+        <div class="gloss-entry"><span class="gloss-term">MQU</span><span class="gloss-def"><b>Monthly Querying Users</b> — sent ≥1 query in last 30 days (rolling). The activity unit and L0 denominator.</span></div>
+        <div class="gloss-entry"><span class="gloss-term">MTU</span><span class="gloss-def"><b>Monthly Task Users</b> — completed ≥1 useful task in last 30 days (rolling). Monthly value-delivered unit.</span></div>
+        <div class="gloss-entry"><span class="gloss-term">NPS</span><span class="gloss-def"><b>Net Promoter Score</b> — would-you-recommend signal</span></div>
+        <div class="gloss-entry"><span class="gloss-term">CSAT</span><span class="gloss-def"><b>Customer Satisfaction</b> score on a single response or session</span></div>
+        <div class="gloss-entry"><span class="gloss-term">D1 / D7 / D30 / D90</span><span class="gloss-def"><b>Day 1 / 7 / 30 / 90 retention</b> — % returning at that day</span></div>
+        <div class="gloss-entry"><span class="gloss-term">SE</span><span class="gloss-def"><b>Signature Experience</b> — Vertical Experience that passes 3 quality checks</span></div>
+        <div class="gloss-entry"><span class="gloss-term">L0–L3 (SE)</span><span class="gloss-def"><b>Maturity ladder</b>: L0 basic · L1 better · L2 differentiated · L3 signature</span></div>
+        <div class="gloss-entry"><span class="gloss-term">BPC</span><span class="gloss-def"><b>Bharat Persona Composite</b> — weighted average across Cohorts A–E</span></div>
+        <div class="gloss-entry"><span class="gloss-term">Cohort A–E</span><span class="gloss-def">5 user cohorts per <code>jbiq_user_cohort_gtm__v1.docx</code></span></div>
+        <div class="gloss-entry"><span class="gloss-term">P7</span><span class="gloss-def"><b>Principle 7</b>: "Build for the loop, not the visit"</span></div>
+        <div class="gloss-entry"><span class="gloss-term">ASR</span><span class="gloss-def"><b>Automatic Speech Recognition</b></span></div>
+        <div class="gloss-entry"><span class="gloss-term">TTS</span><span class="gloss-def"><b>Text-to-Speech</b></span></div>
+        <div class="gloss-entry"><span class="gloss-term">WER</span><span class="gloss-def"><b>Word Error Rate</b> — ASR accuracy (lower better)</span></div>
+        <div class="gloss-entry"><span class="gloss-term">VAD</span><span class="gloss-def"><b>Voice Activity Detection</b></span></div>
+        <div class="gloss-entry"><span class="gloss-term">MOS</span><span class="gloss-def"><b>Mean Opinion Score</b> — TTS naturalness 1–5</span></div>
+        <div class="gloss-entry"><span class="gloss-term">TTFT</span><span class="gloss-def"><b>Time to First Token</b></span></div>
+        <div class="gloss-entry"><span class="gloss-term">E2E</span><span class="gloss-def"><b>End-to-End</b> latency</span></div>
+        <div class="gloss-entry"><span class="gloss-term">p50 / p95</span><span class="gloss-def">50th / 95th <b>percentile latency</b></span></div>
+        <div class="gloss-entry"><span class="gloss-term">SLO</span><span class="gloss-def"><b>Service Level Objective</b></span></div>
+        <div class="gloss-entry"><span class="gloss-term">CI/CD</span><span class="gloss-def"><b>Continuous Integration / Continuous Deployment</b></span></div>
+        <div class="gloss-entry"><span class="gloss-term">PN / WA</span><span class="gloss-def"><b>Push Notification</b> / <b>WhatsApp</b></span></div>
+        <div class="gloss-entry"><span class="gloss-term">CAC</span><span class="gloss-def"><b>Cost of Acquisition</b> per user</span></div>
+        <div class="gloss-entry"><span class="gloss-term">LTV</span><span class="gloss-def"><b>Lifetime Value</b> per user</span></div>
+        <div class="gloss-entry"><span class="gloss-term">ARPU</span><span class="gloss-def"><b>Average Revenue Per User</b></span></div>
+        <div class="gloss-entry"><span class="gloss-term">1P / 2P / 3P</span><span class="gloss-def"><b>First / Second / Third party</b></span></div>
+        <div class="gloss-entry"><span class="gloss-term">LLM / SLM</span><span class="gloss-def"><b>Large / Small Language Model</b></span></div>
+        <div class="gloss-entry"><span class="gloss-term">MCP</span><span class="gloss-def"><b>Model Context Protocol</b></span></div>
+        <div class="gloss-entry"><span class="gloss-term">FnF</span><span class="gloss-def"><b>Friends and Family</b> program</span></div>
+        <div class="gloss-entry"><span class="gloss-term">GA</span><span class="gloss-def"><b>General Availability</b> — public launch</span></div>
+        <div class="gloss-entry"><span class="gloss-term">OCP</span><span class="gloss-def"><b>Omni Central Profile</b> — intelligence layer</span></div>
+        <div class="gloss-entry"><span class="gloss-term">UCP</span><span class="gloss-def"><b>User Central Profile</b> — input into OCP</span></div>
+        <div class="gloss-entry"><span class="gloss-term">FGD</span><span class="gloss-def"><b>Focus Group Discussion</b></span></div>
+        <div class="gloss-entry"><span class="gloss-term">pp</span><span class="gloss-def"><b>Percentage points</b> (95% → 85% = 10pp)</span></div>
+        <div class="gloss-entry"><span class="gloss-term">JioID</span><span class="gloss-def">Reliance Jio user identity</span></div>
+      </div>
+    </div>
+  </details>
+</section>
+
+    </main>
+  </div>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-left">JioBharatIQ · Product Metrics Design</div>
+    <div class="foot-right">Author <span>Sridhar</span><span class="sep">·</span><span>v1</span></div>
+  </div>
+</footer>
+
+</body>
+</html>

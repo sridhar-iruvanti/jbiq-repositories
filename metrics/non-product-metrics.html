@@ -1,0 +1,513 @@
+<!DOCTYPE html><html><head><meta charset=utf-8><style>body{font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;line-height:1.5;color:#0a0a14;max-width:900px;margin:2em auto;padding:1em}h1{color:#0A2885;border-bottom:2px solid #E63946;padding-bottom:6px}h2{color:#0A2885;border-bottom:1px solid #E0E0EA;padding-bottom:4px;margin-top:2em}h3,h4,h5{color:#0A2885;margin-top:1.5em}h5{font-size:1em;color:#444}table{border-collapse:collapse;margin:1em 0;width:100%;font-size:.95em}th,td{border:1px solid #E0E0EA;padding:8px 12px;text-align:left;vertical-align:top}th{background:#F5F5FA;color:#0A2885}code{background:#F5F5FA;padding:2px 5px;border-radius:3px;font-family:SF Mono,Monaco,monospace;font-size:.9em}pre{background:#F5F5FA;padding:12px;border-radius:4px;overflow-x:auto}em{color:#666677}strong{color:#0A0A14}hr{border:none;border-top:1px solid #E0E0EA;margin:2em 0}</style></head><body><h1>JioBharatIQ — Non-Product Metrics</h1>
+<p><em>Parallel metrics tracks that sit </em><em>outside</em><em> the Product Metrics Tree (<code>metrics-tree.md</code>). Real, measurable, important — but they're infrastructure, GTM, operations, or strategic content management, not product-quality measures of whether the AI works for users.</em></p>
+<p><em>Owner: Sridhar (cross-track view) · Last updated: 2026-05-10</em></p>
+<hr />
+<h2>Why these are not in the Product Tree</h2>
+<p>A product metric measures whether the product <strong>delivered value to the user</strong>. The metrics here measure:</p>
+<ul>
+<li>Whether we acquired users (<strong>Growth</strong>)</li>
+<li>Whether we can run the business sustainably (<strong>Unit Economics</strong>)</li>
+<li>Whether we can measure (<strong>Data</strong>)</li>
+<li>Whether we can validate causally (<strong>A/B Experimentation</strong>)</li>
+<li>Whether we can ship content (<strong>Vertical Portfolio Management</strong>)</li>
+<li>Whether comms moves the lifecycle (<strong>Customer Lifecycle</strong>)</li>
+<li>Whether we generate revenue (<strong>Business / Monetization</strong>, post-GA)</li>
+</ul>
+<p>All necessary for the product to exist and grow — but not measures of the product itself.</p>
+<hr />
+<h2>Track 1 — Growth (GTM)</h2>
+<p><em>Acquisition, CAC, channel mix, paid attribution. Owned by GTM/Marketing.</em></p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>New users acquired per month</td>
+<td>Total new installs across all channels</td>
+</tr>
+<tr>
+<td>Activated New Users / Month</td>
+<td>Installs that fire ≥1 query within 7 days (the quality-adjusted view)</td>
+</tr>
+<tr>
+<td>CAC</td>
+<td>Cost of Acquisition per user</td>
+</tr>
+<tr>
+<td>Channel mix</td>
+<td>% of acquisitions per channel</td>
+</tr>
+<tr>
+<td>Per-channel D7 organic return</td>
+<td>Cohort retention sliced by acquisition channel — separates real users from vanity installs</td>
+</tr>
+<tr>
+<td>Per-channel CAC</td>
+<td>Acquisition cost per channel</td>
+</tr>
+<tr>
+<td>Attribution coverage</td>
+<td>% of installs with attributable source</td>
+</tr>
+<tr>
+<td>Referral attribution rate</td>
+<td>% of new installs from in-app referrals (product-earned, flagged here for completeness)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Interface to Product Tree:</strong>
+- GTM produces installs → consumed by <strong>Activation Rate</strong> (Layer 1 L1)
+- Product earns advocacy → <strong>Virality, Active Share Rate, Referral Attribution Rate</strong> (Layer 1, components of Active Habit Rate) flow back to GTM</p>
+<hr />
+<h2>Track 2 — Distribution (GTM)</h2>
+<p><em>Channels through which users reach the product — Jio retail, MyJio, JioFiber, organic search, paid acquisition, referral. Owned by GTM.</em></p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Channel install volume</td>
+<td>Per-channel new users</td>
+</tr>
+<tr>
+<td>Channel cohort distribution</td>
+<td>Which Cohort A–E each channel produces</td>
+</tr>
+<tr>
+<td>Distribution partnership outcomes</td>
+<td>Effectiveness of bundle / retail / OEM deals</td>
+</tr>
+<tr>
+<td>Distribution-driven activation rate</td>
+<td>% of channel users who activate</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Interface:</strong> The <strong>Cohort A–E</strong> cross-cut in the product tree slices every metric by distribution-derived cohort segments without owning the channels themselves.</p>
+<hr />
+<h2>Track 3 — Business / Monetization (post-GA)</h2>
+<p><em>Revenue, transactions, subscriptions. Out of scope at GA per the Mesh ("no advertising, transactions, subscriptions at GA"). Activates post-GA. Track structure exists; metrics activate when monetization launches.</em></p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>When it activates</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ARPU (Average Revenue Per User)</td>
+<td>Post-monetization</td>
+</tr>
+<tr>
+<td>Per-feature monetization conversion</td>
+<td>Post-monetization</td>
+</tr>
+<tr>
+<td>Transaction volume per user</td>
+<td>Post-monetization</td>
+</tr>
+<tr>
+<td>Subscription conversion rate</td>
+<td>Post-monetization</td>
+</tr>
+<tr>
+<td>Subscription churn rate</td>
+<td>Post-monetization</td>
+</tr>
+<tr>
+<td>LTV (Lifetime Value)</td>
+<td>Post-monetization</td>
+</tr>
+<tr>
+<td>LTV/CAC ratio</td>
+<td>Post-monetization</td>
+</tr>
+<tr>
+<td>Ad revenue per user (if ads ship)</td>
+<td>Post-monetization, if applicable</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Status:</strong> Inactive at GA. No interface to Product Tree until monetization is live.</p>
+<hr />
+<h2>Track 4 — Customer Lifecycle</h2>
+<p><em>Per <code>JBIQ_User_Lifecycle_Framework_v1.0.docx</code> (April 2026). Eight stages defined by intent signals (not days). The lifecycle is a user-journey framework — comms is one mechanism for moving users through stages, but the lifecycle itself is broader (covers product surfaces, comms, and behavioural transitions). Owned by Sridhar.</em></p>
+<h3>Lifecycle stages and their metrics</h3>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Definition</th>
+<th>Key metrics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Onboarding</strong></td>
+<td>First home page load → tooltips dismissed or first query sent</td>
+<td>Onboarding completion %, time to first query, drop-off point</td>
+</tr>
+<tr>
+<td><strong>Activation</strong></td>
+<td>First query response received</td>
+<td>Activation rate, D1 return rate, DQU, first query modality</td>
+</tr>
+<tr>
+<td><strong>Engagement</strong></td>
+<td>Y* queries across 2+ sessions; multiple session, multiple query types</td>
+<td>WAU, DQU, queries per session, multi-turn rate, modality mix, feature breadth</td>
+</tr>
+<tr>
+<td><strong>Retention (Prompted)</strong></td>
+<td>Returns consistently in response to PN/WA — channel-dependent habit</td>
+<td>MAU, DAU/MAU, DQU, at-risk %, query length trend</td>
+</tr>
+<tr>
+<td><strong>Retention (Organic)</strong></td>
+<td>Returns on own intent without any prompt — habit formed</td>
+<td>MAU, DAU/MAU, DQU, <strong>Habit Formation Rate</strong>, query length trend</td>
+</tr>
+<tr>
+<td><strong>Re-engagement</strong></td>
+<td>App installed; no query for X+ days</td>
+<td>Reactivation rate, sessions post-nudge, DQU recovery, PN vs WA response rate</td>
+</tr>
+<tr>
+<td><strong>Uninstalled</strong></td>
+<td>User has removed the app — PN channel lost</td>
+<td>Re-install rate, WA open rate, WA response rate, stage at uninstall</td>
+</tr>
+<tr>
+<td><strong>Winback</strong></td>
+<td>Re-install after prior uninstall — prior context exists</td>
+<td>D14 re-retention, time to exit, DQU recovery, multi-turn rate</td>
+</tr>
+<tr>
+<td><strong>Advocacy</strong> (outcome layer, not sequential)</td>
+<td>Satisfaction signal fired — high multi-turn, repeated daily use</td>
+<td>Rating submitted rate, referral shared rate</td>
+</tr>
+</tbody>
+</table>
+<h3>Habit Formation Rate</h3>
+<pre><code>Habit Formation Rate = % of Prompted-stage users who become Organic-stage within 60 days
+</code></pre>
+<p><strong>The KPI for whether comms is working long-term.</strong> A consistently low rate signals the <em>product loop</em> needs strengthening, not more comms.</p>
+<h3>Comms-effectiveness metrics (CleverTap + WA)</h3>
+<p>Per <code>JBIQ_CT_WA_Instrumentation_Spec_v1.0_1.docx</code> — 14 events, 9 user properties, 11 campaign configs.</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PN delivered, opened, post-click action rate by stage and campaign</td>
+<td>Per-campaign push effectiveness</td>
+</tr>
+<tr>
+<td>WA delivered, opened, response rate</td>
+<td>Per-campaign WhatsApp effectiveness</td>
+</tr>
+<tr>
+<td>Per-campaign nudge effectiveness</td>
+<td>Completed action within 24hr ÷ delivered</td>
+</tr>
+<tr>
+<td>Stage transition rates</td>
+<td>% moving from Prompted → Organic, etc.</td>
+</tr>
+<tr>
+<td>Frequency cap hit rate</td>
+<td>Users hitting daily/weekly PN/WA caps</td>
+</tr>
+</tbody>
+</table>
+<h3>Interface to Product Tree</h3>
+<ul>
+<li><strong>Push-attributed Return Rate</strong> (Layer 1 L1) — the product-tree side: returns triggered by comms</li>
+<li><strong>Loop Self-Sufficiency</strong> (Layer 1 L1) — Organic ÷ Total returns; high value = product working without comms support</li>
+<li>Comms-only metrics (per-campaign open rates, stage-transition rates) live here, not in the product tree</li>
+</ul>
+<hr />
+<h2>Track 5 — Data (Foundation Capability)</h2>
+<p><em>Instrumentation, dashboards, joins, freshness, self-serve analytics. Owned by Vinay (Data + Reporting pod).</em></p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Insight Velocity</td>
+<td>Median time question raised → answer found (target: ≤1 min self-serve, ≤1 day for new instrumentation)</td>
+</tr>
+<tr>
+<td>Dashboard coverage %</td>
+<td>% of L1 metrics in <code>metrics-tree.md</code> with a live dashboard openable in ≤10s</td>
+</tr>
+<tr>
+<td>Cross-source join freshness</td>
+<td>Time to join Spanner / GA4 / Langfuse / GrowthBook / New Relic / CleverTap on user_id and session_id (target: ≤15min Beta, ≤5min GA)</td>
+</tr>
+<tr>
+<td>Instrumentation velocity</td>
+<td>Days to add a new event to any consumer</td>
+</tr>
+<tr>
+<td>Self-serve analytics adoption</td>
+<td>% of teams creating dashboards without data engineer</td>
+</tr>
+<tr>
+<td>Data engineer involvement count for product Qs</td>
+<td>Should trend → 0</td>
+</tr>
+<tr>
+<td>Per-source uptime</td>
+<td>Where instrumentation breaks</td>
+</tr>
+<tr>
+<td>Open instrumentation gap count</td>
+<td>Backlog signal</td>
+</tr>
+</tbody>
+</table>
+<h3>Status as of FnF (May 2026)</h3>
+<p><strong>16 P0 / P1 instrumentation gaps tracked in <code>JBIQ_FnF_Metrics_Working.xlsx</code>.</strong> Must close before Wave 1 (May 15). Critical gaps include:
+- Task Completion Rate (no completion signal defined — blocks Layer 4 L0)
+- Re-explanation rate (NLP detection not built — blocks Layer 2 L2)
+- Language param missing from all Firebase events (blocks per-language slicing)
+- trace_id missing from prompt_submitted (#1 instrumentation gap — blocks turn-level join)
+- Family cohort identification (blocks Cohort A–E classification — Open Q1)
+- Channel attribution tagging (blocks per-channel cuts — Open Q2)</p>
+<p><strong>Interface:</strong> Every L0 / L1 in the product tree depends on Data being live. If Data fails, product metrics are not measurable.</p>
+<hr />
+<h2>Track 6 — A/B Experimentation (Foundation Capability)</h2>
+<p><em>Causal inference engine — validates that product metric movements were caused by specific changes. Owned by Vinay (Experimentation pod).</em></p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Experiment velocity</td>
+<td># of experiments shipped per month</td>
+</tr>
+<tr>
+<td>Time-to-significance</td>
+<td>Days from experiment start to actionable result</td>
+</tr>
+<tr>
+<td>Experiment coverage</td>
+<td>% of changes shipped through A/B vs ship-and-watch</td>
+</tr>
+<tr>
+<td>Holdout-cohort discipline</td>
+<td>% of high-risk changes with clean control group</td>
+</tr>
+<tr>
+<td>Variant-assignment integrity</td>
+<td>Leakage rate, randomisation quality</td>
+</tr>
+<tr>
+<td>Per-team experiment cadence</td>
+<td>Are pods using experiments?</td>
+</tr>
+</tbody>
+</table>
+<h3>Distinct from Eval CI/CD (Layer 5 in product tree)</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>When</th>
+<th>What it does</th>
+<th>Where it lives</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Eval CI/CD</strong></td>
+<td>Pre-deploy</td>
+<td>Offline quality gate — every merge runs evals before shipping</td>
+<td>Layer 5 (Quality) L1</td>
+</tr>
+<tr>
+<td><strong>A/B experiment</strong></td>
+<td>Post-deploy</td>
+<td>Online causal validation — split traffic, measure delta</td>
+<td>Here (capability track)</td>
+</tr>
+<tr>
+<td><strong>Production Quality Floor</strong></td>
+<td>Always-on</td>
+<td>Production truth on shipped responses</td>
+<td>Layer 5 (Quality) L0</td>
+</tr>
+</tbody>
+</table>
+<h3>Status at FnF</h3>
+<p><strong>Blocked.</strong> GrowthBook not cleared by InfoSec; no client-side instrumentation. <strong>All FnF metric movements during Wave 1 are correlational, not causal.</strong> P1 instrumentation gap.</p>
+<hr />
+<h2>Track 7 — Unit Economics (Operations)</h2>
+<p><em>Cost of serving the product. Owned by Engineering + Finance.</em></p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tokens consumed per user per day</td>
+<td>LLM input + output tokens</td>
+</tr>
+<tr>
+<td>Cost per query</td>
+<td>Compute + model + orchestration overhead per query</td>
+</tr>
+<tr>
+<td>Cost per task</td>
+<td>Queries × turns × routing overhead</td>
+</tr>
+<tr>
+<td>Cost per active user per month</td>
+<td>Running cost ÷ MQU</td>
+</tr>
+<tr>
+<td>LLM model-mix cost ratio</td>
+<td>Premium model usage as a cost driver</td>
+</tr>
+<tr>
+<td>Voice pipeline cost</td>
+<td>ASR + TTS per voice query</td>
+</tr>
+<tr>
+<td>Per-domain cost-per-task</td>
+<td>Which domains are most expensive?</td>
+</tr>
+<tr>
+<td>Per-language cost</td>
+<td>Regional language costs (some languages more expensive due to model mix)</td>
+</tr>
+<tr>
+<td>Cost per 1M MAU</td>
+<td>Marginal scale economics</td>
+</tr>
+</tbody>
+</table>
+<h3>Interface to Product Tree</h3>
+<p>Every product metric has a <strong>unit-economics shadow</strong>:
+- Active Habit Rate ↑ + Cost-per-user flat = product winning sustainably
+- Active Habit Rate ↑ + Cost-per-user explodes = unsustainable victory
+- Useful Task Rate ↑ + Cost-per-task flat = quality scaling
+- Useful Task Rate ↑ + Cost-per-task ↑ = expensive quality</p>
+<p>Track them paired but don't put unit economics IN the product tree. <em>The product earns engagement; the operations layer pays for it.</em></p>
+<hr />
+<h2>How to use this doc</h2>
+<table>
+<thead>
+<tr>
+<th>Audience</th>
+<th>Tracks they care about</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Sridhar / Core Experience</strong></td>
+<td>Track 4 (Customer Lifecycle) — own pod's adjacency · Track 5 (Data) status</td>
+</tr>
+<tr>
+<td><strong>GTM / Marketing</strong></td>
+<td>Tracks 1, 2 · Track 3 (post-GA)</td>
+</tr>
+<tr>
+<td><strong>Engineering / Vinay</strong></td>
+<td>Tracks 5 (Data), 6 (A/B), 7 (Unit Economics)</td>
+</tr>
+<tr>
+<td><strong>Leadership</strong></td>
+<td>Cross-track view — looked at in totality alongside Product Tree to see whether the product is being measured, validated, served, and made sustainable as a system</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>Open questions across tracks</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Question</th>
+<th>Track</th>
+<th>Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>N1</td>
+<td>Activated New Users / Month threshold definition</td>
+<td>Track 1 (Growth)</td>
+<td>Sridhar + GTM</td>
+</tr>
+<tr>
+<td>N2</td>
+<td>Channel attribution tagging at registration</td>
+<td>Track 2 (Distribution)</td>
+<td>Registration flow team</td>
+</tr>
+<tr>
+<td>N3</td>
+<td>Customer Lifecycle X/Y thresholds — calibrate from FnF cohort data</td>
+<td>Track 4 (Lifecycle)</td>
+<td>Sridhar + Vinay (post-Wave 1)</td>
+</tr>
+<tr>
+<td>N4</td>
+<td>A/B unblock — InfoSec clearance for GrowthBook</td>
+<td>Track 6 (A/B)</td>
+<td>Vinay + InfoSec</td>
+</tr>
+<tr>
+<td>N5</td>
+<td>Cost-per-query baseline before Wave 1</td>
+<td>Track 7 (Unit Economics)</td>
+<td>Engineering</td>
+</tr>
+<tr>
+<td>N6</td>
+<td>16 instrumentation gaps to close before Wave 1</td>
+<td>Track 5 (Data)</td>
+<td>Vinay + App eng</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>References</h2>
+<p><strong>Source docs (saloni's OneDrive <code>01 Product/</code>):</strong>
+- <code>JBIQ_FnF_Metrics_Working.xlsx</code> — FnF dashboard with full instrumentation gap list
+- <code>JBIQ_User_Lifecycle_Framework_v1.0.docx</code> — Customer Lifecycle Framework (8 stages)
+- <code>JBIQ_CT_WA_Instrumentation_Spec_v1.0_1.docx</code> — Comms instrumentation
+- <code>JBIQ_CLM_Strategy_Working - V3.docx</code> — CLM strategy v3
+- <code>jbiq_user_cohort_gtm__v1.docx</code> — GTM cohort definitions (A through E)
+- <code>Product Milestones/JBIQ Goals — GA Pod Cascade.md</code> — pod-level cascaded targets</p>
+<p><strong>Companion files in this folder:</strong>
+- <code>metrics-tree.md</code> — <strong>the</strong> Product Metrics tree (always-on, user-experience layers)
+- <code>product-context.md</code> — Product Metrics context / synthesis (ties Mesh + Goals + FnF + tree)
+- <code>bharat-metrics.md</code> — Bharat resonance framework (parallel, periodic, qualitative)</p></body></html>

@@ -1,0 +1,1393 @@
+<!DOCTYPE html><html><head><meta charset=utf-8><style>body{font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;line-height:1.5;color:#0a0a14;max-width:900px;margin:2em auto;padding:1em}h1{color:#0A2885;border-bottom:2px solid #E63946;padding-bottom:6px}h2{color:#0A2885;border-bottom:1px solid #E0E0EA;padding-bottom:4px;margin-top:2em}h3,h4,h5{color:#0A2885;margin-top:1.5em}h5{font-size:1em;color:#444}table{border-collapse:collapse;margin:1em 0;width:100%;font-size:.95em}th,td{border:1px solid #E0E0EA;padding:8px 12px;text-align:left;vertical-align:top}th{background:#F5F5FA;color:#0A2885}code{background:#F5F5FA;padding:2px 5px;border-radius:3px;font-family:SF Mono,Monaco,monospace;font-size:.9em}pre{background:#F5F5FA;padding:12px;border-radius:4px;overflow-x:auto}em{color:#666677}strong{color:#0A0A14}hr{border:none;border-top:1px solid #E0E0EA;margin:2em 0}</style></head><body><h1>JioBharatIQ — Metrics Tree</h1>
+<p><em>A metrics-design artifact. Pure product thinking, no milestone scaffolding. Layers organised by user experience, not by internal pod taxonomy.</em></p>
+<p><em>Owner: Sridhar · Last updated: 2026-05-09</em></p>
+<hr />
+<h2>Method</h2>
+<p>Working backwards from the product, not forwards from milestones. <strong>Layers map to what the user experiences, not to internal team boundaries.</strong></p>
+<p><strong>The product is a personal AI for India that makes three claims:</strong>
+1. <strong>Knows you</strong> — language, context, history
+2. <strong>Knows what you need right now</strong> — proactive, situational
+3. <strong>Does the work</strong> — completes tasks, doesn't suggest</p>
+<p><strong>The product is working when:</strong>
+A user opens JBIQ, gets something done, comes back tomorrow without being pushed, and the next session starts smarter than the last. Repeat that across 1.4B Indians, in 12 languages, across 12 domains.</p>
+<p>Every metric in the tree must connect — mathematically or causally — back to that statement.</p>
+<hr />
+<h2>Activity Units</h2>
+<p>All units anchored at the <strong>monthly level</strong> for consistency. Daily snapshots (DAU, DQU) are derived from these monthly bases when needed for the L0 stickiness ratio — they are not primary units to track.</p>
+<table>
+<thead>
+<tr>
+<th>Unit</th>
+<th>Definition</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>MAU</strong></td>
+<td>Users who opened the app in last 30 days (rolling)</td>
+<td>Funnel diagnostic only — opened ≠ engaged</td>
+</tr>
+<tr>
+<td><strong>MQU</strong></td>
+<td>Users who sent ≥1 query in last 30 days (rolling)</td>
+<td><strong>The activity unit · L0 denominator.</strong> Anchors engagement and retention metrics.</td>
+</tr>
+<tr>
+<td><strong>MTU</strong></td>
+<td>Users who completed ≥1 useful task in last 30 days (rolling)</td>
+<td><strong>Monthly value-delivered unit</strong> — captures value, not just engagement</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note on daily snapshots:</strong> Active Habit Rate (L0) = <code>Organic DQU ÷ MQU</code> is a daily-stickiness ratio. Daily querying users (DQU) are derived from MQU on a per-day basis — not tracked as a separate primary unit.</p>
+<p>For deeper diagnostics, use <strong>per-query views</strong>, not per-user counts:</p>
+<pre><code>Query → Resolved   (Task Resolution Rate)
+Resolved → Satisfied   (User Satisfaction Rate)
+Useful Task Rate = Resolved × Satisfied   (per-query)
+</code></pre>
+<hr />
+<h2>L0 — The Single Test (paired)</h2>
+<p>A single number is too lossy for a product whose promise is "loop <em>and</em> work." Use a paired north star. Both must move together.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Metric</th>
+<th>Definition</th>
+<th>What it tests</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Loop</strong></td>
+<td><strong>Active Habit Rate</strong></td>
+<td><strong>Organic DQU ÷ MQU</strong> — daily-stickiness anchored on querying users, <em>push-attributed returns excluded</em></td>
+<td>Did the product earn the user, or did push pay for the visit?</td>
+</tr>
+<tr>
+<td><strong>Work</strong></td>
+<td><strong>Useful Task Rate</strong></td>
+<td>% of queries that resolved AND user signaled value</td>
+<td>Did the AI actually deliver something useful?</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Composite (rollup):</strong> <code>Compounding Habit Index = Active Habit × Useful Task</code>. Useful for one-number reporting; never a substitute for the pair.</p>
+<hr />
+<h2>L1 — The Decomposition</h2>
+<h3>L1 of Active Habit Rate (causal drivers, not multiplicative)</h3>
+<pre><code>  Activation              = % of installs that complete a useful task within window (D7 default)
+  Engagement Depth        = queries-per-DQU-per-day · active-days-per-week (deeper = stickier)
+  Retention               = % of activated users who fire ≥1 organic query at D7
+  Loop Self-Sufficiency   = Organic returns ÷ Total returns
+  Personalization Lift    = uplift in retention from Personalization Resonance (Layer 2)
+  Virality                = New installs from referrals ÷ existing users
+</code></pre>
+<p>Engagement is a <strong>driver</strong>, not a component: deeper engagement today → higher likelihood the user is tomorrow's Organic DQU. It belongs in the causal model even though it doesn't appear in the L0 ratio mathematically.</p>
+<h3>Returns decomposition (sister metrics, all in Layer 1)</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Definition</th>
+<th>Where in tree</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Active Habit Rate</td>
+<td>Organic DQU ÷ MQU</td>
+<td><strong>L0</strong></td>
+</tr>
+<tr>
+<td>Total Return Rate</td>
+<td>(Organic + Push-attributed) ÷ MQU</td>
+<td>L1</td>
+</tr>
+<tr>
+<td>Loop Self-Sufficiency</td>
+<td>Organic ÷ Total</td>
+<td>L1</td>
+</tr>
+<tr>
+<td>Push-attributed Return Rate</td>
+<td>Push-driven ÷ Total</td>
+<td>L1</td>
+</tr>
+<tr>
+<td>Habit Formation Rate</td>
+<td>% of Prompted users → Organic within 60d</td>
+<td>L1</td>
+</tr>
+</tbody>
+</table>
+<h3>L1 of Useful Task Rate (mathematical identity)</h3>
+<pre><code>Useful Task Rate = (Intent × Routing × Execution × Production Quality Floor) × User Satisfaction
+                =  Task Resolution                                            ×  User Satisfaction
+</code></pre>
+<p>Where each factor lives (single source of truth — referenced, not duplicated):
+- Intent / Routing / Execution → Layer 4 (Task Delivery) L1
+- Production Quality Floor → Layer 5 (Quality) L0
+- User Satisfaction → Layer 1 (User Loop) L1, Group E (Sentiment + Value)</p>
+<p>User Satisfaction is computed from a basket of behavioural + explicit signals (defined once in Layer 1):
+- <em>No rephrase within 60s</em> (didn't have to re-ask)
+- <em>No thumbs-down on the response</em>
+- <em>Conversation continued OR user returned to that domain within 24h</em>
+- <em>No "still didn't help" / restart pattern</em>
+- Plus explicit signals where present: thumbs-up, NPS, survey ratings</p>
+<hr />
+<h2>The 7 Layers — Organised by User Experience</h2>
+<p>Each layer answers a question the user would actually ask of the product. Internal taxonomy (Vertical / Signature / Core) is deliberately not a layer — it's a cross-cut. Bharat resonance is also not a layer — it's a parallel framework that inherits from this tree (sliced by Cohort A–E) and adds qualitative resonance metrics. See <code>bharat-metrics.md</code>.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Layer</th>
+<th>Question it answers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>The User Loop</td>
+<td>Did the user come back?</td>
+</tr>
+<tr>
+<td>2</td>
+<td>The Personalization</td>
+<td>Did it feel made for me?</td>
+</tr>
+<tr>
+<td>3</td>
+<td>The Conversation</td>
+<td>Did talking to it feel natural?</td>
+</tr>
+<tr>
+<td>4</td>
+<td>The Task Delivery</td>
+<td>Did the AI do what I asked?</td>
+</tr>
+<tr>
+<td>5</td>
+<td>The Quality</td>
+<td>Was the answer right?</td>
+</tr>
+<tr>
+<td>6</td>
+<td>The Platform</td>
+<td>Did it work when I needed it?</td>
+</tr>
+<tr>
+<td>7</td>
+<td>The Partners</td>
+<td>(Scale path — supplier of Layers 4–5)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3>Layer 1 — The User Loop</h3>
+<p><em>Did the user come back? · Layer 1's L0 IS the product L0 — Core Experience owns the loop, so the layer L0 collapses into the product north star.</em></p>
+<p><strong>Activity unit:</strong> DQU (DAU as funnel diagnostic).</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Metric</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L0</td>
+<td><strong>Active Habit Rate</strong> = Organic DQU ÷ MQU</td>
+<td>This IS the product L0</td>
+</tr>
+<tr>
+<td>L1 — Activation (Group A)</td>
+<td><strong>Activation Rate</strong> = % of installs that fire ≥1 query within D7 window (configurable)</td>
+<td>Activation is the simple engagement signal — <em>did they use the AI at all?</em> The <strong>quality</strong> of that engagement (whether the query was useful) lives in <strong>Useful Task Rate</strong> (Product L0), not here.</td>
+</tr>
+<tr>
+<td>L1 — Activation</td>
+<td>First-session activation rate</td>
+<td>First query on Day 0 — immediate activation</td>
+</tr>
+<tr>
+<td>L1 — Activation</td>
+<td>Delayed activation rate</td>
+<td>First query post-session-1, within D7 window</td>
+</tr>
+<tr>
+<td>L1 — Activation</td>
+<td>Time-to-Activation</td>
+<td>Median, p90 hours from install to first query</td>
+</tr>
+<tr>
+<td>L1 — Activation</td>
+<td>Activation rate by session-number-when-activated (1st / 2nd / 3rd / 4th+)</td>
+<td>Activation curve diagnostic</td>
+</tr>
+<tr>
+<td>L1 — Engagement (Group B)</td>
+<td>Queries per DQU per day</td>
+<td>Per-user depth</td>
+</tr>
+<tr>
+<td>L1 — Engagement</td>
+<td>Sessions per DQU per day</td>
+<td>Per-user frequency</td>
+</tr>
+<tr>
+<td>L1 — Engagement</td>
+<td>Queries per session (avg session depth)</td>
+<td>Within-session intensity</td>
+</tr>
+<tr>
+<td>L1 — Engagement</td>
+<td><strong>Avg session duration (median, p95)</strong></td>
+<td>Time spent per session — paired with completion to interpret (short+resolved = good, short+abandoned = bad)</td>
+</tr>
+<tr>
+<td>L1 — Engagement</td>
+<td><strong>Total time spent per DQU per day</strong></td>
+<td>Aggregate engagement time per active user</td>
+</tr>
+<tr>
+<td>L1 — Engagement</td>
+<td>Multi-query session rate (% sessions with ≥2 queries)</td>
+<td>Are sessions one-shot or sustained?</td>
+</tr>
+<tr>
+<td>L1 — Engagement</td>
+<td>Multi-session day rate (% DQU with ≥2 sessions in a day)</td>
+<td>Same-day repeat use</td>
+</tr>
+<tr>
+<td>L1 — Engagement</td>
+<td>Active days per week (avg days/week with ≥1 query, per MQU)</td>
+<td>Frequency of habit</td>
+</tr>
+<tr>
+<td>L1 — Engagement</td>
+<td>Power-user rate (% of DAU with ≥X queries, threshold defined)</td>
+<td>Concentration of deep usage</td>
+</tr>
+<tr>
+<td>L1 — Engagement</td>
+<td>Queries per MQU per month</td>
+<td>Monthly-level engagement intensity</td>
+</tr>
+<tr>
+<td>L1 — Engagement</td>
+<td>Total query volume per day (non-unique count)</td>
+<td>Operational scale</td>
+</tr>
+<tr>
+<td>L1 — Engagement</td>
+<td>Total session volume per day (non-unique count)</td>
+<td>Operational scale</td>
+</tr>
+<tr>
+<td>L1 — Retention curve (Group C)</td>
+<td>D1 organic return rate</td>
+<td>Activation-depth signal — <em>did the first session land?</em></td>
+</tr>
+<tr>
+<td>L1 — Retention curve</td>
+<td>D7 organic return rate (= Total Return Rate at D7)</td>
+<td>Week-1 habit signal</td>
+</tr>
+<tr>
+<td>L1 — Retention curve</td>
+<td>D30 organic return rate</td>
+<td>Month-1 habit signal</td>
+</tr>
+<tr>
+<td>L1 — Retention curve</td>
+<td>D90 organic return rate</td>
+<td>Long-term loyalty signal</td>
+</tr>
+<tr>
+<td>L1 — Loop quality (Group D)</td>
+<td><strong>Organic Returning Users</strong></td>
+<td>Returns without push attribution — the loop working</td>
+</tr>
+<tr>
+<td>L1 — Loop quality</td>
+<td><strong>Inorganic Returning Users (push-attributed)</strong></td>
+<td>Returns triggered by PN / WA tap — comms working</td>
+</tr>
+<tr>
+<td>L1 — Loop quality</td>
+<td>Loop Self-Sufficiency = Organic ÷ Total returns</td>
+<td>What share of returns are organic?</td>
+</tr>
+<tr>
+<td>L1 — Loop quality</td>
+<td>Push-attributed Return Rate (1 − Loop Self-Sufficiency)</td>
+<td>What share is comms pulling in?</td>
+</tr>
+<tr>
+<td>L1 — Loop quality</td>
+<td>Habit Formation Rate (Inorganic → Organic in 60d)</td>
+<td>Does the loop strengthen, or stay push-dependent?</td>
+</tr>
+<tr>
+<td>L1 — Loop quality</td>
+<td>Total Return Rate (Organic + Push) ÷ MQU</td>
+<td>Everyone who came back, for completeness</td>
+</tr>
+<tr>
+<td>L1 — Sentiment + Value (Group E)</td>
+<td>NPS</td>
+<td>Will the user recommend it?</td>
+</tr>
+<tr>
+<td>L1 — Sentiment + Value</td>
+<td>User Satisfaction Rate (per-query, behavioural + explicit)</td>
+<td>Component of Useful Task Rate</td>
+</tr>
+<tr>
+<td>L1 — Sentiment + Value</td>
+<td>Surface time-to-meaningful (p95)</td>
+<td>Did the entry surface (home, persona page, deep link, widget) earn the next tap? Applies to any surface, not just home.</td>
+</tr>
+<tr>
+<td>L1 — Loop expansion (Group F)</td>
+<td>Experience discovery rate (≥2 named experiences in week 1)</td>
+<td>Did the user find what's there?</td>
+</tr>
+<tr>
+<td>L1 — Loop expansion</td>
+<td>Vertical breadth (avg distinct domains used per active user, D7)</td>
+<td>Is the catalog being explored?</td>
+</tr>
+<tr>
+<td>L1 — Loop expansion</td>
+<td>Cross-domain engagement rate (% of users using ≥2 domains in a session)</td>
+<td>Are users moving between domains?</td>
+</tr>
+<tr>
+<td>L1 — Outcome value (Group H)</td>
+<td><strong>Time saved per user per day (estimated)</strong></td>
+<td>Per Mesh GA aspirational target: 30–60 min/user/day. Estimated per task type.</td>
+</tr>
+<tr>
+<td>L1 — Outcome value</td>
+<td><strong>Money saved per user per month (estimated)</strong></td>
+<td>Per Mesh GA aspirational target: ₹500–2,000/user/month. Driven by deal-finding, mandi timing, GST/scheme advice, financial decisions.</td>
+</tr>
+<tr>
+<td>L1 — Outcome value</td>
+<td><strong>Money earned per user per month (estimated)</strong></td>
+<td>Income-driven use cases: jobs found, commerce sold at better timing (Raju's mandi advice), better financial timing</td>
+</tr>
+<tr>
+<td>L1 — Outcome value</td>
+<td>User-reported value (survey)</td>
+<td>Weekly self-reported: "How much time / money did JBIQ save you this week?"</td>
+</tr>
+<tr>
+<td>L1 — Outcome value</td>
+<td>Substitution rate</td>
+<td>% of tasks where user reports JBIQ replaced another app/service/call — tests "completes things vs points elsewhere"</td>
+</tr>
+<tr>
+<td>L1 — Outcome value</td>
+<td>Value Ribbon surface engagement</td>
+<td>% of users viewing the cumulative ₹-saved / time-saved widget — does showing value back drive return?</td>
+</tr>
+<tr>
+<td>L1 — Outcome value</td>
+<td>Per-domain value attribution</td>
+<td>Estimated time/money saved per domain (Cricket, Devotion, Commerce, Finance, Jobs, Govt Schemes have different value profiles)</td>
+</tr>
+<tr>
+<td>L2 — Pre-activation funnel</td>
+<td>Install → DAU rate</td>
+<td>Did they open after installing?</td>
+</tr>
+<tr>
+<td>L2 — Pre-activation funnel</td>
+<td>DAU → DQU rate</td>
+<td>Did they query after opening?</td>
+</tr>
+<tr>
+<td>L2 — Pre-activation funnel</td>
+<td>DQU → Activation rate</td>
+<td>Did the first query become a useful task?</td>
+</tr>
+<tr>
+<td>L2 — Pre-activation funnel</td>
+<td>Time to Activation (median hrs install → first useful task)</td>
+<td>Speed of first value</td>
+</tr>
+<tr>
+<td>L2 — Curve diagnostics</td>
+<td>D1→D7 drop-off rate</td>
+<td>Activation-to-week-1 leak</td>
+</tr>
+<tr>
+<td>L2 — Curve diagnostics</td>
+<td>D7→D30 drop-off rate</td>
+<td>Week-1-to-month-1 leak</td>
+</tr>
+<tr>
+<td>L2 — Curve diagnostics</td>
+<td>Cohort curves by acquisition channel · domain · language</td>
+<td>Where retention leaks</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Onboarding completion %, time-to-first-query</td>
+<td>Where the funnel leaks</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Drop-off step in onboarding flow</td>
+<td>Friction point</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Survey response rate</td>
+<td>Is NPS valid?</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Rephrase rate, Re-ask rate, Response dwell time</td>
+<td>Behavioural satisfaction signals</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>At-risk % (no query for X+ days in Retention)</td>
+<td>Pre-churn warning</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>PN / WA open rate, post-click action rate</td>
+<td>Comms-layer effectiveness</td>
+</tr>
+<tr>
+<td>L2 — Cohort diagnostics</td>
+<td>Cohort Variance = max(Active Habit Rate by cohort) − min</td>
+<td>High variance = product winning unevenly across cohorts A–E. Strategic flag for the Bharat-first bet.</td>
+</tr>
+<tr>
+<td>L2 — Cohort diagnostics</td>
+<td>Per-cohort Active Habit Rate, Useful Task Rate, Personalization Resonance, NPS</td>
+<td>All Layer 1 metrics sliced by Cohort A–E — the headline view of "which cohort is clicking"</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>NPS verbatim themes (top 5 detractors / promoters)</td>
+<td>Where is the love and the hate?</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Sentiment in user-initiated free-text feedback</td>
+<td>NLP classification</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>FGD findings, diary studies</td>
+<td>Qualitative feed-in</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Trust signal events (shared output, advocacy actions)</td>
+<td>Trust beyond utility</td>
+</tr>
+</tbody>
+</table>
+<p><strong>L1 — Group G: Experience metrics</strong> (filter: Generic vs Signature)</p>
+<h5>G.1 · Per-experience metrics (applies to all — slice by Generic / Signature)</h5>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Per-Experience Attempt Rate</td>
+<td>% of DQU who started a session with this experience</td>
+</tr>
+<tr>
+<td>Per-Experience Completion Rate</td>
+<td>% of attempts resulting in a resolved task (≥4 turns or tool-call success)</td>
+</tr>
+<tr>
+<td>Per-Experience 24-hour Return Rate</td>
+<td>Same-day pull</td>
+</tr>
+<tr>
+<td>Per-Experience D7 / D30 Stickiness</td>
+<td>Multi-week pull — first-time users returning at D7 / D30</td>
+</tr>
+<tr>
+<td>Per-Experience Avg Turns / Session Duration</td>
+<td>Depth of engagement when this experience is used</td>
+</tr>
+<tr>
+<td>Per-Experience Cohort Penetration</td>
+<td>% of each Cohort A–E that has used this experience in last 30d</td>
+</tr>
+<tr>
+<td>Per-Experience Net Promoter (in-context)</td>
+<td>Experience-specific satisfaction — captured at flow exit</td>
+</tr>
+</tbody>
+</table>
+<h5>G.2 · Signature qualification benchmarks (must clear ALL to be classified Signature)</h5>
+<table>
+<thead>
+<tr>
+<th>Benchmark</th>
+<th>Threshold</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Proprietary data binding</td>
+<td>Verified Jio/RIL data binding OR exclusive 3P integration. Binary: 1 / 0.</td>
+</tr>
+<tr>
+<td>Loop-forming benchmark</td>
+<td>Per-Experience D7 retention ≥ threshold (e.g., 40%) AND 24-hour return ≥ threshold</td>
+</tr>
+<tr>
+<td>Cultural irreplaceability benchmark</td>
+<td>"Would you use another AI for this?" — % saying No ≥ threshold (e.g., 60%) + cultural relevance rating ≥ threshold</td>
+</tr>
+<tr>
+<td><strong>Signature Qualification Score (composite)</strong></td>
+<td>Pass-count across 3 benchmarks (0–3). Only 3/3 qualifies. Re-baselined quarterly.</td>
+</tr>
+</tbody>
+</table>
+<h5>G.3 · Signature vs Non-Signature deltas (the real qualifier — proves signature designation is justified)</h5>
+<table>
+<thead>
+<tr>
+<th>Delta metric</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>D7 Retention Delta</strong></td>
+<td>D7(Signature users) − D7(Non-Signature users) for same domain. Positive = SE earning its label.</td>
+</tr>
+<tr>
+<td><strong>Completion Delta</strong></td>
+<td>Useful Task Rate(Signature) − Useful Task Rate(Non-Signature for same intent class)</td>
+</tr>
+<tr>
+<td><strong>Stickiness Delta</strong></td>
+<td>D30(Signature users) − D30(Non-Signature users)</td>
+</tr>
+<tr>
+<td><strong>Per-Cohort Pull Delta</strong></td>
+<td>% of cohort using Signature − % of cohort using Generic-only — per Cohort A–E</td>
+</tr>
+<tr>
+<td><strong>NPS Delta</strong></td>
+<td>NPS(Signature in-context) − NPS(Generic chat for same intent)</td>
+</tr>
+<tr>
+<td><strong>Per-Domain Coverage Delta</strong></td>
+<td>Queries served by Signature ÷ total queries in domain</td>
+</tr>
+<tr>
+<td><strong>Time-to-Resolution Delta</strong></td>
+<td>Median time-to-resolved(Signature) − Median time-to-resolved(Generic) — speed differential</td>
+</tr>
+</tbody>
+</table>
+<p>If deltas are flat or negative, the "Signature" label is theatre — the experience isn't outperforming generic chat. Quarterly review must demote experiences with sustained zero/negative deltas.</p>
+<h5>G.4 · Catalog velocity (how fast new experiences ship to users)</h5>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>New experiences live / month</td>
+<td>Total Vertical Experiences shipped to production per month (1P + partner-built)</td>
+</tr>
+<tr>
+<td>New Signature Experiences live / month</td>
+<td>Subset of new experiences clearing 3/3 qualification benchmarks (G.2)</td>
+</tr>
+<tr>
+<td>Time idea → live (median, p90 days)</td>
+<td>From validated idea to live experience — process velocity</td>
+</tr>
+<tr>
+<td>% of new experiences clearing D7 retention threshold within 30 days of launch</td>
+<td>Quality-adjusted velocity — are we shipping experiences that work?</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3>Layer 2 — The Personalization</h3>
+<p><em>Did it feel made for me? · One of the 5 Key Bets. The user experiences personalization as a unified thing — home reflects them, language matches, AI remembers — so it deserves a single layer rather than fragmenting across User and Memory.</em></p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Metric</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L0</td>
+<td><strong>Personalization Resonance Rate</strong> = % of returning sessions where personalization fired AND was correct AND the user signaled value</td>
+<td>Three-clause AND — captures user-perceived "knows me", not just memory accuracy</td>
+</tr>
+<tr>
+<td>L1 — Memory-driven</td>
+<td>Context-Driven Value Rate (memory retrieved + applied + no re-explanation)</td>
+<td>Memory's contribution to feeling "known"</td>
+</tr>
+<tr>
+<td>L1 — Surface-driven</td>
+<td>Home reflects chosen interests rate (persona tiles surface user-relevant content)</td>
+<td>Visible personalization on the home surface</td>
+</tr>
+<tr>
+<td>L1 — Surface-driven</td>
+<td>Persona tile / suggested prompt relevance rate (taps ÷ impressions)</td>
+<td>Are entry points personalized to the user?</td>
+</tr>
+<tr>
+<td>L1 — Language-driven</td>
+<td>Correct-language session rate (no manual selection needed)</td>
+<td>Language is the strongest personalization signal</td>
+</tr>
+<tr>
+<td>L1 — Language-driven</td>
+<td>Cross-language continuity rate (memory survives language switch)</td>
+<td>Set in Hindi, recalled in Tamil — must work</td>
+</tr>
+<tr>
+<td>L1 — Identity-driven</td>
+<td>JioID pre-load rate</td>
+<td>Day-0 should not be cold for Jio users</td>
+</tr>
+<tr>
+<td>L1 — Surface-driven</td>
+<td>Widget / tile tap rate (taps ÷ impressions)</td>
+<td>Generalises beyond persona tiles — covers any home widget, suggestion card, recommendation tile, or content surface</td>
+</tr>
+<tr>
+<td>L1 — Adaptive</td>
+<td>Next-prompt suggestion match rate</td>
+<td>Does the system anticipate what's next?</td>
+</tr>
+<tr>
+<td>L1 — Adaptive</td>
+<td>Time-of-day relevance rate</td>
+<td>Morning briefing in the morning, not evening</td>
+</tr>
+<tr>
+<td>L1 — Validation</td>
+<td>N=1 Retention Lift = D30(memory active) − D30(no-memory cohort)</td>
+<td>Periodic causal validation — not always-on</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Memory capture precision / recall</td>
+<td>Did we save the right things?</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Memory retrieval precision / recall</td>
+<td>Can we find what we saved?</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Re-explanation rate</td>
+<td>How often does the user repeat context? <em>Direct test of "knows you."</em></td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Hallucinated facts per audit</td>
+<td>Memory hallucinations are the worst kind</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Memory volume per active user</td>
+<td>Are we capturing enough signal?</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Per-language memory accuracy</td>
+<td>Cross-language is the failure mode</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Memory-trust signal events (Saved Kundali, returning to context)</td>
+<td>Behavioural proxy that personalization is being relied on</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Persona-tile tap rate by surfaced position</td>
+<td>Surface effectiveness</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3>Layer 3 — The Conversation</h3>
+<p><em>Did talking to it feel natural? · The unified voice + text + image surface. Voice gets the most detailed sub-tree because it's a Key Bet, but text and image are equally first-class.</em></p>
+<p><em>L0 deliberately tests </em><em>conversation-surface quality</em><em> — distinct from task resolution (Layer 4) and personalization context (Layer 2). The earlier "Conversation Carry-Through Rate" was reframed because it overlapped with Task Resolution.</em></p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Metric</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L0</td>
+<td><strong>Multi-turn Coherence Rate</strong> = % of multi-turn sessions where (a) conversational context was correctly maintained across all turns AND (b) any mid-session modality switches succeeded</td>
+<td>Tests conversation-surface quality — does the surface itself work over multiple turns? Excludes single-turn sessions (where there's no coherence to test).</td>
+</tr>
+<tr>
+<td>L1 — Voice path</td>
+<td><strong>Voice Primary User Share</strong> = % of DQU with ≥50% voice queries in 7d (Bharat-cut is the headline)</td>
+<td>The strategic voice bet</td>
+</tr>
+<tr>
+<td>L1 — Voice path</td>
+<td>Voice Initiation Rate · Voice Stickiness · Voice→Text Fallback Rate</td>
+<td>Reach</td>
+</tr>
+<tr>
+<td>L1 — Voice path</td>
+<td>ASR WER per language · Code-mix Completion Rate · Voice Intent Accuracy</td>
+<td>Accuracy of input</td>
+</tr>
+<tr>
+<td>L1 — Voice path</td>
+<td>E2E Voice Latency p95 (≤1.5s) · Barge-in Latency (≤300ms) · VAD F1</td>
+<td>Speed</td>
+</tr>
+<tr>
+<td>L1 — Voice path</td>
+<td>TTS Naturalness (MOS) per language · TTS Playback Completion</td>
+<td>Output</td>
+</tr>
+<tr>
+<td>L1 — Voice path</td>
+<td>Voice Carry-Through · Voice Misunderstanding Recovery Rate</td>
+<td>End-to-end</td>
+</tr>
+<tr>
+<td>L1 — Text path</td>
+<td>Text Query Latency · Text Completion Rate · Multi-turn rate (text)</td>
+<td>Table stakes</td>
+</tr>
+<tr>
+<td>L1 — Text path</td>
+<td>Suggested-prompt usage rate</td>
+<td>Discovery within text</td>
+</tr>
+<tr>
+<td>L1 — Image path</td>
+<td>Image Upload Success Rate · Vision Model Accuracy · Image-to-Task Completion</td>
+<td>Document analysis, fact-check, image generation</td>
+</tr>
+<tr>
+<td>L1 — Cross-modal</td>
+<td>Multi-turn Coherence (context held across turns)</td>
+<td>Conversation continuity</td>
+</tr>
+<tr>
+<td>L1 — Cross-modal</td>
+<td>Modality Switch Success (voice→text mid-flow works)</td>
+<td>Modality fluidity</td>
+</tr>
+<tr>
+<td>L1 — Cross-modal</td>
+<td>Turn-Taking Quality (barge-in, pacing)</td>
+<td>Conversation feel</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Noise-ASR retention (kitchen, market, traffic)</td>
+<td>Indian environments are noisy</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Per-network-type latency (4G / 3G / 2G)</td>
+<td>Bharat-first means slow networks must work</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Per-device-tier voice metrics</td>
+<td>Low-end must hold latency SLO</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Audio Replay Rate</td>
+<td>User replayed = unclear delivery</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Mic Permission Grant Rate</td>
+<td>Pre-condition for voice</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Voice Abandonment Rate</td>
+<td>Single failure-mode diagnostic</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3>Layer 4 — The Task Delivery</h3>
+<p><em>Did the AI do what I asked? · The orchestrator owns "did the system do what was asked of it?" — not "did the user feel served." The user-need-met question lives at the product L0 (Useful Task Rate = this layer's L0 × User Satisfaction from Layer 1).</em></p>
+<p><em>Latency note: Layer 4 owns </em><em>modality-agnostic</em><em> task speed (TTFT, overall E2E). </em><em>Voice-specific latency</em><em> (E2E voice ≤1.5s, barge-in ≤300ms) lives in Layer 3 (Conversation) Voice path L1 — that's a conversation-feel concern, not a task-execution concern. Underlying SLO compliance rolls up to Layer 6 (Platform).</em></p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Metric</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L0</td>
+<td><strong>Task Resolution Rate</strong> (system-side: task reached a resolved state)</td>
+<td>Layer 4's contribution to Useful Task Rate</td>
+</tr>
+<tr>
+<td>L1 — Accuracy</td>
+<td>Intent Classification Accuracy</td>
+<td>Did we understand what was asked?</td>
+</tr>
+<tr>
+<td>L1 — Accuracy</td>
+<td>Routing Accuracy (right skill on first attempt)</td>
+<td>Right intent, wrong skill = same failure</td>
+</tr>
+<tr>
+<td>L1 — Accuracy</td>
+<td>Execution Success Rate (skill ran without error)</td>
+<td>Right skill, broken execution = same failure</td>
+</tr>
+<tr>
+<td>L1 — Accuracy</td>
+<td>Multi-step Task Success Rate</td>
+<td>Agentic chains are fragile</td>
+</tr>
+<tr>
+<td>L1 — Speed</td>
+<td>TTFT p95 (time to first token)</td>
+<td>Voice has zero latency tolerance</td>
+</tr>
+<tr>
+<td>L1 — Speed</td>
+<td>E2E Latency p95 (full response time)</td>
+<td>Complete response in budget</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Per-skill accuracy</td>
+<td>Where is routing weakest?</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Per-domain task completion</td>
+<td>Which domains are weakest?</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Confirmation-bypass rate on irreversible actions</td>
+<td>Hard rule, must = 0</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Per-network-type latency</td>
+<td>Bharat-first means slow networks must work</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Per-device-tier latency</td>
+<td>Low-end must hold latency SLO</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3>Layer 5 — The Quality</h3>
+<p><em>Was the answer right? · Eval pass rate alone is a tautology — Evals measures what Evals built. The L0 must measure quality in </em><em>production</em><em>, not in the offline test set.</em></p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Metric</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L0</td>
+<td><strong>Production Quality Floor</strong> = % of production responses passing all critical eval dimensions (relevance, accuracy, safety, language)</td>
+<td>Production-truth, not offline-truth</td>
+</tr>
+<tr>
+<td>L1</td>
+<td>Eval pass rate (offline golden dataset)</td>
+<td>Pre-production gate</td>
+</tr>
+<tr>
+<td>L1</td>
+<td>Hallucination rate (Langfuse traces)</td>
+<td>Critical for News, Health, Govt Schemes</td>
+</tr>
+<tr>
+<td>L1</td>
+<td>Guardrail block rate on adversarial inputs</td>
+<td>Safety at scale</td>
+</tr>
+<tr>
+<td>L1</td>
+<td>Drift between online production and offline golden (≤10pp)</td>
+<td>Production must match what was tested</td>
+</tr>
+<tr>
+<td>L1</td>
+<td>CI/CD eval gating coverage</td>
+<td>Every merge must pass evals</td>
+</tr>
+<tr>
+<td>L1</td>
+<td>Brand-voice adherence (sample audit)</td>
+<td>Cultural authenticity at response level</td>
+</tr>
+<tr>
+<td>L1</td>
+<td>Language authenticity (native-speaker blind eval per language)</td>
+<td>"Sounds native or translated?" — Bharat-first promise</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Per-language eval score</td>
+<td>Quality cannot drop in regional languages</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Red-team violation count</td>
+<td>Trend over time</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>New grader velocity</td>
+<td>Can we add new quality dimensions fast?</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Eval misses that reached users</td>
+<td>Coverage gap signal</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3>Layer 6 — The Platform</h3>
+<p><em>Did it work when I needed it? · Uptime alone says nothing about whether the platform was usable. A platform up but slow or crashing isn't serving users. The L0 must combine availability, latency, and stability.</em></p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Metric</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L0</td>
+<td><strong>Reliability-Adjusted Availability</strong> = % of seconds platform is up AND within latency SLO AND below crash threshold</td>
+<td>The complete "platform was useful" signal</td>
+</tr>
+<tr>
+<td>L1</td>
+<td>Service uptime %</td>
+<td>Component of L0 — pure availability</td>
+</tr>
+<tr>
+<td>L1</td>
+<td>Latency SLO compliance (voice / agentic / dashboard)</td>
+<td>Component of L0 — speed</td>
+</tr>
+<tr>
+<td>L1</td>
+<td>Crash rate per 100 sessions</td>
+<td>Component of L0 — stability</td>
+</tr>
+<tr>
+<td>L1</td>
+<td>Scale headroom under load</td>
+<td>Concurrent capacity must lead, not lag, demand</td>
+</tr>
+<tr>
+<td>L1</td>
+<td>PR-to-production velocity</td>
+<td>Speed of recovery and improvement</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Per-service availability</td>
+<td>Where is reliability weakest?</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Per-region latency</td>
+<td>Geo coverage holding?</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Self-serve service setup time</td>
+<td>Foundation cost-of-shipping</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Incident detect → ack time</td>
+<td>Operational responsiveness</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3>Layer 7 — The Partners</h3>
+<p><em>Scale path — supplier of capacity to Layers 4–5. Partners ship skills that core engineering can't ship at cadence — irrespective of whether those skills handle everyday intents or signature experiences.</em></p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Metric</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L0</td>
+<td><strong>% of skills served by partners</strong> (everyday intent or Signature Experience — both count)</td>
+<td>Partners scale the catalog regardless of skill class</td>
+</tr>
+<tr>
+<td>L1</td>
+<td>Partner-built skills live in production (count + share)</td>
+<td>Catalog share by partners</td>
+</tr>
+<tr>
+<td>L1</td>
+<td>Self-serve onboarding compliance gate time</td>
+<td>Friction here = no partner ecosystem</td>
+</tr>
+<tr>
+<td>L1</td>
+<td>New skills shipped/month autonomously (no core eng)</td>
+<td>Velocity of the ecosystem</td>
+</tr>
+<tr>
+<td>L1</td>
+<td>External partners live in production</td>
+<td>Is the platform real?</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Per-partner skill share</td>
+<td>Concentration risk</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Per-partner-skill task completion rate</td>
+<td>Quality consistency across partners</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Manual intervention steps per onboarding</td>
+<td>Friction count, must trend → 0</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>Out of the Product Tree</h2>
+<p>These are real, measurable, and important — but they're <strong>infrastructure, GTM, or operations</strong>, not product metrics. They live in parallel tracks; the product tree references them but doesn't own them.</p>
+<h3>Growth (GTM track)</h3>
+<p><em>Acquisition, CAC, channel mix, paid attribution.</em> GTM produces installs → consumed by Activation Rate (Layer 1 L1). Product earns advocacy → Virality and referral attribution (Layer 1 L1) flow back. <em>The product earns advocacy; the product does not own acquisition.</em></p>
+<h3>Distribution (GTM track)</h3>
+<p><em>Channels through which users reach the product — Jio retail, MyJio, JioFiber, organic, paid, referral.</em> Per-channel cohort outcomes are GTM concerns. The Cohort cross-cut (Jio/non-Jio, urban/Tier-2/3) lets the product tree slice by distribution-derived segments without owning channels.</p>
+<h3>Data (Foundation Capability track)</h3>
+<p><em>Instrumentation, dashboards, joins, freshness, self-serve analytics.</em> Capability metrics: Insight Velocity (median time question→answer), dashboard coverage, cross-source join freshness. <em>Data is how we measure the product. It is not the product.</em></p>
+<h3>A/B Experimentation (Foundation Capability track)</h3>
+<p><em>Causal inference engine.</em> Capability metrics: experiment velocity, time-to-significance, experiment coverage, holdout-cohort discipline. Distinct from Eval CI/CD (Layer 5 — pre-deploy offline gating). <strong>Currently blocked at FnF</strong> (GrowthBook InfoSec gate); all FnF metric movements are correlational.</p>
+<h3>Unit Economics / Cost (Operations track)</h3>
+<p><em>Cost of serving the product.</em> Tokens consumed per user per day, cost per query, cost per task, cost per active user per month, LLM model-mix cost, voice pipeline cost, per-domain cost-per-task, per-language cost. Critical to business viability but doesn't measure whether the product is working — <em>the product earns engagement; the operations layer pays for it.</em></p>
+<h3>Vertical Portfolio Management (Strategy / Content track)</h3>
+<p><em>The Vertical / Signature / Core taxonomy is internal — users don't experience it. Portfolio metrics live here:</em> count of SEs at L2+ maturity, count at L3 (signature), idea→live velocity, per-SE retention (as a portfolio diagnostic), concentration metric (% of value from top 5 SEs). These inform what to build next; they don't measure whether the product is working today.</p>
+<h3>User Sentiment &amp; Resonance (redistributed)</h3>
+<p><em>Components folded into product layers:</em>
+- NPS, NPS verbatim, free-text sentiment, FGD findings, trust signals → Layer 1 (User Loop)
+- Brand-voice adherence, language authenticity → Layer 5 (Quality)
+- Memory-trust signals → Layer 2 (Personalization)
+- Persona resonance, Sunita/Raju Score, BPC → <code>bharat-metrics.md</code></p>
+<hr />
+<h2>Cross-Cutting Attributes</h2>
+<p>Every L0 / L1 in the tree must be sliceable by these. Every metric reported should carry the dimensions it was sliced by.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Attribute</th>
+<th>Values</th>
+<th>Especially relevant for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>Cohort A–E</strong></td>
+<td>5 user cohorts per <code>jbiq_user_cohort_gtm__v1.docx</code> (each encapsulates language, device, geography, segment)</td>
+<td>Bharat (BPC), Active Habit, NPS, Useful Task — all slice by cohort</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Loop type</strong></td>
+<td>Daily · Task · Life (per Mesh framing)</td>
+<td>Active Habit Rate per loop type, per-experience retention</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Domain</strong></td>
+<td>12 daily-life domains (Daily Assistant, Entertainment, News, Jobs, Devotion, Astrology, Life Companion, Health, Finance, Commerce, Local Services, Govt Services)</td>
+<td>Useful Task Rate per domain, per-domain quality</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Experience type</strong></td>
+<td>Vertical · Signature · Generic chat</td>
+<td>Group G filter — SE Retention Lift, Coverage Delta, Generic→SE Conversion</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>Modality</strong></td>
+<td>Voice · Text · Image</td>
+<td>Voice Primary User Share, modality switch success, per-modality completion</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>Language</strong></td>
+<td>12 Indian languages (Hindi, English, Tamil, Telugu, Gujarati, Bengali, Marathi, Kannada, Malayalam, Punjabi, Odia, Assamese)</td>
+<td>ASR WER, Production Quality Floor, NPS, brand-voice adherence</td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>Device tier</strong></td>
+<td>Low-end · Mid-end · Flagship</td>
+<td>Latency, crash rate, voice abandonment — Bharat-first means low-end must work</td>
+</tr>
+<tr>
+<td>8</td>
+<td><strong>Network type</strong></td>
+<td>4G · 3G · 2G</td>
+<td>Voice latency, task completion — voice runs on 3G, text on 2G</td>
+</tr>
+<tr>
+<td>9</td>
+<td><strong>Surface</strong></td>
+<td>Home · Persona page · Suggestion tile · Widget · Deep link · Notification</td>
+<td>Surface time-to-meaningful, widget tap rate, surface-driven personalization</td>
+</tr>
+<tr>
+<td>10</td>
+<td><strong>Time horizon</strong></td>
+<td>D1 · D7 · D30 · D90</td>
+<td>Retention curve, cohort analysis, all return rate metrics</td>
+</tr>
+<tr>
+<td>11</td>
+<td><strong>Acquisition channel</strong></td>
+<td>Jio retail · MyJio · JioFiber · Organic · Paid · Referral</td>
+<td>Per-channel D7 organic return — separates real users from vanity installs</td>
+</tr>
+<tr>
+<td>12</td>
+<td><strong>Session depth</strong></td>
+<td>Single-turn · Multi-turn (≥3) · Extended (≥5)</td>
+<td>Multi-turn Coherence, Engagement metrics, conversation quality</td>
+</tr>
+<tr>
+<td>13</td>
+<td><strong>Time of day</strong></td>
+<td>Morning · Day · Evening · Night</td>
+<td>Adaptive engagement (next-prompt), Personalization, contextual greeting</td>
+</tr>
+<tr>
+<td>14</td>
+<td><strong>Day of week</strong></td>
+<td>Weekday · Weekend</td>
+<td>Engagement frequency, weekend-specific use cases</td>
+</tr>
+<tr>
+<td>15</td>
+<td><strong>Region</strong></td>
+<td>Urban · Tier-2 · Tier-3 · Rural</td>
+<td>Per-region latency, distribution-derived cohort cuts, Bharat segment composite</td>
+</tr>
+<tr>
+<td>16</td>
+<td><strong>Skill class</strong></td>
+<td>1P · 2P · 3P · Generic chat</td>
+<td>Partner skill share, per-partner task completion (Layer 7)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>Lifecycle Index (AARRR-style cross-reference)</h2>
+<p>The tree above is cut by <strong>layer / user experience</strong>. PMs often navigate by <strong>lifecycle stage</strong>. This index cross-references the layers by stage.</p>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Where it lives in the tree</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Acquisition</strong></td>
+<td>GTM track (out of product tree) — New users/month · CAC · Channel mix</td>
+</tr>
+<tr>
+<td><strong>Activation</strong></td>
+<td>Layer 1 (User Loop) — First-session activation rate · Onboarding completion % · DAU→DQU rate</td>
+</tr>
+<tr>
+<td><strong>Engagement</strong></td>
+<td>Layer 1 + Layer 3 — DQU · Sessions/user · Multi-turn rate · Conversation Carry-Through · Personalization Resonance</td>
+</tr>
+<tr>
+<td><strong>Retention</strong></td>
+<td>Layer 1 + Layer 2 — D1/D7/D30 organic return · <strong>Active Habit Rate (L0)</strong> · Habit Formation Rate · Personalization Resonance</td>
+</tr>
+<tr>
+<td><strong>Referral</strong></td>
+<td>Layer 1 — Active Share rate · Referral attribution · Virality · Advocacy actions</td>
+</tr>
+<tr>
+<td><strong>Quality</strong></td>
+<td>Layer 4 + Layer 5 — <strong>Useful Task Rate (L0)</strong> · Task Resolution · Production Quality Floor · Hallucination rate</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>Metrics-Design Audit</h2>
+<table>
+<thead>
+<tr>
+<th>Principle</th>
+<th>Pass?</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Layers organised by user experience, not internal pods</strong></td>
+<td>✓</td>
+<td>Each layer answers a user-question. Internal taxonomy (Vertical/Signature/Core) is a cross-cut, not a layer.</td>
+</tr>
+<tr>
+<td><strong>L1 decomposes L0</strong></td>
+<td>Partial ✓</td>
+<td>Useful Task Rate has clean multiplicative identity. Active Habit Rate is causal decomposition only.</td>
+</tr>
+<tr>
+<td><strong>Each metric is Actionable</strong></td>
+<td>Mostly ✓</td>
+<td>NPS, virality, FGD findings are observational — flagged in their layer</td>
+</tr>
+<tr>
+<td><strong>Each metric is Measurable today</strong></td>
+<td>⚠</td>
+<td>P0 instrumentation gaps (re-explanation, task completion signal, language param, trace_id, satisfaction signals, voice intent accuracy, A/B variant assignment) — see <code>product-context.md</code></td>
+</tr>
+<tr>
+<td><strong>Leading vs lagging is distinct</strong></td>
+<td>✓</td>
+<td>L2 mostly leading, L1 mostly lagging</td>
+</tr>
+<tr>
+<td><strong>No vanity metrics at the top</strong></td>
+<td>✓</td>
+<td>DAU at Layer 1 L2 (funnel diagnostic). Growth, Data, A/B, Unit Economics, Resonance, Vertical Portfolio all out of product tree.</td>
+</tr>
+<tr>
+<td><strong>Each metric has a causal link to L0</strong></td>
+<td>✓</td>
+<td>Drivers traceable to L0 via decomposition</td>
+</tr>
+<tr>
+<td><strong>Not double-counted across layers</strong></td>
+<td>✓</td>
+<td>Task Resolution lives once (Layer 4); appears elsewhere only as a factor</td>
+</tr>
+<tr>
+<td><strong>Activity unit is appropriate</strong></td>
+<td>✓</td>
+<td>DQU not DAU</td>
+</tr>
+<tr>
+<td><strong>Personalization is elevated</strong></td>
+<td>✓</td>
+<td>Layer 2 has its own L0 (Personalization Resonance Rate); was previously buried in Memory + scattered in User</td>
+</tr>
+<tr>
+<td><strong>Conversation is unified</strong></td>
+<td>✓</td>
+<td>Layer 3 covers voice + text + image in one layer; voice retains strategic prominence within</td>
+</tr>
+<tr>
+<td><strong>Bharat resonance has a home</strong></td>
+<td>✓</td>
+<td>Cohort A–E cross-cut applied to every metric · Cohort Variance flagged at Layer 1 L2 · qualitative resonance metrics in parallel <code>bharat-metrics.md</code> framework</td>
+</tr>
+<tr>
+<td><strong>Causal validation has a home</strong></td>
+<td>⚠</td>
+<td>A/B in capability track. Currently blocked at FnF. Movement claims are correlational.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>Three design choices worth defending</h2>
+<p><strong>1. Paired L0, not single.</strong>
+Choosing one of {Active Habit, Useful Task} would compromise the product. A high single-metric organisation can hit it by failing the other half. The pair forces both.</p>
+<p><strong>2. Layers organised by user experience, not internal pod taxonomy.</strong>
+The user doesn't experience "Vertical Experience" or "Signature Experience" — they experience "did it work, did it know me, did it talk well." Organising layers around user-experienced concepts forces the metrics to test what users actually feel, not what teams ship. Internal taxonomy (Vertical / Signature / Core) is real and useful for portfolio management — but it lives as a cross-cut and a Strategy track, not as a layer.</p>
+<p><strong>3. Personalization elevated to its own layer (Layer 2).</strong>
+N=1 personalization is one of the 5 Key Bets. Burying it inside Memory + scattering it across User obscured a strategic bet. Layer 2 with <strong>Personalization Resonance Rate</strong> as L0 makes the bet visible and movable. Sub-areas (Memory-driven, Surface-driven, Language-driven, Identity-driven, Adaptive) are L1 — each independently movable.</p>
+<p><strong>4. Cohort A–E as cross-cut, Bharat as parallel framework — not a separate layer.</strong>
+Earlier we considered making Bharat-First Adherence a separate Layer 8 with a Bharat Persona Composite (BPC) L0. The simpler answer: <strong>cohort cuts on Active Habit Rate ARE the behavioural resonance test.</strong> If Cohort D users keep returning organically, the product is resonating with them — by behaviour, the most reliable signal. A "Bharat composite" layer was double-counting what the cohort cut already shows. Instead: Cohort A–E (per <code>jbiq_user_cohort_gtm__v1.docx</code>) is the cross-cut applied to every metric in the tree. <strong>Cohort Variance</strong> (max − min Active Habit Rate across A–E) is the strategic diagnostic, kept at Layer 1 L2. Soft, qualitative resonance metrics ("feels native vs translated", persona-fit feel, cultural relevance, FGD themes per cohort) live in <code>bharat-metrics.md</code> as a parallel periodic framework — distinct from the always-on product tree.</p>
+<hr />
+<h2>What's missing from this tree (future scope)</h2>
+<ul>
+<li><strong>Revenue / monetisation</strong> — out of scope per Mesh. Adds at post-monetisation stage.</li>
+<li><strong>Family / multi-user account</strong> — post-launch direction.</li>
+<li><strong>Offline / on-device intelligence</strong> — post-launch.</li>
+</ul>
+<hr />
+<h2>Companion files</h2>
+<ul>
+<li><code>product-context.md</code> — Product Metrics context / synthesis: ties Mesh + Layers + Goals + FnF Dashboard with ownership and operational state</li>
+<li><code>bharat-metrics.md</code> — Bharat resonance framework (per-cohort product metrics + qualitative resonance), parallel to this tree</li>
+<li><code>non-product-metrics.md</code> — Parallel tracks outside the product tree: Growth · Distribution · Business · Customer Lifecycle · Data · A/B · Unit Economics · Vertical Portfolio</li>
+</ul></body></html>
