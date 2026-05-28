@@ -1,6 +1,6 @@
 # JioBharatIQ — Product Metrics Tree
 
-*Owner: Sridhar · v8 · Last updated: 2026-05-20 · Internal · Reliance Intelligence*
+*v8 · Last updated 2026-05-28 · Sridhar Iruvanti · Internal · Reliance Intelligence*
 
 ---
 
@@ -282,3 +282,7 @@ Real, measurable, important — not measures of whether the product is working f
 - `product-context.md` — product metrics context, ownership, operational state
 - `bharat-metrics.md` — Bharat resonance framework, per-cohort metrics, qualitative resonance
 - `non-product-metrics.md` — parallel tracks outside the product tree
+
+---
+
+*v8 · Last updated 2026-05-28 · Sridhar Iruvanti · Internal · Reliance Intelligence*
