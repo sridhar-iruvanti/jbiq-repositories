@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JioBharatIQ — Product Metrics</title>
+<style>
+:root {
+  --blue:        #1A3A6B;
+  --blue-mid:    #2E6094;
+  --blue-light:  #EDF3FA;
+  --blue-xlight: #F6F9FD;
+  --red:         #C8303A;
+  --green:       #2D6A0A;
+  --green-light: #EAF4E2;
+  --amber:       #7D4E00;
+  --amber-light: #FEF3E2;
+  --gray:        #F4F3F0;
+  --gray-mid:    #888;
+  --gray-dark:   #444;
+  --border:      #E0E0EA;
+  --text:        #111;
+  --tree-nav-w:  200px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;font-size:14px;line-height:1.6;color:var(--text);background:#f5f5f7}
+
+/* ── VIEW SWITCHER ── */
+.view-bar{position:sticky;top:0;z-index:200;background:var(--blue);padding:0 2rem;display:flex;align-items:center;gap:0;border-bottom:2px solid rgba(255,255,255,.1)}
+.view-bar .brand{font-size:13px;font-weight:700;color:#fff;margin-right:2rem;white-space:nowrap;padding:14px 0}
+.view-btn{padding:14px 20px;font-size:12.5px;font-weight:500;color:rgba(255,255,255,.6);border:none;background:transparent;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;white-space:nowrap}
+.view-btn:hover{color:#fff}
+.view-btn.active{color:#fff;border-bottom-color:#fff}
+.pod-select{margin-left:auto;padding:6px 12px;font-size:12px;background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2);border-radius:5px;cursor:pointer;display:none}
+.pod-select option{color:var(--text);background:#fff}
+
+/* ── VIEWS ── */
+.view{display:none;min-height:calc(100vh - 48px)}
+.view.active{display:block}
+
+/* ── OVERVIEW + POD — centred layout ── */
+#view-overview,#view-pod{padding:2rem 2.5rem 6rem;max-width:960px;margin:0 auto}
+
+/* ── FULL TREE — sidebar + content ── */
+#view-tree{display:none;flex-direction:row}
+#view-tree.active{display:flex}
+.tree-nav{width:var(--tree-nav-w);flex-shrink:0;position:sticky;top:48px;height:calc(100vh - 48px);overflow-y:auto;background:#fff;border-right:1px solid var(--border);padding:1rem 0}
+.tree-nav .tn-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--gray-mid);padding:10px 16px 4px}
+.tree-nav a{display:block;padding:5px 16px;font-size:12px;color:var(--gray-dark);text-decoration:none;border-left:2px solid transparent;transition:all .12s}
+.tree-nav a:hover,.tree-nav a.active{color:var(--blue);background:var(--blue-xlight);border-left-color:var(--blue)}
+.tree-content{flex:1;padding:2rem 2.5rem 6rem;max-width:760px;min-width:0}
+
+/* ── FOOTER ── */
+.footer{background:#fff;border-top:1px solid var(--border);padding:12px 2.5rem;font-size:11.5px;color:var(--gray-mid);display:flex;align-items:center;justify-content:space-between}
+.footer strong{color:var(--gray-dark)}
+
+/* ── TYPE ── */
+.page-title{font-size:22px;font-weight:700;color:var(--blue);border-bottom:3px solid var(--red);padding-bottom:6px;margin-bottom:4px}
+.page-meta{font-size:12px;color:var(--gray-mid);margin-bottom:1.8rem}
+.section-heading{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--gray-mid);margin:2rem 0 .8rem;padding-bottom:4px;border-bottom:1px solid var(--border)}
+h2{font-size:15px;font-weight:700;color:var(--blue);border-bottom:1px solid var(--border);padding-bottom:4px;margin:1.8rem 0 .7rem}
+h3{font-size:13.5px;font-weight:600;color:var(--blue-mid);margin:1.2rem 0 .35rem}
+p{margin-bottom:.6rem;color:var(--gray-dark);font-size:13px}
+hr{border:none;border-top:1px solid var(--border);margin:1.6rem 0}
+.muted{font-size:12px;color:var(--gray-mid);font-style:italic}
+
+/* ── CALLOUTS ── */
+.callout{border-radius:6px;padding:10px 14px;margin-bottom:.7rem;font-size:13px;line-height:1.6}
+.callout.blue  {background:var(--blue-light); border-left:4px solid var(--blue-mid)}
+.callout.green {background:var(--green-light);border-left:4px solid var(--green)}
+.callout.amber {background:var(--amber-light);border-left:4px solid var(--amber)}
+.callout.gray  {background:var(--gray);       border-left:4px solid #ccc}
+.callout strong{color:var(--text)}
+
+/* ── ORG GOALS — VISUAL ── */
+.goals-section{margin-bottom:1.5rem}
+.goals-cluster-wrap{margin-bottom:1rem}
+.cluster-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.cluster-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.cluster-dot.user  {background:var(--green)}
+.cluster-dot.system{background:var(--blue-mid)}
+.cluster-dot.scale {background:#aaa}
+.cluster-name{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--gray-dark)}
+.goals-grid{display:grid;gap:6px}
+.goals-grid.g3{grid-template-columns:repeat(3,1fr)}
+.goals-grid.g2{grid-template-columns:repeat(2,1fr)}
+.goals-grid.g4{grid-template-columns:repeat(4,1fr)}
+.gc{background:#fff;border:1px solid var(--border);border-radius:7px;padding:12px 14px;position:relative;overflow:hidden}
+.gc::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%}
+.gc.user  ::before{background:var(--green)}
+.gc.system::before{background:var(--blue-mid)}
+.gc.scale ::before{background:#bbb}
+.gc-num{font-size:11px;font-weight:700;color:var(--gray-mid);margin-bottom:5px}
+.gc-text{font-size:12.5px;color:var(--text);line-height:1.45}
+
+/* ── NORTH STAR ── */
+.ns-section{margin-bottom:1.5rem}
+.ns-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px}
+.ns-card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:16px 18px;position:relative;overflow:hidden}
+.ns-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.ns-card.loop::before{background:var(--blue)}
+.ns-card.work::before{background:var(--green)}
+.ns-badge{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px}
+.ns-card.loop .ns-badge{color:var(--blue)}
+.ns-card.work .ns-badge{color:var(--green)}
+.ns-name{font-size:16px;font-weight:700;color:var(--text);margin-bottom:5px}
+.ns-formula{font-family:SF Mono,Monaco,monospace;font-size:12px;color:var(--blue-mid);background:var(--blue-xlight);padding:4px 9px;border-radius:4px;display:inline-block;margin-bottom:6px}
+.ns-card.work .ns-formula{color:var(--green);background:var(--green-light)}
+.ns-desc{font-size:12px;color:var(--gray-dark);line-height:1.5}
+.ns-footer{background:var(--gray);border-radius:6px;padding:9px 14px;font-size:12px;color:var(--gray-dark);display:flex;align-items:center;gap:8px}
+.ns-footer .ns-composite{font-weight:600;color:var(--text)}
+.ns-dir{font-size:11px;color:var(--gray-mid);margin-top:5px}
+
+/* ── 7 LAYERS OVERVIEW ── */
+.layers-section{}
+.layers-strip{display:flex;flex-direction:column;gap:4px}
+.layer-row-overview{display:grid;grid-template-columns:32px 1fr 180px 64px;align-items:stretch;background:#fff;border:1px solid var(--border);border-radius:6px;overflow:hidden;transition:box-shadow .15s}
+.layer-row-overview:hover{box-shadow:0 1px 6px rgba(0,0,0,.07)}
+.lro-num{background:var(--blue);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;width:32px;flex-shrink:0}
+.lro-body{padding:10px 14px;min-width:0}
+.lro-name{font-size:13px;font-weight:600;color:var(--blue);margin-bottom:2px}
+.lro-obj{font-size:11.5px;color:var(--gray-dark)}
+.lro-metric{padding:10px 12px;display:flex;align-items:center;border-left:1px solid var(--border)}
+.lro-metric-text{font-size:11.5px;color:var(--blue-mid);font-weight:500}
+.lro-dir{padding:10px 10px;display:flex;align-items:center;justify-content:center;border-left:1px solid var(--border)}
+.dir-tag{display:inline-block;font-size:10px;font-weight:600;padding:2px 7px;border-radius:9px;text-transform:uppercase;letter-spacing:.04em}
+.dir-user  {background:var(--green-light);color:var(--green)}
+.dir-system{background:var(--blue-light); color:var(--blue-mid)}
+.dir-org   {background:var(--gray);       color:var(--gray-dark);border:1px solid #ccc}
+
+/* ── TABLES ── */
+table{width:100%;border-collapse:collapse;margin:.5rem 0 1rem;font-size:13px}
+th{background:var(--blue);color:#fff;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:7px 10px;text-align:left}
+td{border:1px solid var(--border);padding:7px 10px;vertical-align:top;line-height:1.5}
+tr:hover td{background:var(--blue-xlight)}
+.td-l0{background:var(--blue-light)!important;font-weight:600;color:var(--blue)}
+.td-l2{background:var(--amber-light)!important;color:var(--amber)}
+.td-grp{background:var(--gray)!important;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--gray-mid)}
+
+/* ── COLLAPSIBLES ── */
+.collapsible{border:1px solid var(--border);border-radius:7px;overflow:hidden;margin-bottom:6px}
+.coll-head{display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--blue);cursor:pointer;user-select:none;border:none;width:100%;text-align:left}
+.coll-head:hover{background:var(--blue-mid)}
+.coll-head.dark{background:var(--gray-dark)}
+.coll-head.dark:hover{background:#333}
+.coll-num{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.18);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.coll-title{flex:1}
+.coll-name{font-size:13px;font-weight:700;color:#fff}
+.coll-sub{font-size:11px;color:rgba(255,255,255,.6);font-style:italic}
+.coll-l0{font-size:10.5px;font-weight:600;background:rgba(255,255,255,.12);color:rgba(255,255,255,.85);padding:3px 9px;border-radius:9px;max-width:230px;text-align:right;line-height:1.4;flex-shrink:0}
+.coll-chev{color:rgba(255,255,255,.4);font-size:12px;transition:transform .2s;flex-shrink:0}
+.coll-head.open .coll-chev{transform:rotate(180deg)}
+.coll-body{display:none;padding:14px;background:#fff}
+.coll-body.open{display:block}
+
+/* ── POD VIEW ── */
+.pod-mission{background:var(--blue-xlight);border:1px solid var(--blue-light);border-radius:7px;padding:12px 16px;margin-bottom:1.2rem}
+.pod-mission .pm-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--blue-mid);margin-bottom:4px}
+.pod-mission .pm-text{font-size:13px;color:var(--gray-dark)}
+.pod-goals{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.2rem}
+.pod-goal-tag{font-size:12px;background:var(--green-light);color:var(--green);border:1px solid rgba(45,106,10,.2);border-radius:5px;padding:5px 10px}
+
+/* ── STRUCTURE VIEW ── */
+.sv-wrap{margin-bottom:1.5rem}
+.sv-row-header{display:grid;grid-template-columns:160px 220px 1fr;background:var(--blue);border-radius:6px 6px 0 0;overflow:hidden}
+.sv-row-header div{padding:7px 12px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:rgba(255,255,255,.65)}
+.sv-data-row{display:grid;grid-template-columns:160px 220px 1fr;border:1px solid var(--border);border-top:none;background:#fff}
+.sv-data-row:last-child{border-radius:0 0 6px 6px}
+.sv-data-row:hover .sv-cell{background:var(--blue-xlight)}
+.sv-cell{padding:9px 12px;font-size:12px;line-height:1.45;border-right:1px solid var(--border)}
+.sv-cell:last-child{border-right:none}
+.sv-cell.l0{background:var(--blue-light);font-weight:600;color:var(--blue)}
+
+/* ── HIERARCHY ── */
+.hierarchy{background:var(--gray);border-radius:6px;padding:12px 16px;font-family:SF Mono,Monaco,monospace;font-size:12px;line-height:2;color:var(--gray-dark);margin-bottom:.8rem}
+.hl{color:var(--blue);font-weight:600}
+.hn{font-family:-apple-system,Arial,sans-serif;font-size:11px;color:var(--gray-mid);margin-left:5px}
+
+/* ── CROSS-CUTS ── */
+.cuts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:.8rem}
+.cut-card{background:var(--blue-xlight);border:1px solid var(--blue-light);border-radius:5px;padding:8px 10px}
+.cut-num{font-size:10px;font-weight:600;color:var(--blue-mid);margin-bottom:2px}
+.cut-name{font-size:12px;font-weight:600;color:var(--blue);margin-bottom:2px}
+.cut-vals{font-size:11px;color:var(--gray-dark);line-height:1.5}
+.cut-rel{font-size:10.5px;color:var(--gray-mid);margin-top:2px;font-style:italic}
+
+/* ── USE CASES ── */
+.uc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0 4px}
+.uc-domain{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--blue-mid);margin-bottom:4px}
+.uc-item{font-size:11.5px;color:var(--gray-dark);line-height:1.8}
+
+/* ── TAGS ── */
+.tag{display:inline-block;font-size:10px;font-weight:600;padding:2px 6px;border-radius:9px;text-transform:uppercase;letter-spacing:.04em;vertical-align:middle;margin-left:4px}
+.tag-user  {background:var(--green-light);color:var(--green)}
+.tag-system{background:var(--blue-light); color:var(--blue-mid)}
+.tag-org   {background:var(--gray);       color:var(--gray-dark);border:1px solid #ccc}
+</style>
+</head>
+<body>
+
+<!-- ═══ VIEW BAR ═══ -->
+<div class="view-bar">
+  <div class="brand">JioBharatIQ · Product Metrics</div>
+  <button class="view-btn active" onclick="switchView('overview',this)">Org Overview</button>
+  <button class="view-btn" onclick="switchView('pod',this)">Pod View</button>
+  <button class="view-btn" onclick="switchView('tree',this)">Full Metrics Tree</button>
+  <select class="pod-select" id="podSelect" onchange="switchPod(this.value)">
+    <option value="core">Core Experience</option>
+    <option value="personalisation">Memory &amp; Personalisation</option>
+    <option value="voice">Voice &amp; Multimodal</option>
+    <option value="agentic">Agentic Orchestration</option>
+    <option value="evals">Evals &amp; Quality</option>
+    <option value="platform">Backend Platform</option>
+    <option value="partner">Partner Experience</option>
+  </select>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     VIEW 1 — ORG OVERVIEW
+═══════════════════════════════════════════ -->
+<div class="view active" id="view-overview">
+  <h1 class="page-title">Product Metrics</h1>
+  <p class="page-meta">JioBharatIQ &nbsp;·&nbsp; Internal · Reliance Intelligence</p>
+
+  <div class="callout blue" style="font-size:13px;margin-bottom:1.8rem">
+    <strong>Vision —</strong> Democratize intelligence for 1.4 billion Indians — making AI abundant, affordable, and accessible to every Indian, in every language, across every domain of daily life.
+  </div>
+
+  <!-- ORG GOALS -->
+  <div class="section-heading">Org Goals</div>
+
+  <div class="goals-section">
+    <div class="goals-cluster-wrap">
+      <div class="cluster-header">
+        <div class="cluster-dot user"></div>
+        <div class="cluster-name">Consumer Outcomes</div>
+      </div>
+      <div class="goals-grid g3">
+        <div class="gc user">
+          <div class="gc-num">G03</div>
+          <div class="gc-text">40%+ first-time users complete a task in their first session. 80%+ task completion across returning users.</div>
+        </div>
+        <div class="gc user">
+          <div class="gc-num">G04</div>
+          <div class="gc-text">25%+ of monthly users return daily.</div>
+        </div>
+        <div class="gc user">
+          <div class="gc-num">G05</div>
+          <div class="gc-text">80%+ response satisfaction across all signature experiences. No single domain below 70%.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="goals-cluster-wrap">
+      <div class="cluster-header">
+        <div class="cluster-dot system"></div>
+        <div class="cluster-name">Platform Capability</div>
+      </div>
+      <div class="goals-grid g2">
+        <div class="gc system">
+          <div class="gc-num">G06</div>
+          <div class="gc-text">12+ Indian languages in production, each beating benchmark speech recognition accuracy by 5%+.</div>
+        </div>
+        <div class="gc system">
+          <div class="gc-num">G07</div>
+          <div class="gc-text">99%+ quality eval pass rate. Load-tested and stable at 100K+ concurrent users.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="goals-cluster-wrap">
+      <div class="cluster-header">
+        <div class="cluster-dot scale"></div>
+        <div class="cluster-name">Scale Readiness &amp; Market Reach</div>
+      </div>
+      <div class="goals-grid g4">
+        <div class="gc scale">
+          <div class="gc-num">G01</div>
+          <div class="gc-text">1M+ Indians reached every month.</div>
+        </div>
+        <div class="gc scale">
+          <div class="gc-num">G02</div>
+          <div class="gc-text">15+ signature experiences across 5+ domains.</div>
+        </div>
+        <div class="gc scale">
+          <div class="gc-num">G08</div>
+          <div class="gc-text">10+ partners live, 3+ new onboarding every month.</div>
+        </div>
+        <div class="gc scale">
+          <div class="gc-num">G09</div>
+          <div class="gc-text">2+ new signature experiences live every month.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NORTH STAR -->
+  <div class="section-heading">North Star</div>
+  <div class="ns-section">
+    <div class="ns-pair">
+      <div class="ns-card loop">
+        <div class="ns-badge">Loop</div>
+        <div class="ns-name">Active Habit Rate</div>
+        <div class="ns-formula">DEU ÷ MEU</div>
+        <div class="ns-desc">Are users coming back? All returns included. Push vs organic qualified at L1.</div>
+      </div>
+      <div class="ns-card work">
+        <div class="ns-badge">Work</div>
+        <div class="ns-name">Useful Task Rate</div>
+        <div class="ns-formula">% tasks resolved AND user signaled value</div>
+        <div class="ns-desc">Did the AI deliver something useful? Composed from Layer 4 × Layer 5.</div>
+      </div>
+    </div>
+    <div class="ns-footer">
+      <span class="ns-composite">Compounding Habit Index = Active Habit Rate × Useful Task Rate</span>
+      <span style="color:var(--gray-mid)">&nbsp;·&nbsp; One-number composite only</span>
+    </div>
+    <div class="ns-dir">Layers 1–5 are user-backwards — defined from what the user experienced. Layer 6 is system. Layer 7 is org-scale.</div>
+  </div>
+
+  <!-- 7 LAYERS -->
+  <div class="section-heading">7 Layers</div>
+  <p class="muted" style="margin-bottom:.8rem">Every metric is derivable. L0 is the outcome. L1 is what drives it. L2 is where you look when L1 moves.</p>
+  <div class="layers-strip">
+    <div class="layer-row-overview">
+      <div class="lro-num">1</div>
+      <div class="lro-body"><div class="lro-name">User Loop</div><div class="lro-obj">Users return on their own, without being pushed</div></div>
+      <div class="lro-metric"><div class="lro-metric-text">Active Habit Rate</div></div>
+      <div class="lro-dir"><span class="dir-tag dir-user">User</span></div>
+    </div>
+    <div class="layer-row-overview">
+      <div class="lro-num">2</div>
+      <div class="lro-body"><div class="lro-name">Personalisation</div><div class="lro-obj">Every session feels tailored to that specific user</div></div>
+      <div class="lro-metric"><div class="lro-metric-text">Personalisation Resonance Rate</div></div>
+      <div class="lro-dir"><span class="dir-tag dir-user">User</span></div>
+    </div>
+    <div class="layer-row-overview">
+      <div class="lro-num">3</div>
+      <div class="lro-body"><div class="lro-name">Conversation</div><div class="lro-obj">Talking to JBIQ feels as natural as talking to a person</div></div>
+      <div class="lro-metric"><div class="lro-metric-text">Multi-turn Coherence Rate</div></div>
+      <div class="lro-dir"><span class="dir-tag dir-user">User</span></div>
+    </div>
+    <div class="layer-row-overview">
+      <div class="lro-num">4</div>
+      <div class="lro-body"><div class="lro-name">Task Delivery</div><div class="lro-obj">The AI completes what the user came to get done</div></div>
+      <div class="lro-metric"><div class="lro-metric-text">Task Completion Rate</div></div>
+      <div class="lro-dir"><span class="dir-tag dir-user">User</span></div>
+    </div>
+    <div class="layer-row-overview">
+      <div class="lro-num">5</div>
+      <div class="lro-body"><div class="lro-name">Quality</div><div class="lro-obj">Every response is accurate, safe, and sounds native</div></div>
+      <div class="lro-metric"><div class="lro-metric-text">Response Satisfaction Rate</div></div>
+      <div class="lro-dir"><span class="dir-tag dir-user">User</span></div>
+    </div>
+    <div class="layer-row-overview">
+      <div class="lro-num">6</div>
+      <div class="lro-body"><div class="lro-name">Platform</div><div class="lro-obj">Available and fast whenever a user shows up</div></div>
+      <div class="lro-metric"><div class="lro-metric-text">Reliability-Adjusted Availability</div></div>
+      <div class="lro-dir"><span class="dir-tag dir-system">System</span></div>
+    </div>
+    <div class="layer-row-overview">
+      <div class="lro-num">7</div>
+      <div class="lro-body"><div class="lro-name">Partners</div><div class="lro-obj">The catalog grows beyond what core engineering can build</div></div>
+      <div class="lro-metric"><div class="lro-metric-text">Partner Skill Coverage</div></div>
+      <div class="lro-dir"><span class="dir-tag dir-org">Org</span></div>
+    </div>
+  </div>
+
+  <div class="footer" style="margin-top:3rem;border-radius:6px">
+    <span>JioBharatIQ · Product Metrics · v9 · 2026-05-28</span>
+    <span>Internal · Reliance Intelligence</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     VIEW 2 — POD VIEW
+═══════════════════════════════════════════ -->
+<div class="view" id="view-pod">
+  <h1 class="page-title" id="pod-title">Core Experience</h1>
+  <p class="page-meta">Pod view — L0, L1, L2 for this pod's owned layer</p>
+
+  <div id="pod-content">
+    <!-- Populated by JS -->
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     VIEW 3 — FULL METRICS TREE
+═══════════════════════════════════════════ -->
+<div class="view" id="view-tree">
+  <!-- LEFT NAV -->
+  <nav class="tree-nav">
+    <div class="tn-label">Layers</div>
+    <a href="#t-l1" onclick="scrollTo('t-l1')">1 · User Loop</a>
+    <a href="#t-l2" onclick="scrollTo('t-l2')">2 · Personalisation</a>
+    <a href="#t-l3" onclick="scrollTo('t-l3')">3 · Conversation</a>
+    <a href="#t-l4" onclick="scrollTo('t-l4')">4 · Task Delivery</a>
+    <a href="#t-l5" onclick="scrollTo('t-l5')">5 · Quality</a>
+    <a href="#t-l6" onclick="scrollTo('t-l6')">6 · Platform</a>
+    <a href="#t-l7" onclick="scrollTo('t-l7')">7 · Partners</a>
+    <div class="tn-label">Reference</div>
+    <a href="#t-glance" onclick="scrollTo('t-glance')">All Layers at a Glance</a>
+    <a href="#t-defs" onclick="scrollTo('t-defs')">Activity Units</a>
+    <a href="#t-glossary" onclick="scrollTo('t-glossary')">Glossary</a>
+    <a href="#t-cuts" onclick="scrollTo('t-cuts')">Cross-Cutting Attributes</a>
+    <a href="#t-out" onclick="scrollTo('t-out')">Out of Product Metrics Tree</a>
+  </nav>
+
+  <!-- CONTENT -->
+  <div class="tree-content">
+    <h1 class="page-title">Full Metrics Tree</h1>
+    <p class="page-meta">All 7 layers · L0 / L1 / L2 · Definitions · Reference</p>
+
+    <div class="callout gray" style="margin-bottom:1.5rem;font-size:13px">
+      <strong>Design principle:</strong> Every metric is derivable. L0 is the outcome. L1 is what drives it. L2 is where you look when L1 moves. Complexity lives at the bottom, not the top.<br>
+      <strong>Direction:</strong> Layers 1–5 are user-backwards. Layer 6 is system-backwards. Layer 7 is org-backwards.
+    </div>
+
+    <!-- LAYER 1 -->
+    <div id="t-l1" class="collapsible">
+      <button class="coll-head" onclick="togC(this)">
+        <div class="coll-num">1</div>
+        <div class="coll-title"><div class="coll-name">User Loop</div><div class="coll-sub">Users return on their own, without being pushed &nbsp;·&nbsp; User-backwards</div></div>
+        <div class="coll-l0">Active Habit Rate = DEU ÷ MEU</div>
+        <div class="coll-chev">▼</div>
+      </button>
+      <div class="coll-body">
+        <table>
+          <thead><tr><th style="width:8%">Level</th><th style="width:17%">Group</th><th>Metric</th></tr></thead>
+          <tbody>
+            <tr><td class="td-l0" colspan="2">L0</td><td class="td-l0">Active Habit Rate = DEU ÷ MEU &nbsp;·&nbsp; All returns included. Push vs organic qualified at L1.</td></tr>
+            <tr><td class="td-grp" colspan="3">L1 — Activation</td></tr>
+            <tr><td>L1</td><td>Activation</td><td>Activation Rate = % installs completing ≥1 task within D7 &nbsp;·&nbsp; Onboarding completion rate &nbsp;·&nbsp; First-session task rate &nbsp;·&nbsp; Delayed activation rate &nbsp;·&nbsp; Time-to-first-task</td></tr>
+            <tr><td class="td-grp" colspan="3">L1 — Engagement</td></tr>
+            <tr><td>L1</td><td>Engagement</td><td>MEU growth rate (MoM) &nbsp;·&nbsp; DEU growth rate (MoM) &nbsp;·&nbsp; Tasks per DEU/day &nbsp;·&nbsp; Sessions per DEU/day &nbsp;·&nbsp; Avg session duration &nbsp;·&nbsp; Multi-task session rate &nbsp;·&nbsp; Active days/week</td></tr>
+            <tr><td class="td-grp" colspan="3">L1 — Retention</td></tr>
+            <tr><td>L1</td><td>Retention</td><td>D1 / D7 / D30 / D90 organic return rate</td></tr>
+            <tr><td class="td-grp" colspan="3">L1 — Loop quality</td></tr>
+            <tr><td>L1</td><td>Loop Self-Sufficiency</td><td>Organic DEU ÷ Total DEU &nbsp;·&nbsp; What share of daily returns are unprompted</td></tr>
+            <tr><td>L1</td><td>Push-attributed Return Rate</td><td>Push DEU ÷ Total DEU &nbsp;·&nbsp; What share is comms pulling in</td></tr>
+            <tr><td>L1</td><td>Habit Formation Rate</td><td>% push-prompted users → organic within 60d &nbsp;·&nbsp; Is push building habit or sustaining dependency</td></tr>
+            <tr><td>L1</td><td>Organic Active Habit Rate</td><td>Organic DEU ÷ MEU &nbsp;·&nbsp; Push-excluded pull signal &nbsp;·&nbsp; Quality lens on L0</td></tr>
+            <tr><td class="td-grp" colspan="3">L1 — Sentiment + Advocacy</td></tr>
+            <tr><td>L1</td><td>Sentiment</td><td>NPS &nbsp;·&nbsp; User Satisfaction Rate &nbsp;·&nbsp; Surface time-to-meaningful p95</td></tr>
+            <tr><td>L1</td><td>Advocacy</td><td>Share rate (output shared externally) &nbsp;·&nbsp; Screenshot proxy (content saved to device) &nbsp;·&nbsp; Show-family behaviour (session started from shared content) &nbsp;·&nbsp; High-signal indicator that genuine value was delivered</td></tr>
+            <tr><td class="td-grp" colspan="3">L1 — Expansion</td></tr>
+            <tr><td>L1</td><td>Expansion</td><td>Experience discovery rate &nbsp;·&nbsp; Vertical breadth &nbsp;·&nbsp; Cross-domain engagement rate</td></tr>
+            <tr><td class="td-grp" colspan="3">L1 — Experience Metrics (G)</td></tr>
+            <tr><td>L1</td><td>Per-experience</td><td>Attempt rate &nbsp;·&nbsp; Completion rate &nbsp;·&nbsp; D1 / D3 / D7 same-experience return rate (unprompted) &nbsp;·&nbsp; D30 Stickiness &nbsp;·&nbsp; Cohort Penetration &nbsp;·&nbsp; In-context NPS</td></tr>
+            <tr><td>L1</td><td>Signature</td><td>Signature Qualification Score (0–3, only 3/3 qualifies) &nbsp;·&nbsp; D7 Retention Delta &nbsp;·&nbsp; Completion Delta &nbsp;·&nbsp; NPS Delta vs Generic</td></tr>
+            <tr><td>L1</td><td>Catalog</td><td>New experiences live/month &nbsp;·&nbsp; Time idea→live &nbsp;·&nbsp; % clearing D7 threshold in 30d</td></tr>
+            <tr><td class="td-grp" colspan="3">L2 — Diagnostics</td></tr>
+            <tr><td class="td-l2">L2</td><td class="td-l2">User buckets</td><td class="td-l2">MAU / MEU / MQU / MCU counts and % of installed base &nbsp;·&nbsp; MEU growth rate (MoM) &nbsp;·&nbsp; DEU growth rate (MoM)</td></tr>
+            <tr><td class="td-l2">L2</td><td class="td-l2">Drop-off</td><td class="td-l2">Per-experience: completion rate paired with same-experience return rate &nbsp;·&nbsp; Low completion + low return = bad experience &nbsp;·&nbsp; Low completion + decent return = wrong fit or shallow content</td></tr>
+            <tr><td class="td-l2">L2</td><td class="td-l2">Onboarding</td><td class="td-l2">Onboarding time (median, p90) &nbsp;·&nbsp; Drop-off step &nbsp;·&nbsp; Per-device + per-network completion rate</td></tr>
+            <tr><td class="td-l2">L2</td><td class="td-l2">Cohort</td><td class="td-l2">Cohort Variance = max(Active Habit Rate) − min across A–E</td></tr>
+            <tr><td class="td-l2">L2</td><td class="td-l2">Signals</td><td class="td-l2">Rephrase rate &nbsp;·&nbsp; Re-ask rate &nbsp;·&nbsp; At-risk % &nbsp;·&nbsp; PN/WA open + post-click &nbsp;·&nbsp; History-to-query conversion rate</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- LAYER 2 -->
+    <div id="t-l2" class="collapsible">
+      <button class="coll-head" onclick="togC(this)">
+        <div class="coll-num">2</div>
+        <div class="coll-title"><div class="coll-name">Personalisation</div><div class="coll-sub">Every session feels tailored to that specific user &nbsp;·&nbsp; User-backwards</div></div>
+        <div class="coll-l0">Personalisation Resonance Rate</div>
+        <div class="coll-chev">▼</div>
+      </button>
+      <div class="coll-body">
+        <table>
+          <thead><tr><th style="width:8%">Level</th><th style="width:17%">Group</th><th>Metric</th></tr></thead>
+          <tbody>
+            <tr><td class="td-l0" colspan="2">L0</td><td class="td-l0">Personalisation Resonance Rate = % sessions where product demonstrated it knew the user &nbsp;·&nbsp; At least ONE of: correct language auto-served · prior context applied without re-explanation · personalised surface element engaged · proactive suggestion accepted</td></tr>
+            <tr><td class="td-grp" colspan="3">L1 — Identity</td></tr>
+            <tr><td>L1</td><td>Identity</td><td>Warm start rate &nbsp;·&nbsp; Cold start rate &nbsp;·&nbsp; Cold→warm transition rate (D7)</td></tr>
+            <tr><td class="td-grp" colspan="3">L1 — Memory</td></tr>
+            <tr><td>L1</td><td>Memory</td><td>Context carry-through rate = % returning sessions where prior context applied without re-explanation</td></tr>
+            <tr><td class="td-grp" colspan="3">L1 — Surface relevance</td></tr>
+            <tr><td>L1</td><td>Surface</td><td>Personalised surface engagement rate = % sessions where user engaged with a personalised home element or suggestion</td></tr>
+            <tr><td class="td-grp" colspan="3">L1 — Anticipation</td></tr>
+            <tr><td>L1</td><td>Anticipation</td><td>Proactive suggestion acceptance rate &nbsp;·&nbsp; Time-of-day relevance rate</td></tr>
+            <tr><td class="td-grp" colspan="3">L1 — Language</td></tr>
+            <tr><td>L1</td><td>Language</td><td>Correct-language session rate &nbsp;·&nbsp; Cross-language continuity rate</td></tr>
+            <tr><td class="td-grp" colspan="3">L1 — Validation</td></tr>
+            <tr><td>L1</td><td>Validation</td><td>N=1 Retention Lift = D30(personalisation on) − D30(personalisation off cohort) &nbsp;·&nbsp; Periodic</td></tr>
+            <tr><td class="td-grp" colspan="3">L2 — Diagnostics</td></tr>
+            <tr><td class="td-l2">L2</td><td class="td-l2">UCP</td><td class="td-l2">UCP parameter coverage &nbsp;·&nbsp; UCP utilisation ratio &nbsp;·&nbsp; Signal freshness (profile updated within 15 min)</td></tr>
+            <tr><td class="td-l2">L2</td><td class="td-l2">Identity</td><td class="td-l2">JioID context load rate &nbsp;·&nbsp; Language auto-detect accuracy</td></tr>
+            <tr><td class="td-l2">L2</td><td class="td-l2">Memory</td><td class="td-l2">Memory capture / retrieval precision + recall &nbsp;·&nbsp; Hallucinated facts per audit &nbsp;·&nbsp; Re-explanation rate &nbsp;·&nbsp; Users with 6+ memories stored</td></tr>
+            <tr><td class="td-l2">L2</td><td class="td-l2">Surface</td><td class="td-l2">Tile tap rate by position &nbsp;·&nbsp; Cold home rate &nbsp;·&nbsp; Inference latency p95 ≤50ms</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- LAYER 3 -->
+    <div id="t-l3" class="collapsible">
+      <button class="coll-head" onclick="togC(this)">
+        <div class="coll-num">3</div>
+        <div class="coll-title"><div class="coll-name">Conversation</div><div class="coll-sub">Talking to JBIQ feels as natural as talking to a person &nbsp;·&nbsp; User-backwards</div></div>
+        <div class="coll-l0">Multi-turn Coherence Rate</div>
+        <div class="coll-chev">▼</div>
+      </button>
+      <div class="coll-body">
+        <table>
+          <thead><tr><th style="width:8%">Level</th><th style="width:17%">Group</th><th>Metric</th></tr></thead>
+          <tbody>
+            <tr><td class="td-l0" colspan="2">L0</td><td class="td-l0">Multi-turn Coherence Rate = % multi-turn sessions where context held AND modality switches succeeded</td></tr>
+            <tr><td class="td-grp" colspan="3">L1 — Voice (Key Bet)</td></tr>
+            <tr><td>L1</td><td>Voice</td><td>Voice Primary User Share &nbsp;·&nbsp; ASR WER per language &nbsp;·&nbsp; E2E Voice Latency p95 ≤1.5s &nbsp;·&nbsp; Barge-in ≤300ms &nbsp;·&nbsp; TTS Naturalness MOS &nbsp;·&nbsp; Voice Carry-Through &nbsp;·&nbsp; Misunderstanding Recovery Rate</td></tr>
+            <tr><td class="td-grp" colspan="3">L1 — Text</td></tr>
+            <tr><td>L1</td><td>Text</td><td>Text Query Latency &nbsp;·&nbsp; Text Completion Rate &nbsp;·&nbsp; Suggested-prompt usage rate</td></tr>
+            <tr><td class="td-grp" colspan="3">L1 — Image</td></tr>
+            <tr><td>L1</td><td>Image</td><td>Image Upload Success &nbsp;·&nbsp; Vision Accuracy &nbsp;·&nbsp; Image-to-Task Completion</td></tr>
+            <tr><td class="td-grp" colspan="3">L1 — Cross-modal</td></tr>
+            <tr><td>L1</td><td>Cross-modal</td><td>Modality Switch Success &nbsp;·&nbsp; Turn-Taking Quality</td></tr>
+            <tr><td class="td-grp" colspan="3">L2 — Diagnostics</td></tr>
+            <tr><td class="td-l2">L2</td><td class="td-l2">Environment</td><td class="td-l2">Noise-ASR retention &nbsp;·&nbsp; Per-network latency (4G/3G/2G) &nbsp;·&nbsp; Per-device-tier voice metrics</td></tr>
+            <tr><td class="td-l2">L2</td><td class="td-l2">Signals</td><td class="td-l2">Mic Permission Grant Rate &nbsp;·&nbsp; Voice Abandonment Rate &nbsp;·&nbsp; Audio Replay Rate</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- LAYER 4 -->
+    <div id="t-l4" class="collapsible">
+      <button class="coll-head" onclick="togC(this)">
+        <div class="coll-num">4</div>
+        <div class="coll-title"><div class="coll-name">Task Delivery</div><div class="coll-sub">The AI completes what the user came to get done &nbsp;·&nbsp; User-backwards</div></div>
+        <div class="coll-l0">Task Completion Rate</div>
+        <div class="coll-chev">▼</div>
+      </button>
+      <div class="coll-body">
+        <table>
+          <thead><tr><th style="width:8%">Level</th><th style="width:17%">Group</th><th>Metric</th></tr></thead>
+          <tbody>
+            <tr><td class="td-l0" colspan="2">L0</td><td class="td-l0">Task Completion Rate = % of tasks that reached a resolved state</td></tr>
+            <tr><td class="td-grp" colspan="3">L1 — Split</td></tr>
+            <tr><td>L1</td><td>Split</td><td>First-time user task completion rate &nbsp;·&nbsp; Returning user task completion rate</td></tr>
+            <tr><td class="td-grp" colspan="3">L1 — Qualified</td></tr>
+            <tr><td>L1</td><td>Qualified</td><td>Qualified Task Rate = % completed tasks where user felt the problem was solved &nbsp;·&nbsp; Signals: no rephrase · no thumbs-down · no restart · plus ≥1 positive (continued / domain return 24h / thumbs-up)</td></tr>
+            <tr><td class="td-grp" colspan="3">L1 — Accuracy</td></tr>
+            <tr><td>L1</td><td>Accuracy</td><td>Intent Classification Accuracy &nbsp;·&nbsp; Routing Accuracy &nbsp;·&nbsp; Execution Success Rate &nbsp;·&nbsp; Multi-step Task Success Rate</td></tr>
+            <tr><td class="td-grp" colspan="3">L1 — Speed</td></tr>
+            <tr><td>L1</td><td>Speed</td><td>TTFT p95 &nbsp;·&nbsp; E2E Latency p95</td></tr>
+            <tr><td class="td-grp" colspan="3">L2 — Diagnostics</td></tr>
+            <tr><td class="td-l2">L2</td><td class="td-l2">Completion</td><td class="td-l2">Per-skill completion &nbsp;·&nbsp; Per-domain completion &nbsp;·&nbsp; Confirmation-bypass rate (must = 0)</td></tr>
+            <tr><td class="td-l2">L2</td><td class="td-l2">Failure recovery</td><td class="td-l2">Task failure recovery rate = % failed tasks where user retried within session &nbsp;·&nbsp; Post-failure abandonment rate</td></tr>
+            <tr><td class="td-l2">L2</td><td class="td-l2">Environment</td><td class="td-l2">Per-network latency &nbsp;·&nbsp; Per-device-tier latency</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- LAYER 5 -->
+    <div id="t-l5" class="collapsible">
+      <button class="coll-head" onclick="togC(this)">
+        <div class="coll-num">5</div>
+        <div class="coll-title"><div class="coll-name">Quality</div><div class="coll-sub">Every response is accurate, safe, and sounds native &nbsp;·&nbsp; User-backwards</div></div>
+        <div class="coll-l0">Response Satisfaction Rate</div>
+        <div class="coll-chev">▼</div>
+      </button>
+      <div class="coll-body">
+        <table>
+          <thead><tr><th style="width:8%">Level</th><th style="width:17%">Group</th><th>Metric</th></tr></thead>
+          <tbody>
+            <tr><td class="td-l0" colspan="2">L0</td><td class="td-l0">Response Satisfaction Rate = % of chats where user was satisfied &nbsp;·&nbsp; Reported overall AND per domain. Overall valid only when all domains above minimum floor.</td></tr>
+            <tr><td class="td-grp" colspan="3">L1 — System gate</td></tr>
+            <tr><td>L1</td><td>System gate</td><td>Production Quality Floor = % responses passing all eval dimensions (relevance, accuracy, safety, language) &nbsp;·&nbsp; Per-domain Response Satisfaction Rate</td></tr>
+            <tr><td class="td-grp" colspan="3">L1 — Quality dimensions</td></tr>
+            <tr><td>L1</td><td>Quality</td><td>Eval pass rate &nbsp;·&nbsp; Hallucination rate &nbsp;·&nbsp; Guardrail block rate &nbsp;·&nbsp; Drift online vs offline ≤10pp &nbsp;·&nbsp; CI/CD eval gating coverage</td></tr>
+            <tr><td class="td-grp" colspan="3">L1 — Authenticity</td></tr>
+            <tr><td>L1</td><td>Authenticity</td><td>Brand-voice adherence &nbsp;·&nbsp; Language authenticity (native-speaker blind eval per language)</td></tr>
+            <tr><td class="td-grp" colspan="3">L2 — Diagnostics</td></tr>
+            <tr><td class="td-l2">L2</td><td class="td-l2">Diagnostics</td><td class="td-l2">Per-language eval score &nbsp;·&nbsp; Per-language satisfaction rate &nbsp;·&nbsp; Satisfaction gap by domain &nbsp;·&nbsp; Eval misses that reached users &nbsp;·&nbsp; Red-team violation count</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- LAYER 6 -->
+    <div id="t-l6" class="collapsible">
+      <button class="coll-head" onclick="togC(this)">
+        <div class="coll-num">6</div>
+        <div class="coll-title"><div class="coll-name">Platform</div><div class="coll-sub">Available and fast whenever a user shows up &nbsp;·&nbsp; System-backwards</div></div>
+        <div class="coll-l0">Reliability-Adjusted Availability</div>
+        <div class="coll-chev">▼</div>
+      </button>
+      <div class="coll-body">
+        <table>
+          <thead><tr><th style="width:8%">Level</th><th style="width:17%">Group</th><th>Metric</th></tr></thead>
+          <tbody>
+            <tr><td class="td-l0" colspan="2">L0</td><td class="td-l0">Reliability-Adjusted Availability = % of seconds up AND within latency SLO AND below crash threshold</td></tr>
+            <tr><td class="td-grp" colspan="3">L1 — Components</td></tr>
+            <tr><td>L1</td><td>Components</td><td>Service uptime % &nbsp;·&nbsp; Latency SLO compliance (voice ≤1.5s / agentic ≤700ms) &nbsp;·&nbsp; Crash rate per 100 sessions &nbsp;·&nbsp; Scale headroom ≥30% at 100K concurrent &nbsp;·&nbsp; PR-to-production velocity ≤2h</td></tr>
+            <tr><td class="td-grp" colspan="3">L2 — Diagnostics</td></tr>
+            <tr><td class="td-l2">L2</td><td class="td-l2">Diagnostics</td><td class="td-l2">Per-service availability &nbsp;·&nbsp; Per-region latency &nbsp;·&nbsp; Incident detect→ack time</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- LAYER 7 -->
+    <div id="t-l7" class="collapsible">
+      <button class="coll-head" onclick="togC(this)">
+        <div class="coll-num">7</div>
+        <div class="coll-title"><div class="coll-name">Partners</div><div class="coll-sub">The catalog grows beyond what core engineering can build &nbsp;·&nbsp; Org-backwards</div></div>
+        <div class="coll-l0">Partner Skill Coverage</div>
+        <div class="coll-chev">▼</div>
+      </button>
+      <div class="coll-body">
+        <table>
+          <thead><tr><th style="width:8%">Level</th><th style="width:17%">Group</th><th>Metric</th></tr></thead>
+          <tbody>
+            <tr><td class="td-l0" colspan="2">L0</td><td class="td-l0">Partner Skill Coverage = % of skills served by partners</td></tr>
+            <tr><td class="td-grp" colspan="3">L1 — Ecosystem</td></tr>
+            <tr><td>L1</td><td>Ecosystem</td><td>Partner-built skills in production &nbsp;·&nbsp; Self-serve onboarding rate &nbsp;·&nbsp; Onboarding gate time ≤7d &nbsp;·&nbsp; New skills/month autonomous &nbsp;·&nbsp; External partners live</td></tr>
+            <tr><td class="td-grp" colspan="3">L2 — Diagnostics</td></tr>
+            <tr><td class="td-l2">L2</td><td class="td-l2">Health</td><td class="td-l2">Per-partner skill share &nbsp;·&nbsp; Per-partner task completion rate &nbsp;·&nbsp; Manual steps per onboarding (must → 0)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- ALL LAYERS AT A GLANCE -->
+    <div id="t-glance" class="collapsible">
+      <button class="coll-head dark" onclick="togC(this)">
+        <div class="coll-title"><div class="coll-name">All Layers at a Glance</div></div>
+        <div class="coll-chev">▼</div>
+      </button>
+      <div class="coll-body">
+        <p class="muted" style="margin-bottom:.7rem">Layer · L0 metric · primary L1 groups.</p>
+        <div class="sv-wrap">
+          <div class="sv-row-header"><div>Layer</div><div>L0 Metric</div><div>L1 Groups</div></div>
+          <div class="sv-data-row"><div class="sv-cell l0">1 · User Loop</div><div class="sv-cell l0">Active Habit Rate = DEU ÷ MEU</div><div class="sv-cell l0">Activation · Engagement (MEU+DEU growth) · Retention · Loop quality (4 metrics) · Sentiment + Advocacy · Expansion · Experience (G)</div></div>
+          <div class="sv-data-row"><div class="sv-cell l0">2 · Personalisation</div><div class="sv-cell l0">Personalisation Resonance Rate</div><div class="sv-cell l0">Identity · Memory · Surface relevance · Anticipation · Language · Validation</div></div>
+          <div class="sv-data-row"><div class="sv-cell l0">3 · Conversation</div><div class="sv-cell l0">Multi-turn Coherence Rate</div><div class="sv-cell l0">Voice · Text · Image · Cross-modal</div></div>
+          <div class="sv-data-row"><div class="sv-cell l0">4 · Task Delivery</div><div class="sv-cell l0">Task Completion Rate</div><div class="sv-cell l0">Split · Qualified · Accuracy · Speed</div></div>
+          <div class="sv-data-row"><div class="sv-cell l0">5 · Quality</div><div class="sv-cell l0">Response Satisfaction Rate</div><div class="sv-cell l0">System gate · Quality dimensions · Authenticity</div></div>
+          <div class="sv-data-row"><div class="sv-cell l0">6 · Platform</div><div class="sv-cell l0">Reliability-Adjusted Availability</div><div class="sv-cell l0">Components (uptime · latency · crash · scale)</div></div>
+          <div class="sv-data-row"><div class="sv-cell l0">7 · Partners</div><div class="sv-cell l0">Partner Skill Coverage</div><div class="sv-cell l0">Ecosystem (skills · onboarding · velocity)</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACTIVITY UNITS -->
+    <div id="t-defs" class="collapsible">
+      <button class="coll-head dark" onclick="togC(this)">
+        <div class="coll-title"><div class="coll-name">Activity Units</div></div>
+        <div class="coll-chev">▼</div>
+      </button>
+      <div class="coll-body">
+        <div class="hierarchy">
+          <span class="hl">MAU</span><span class="hn">— opened the app in last 30d</span><br>
+          &nbsp;&nbsp;└── <span class="hl">MEU</span><span class="hn">— query OR audio/video ≥10s in last 30d &nbsp;(MQU ∪ MCU) &nbsp;·&nbsp; Primary engaged base</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── <span class="hl">MQU</span><span class="hn">— ≥1 query (text / voice / image). All queries are tasks. MQU ⊂ MEU.</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <span class="hl">MCU</span><span class="hn">— ≥1 audio/video played ≥10s. Card taps are surface events, not MCU.</span>
+        </div>
+        <div class="callout green" style="font-size:12px"><strong>Useful Task</strong> — a task that resolved AND user signaled value. ALL of: no rephrase within 60s · no thumbs-down · no restart. Plus ≥1 positive: continued · domain return 24h · thumbs-up.</div>
+        <div class="callout gray" style="font-size:12px"><strong>A query is a task.</strong> One user intent can span multiple queries.</div>
+      </div>
+    </div>
+
+    <!-- GLOSSARY -->
+    <div id="t-glossary" class="collapsible">
+      <button class="coll-head dark" onclick="togC(this)">
+        <div class="coll-title"><div class="coll-name">Glossary</div></div>
+        <div class="coll-chev">▼</div>
+      </button>
+      <div class="coll-body">
+        <table>
+          <thead><tr><th style="width:22%">Term</th><th>Definition</th></tr></thead>
+          <tbody>
+            <tr><td><strong>L0</strong></td><td>The single primary metric for a layer — the outcome. One per layer.</td></tr>
+            <tr><td><strong>L1</strong></td><td>Primary drivers of L0. What pod leads own and optimise.</td></tr>
+            <tr><td><strong>L2</strong></td><td>Diagnostics — where you look when L1 moves. Never in a leadership review.</td></tr>
+            <tr><td><strong>MAU / MEU / MQU / MCU / DEU</strong></td><td>See Activity Units above.</td></tr>
+            <tr><td><strong>Active Habit Rate</strong></td><td>DEU ÷ MEU — all returns. Push vs organic qualified at L1.</td></tr>
+            <tr><td><strong>Organic Active Habit Rate</strong></td><td>Organic DEU ÷ MEU — push-excluded L1 quality lens.</td></tr>
+            <tr><td><strong>Loop Self-Sufficiency</strong></td><td>Organic DEU ÷ Total DEU. What share of returns are unprompted.</td></tr>
+            <tr><td><strong>Habit Formation Rate</strong></td><td>% push-prompted users who become organic within 60d.</td></tr>
+            <tr><td><strong>Useful Task Rate</strong></td><td>% tasks resolved AND user signaled value. Product Work L0.</td></tr>
+            <tr><td><strong>Task Completion Rate</strong></td><td>% tasks reaching a resolved state. Layer 4 L0.</td></tr>
+            <tr><td><strong>Qualified Task Rate</strong></td><td>% completed tasks where user felt problem was solved. Layer 4 L1.</td></tr>
+            <tr><td><strong>Personalisation Resonance Rate</strong></td><td>% sessions where product demonstrated it knew the user.</td></tr>
+            <tr><td><strong>Warm start</strong></td><td>Correct language served AND ≥1 UCP attribute applied AND JioID loaded.</td></tr>
+            <tr><td><strong>UCP</strong></td><td>User Central Profile — attributes from JioID and session behaviour.</td></tr>
+            <tr><td><strong>JioID</strong></td><td>Reliance Jio user identity — source of Day 0 context.</td></tr>
+            <tr><td><strong>Cohort A–E</strong></td><td>5 user cohorts — language, device, geography, segment.</td></tr>
+            <tr><td><strong>Cohort Variance</strong></td><td>max(Active Habit Rate across A–E) − min.</td></tr>
+            <tr><td><strong>Signature Experience</strong></td><td>Vertical experience passing all 3 benchmarks — proprietary data + loop-forming + cultural irreplaceability.</td></tr>
+            <tr><td><strong>ASR / WER</strong></td><td>Automatic Speech Recognition / Word Error Rate (lower is better).</td></tr>
+            <tr><td><strong>TTS / MOS</strong></td><td>Text-to-Speech / Mean Opinion Score (naturalness, 1–5).</td></tr>
+            <tr><td><strong>TTFT / p95</strong></td><td>Time to First Token / 95th percentile latency.</td></tr>
+            <tr><td><strong>SLO</strong></td><td>Service Level Objective.</td></tr>
+            <tr><td><strong>FnF / GA</strong></td><td>Friends and Family / General Availability.</td></tr>
+            <tr><td><strong>D1 / D7 / D30 / D90</strong></td><td>Day 1 / 7 / 30 / 90 organic return rate checkpoints.</td></tr>
+            <tr><td><strong>PN / WA / pp</strong></td><td>Push Notification / WhatsApp / Percentage points.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- CROSS-CUTTING ATTRIBUTES -->
+    <div id="t-cuts" class="collapsible">
+      <button class="coll-head dark" onclick="togC(this)">
+        <div class="coll-title"><div class="coll-name">Cross-Cutting Attributes</div></div>
+        <div class="coll-chev">▼</div>
+      </button>
+      <div class="coll-body">
+        <p class="muted" style="margin-bottom:.7rem">Every L0 and L1 sliceable by all of these.</p>
+        <div class="cuts-grid">
+          <div class="cut-card"><div class="cut-num">#1</div><div class="cut-name">Cohort A–E</div><div class="cut-vals">5 cohorts per jbiq_user_cohort_gtm__v1.docx</div></div>
+          <div class="cut-card"><div class="cut-num">#2</div><div class="cut-name">Language</div><div class="cut-vals">Hindi · English · Tamil · Telugu · Gujarati · Bengali · Marathi · Kannada · Malayalam · Punjabi · Odia · Assamese</div></div>
+          <div class="cut-card"><div class="cut-num">#3</div><div class="cut-name">Use Cases</div><div class="cut-vals" style="font-style:italic;margin-bottom:6px">Directional — grows as verticals ship</div>
+            <div class="uc-grid">
+              <div><div class="uc-domain">Astrology</div><div class="uc-item">Meri Kundli · Shubh Muhurat · Kundali Matching</div></div>
+              <div><div class="uc-domain">Spirituality</div><div class="uc-item">Live Darshan · Aaj Ka Panchang · Aane Wale Tyohar · Mera Daily Ritual</div></div>
+              <div><div class="uc-domain">News</div><div class="uc-item">Breaking News · Fact Check · Market Pulse</div></div>
+              <div><div class="uc-domain">Entertainment</div><div class="uc-item">AI Podcast</div></div>
+              <div><div class="uc-domain">Career</div><div class="uc-item">Interview Prep · Learn New Skills · Govt Exams</div></div>
+              <div><div class="uc-domain">Daily Assistant</div><div class="uc-item">Create Image · Edit Image · Quick Translate · Email Writer · Analyse Doc</div></div>
+            </div>
+          </div>
+          <div class="cut-card"><div class="cut-num">#4</div><div class="cut-name">Modality</div><div class="cut-vals">Voice · Text · Image</div></div>
+          <div class="cut-card"><div class="cut-num">#5</div><div class="cut-name">Device tier</div><div class="cut-vals">Low-end · Mid-end · Flagship</div></div>
+          <div class="cut-card"><div class="cut-num">#6</div><div class="cut-name">Network type</div><div class="cut-vals">4G · 3G · 2G</div></div>
+          <div class="cut-card"><div class="cut-num">#7</div><div class="cut-name">Region</div><div class="cut-vals">Urban · Tier-2 · Tier-3 · Rural</div></div>
+          <div class="cut-card"><div class="cut-num">#8</div><div class="cut-name">User type</div><div class="cut-vals">First-time · Returning</div></div>
+          <div class="cut-card"><div class="cut-num">#9</div><div class="cut-name">Experience type</div><div class="cut-vals">Signature · Vertical · Generic chat &nbsp;·&nbsp; Qualifier: 3/3 benchmarks required</div></div>
+          <div class="cut-card"><div class="cut-num">#10</div><div class="cut-name">Session depth</div><div class="cut-vals">Single-turn · Multi-turn (≥3) · Extended (≥5)</div></div>
+          <div class="cut-card"><div class="cut-num">#11</div><div class="cut-name">Time horizon</div><div class="cut-vals">D1 · D7 · D30 · D90</div></div>
+          <div class="cut-card"><div class="cut-num">#12</div><div class="cut-name">Acquisition channel</div><div class="cut-vals">Jio retail · MyJio · JioFiber · Organic · Paid · Referral</div></div>
+          <div class="cut-card"><div class="cut-num">#13</div><div class="cut-name">Loop type</div><div class="cut-vals">Daily · Task · Life</div></div>
+          <div class="cut-card"><div class="cut-num">#14</div><div class="cut-name">Task type</div><div class="cut-vals">Query (text / voice / image) · Structured skill action</div></div>
+          <div class="cut-card"><div class="cut-num">#15</div><div class="cut-name">Surface</div><div class="cut-vals">Home · Persona page · Widget · Deep link · Notification · History · Settings</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OUT OF PRODUCT METRICS TREE -->
+    <div id="t-out" class="collapsible">
+      <button class="coll-head dark" onclick="togC(this)">
+        <div class="coll-title"><div class="coll-name">Out of Product Metrics Tree</div></div>
+        <div class="coll-chev">▼</div>
+      </button>
+      <div class="coll-body">
+        <p style="margin-bottom:.8rem;font-size:13px;color:var(--gray-dark)">Real, measurable, important — but not measures of whether the product is working for users.</p>
+        <table>
+          <thead><tr><th style="width:26%">Track</th><th>What it covers</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Growth / Distribution</strong></td><td>Acquisition, CAC, channel mix. GTM produces installs → consumed by Activation Rate (Layer 1 L1).</td></tr>
+            <tr><td><strong>A/B Experimentation</strong></td><td>Causal inference engine. Currently blocked at FnF (GrowthBook InfoSec gate). All FnF movements are correlational.</td></tr>
+            <tr><td><strong>Unit Economics</strong></td><td>Tokens/user, cost/query, cost/task. The product earns engagement; the operations layer pays for it.</td></tr>
+            <tr><td><strong>Data / Instrumentation</strong></td><td>Insight velocity, dashboard coverage, join freshness.</td></tr>
+            <tr><td><strong>Vertical Portfolio</strong></td><td>SE count at maturity levels, idea→live velocity. Informs what to build — not whether the product works today.</td></tr>
+            <tr><td><strong>Customer Lifecycle</strong></td><td>8 user-journey stages, per-campaign attribution. Push-attributed Return Rate (Layer 1 L1) is the product-tree interface.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="footer" style="margin-top:2rem;border-radius:6px">
+      <span>JioBharatIQ · Product Metrics · v9 · 2026-05-28</span>
+      <span>Internal · Reliance Intelligence</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     POD DATA
+═══════════════════════════════════════════ -->
+<script>
+const PODS = {
+  core: {
+    name: "Core Experience",
+    lead: "Sridhar Iruvanti",
+    mission: "Design and build the experience every user touches — the home screen, conversation interface, onboarding, engagement loops, and how personalisation surfaces visually.",
+    goals: ["G03 — First-session task completion", "G04 — Daily return"],
+    layer: 1,
+    layerName: "User Loop",
+    objective: "Users return on their own, without being pushed",
+    direction: "User-backwards",
+    note: "",
+    l0: "Active Habit Rate = DEU ÷ MEU · All returns included. Push vs organic qualified at L1.",
+    l1: [
+      { group: "Activation", metrics: "Activation Rate · Onboarding completion rate · First-session task rate · Delayed activation · Time-to-first-task" },
+      { group: "Engagement", metrics: "MEU growth rate (MoM) · DEU growth rate (MoM) · Tasks per DEU/day · Sessions per DEU/day · Active days/week · Multi-task session rate" },
+      { group: "Retention", metrics: "D1 / D7 / D30 / D90 organic return rate" },
+      { group: "Loop Self-Sufficiency", metrics: "Organic DEU ÷ Total DEU · What share of daily returns are unprompted" },
+      { group: "Push-attributed Return Rate", metrics: "Push DEU ÷ Total DEU · What share is comms pulling in" },
+      { group: "Habit Formation Rate", metrics: "% push-prompted users → organic within 60d · Is push building habit or sustaining dependency" },
+      { group: "Organic Active Habit Rate", metrics: "Organic DEU ÷ MEU · Push-excluded pull signal · Quality lens on L0" },
+      { group: "Sentiment", metrics: "NPS · User Satisfaction Rate · Surface time-to-meaningful p95" },
+      { group: "Advocacy", metrics: "Share rate · Screenshot proxy · Show-family behaviour · High-signal indicator that genuine value was delivered" },
+      { group: "Expansion", metrics: "Experience discovery rate · Vertical breadth · Cross-domain engagement" },
+      { group: "Experience (G)", metrics: "Attempt · Completion · D1/D3/D7 same-experience return (unprompted) · D30 Stickiness · Signature Score · Delta validators · Catalog velocity" }
+    ],
+    l2: [
+      { group: "User buckets", metrics: "MAU / MEU / MQU / MCU counts · MEU growth rate (MoM) · DEU growth rate (MoM)" },
+      { group: "Drop-off", metrics: "Per-experience: completion rate paired with same-experience return · Low completion + low return = bad experience · Low completion + decent return = wrong fit" },
+      { group: "Onboarding", metrics: "Onboarding time (median, p90) · Drop-off step · Per-device + per-network completion" },
+      { group: "Cohort", metrics: "Cohort Variance = max(Active Habit Rate) − min across A–E" },
+      { group: "Signals", metrics: "Rephrase rate · Re-ask rate · At-risk % · PN/WA open + post-click · History-to-query conversion" }
+    ],
+    defs: [
+      { term: "Active Habit Rate", def: "DEU ÷ MEU — all returns. Push vs organic qualified at L1." },
+      { term: "Organic Active Habit Rate", def: "Organic DEU ÷ MEU — push-excluded L1 quality lens." },
+      { term: "MEU", def: "Monthly Engaged Users — query OR audio/video ≥10s. Primary engaged base." },
+      { term: "Loop Self-Sufficiency", def: "Organic DEU ÷ Total DEU. What share of returns are unprompted." },
+      { term: "Habit Formation Rate", def: "% push-prompted users who become organic within 60d." }
+    ]
+  },
+  personalisation: {
+    name: "Memory & Personalisation",
+    lead: "Karan Prasad",
+    mission: "Build and run the systems that capture, store, and retrieve what JBIQ knows about a user — and make responses adapt to each user across every session.",
+    goals: ["G04 — Organic daily return (via personalisation lift on retention)"],
+    layer: 2,
+    layerName: "Personalisation",
+    objective: "Every session feels tailored to that specific user",
+    direction: "User-backwards",
+    l0: "Personalisation Resonance Rate = % sessions product demonstrated it knew the user",
+    l1: [
+      { group: "Identity", metrics: "Warm start rate · Cold start rate · Cold→warm transition rate (D7)" },
+      { group: "Memory", metrics: "Context carry-through rate = % returning sessions where prior context applied without re-explanation" },
+      { group: "Surface relevance", metrics: "Personalised surface engagement rate" },
+      { group: "Anticipation", metrics: "Proactive suggestion acceptance rate · Time-of-day relevance rate" },
+      { group: "Language", metrics: "Correct-language session rate · Cross-language continuity rate" },
+      { group: "Validation", metrics: "N=1 Retention Lift = D30(on) − D30(off cohort) — periodic" }
+    ],
+    l2: [
+      { group: "UCP", metrics: "UCP parameter coverage · UCP utilisation ratio · Signal freshness (≤15 min)" },
+      { group: "Identity", metrics: "JioID context load rate · Language auto-detect accuracy" },
+      { group: "Memory", metrics: "Memory capture/retrieval precision + recall · Hallucinated facts · Re-explanation rate · Users with 6+ memories stored" },
+      { group: "Surface", metrics: "Tile tap rate by position · Cold home rate · Inference latency p95 (≤50ms)" }
+    ],
+    defs: [
+      { term: "Personalisation Resonance Rate", def: "% sessions where at least ONE of: language auto-served · context applied · surface engaged · suggestion accepted." },
+      { term: "Warm start", def: "Correct language served AND ≥1 UCP attribute applied AND JioID loaded." },
+      { term: "Context carry-through rate", def: "% returning sessions where prior context applied without user re-explaining." },
+      { term: "UCP", def: "User Central Profile — attributes from JioID and session behaviour." }
+    ]
+  },
+  voice: {
+    name: "Voice & Multimodal",
+    lead: "Anmol Batra",
+    mission: "Build and run the full non-text input/output pipeline — voice capture, VAD, STT, language detection, code-mix, TTS, and image/document understanding.",
+    goals: ["G06 — 12 languages, ASR WER beating benchmark by 5%+"],
+    layer: 3,
+    layerName: "Conversation",
+    objective: "Talking to JBIQ feels as natural as talking to a person",
+    direction: "User-backwards",
+    l0: "Multi-turn Coherence Rate = % multi-turn sessions where context held AND modality switches succeeded",
+    l1: [
+      { group: "Voice", metrics: "Voice Primary User Share · ASR WER per language · E2E Voice Latency p95 ≤1.5s · Barge-in ≤300ms · TTS Naturalness MOS · Voice Carry-Through · Misunderstanding Recovery Rate" },
+      { group: "Text", metrics: "Text Query Latency · Text Completion Rate · Suggested-prompt usage rate" },
+      { group: "Image", metrics: "Image Upload Success · Vision Accuracy · Image-to-Task Completion" },
+      { group: "Cross-modal", metrics: "Modality Switch Success · Turn-Taking Quality" }
+    ],
+    l2: [
+      { group: "Environment", metrics: "Noise-ASR retention · Per-network latency (4G/3G/2G) · Per-device-tier voice metrics" },
+      { group: "Signals", metrics: "Mic Permission Grant Rate · Voice Abandonment Rate · Audio Replay Rate" }
+    ],
+    defs: [
+      { term: "ASR WER", def: "Word Error Rate — lower is better. Measured on frozen test set per language." },
+      { term: "TTS MOS", def: "Mean Opinion Score — naturalness 1–5, validated by native-speaker blind eval." },
+      { term: "Barge-in", def: "User interrupts TTS mid-speech. Must cancel and re-route to STT within 300ms." }
+    ]
+  },
+  agentic: {
+    name: "Agentic Orchestration",
+    lead: "Bharat Bheesetti",
+    mission: "Build and run the intelligence layer that turns user intent into completed tasks — routing, execution, multi-step chains, and agentic safety.",
+    goals: ["G03 — Task completion sustained across returning users"],
+    layer: 4,
+    layerName: "Task Delivery",
+    objective: "The AI completes what the user came to get done",
+    direction: "User-backwards",
+    l0: "Task Completion Rate = % of tasks that reached a resolved state",
+    l1: [
+      { group: "Split", metrics: "First-time user task completion rate · Returning user task completion rate" },
+      { group: "Qualified", metrics: "Qualified Task Rate = % completed tasks where user felt problem was solved" },
+      { group: "Accuracy", metrics: "Intent Classification Accuracy · Routing Accuracy · Execution Success Rate · Multi-step Task Success Rate" },
+      { group: "Speed", metrics: "TTFT p95 · E2E Latency p95" }
+    ],
+    l2: [
+      { group: "Completion", metrics: "Per-skill completion · Per-domain completion · Confirmation-bypass rate (must = 0)" },
+      { group: "Failure recovery", metrics: "Task failure recovery rate · Post-failure abandonment rate" },
+      { group: "Environment", metrics: "Per-network latency · Per-device-tier latency" }
+    ],
+    defs: [
+      { term: "Task Completion Rate", def: "% tasks reaching a resolved state — system-measurable, no user signal required." },
+      { term: "Qualified Task Rate", def: "% completed tasks where user felt problem was solved. L1 satisfaction layer on top of completion." },
+      { term: "TTFT", def: "Time to First Token — latency from query submission to first response token." }
+    ]
+  },
+  evals: {
+    name: "Evals & Quality",
+    lead: "Karan Prasad, Bhushan Patil",
+    mission: "Build and run the systems that measure whether JBIQ is working — across every skill, language, and partner integration.",
+    goals: ["G05 — 80%+ response satisfaction, no domain below 70%", "G07 — 99%+ eval pass rate"],
+    layer: 5,
+    layerName: "Quality",
+    objective: "Every response is accurate, safe, and sounds native",
+    direction: "User-backwards",
+    l0: "Response Satisfaction Rate = % of chats where user was satisfied",
+    l1: [
+      { group: "System gate", metrics: "Production Quality Floor = % responses passing all eval dimensions · Per-domain Response Satisfaction Rate" },
+      { group: "Quality", metrics: "Eval pass rate · Hallucination rate · Guardrail block rate · Drift online vs offline ≤10pp · CI/CD eval gating coverage" },
+      { group: "Authenticity", metrics: "Brand-voice adherence · Language authenticity (native-speaker blind eval)" }
+    ],
+    l2: [
+      { group: "Diagnostics", metrics: "Per-language eval score · Per-language satisfaction rate · Satisfaction gap by domain · Eval misses that reached users · Red-team violation count" }
+    ],
+    defs: [
+      { term: "Response Satisfaction Rate", def: "% chats where user was satisfied. Reported overall AND per domain. Overall only valid when all domains above floor." },
+      { term: "Production Quality Floor", def: "% responses passing all eval dimensions. System gate — was v1 L0, now correctly at L1." },
+      { term: "Drift", def: "Online production score vs offline golden dataset. Must stay within 10pp." }
+    ]
+  },
+  platform: {
+    name: "Backend Platform",
+    lead: "TBD",
+    mission: "Build and run the infrastructure every pod depends on — services, APIs, reliability, and scale.",
+    goals: ["G07 — Stable at 100K+ concurrent users"],
+    layer: 6,
+    layerName: "Platform",
+    objective: "Available and fast whenever a user shows up",
+    direction: "System-backwards",
+    l0: "Reliability-Adjusted Availability = % seconds up AND within latency SLO AND below crash threshold",
+    l1: [
+      { group: "Components", metrics: "Service uptime % · Latency SLO compliance (voice ≤1.5s / agentic ≤700ms) · Crash rate per 100 sessions · Scale headroom ≥30% at 100K concurrent · PR-to-production velocity ≤2h" }
+    ],
+    l2: [
+      { group: "Diagnostics", metrics: "Per-service availability · Per-region latency · Incident detect→ack time" }
+    ],
+    defs: [
+      { term: "Reliability-Adjusted Availability", def: "% seconds platform is up AND within latency SLO AND below crash threshold. All three must hold simultaneously." },
+      { term: "SLO", def: "Service Level Objective. Voice ≤1.5s p95, agentic ≤700ms p95." }
+    ]
+  },
+  partner: {
+    name: "Partner Experience",
+    lead: "Sushant Joshi, Arun Godavarthi",
+    mission: "Build and run the Partner Portal and lead the hands-on engagement that gets partners live and successful on JBIQ.",
+    goals: ["G08 — 10+ partners live, 3+ new per month", "G09 — 2+ new signature experiences per month"],
+    layer: 7,
+    layerName: "Partners",
+    objective: "The catalog grows beyond what core engineering can build",
+    direction: "Org-backwards",
+    l0: "Partner Skill Coverage = % of skills served by partners",
+    l1: [
+      { group: "Ecosystem", metrics: "Partner-built skills in production · Self-serve onboarding rate · Onboarding gate time ≤7d · New skills/month autonomous · External partners live" }
+    ],
+    l2: [
+      { group: "Health", metrics: "Per-partner skill share · Per-partner task completion rate · Manual steps per onboarding (must → 0)" }
+    ],
+    defs: [
+      { term: "Partner Skill Coverage", def: "% of skills served by partners — everyday intent or Signature Experience, both count." },
+      { term: "Self-serve onboarding rate", def: "% of onboardings completed without core engineering involvement." }
+    ]
+  }
+};
+
+// ── VIEW SWITCHER ──
+function switchView(v, btn) {
+  document.querySelectorAll('.view').forEach(el => {
+    el.classList.remove('active');
+    el.style.display = 'none';
+  });
+  document.querySelectorAll('.view-btn').forEach(el => el.classList.remove('active'));
+  const view = document.getElementById('view-' + v);
+  view.classList.add('active');
+  view.style.display = (v === 'tree') ? 'flex' : 'block';
+  btn.classList.add('active');
+  const sel = document.getElementById('podSelect');
+  sel.style.display = (v === 'pod') ? 'block' : 'none';
+  if (v === 'pod') renderPod(sel.value);
+}
+
+// Left nav scroll for tree view
+function scrollTo(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    const content = document.querySelector('.tree-content');
+    const offset = el.offsetTop - 20;
+    content.scrollTop = offset;
+  }
+  // Update active nav link
+  document.querySelectorAll('.tree-nav a').forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+  });
+  return false;
+}
+
+// Track scroll in tree content for nav highlighting
+document.addEventListener('DOMContentLoaded', () => {
+  const content = document.querySelector('.tree-content');
+  if (content) {
+    content.addEventListener('scroll', () => {
+      const sections = ['t-l1','t-l2','t-l3','t-l4','t-l5','t-l6','t-l7','t-glance','t-defs','t-glossary','t-cuts','t-out'];
+      let active = '';
+      sections.forEach(id => {
+        const el = document.getElementById(id);
+        if (el && el.offsetTop - 60 <= content.scrollTop) active = id;
+      });
+      document.querySelectorAll('.tree-nav a').forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + active);
+      });
+    }, { passive: true });
+  }
+});
+
+// ── POD VIEW ──
+function switchPod(val) { renderPod(val); }
+
+function renderPod(key) {
+  const p = PODS[key];
+  if (!p) return;
+  document.getElementById('pod-title').textContent = p.name;
+
+  const dirTag = p.direction === 'User-backwards'
+    ? '<span class="dir-tag dir-user">User-backwards</span>'
+    : p.direction === 'System-backwards'
+      ? '<span class="dir-tag dir-system">System-backwards</span>'
+      : '<span class="dir-tag dir-org">Org-backwards</span>';
+
+  const goalsHtml = p.goals.map(g => `<div class="pod-goal-tag">${g}</div>`).join('');
+  const noteHtml = p.note ? `<div class="callout amber" style="font-size:12px;margin-bottom:1.2rem"><strong>Scope:</strong> ${p.note}</div>` : '';
+
+  if (key === 'core') {
+    document.getElementById('pod-content').innerHTML = `
+      <div class="pod-mission">
+        <div class="pm-label">Mission &nbsp;·&nbsp; Layer ${p.layer} — ${p.layerName} &nbsp;·&nbsp; ${dirTag}</div>
+        <div class="pm-text">${p.mission}</div>
+      </div>
+      <h3>Org Goals this pod owns</h3>
+      <div class="pod-goals">${goalsHtml}</div>
+      ${noteHtml}
+      <div style="background:var(--blue-light);border-left:4px solid var(--blue-mid);border-radius:6px;padding:10px 14px;margin-bottom:.8rem">
+        <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--blue-mid)">L0 &nbsp;·&nbsp; </span>
+        <span style="font-size:14px;font-weight:700;color:var(--blue)">${p.l0}</span>
+      </div>
+      <div style="background:var(--gray);border-radius:6px;padding:9px 13px;margin-bottom:1rem;font-size:12px;color:var(--gray-dark)">
+        <strong>Persistent filter bar across all views:</strong> Cohort A–E &nbsp;·&nbsp; Language &nbsp;·&nbsp; User type &nbsp;·&nbsp; + More filters (Modality · Device tier · Network · Region · Channel · Experience type · Session depth · Loop type · Task type · Surface · Time of day)
+      </div>
+      <h3 style="margin-bottom:.5rem">Metrics — Formula · Visualisation · View</h3>
+      ${cs('L0', [
+        ['Active Habit Rate','DEU ÷ MEU','Single large number + 30d rolling trend line','Summary — always visible']
+      ])}
+      ${cs('L1 — Activation', [
+        ['Activation Rate','Users completing ≥1 task within D7 ÷ Total installs in same cohort','Single number + cohort trend line','Activation section'],
+        ['Onboarding Completion Rate','Users completing onboarding ÷ Users starting onboarding','Single number + horizontal funnel bar','Activation section'],
+        ['First-Session Task Rate','Users completing ≥1 task on D0 ÷ Users who opened app on D0','Single number + daily trend','Activation section'],
+        ['Onboarding Duration','Median time onboarding start → complete','p50 + p90 side by side · trend line','Activation section'],
+        ['Drop-off by Step','Users completing step N − users completing step N+1','Horizontal funnel — one bar per step','Activation · drill-down'],
+        ['Time-to-First-Task','Median time from install to first completed task','p50 + p90 · trend over time','Activation section'],
+        ['Delayed Activation Rate','Users completing first task D2–D7 ÷ Total installs','Stacked bar — D0 vs D2–D7 split','Activation section'],
+      ])}
+      ${cs('L1 — Engagement', [
+        ['MEU growth rate (MoM)','(MEU this month − MEU last month) ÷ MEU last month','% change + MoM bar chart · paired with DEU','Engagement section'],
+        ['DEU growth rate (MoM)','(Avg DEU this month − Avg DEU last month) ÷ Avg DEU last month','% change + MoM bar chart · paired with MEU','Engagement section'],
+        ['Tasks per DEU/day','Total tasks by DEU on day D ÷ Count of DEU on day D','Line chart — 30d rolling','Engagement section'],
+        ['Sessions per DEU/day','Total sessions by DEU on day D ÷ Count of DEU on day D','Line chart — 30d rolling','Engagement section'],
+        ['Avg session duration','Total session time ÷ Total sessions','Single number + trend line','Engagement section'],
+        ['Active days/week','Days in last 7d with ≥1 engagement event · median across MEU','Distribution histogram (1–7 days)','Engagement section'],
+        ['Multi-task session rate','Sessions with ≥2 completed tasks ÷ Total sessions','Single number + trend','Engagement section'],
+      ])}
+      ${cs('L1 — Retention', [
+        ['D1 organic return rate','Users active on D1 with no push trigger D0–D1 ÷ Users active on D0','Retention curve D1/D7/D30/D90 · by install cohort','Retention section'],
+        ['D7 organic return rate','Users active on D7 with no push trigger D0–D7 ÷ Users active on D0','Same retention curve','Retention section'],
+        ['D30 organic return rate','Users active on D30 with no push trigger D0–D30 ÷ Users active on D0','Same retention curve','Retention section'],
+        ['D90 organic return rate','Users active on D90 with no push trigger D0–D90 ÷ Users active on D0','Same retention curve','Retention section'],
+      ], 'Organic = no push notification or WA message opened in 24h window before return session.')}
+      ${cs('L1 — Loop Quality', [
+        ['Loop Self-Sufficiency','Organic DEU ÷ Total DEU','% donut + trend · paired with Push-attributed','Loop Quality section'],
+        ['Push-attributed Return Rate','DEU where user opened PN or WA in prior 24h ÷ Total DEU','Same donut — complement of Loop Self-Sufficiency','Loop Quality section'],
+        ['Habit Formation Rate','Push-prompted → organic within 60d ÷ All push-prompted users','Funnel: push-prompted → converted → organic','Loop Quality section'],
+        ['Organic Active Habit Rate','Organic DEU ÷ MEU','Line chart overlaid on L0 — gap between total and organic visible','Loop Quality · same chart as L0'],
+      ])}
+      ${cs('L1 — Sentiment + Advocacy', [
+        ['NPS','((Promoters − Detractors) ÷ Total respondents) × 100 · Promoters = 9–10 · Detractors = 0–6','Single number by zone + trend + stacked bar (Promoter/Passive/Detractor)','Sentiment section'],
+        ['User Satisfaction Rate','Users rating ≥4/5 ÷ Total survey respondents','Single number + trend','Sentiment section'],
+        ['Surface time-to-meaningful p95','95th percentile time from screen visible to first tap on meaningful element','Single number + trend','Sentiment section'],
+        ['Share rate','Output shared events ÷ Total sessions','Single number + trend','Advocacy section'],
+        ['Screenshot proxy','Screenshot or share-sheet open events ÷ Total sessions','Single number + trend · alongside share rate','Advocacy section'],
+        ['Show-family behaviour','New app opens attributed to shared link ÷ Total shared outputs','Single number + trend','Advocacy section'],
+      ])}
+      ${cs('L1 — Expansion', [
+        ['Experience discovery rate','Users engaging with ≥2 distinct experiences in W1 ÷ Total MEU in W1','Single number + weekly trend','Expansion section'],
+        ['Vertical breadth','Median distinct experience count per user per month','Distribution histogram — 1/2/3/4/5+ experiences','Expansion section'],
+        ['Cross-domain engagement rate','Users engaging across ≥2 distinct domains ÷ Total MEU','Single number + trend','Expansion section'],
+      ], 'Vertical breadth as histogram — shows whether users are clustered at 1 experience or spreading.')}
+      ${cs('L1 — Experience (G)', [
+        ['Attempt rate','Users who started experience X ÷ Total MEU','Bar chart — experiences ranked by attempt rate','Experience view'],
+        ['Completion rate','Users who completed X ÷ Users who started X','Bar chart alongside attempt rate','Experience view'],
+        ['D1 same-experience return','Users returning to X on D1 without push ÷ D0 users of X','Heatmap — experiences on Y · D1/D3/D7 on X','Experience view'],
+        ['D3 same-experience return','Users returning to X on D3 without push ÷ D0 users of X','Same heatmap','Experience view'],
+        ['D7 same-experience return','Users returning to X on D7 without push ÷ D0 users of X','Same heatmap','Experience view'],
+        ['D30 stickiness','Users returning to X in D30 window ÷ W1 users of X','Column in experience table','Experience view'],
+        ['Cohort penetration','Users from cohort C who used X ÷ MEU in cohort C','Grouped bar — experience vs cohort','Experience view · drill-down'],
+        ['In-context NPS','((Promoters − Detractors) ÷ Respondents) × 100 at experience exit','Bar chart — NPS score per experience','Experience view'],
+      ], 'Experience (G) is its own view — one row per experience, sortable by any column. D1/D3/D7 heatmap gives pull signal at a glance.')}
+      ${cs('L2 — Diagnostics', [
+        ['MAU / MEU / MQU / MCU / DEU','Distinct user counts per definition','5 number tiles in one row + 30d trend each','Diagnostics — collapsed by default'],
+        ['MEU + DEU growth rate','MoM delta for both','Two paired bars side by side','Diagnostics'],
+        ['Drop-off diagnostic','Per-experience: completion rate + D1 return rate as a pair','Scatter plot — completion on X · D1 return on Y · each dot = one experience','Diagnostics · drill-down'],
+        ['Onboarding duration p50/p90','Time onboarding start → complete at p50 and p90','Two numbers side by side + trend','Diagnostics'],
+        ['Cohort Variance','max(Active Habit Rate across A–E) − min','Grouped bar one per cohort + variance callout','Summary callout + Diagnostics detail'],
+        ['Rephrase rate','Sessions where same core intent submitted ≥2x within 60s ÷ Total sessions','Single number + trend','Diagnostics'],
+        ['Re-ask rate','Total queries per resolved task − 1 · averaged across sessions','Single number + trend','Diagnostics'],
+        ['At-risk %','MEU users with 0 engagement events in last 7d ÷ Total MEU','Single number + trend · alert threshold','Diagnostics'],
+        ['PN/WA open + post-click','Push opens → app session within 1h ÷ Total pushes sent','Two numbers (open rate + post-click) + trend','Diagnostics'],
+        ['History-to-query conversion','History accessed → query submitted in same session ÷ Sessions where history accessed','Single number + trend','Diagnostics'],
+      ])}
+    `;
+    return;
+  }
+
+  // Other pods — standard flat table
+  const l1Html = p.l1.map(g => `
+    <tr><td class="td-grp" colspan="2">L1 — ${g.group}</td></tr>
+    <tr><td>L1</td><td>${g.metrics}</td></tr>
+  `).join('');
+  const l2Html = p.l2.map(g => `
+    <tr><td class="td-l2">L2</td><td class="td-l2">${g.group} — ${g.metrics}</td></tr>
+  `).join('');
+  const defsHtml = p.defs.map(d => `<tr><td><strong>${d.term}</strong></td><td>${d.def}</td></tr>`).join('');
+
+  document.getElementById('pod-content').innerHTML = `
+    <div class="pod-mission">
+      <div class="pm-label">Mission &nbsp;·&nbsp; Layer ${p.layer} — ${p.layerName} &nbsp;·&nbsp; ${dirTag}</div>
+      <div class="pm-text">${p.mission}</div>
+    </div>
+    <h3>Org Goals this pod owns</h3>
+    <div class="pod-goals">${goalsHtml}</div>
+    ${noteHtml}
+    <h3>Metrics — L0 / L1 / L2</h3>
+    <table>
+      <thead><tr><th style="width:10%">Level</th><th>Metric</th></tr></thead>
+      <tbody>
+        <tr><td class="td-l0">L0</td><td class="td-l0">${p.l0}</td></tr>
+        ${l1Html}
+        ${l2Html}
+      </tbody>
+    </table>
+    <div class="collapsible" style="margin-top:1rem">
+      <button class="coll-head dark" onclick="togC(this)">
+        <div class="coll-title"><div class="coll-name">Metric definitions for this pod</div></div>
+        <div class="coll-chev">▼</div>
+      </button>
+      <div class="coll-body">
+        <table>
+          <thead><tr><th style="width:28%">Term</th><th>Definition</th></tr></thead>
+          <tbody>${defsHtml}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+function cs(title, rows, note) {
+  const rowsHtml = rows.map(([m, f, v, vw]) => `
+    <tr>
+      <td style="font-weight:500;color:var(--text);font-size:12.5px">${m}</td>
+      <td style="font-family:SF Mono,Monaco,monospace;font-size:11px;color:var(--blue-mid)">${f}</td>
+      <td style="font-size:12px;color:var(--gray-dark)">${v}</td>
+      <td style="font-size:11.5px;color:var(--gray-mid)">${vw}</td>
+    </tr>`).join('');
+  const noteHtml = note ? `<div style="font-size:11.5px;color:var(--gray-mid);font-style:italic;padding:4px 0 6px">${note}</div>` : '';
+  return `<div class="collapsible" style="margin-bottom:4px">
+    <button class="coll-head" onclick="togC(this)" style="padding:9px 14px">
+      <div class="coll-title"><div class="coll-name" style="font-size:12.5px">${title}</div></div>
+      <div class="coll-chev">▼</div>
+    </button>
+    <div class="coll-body" style="padding:10px 12px">
+      ${noteHtml}
+      <table style="margin:0">
+        <thead><tr>
+          <th style="width:20%">Metric</th>
+          <th style="width:33%">Formula</th>
+          <th style="width:27%">Visualisation</th>
+          <th style="width:20%">View</th>
+        </tr></thead>
+        <tbody>${rowsHtml}</tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+// ── COLLAPSIBLES ──
+function togC(btn) {
+  const o = btn.classList.contains('open');
+  btn.classList.toggle('open', !o);
+  btn.nextElementSibling.classList.toggle('open', !o);
+}
+
+// ── INIT ──
+renderPod('core');
+</script>
+</body>
+</html>
